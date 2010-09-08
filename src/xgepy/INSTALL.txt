@@ -1,0 +1,3 @@
+see building rule:
+	copy xgepy.py to $src/pyplasm/xge
+

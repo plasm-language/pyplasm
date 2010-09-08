@@ -1,0 +1,383 @@
+#include <xge/xge.h>
+#include <xge/engine.h>
+#include <GL/glew.h>
+
+#if ENGINE_ENABLE_SHADOW_SHADER
+
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+EngineShadowShader::EngineShadowShader()
+{
+	this->depth_tex = 0; 
+
+	//i don't want to loose he context (if exists)
+	int64 RC=(int64)wglGetCurrentContext();
+	bool bValidContext=(RC!=0);
+	if (!bValidContext) 
+	{
+		Engine::GetSharedContext()->Lock(); 
+		RC=Engine::GetSharedContext()->RC;
+	}
+	else 
+	{
+		Engine::GetSharedContext()->lock.Lock();
+	}
+	int glew_context=Engine::WCs[RC];
+	#define glewGetContext() ((GLEWContext*)glew_context)
+	{
+		//generate offscreen buffers
+		glGenFramebuffersEXT(1, &depth_fb);
+		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, depth_fb);
+		glDrawBuffer(GL_NONE);
+		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+
+		//init texture for offline rendefing
+		glActiveTexture(GL_TEXTURE0+SHADOWMAP_TEXTURE_OFFSET);
+		glGenTextures(1, &depth_tex);
+		glBindTexture(GL_TEXTURE_2D_ARRAY_EXT, depth_tex);
+		glTexImage3D(GL_TEXTURE_2D_ARRAY_EXT, 0, GL_DEPTH_COMPONENT24, SHADOWMAP_DEPTH_SIZE, SHADOWMAP_DEPTH_SIZE, SHADOWMAP_MAX_SPLITS, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY_EXT, GL_TEXTURE_MIN_FILTER  , GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY_EXT, GL_TEXTURE_MAG_FILTER  , GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY_EXT, GL_TEXTURE_WRAP_S      , GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY_EXT, GL_TEXTURE_WRAP_T      , GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY_EXT, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
+		glActiveTexture(GL_TEXTURE0);
+	}
+	#undef glewGetContext
+	
+	if (!bValidContext) 
+		Engine::GetSharedContext()->Unlock(); 
+	else 
+		Engine::GetSharedContext()->lock.Unlock();
+}
+
+
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+void EngineShadowShader::Setup(Engine* engine,Vec3f light_dir,Frustum* frustum,Box3f model_box)
+{
+	//new far bounds from camera view
+	memset(frustum_bound,0,sizeof(frustum_bound));
+
+	glGetFloatv(GL_MODELVIEW_MATRIX , CM.mat);
+	glGetFloatv(GL_PROJECTION_MATRIX, CP.mat);
+
+	glPushMatrix();
+	{
+		glLoadIdentity();
+		gluLookAt(0, 0, 0, -light_dir[0], -light_dir[1], -light_dir[2], -1.0f, 0.0f, 0.0f);
+		glGetFloatv(GL_MODELVIEW_MATRIX, LM.mat);
+		assert(!LM[12] && !LM[13] && !LM[14] && !LM[3] && !LM[7] && !LM[11] && LM[15]==1 );
+		LM_11=LM[ 0] ; LM_12=LM[ 4] ; LM_13=LM[ 8];
+		LM_21=LM[ 1] ; LM_22=LM[ 5] ; LM_23=LM[ 9];
+		LM_31=LM[ 2] ; LM_32=LM[ 6] ; LM_33=LM[10];
+	}
+	glPopMatrix();
+
+	CMI[0]  = CM[0]; CMI[1]  = CM[4]; CMI[2]  = CM[8]; CMI[3]  = 0.0f;
+	CMI[4]  = CM[1]; CMI[5]  = CM[5]; CMI[6]  = CM[9]; CMI[7]  = 0.0f;
+	CMI[8]  = CM[2]; CMI[9]  = CM[6]; CMI[10] = CM[10];CMI[11] = 0.0f;
+
+	CMI[12] = -(CM[12] * CM[0]) - (CM[13] * CM[1]) - (CM[14] * CM[2]);
+	CMI[13] = -(CM[12] * CM[4]) - (CM[13] * CM[5]) - (CM[14] * CM[6]);
+	CMI[14] = -(CM[12] * CM[8]) - (CM[13] * CM[9]) - (CM[14] * CM[10]);
+	CMI[15] = 1.0f;
+
+	//very important, the camera frustum should be a little larger
+	//here I increase the shadow map resolution but I have some problems on the borders of the screen should be something like 12 degree 
+	//the +IncrementFov  is important because we might get artifacts at the screen borders.
+	float IncrementFov=12;
+
+	#if SHADOWMAP_MAXIMIZE_Z_USE
+	//correct near and far in order to maximize depth utilization
+	//be sure that for the Z i include all the objects of the bounding box
+	assert(!CM[3] && !CM[7] && !CM[11] && CM[15]==1);
+	float _X1=-1*CM[ 2]*model_box.p1.x , _X2 = -1*CM[ 2]*model_box.p2.x;
+	float _Y1=-1*CM[ 6]*model_box.p1.y , _Y2 = -1*CM[ 6]*model_box.p2.y;
+	float _Z1=-1*CM[10]*model_box.p1.z , _Z2 = -1*CM[10]*model_box.p2.z ;
+	float _D =-1*CM[14];
+	float Near = 1.001f * (min2(_X1,_X2)+min2(_Y1,_Y2)+min2(_Z1,_Z2)+_D);
+	float Far  = 0.999f * (max2(_X1,_X2)+max2(_Y1,_Y2)+max2(_Z1,_Z2)+_D);
+
+	//TODO: this is probably not an optimization, TO redo!
+	if (Near<=0  ) Near=1e-4f;
+	if (Far<=Near) Far=Near*100;
+	ReleaseAssert(Near>=0 && Far>Near);
+	#endif //SHADOWMAP_MAXIMIZE_Z_USE
+
+	for (int S=0;S<SHADOWMAP_NUM_SPLITS;S++)
+	{
+		#define splitPosition(S,Near,Far) \
+			(SHADOWMAP_SPLIT_WEIGHT *((Near)*powf((Far)/(Near), (S) / (float)SHADOWMAP_NUM_SPLITS)) + (1-SHADOWMAP_SPLIT_WEIGHT)*((Near) + ((Far) - (Near))*((S) / (float)SHADOWMAP_NUM_SPLITS)))
+
+		float Frustum_Near = (!S                         )?(Near):(splitPosition(S  ,Near,Far)        );
+		float Frustum_Far  = (S==(SHADOWMAP_NUM_SPLITS-1))?(Far ):(splitPosition(S+1,Near,Far)* 1.005f);
+
+		Frustum temp;
+		temp.pos    =frustum->pos;
+		temp.dir    =frustum->dir;
+		temp.right  =frustum->right;
+		temp.width  =frustum->width;
+		temp.height =frustum->height;
+		temp.projection_matrix=Mat4f::perspective(DEFAULT_FOV+IncrementFov,temp.width/(float)temp.height,Frustum_Near,Frustum_Far);
+
+		temp.refresh();
+
+		// f[i].fard is originally in eye space - tell's us how far we can see.
+		// Here we compute it in camera homogeneous coordinates. Basically, we calculate
+		// CP * (0, 0, f[i].fard, 1)^t and then normalize to [0; 1]
+		frustum_bound[S]=0.5f+0.5f* (CP[10]*(-Frustum_Far)+CP[14])/(Frustum_Far);
+
+		// adjust the view frustum of the light, so that it encloses the camera frustum slice fully.
+		// note that this function sets the projection matrix as it sees best fit
+		{
+			float minX = +1e18f , maxX = -1e18f;
+			float minY = +1e18f , maxY=  -1e18f;
+			float minZ = +1e18f , maxZ = -1e18f;
+
+			for (int i=0;i<8;i++)
+			{
+				Vec3f p=temp.points[i];
+				float X=p.x;
+				float Y=p.y;
+				float Z=p.z;
+				float tx=LM_11*X+LM_12*Y+LM_13*Z; if (tx<minX) minX=tx;if (tx>maxX) maxX=tx;
+				float ty=LM_21*X+LM_22*Y+LM_23*Z; if (ty<minY) minY=ty;if (ty>maxY) maxY=ty;
+				float tz=LM_31*X+LM_32*Y+LM_33*Z; if (tz<minZ) minZ=tz;if (tz>maxZ) maxZ=tz;
+			}
+
+			// make sure all relevant shadow casters are included
+			float maxZ_model=max2(LM_31*model_box.p1.x,LM_31*model_box.p2.x)+max2(LM_32*model_box.p1.y,LM_32*model_box.p2.y)+max2(LM_33*model_box.p1.z,LM_33*model_box.p2.z);
+			maxZ=max2(maxZ,maxZ_model);
+
+			frustum_min[S].x=minX;frustum_max[S].x=maxX;
+			frustum_min[S].y=minY;frustum_max[S].y=maxY;
+			frustum_min[S].z=minZ;frustum_max[S].z=maxZ;
+		}
+
+	}
+
+	static GLfloat white[]={0.8f,0.8f,0.8f,1};
+	glLightfv(GL_LIGHT0,GL_AMBIENT ,white);
+	glLightfv(GL_LIGHT0,GL_DIFFUSE ,white);
+	glLightfv(GL_LIGHT0,GL_SPECULAR,white);
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+
+	float _light_dir[]={light_dir.x,light_dir.y,light_dir.z,0};
+	glLightfv(GL_LIGHT0,GL_POSITION,_light_dir);
+
+}
+
+
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+void EngineShadowShader::BeginSplit(Engine* engine,int S) 
+{
+	#define glewGetContext() ((GLEWContext*)engine->WC)
+
+	//save actual state (do not try to push ALL attrib, you will get an error for unknown reasons)
+	glPushAttrib(GL_VIEWPORT_BIT | GL_ENABLE_BIT);
+
+	// redirect rendering to the depth texture
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, depth_fb);
+
+	// make the current depth map a rendering target
+	glFramebufferTextureLayerEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, depth_tex, 0, S);	
+
+	// store the screen viewport
+	glViewport(0, 0, SHADOWMAP_DEPTH_SIZE, SHADOWMAP_DEPTH_SIZE);
+
+	// offset the geometry slightly to prevent z-fighting
+	// note that this introduces some light-leakage artifacts
+	glPolygonOffset( 1.0f, 4096.0f);
+	glEnable(GL_POLYGON_OFFSET_FILL);
+
+	//no need for lighting or texturing from light view
+	glDisable(GL_LIGHTING);
+	glDisable(GL_TEXTURE_2D);
+
+	// light projection matrix
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+	glOrtho(frustum_min[S].x, frustum_max[S].x, frustum_min[S].y, frustum_max[S].y, -frustum_max[S].z, -frustum_min[S].z);
+	glGetFloatv(GL_PROJECTION_MATRIX, LP.mat);
+	glPopMatrix();
+
+	// compute a matrix that transforms from camera eye space to light clip space
+	// and pass it to the shader through the OpenGL texture matrices, since we
+	// don't use them now
+	static const float bias[16] = 
+	{	
+		0.5f, 0.0f, 0.0f, 0.0f, 
+		0.0f, 0.5f, 0.0f, 0.0f,
+		0.0f, 0.0f, 0.5f, 0.0f,
+		0.5f, 0.5f, 0.5f, 1.0f	
+	};
+
+	glActiveTexture(GL_TEXTURE0 + SHADOWMAP_TEXTURE_OFFSET + (GLenum)S ); 
+	glMatrixMode(GL_TEXTURE);
+	glLoadMatrixf(bias);
+	glMultMatrixf(LP.mat  );
+	glMultMatrixf(LM.mat  );
+	glMultMatrixf(CMI.mat );
+
+	//light projection and texture1 modelview
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadMatrixf(LP.mat);
+	
+	glMatrixMode(GL_MODELVIEW );
+	glPushMatrix();
+	glLoadMatrixf(LM.mat);
+
+	//now you can draw ...
+	glClear(GL_DEPTH_BUFFER_BIT);
+
+	#undef glewGetContext
+}
+
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+void EngineShadowShader::EndSplit(Engine* engine,int S)
+{
+	#define glewGetContext() ((GLEWContext*)engine->WC)
+
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+	
+	glMatrixMode(GL_MODELVIEW );
+	glPopMatrix();
+
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+	glPopAttrib();
+
+	#undef glewGetContext
+}
+
+
+///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
+void EngineShadowShader::Bind(Engine* engine)
+{
+	#define glewGetContext() ((GLEWContext*)engine->WC)
+
+	GLint current_shader;
+	glGetIntegerv(GL_CURRENT_PROGRAM,&current_shader);
+	ReleaseAssert(current_shader>0);
+
+	//final image	
+	glBindTexture  (GL_TEXTURE_2D_ARRAY_EXT, depth_tex);
+	glTexParameteri( GL_TEXTURE_2D_ARRAY_EXT, GL_TEXTURE_COMPARE_MODE, GL_NONE);
+
+	EngineShader::Set1b   (engine,current_shader,"shadow_enabled"  ,true);
+	EngineShader::Set1i   (engine,current_shader,"shadow_texture"  ,(int)SHADOWMAP_TEXTURE_OFFSET);
+	EngineShader::Set4fv  (engine,current_shader,"shadow_bounds"   ,1,frustum_bound);
+
+	#undef glewGetContext
+}
+
+
+///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
+void EngineShadowShader::Unbind(Engine* engine)
+{
+	;
+}
+
+
+///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
+class GLshadowViewer : public Viewer
+{
+public:
+
+	SmartPointer<Hpc>                 mesh;
+	std::vector<SmartPointer<Batch> > batches;
+	EngineShadowShader*  shadowmap;
+	Vec3f                light_dir;
+
+	EngineShader* shader;
+
+	////////////////////////////////////////////////////////////////////
+	GLshadowViewer(std::vector<SmartPointer<Batch> > batches)
+	{	
+		shader   =new EngineShader(":glsl/phong.vertex.glsl",":glsl/phong.fragment.glsl");
+		shadowmap=new EngineShadowShader();
+		this->batches=batches;
+		this->frustum.guessBestPosition(getModelBox());
+		this->light_dir=frustum.vup.rotate(frustum.dir,(float)-M_PI/6).normalize();
+		this->Redisplay();
+	}
+
+	////////////////////////////////////////////////////////////////////
+	void displayModel()
+	{
+		for (int i=0;i<(int)batches.size();i++)
+			this->engine->Render(batches[i],&frustum);
+	}
+
+
+	////////////////////////////////////////////////////////////////////
+	Box3f getModelBox()
+	{
+		Box3f ret;
+		for (int i=0;i<(int)batches.size();i++)
+			ret.add(batches[i]->getBox());
+
+		return ret;
+	}
+
+	////////////////////////////////////////////////////////////////////
+	virtual void Render()
+	{
+		this->engine->ClearScreen();
+
+		this->engine->SetViewport(frustum.x,frustum.y,frustum.width,frustum.height);
+		this->engine->SetProjectionMatrix(frustum.projection_matrix);
+		this->engine->SetModelviewMatrix(frustum.getModelviewMatrix());
+
+		shadowmap->Setup(this->engine,this->light_dir,&this->frustum,getModelBox());
+		for (int S=0;S<shadowmap->numberOfSplits();S++)
+		{
+			shadowmap->BeginSplit(this->engine,S);
+			displayModel();
+			shadowmap->EndSplit(this->engine,S);
+		}
+
+		this->engine->ClearScreen();
+
+		this->engine->SetViewport(frustum.x,frustum.y,frustum.width,frustum.height);
+		this->engine->SetProjectionMatrix(frustum.projection_matrix);
+		this->engine->SetModelviewMatrix(frustum.getModelviewMatrix());
+
+		shader->Bind(this->engine);
+		{
+			shadowmap->Bind(this->engine);
+			{
+				displayModel();
+			}
+			shadowmap->Unbind(this->engine);
+		}
+		shader->Unbind(this->engine);
+
+		this->engine->FlushScreen();
+	}
+};
+
+
+////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////
+void EngineShadowShader::SelfTest()
+{
+	GLshadowViewer v(Plasm::getBatches(Plasm::open(":models/temple.hpc.xml")));
+	v.Run();
+	v.Wait();
+}
+
+
+
+
+
+#endif //ENGINE_ENABLE_SHADOW_SHADER
