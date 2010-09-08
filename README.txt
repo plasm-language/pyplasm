@@ -1,5 +1,3 @@
-
-
 ////////////////////////////////////////////
 MacOSX installation 
 ////////////////////////////////////////////
@@ -16,12 +14,3 @@ Istall PyOpenGL (http://pypi.python.org/packages/source/P/PyOpenGL/PyOpenGL-3.0.
 	tar -zxvf PyOpenGL-3.0.0.tar.gz
 	cd PyOpenGL-3.0.0
 	python setup.py install
-
-
-	
-
-	
-
-
-
-
