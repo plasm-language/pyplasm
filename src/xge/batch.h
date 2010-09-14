@@ -209,7 +209,7 @@ public:
 	static std::vector<SmartPointer<Batch> > openPtx(std::string filename,bool bUseReflectance=false);
 
 	//! open point cloud in PTS format
-	static std::vector<SmartPointer<Batch> > openPts(std::string filename,bool bUseReflectance=false);
+	//static std::vector<SmartPointer<Batch> > openPts(std::string filename,bool bUseReflectance=false);
 
 	//!utility to open/save/view
 	static void                               Save (std::string filename,std::vector< SmartPointer<Batch> > batches);

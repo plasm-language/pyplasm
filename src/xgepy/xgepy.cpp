@@ -3231,47 +3231,48 @@ namespace Swig {
 #define SWIGTYPE_p_polygon_t swig_types[67]
 #define SWIGTYPE_p_size_type swig_types[68]
 #define SWIGTYPE_p_std__invalid_argument swig_types[69]
-#define SWIGTYPE_p_std__mapT_std__string_std__string_std__lessT_std__string_t_std__allocatorT_std__pairT_std__string_const_std__string_t_t_t swig_types[70]
-#define SWIGTYPE_p_std__tr1__shared_ptrT_Batch_t swig_types[71]
-#define SWIGTYPE_p_std__tr1__shared_ptrT_EngineResource_t swig_types[72]
-#define SWIGTYPE_p_std__tr1__shared_ptrT_Graph_t swig_types[73]
-#define SWIGTYPE_p_std__tr1__shared_ptrT_Hpc_t swig_types[74]
-#define SWIGTYPE_p_std__tr1__shared_ptrT_Matf_t swig_types[75]
-#define SWIGTYPE_p_std__tr1__shared_ptrT_Octree_t swig_types[76]
-#define SWIGTYPE_p_std__tr1__shared_ptrT_Texture_t swig_types[77]
-#define SWIGTYPE_p_std__tr1__shared_ptrT_Vector_t swig_types[78]
-#define SWIGTYPE_p_std__tr1__shared_ptrT_std__mapT_std__string_std__string_std__lessT_std__string_t_std__allocatorT_std__pairT_std__string_const_std__string_t_t_t_t swig_types[79]
-#define SWIGTYPE_p_std__vectorT_Vec3f_std__allocatorT_Vec3f_t_t swig_types[80]
-#define SWIGTYPE_p_std__vectorT_Vec3f_std__allocatorT_Vec3f_t_t__allocator_type swig_types[81]
-#define SWIGTYPE_p_std__vectorT_Vec3f_std__allocatorT_Vec3f_t_t__value_type swig_types[82]
-#define SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t swig_types[83]
-#define SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t__allocator_type swig_types[84]
-#define SWIGTYPE_p_std__vectorT_int_std__allocatorT_int_t_t swig_types[85]
-#define SWIGTYPE_p_std__vectorT_int_std__allocatorT_int_t_t__allocator_type swig_types[86]
-#define SWIGTYPE_p_std__vectorT_std__string_std__allocatorT_std__string_t_t swig_types[87]
-#define SWIGTYPE_p_std__vectorT_std__string_std__allocatorT_std__string_t_t__allocator_type swig_types[88]
-#define SWIGTYPE_p_std__vectorT_std__tr1__shared_ptrT_Batch_t_std__allocatorT_std__tr1__shared_ptrT_Batch_t_t_t swig_types[89]
-#define SWIGTYPE_p_std__vectorT_std__tr1__shared_ptrT_Batch_t_std__allocatorT_std__tr1__shared_ptrT_Batch_t_t_t__allocator_type swig_types[90]
-#define SWIGTYPE_p_std__vectorT_std__tr1__shared_ptrT_EngineResource_t_std__allocatorT_std__tr1__shared_ptrT_EngineResource_t_t_t swig_types[91]
-#define SWIGTYPE_p_std__vectorT_std__tr1__shared_ptrT_EngineResource_t_std__allocatorT_std__tr1__shared_ptrT_EngineResource_t_t_t__allocator_type swig_types[92]
-#define SWIGTYPE_p_std__vectorT_std__tr1__shared_ptrT_Hpc_t_std__allocatorT_std__tr1__shared_ptrT_Hpc_t_t_t swig_types[93]
-#define SWIGTYPE_p_std__vectorT_std__tr1__shared_ptrT_Hpc_t_std__allocatorT_std__tr1__shared_ptrT_Hpc_t_t_t__allocator_type swig_types[94]
-#define SWIGTYPE_p_std__vectorT_std__tr1__shared_ptrT_Texture_t_std__allocatorT_std__tr1__shared_ptrT_Texture_t_t_t swig_types[95]
-#define SWIGTYPE_p_std__vectorT_std__tr1__shared_ptrT_Texture_t_std__allocatorT_std__tr1__shared_ptrT_Texture_t_t_t__allocator_type swig_types[96]
-#define SWIGTYPE_p_std__vectorT_std__vectorT_Vec3f_std__allocatorT_Vec3f_t_t_std__allocatorT_std__vectorT_Vec3f_std__allocatorT_Vec3f_t_t_t_t swig_types[97]
-#define SWIGTYPE_p_std__vectorT_std__vectorT_int_std__allocatorT_int_t_t_std__allocatorT_std__vectorT_int_std__allocatorT_int_t_t_t_t swig_types[98]
-#define SWIGTYPE_p_std__vectorT_std__vectorT_int_std__allocatorT_int_t_t_std__allocatorT_std__vectorT_int_std__allocatorT_int_t_t_t_t__allocator_type swig_types[99]
-#define SWIGTYPE_p_std__vectorT_std__vectorT_std__vectorT_Vec3f_std__allocatorT_Vec3f_t_t_std__allocatorT_std__vectorT_Vec3f_std__allocatorT_Vec3f_t_t_t_t_std__allocatorT_std__vectorT_std__vectorT_Vec3f_std__allocatorT_Vec3f_t_t_std__allocatorT_std__vectorT_Vec3f_std__allocatorT_Vec3f_t_t_t_t_t_t swig_types[100]
-#define SWIGTYPE_p_std__vectorT_unsigned_char_std__allocatorT_unsigned_char_t_t swig_types[101]
-#define SWIGTYPE_p_std__vectorT_unsigned_char_std__allocatorT_unsigned_char_t_t__allocator_type swig_types[102]
-#define SWIGTYPE_p_swig__SwigPyIterator swig_types[103]
-#define SWIGTYPE_p_unsigned_char swig_types[104]
-#define SWIGTYPE_p_unsigned_int swig_types[105]
-#define SWIGTYPE_p_unsigned_long swig_types[106]
-#define SWIGTYPE_p_unsigned_long_long swig_types[107]
-#define SWIGTYPE_p_value_type swig_types[108]
-static swig_type_info *swig_types[110];
-static swig_module_info swig_module = {swig_types, 109, 0, 0, 0, 0};
+#define SWIGTYPE_p_std__mapT_long_long_long_long_std__lessT_long_long_t_std__allocatorT_std__pairT_long_long_const_long_long_t_t_t swig_types[70]
+#define SWIGTYPE_p_std__mapT_std__string_std__string_std__lessT_std__string_t_std__allocatorT_std__pairT_std__string_const_std__string_t_t_t swig_types[71]
+#define SWIGTYPE_p_std__tr1__shared_ptrT_Batch_t swig_types[72]
+#define SWIGTYPE_p_std__tr1__shared_ptrT_EngineResource_t swig_types[73]
+#define SWIGTYPE_p_std__tr1__shared_ptrT_Graph_t swig_types[74]
+#define SWIGTYPE_p_std__tr1__shared_ptrT_Hpc_t swig_types[75]
+#define SWIGTYPE_p_std__tr1__shared_ptrT_Matf_t swig_types[76]
+#define SWIGTYPE_p_std__tr1__shared_ptrT_Octree_t swig_types[77]
+#define SWIGTYPE_p_std__tr1__shared_ptrT_Texture_t swig_types[78]
+#define SWIGTYPE_p_std__tr1__shared_ptrT_Vector_t swig_types[79]
+#define SWIGTYPE_p_std__tr1__shared_ptrT_std__mapT_std__string_std__string_std__lessT_std__string_t_std__allocatorT_std__pairT_std__string_const_std__string_t_t_t_t swig_types[80]
+#define SWIGTYPE_p_std__vectorT_Vec3f_std__allocatorT_Vec3f_t_t swig_types[81]
+#define SWIGTYPE_p_std__vectorT_Vec3f_std__allocatorT_Vec3f_t_t__allocator_type swig_types[82]
+#define SWIGTYPE_p_std__vectorT_Vec3f_std__allocatorT_Vec3f_t_t__value_type swig_types[83]
+#define SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t swig_types[84]
+#define SWIGTYPE_p_std__vectorT_float_std__allocatorT_float_t_t__allocator_type swig_types[85]
+#define SWIGTYPE_p_std__vectorT_int_std__allocatorT_int_t_t swig_types[86]
+#define SWIGTYPE_p_std__vectorT_int_std__allocatorT_int_t_t__allocator_type swig_types[87]
+#define SWIGTYPE_p_std__vectorT_std__string_std__allocatorT_std__string_t_t swig_types[88]
+#define SWIGTYPE_p_std__vectorT_std__string_std__allocatorT_std__string_t_t__allocator_type swig_types[89]
+#define SWIGTYPE_p_std__vectorT_std__tr1__shared_ptrT_Batch_t_std__allocatorT_std__tr1__shared_ptrT_Batch_t_t_t swig_types[90]
+#define SWIGTYPE_p_std__vectorT_std__tr1__shared_ptrT_Batch_t_std__allocatorT_std__tr1__shared_ptrT_Batch_t_t_t__allocator_type swig_types[91]
+#define SWIGTYPE_p_std__vectorT_std__tr1__shared_ptrT_EngineResource_t_std__allocatorT_std__tr1__shared_ptrT_EngineResource_t_t_t swig_types[92]
+#define SWIGTYPE_p_std__vectorT_std__tr1__shared_ptrT_EngineResource_t_std__allocatorT_std__tr1__shared_ptrT_EngineResource_t_t_t__allocator_type swig_types[93]
+#define SWIGTYPE_p_std__vectorT_std__tr1__shared_ptrT_Hpc_t_std__allocatorT_std__tr1__shared_ptrT_Hpc_t_t_t swig_types[94]
+#define SWIGTYPE_p_std__vectorT_std__tr1__shared_ptrT_Hpc_t_std__allocatorT_std__tr1__shared_ptrT_Hpc_t_t_t__allocator_type swig_types[95]
+#define SWIGTYPE_p_std__vectorT_std__tr1__shared_ptrT_Texture_t_std__allocatorT_std__tr1__shared_ptrT_Texture_t_t_t swig_types[96]
+#define SWIGTYPE_p_std__vectorT_std__tr1__shared_ptrT_Texture_t_std__allocatorT_std__tr1__shared_ptrT_Texture_t_t_t__allocator_type swig_types[97]
+#define SWIGTYPE_p_std__vectorT_std__vectorT_Vec3f_std__allocatorT_Vec3f_t_t_std__allocatorT_std__vectorT_Vec3f_std__allocatorT_Vec3f_t_t_t_t swig_types[98]
+#define SWIGTYPE_p_std__vectorT_std__vectorT_int_std__allocatorT_int_t_t_std__allocatorT_std__vectorT_int_std__allocatorT_int_t_t_t_t swig_types[99]
+#define SWIGTYPE_p_std__vectorT_std__vectorT_int_std__allocatorT_int_t_t_std__allocatorT_std__vectorT_int_std__allocatorT_int_t_t_t_t__allocator_type swig_types[100]
+#define SWIGTYPE_p_std__vectorT_std__vectorT_std__vectorT_Vec3f_std__allocatorT_Vec3f_t_t_std__allocatorT_std__vectorT_Vec3f_std__allocatorT_Vec3f_t_t_t_t_std__allocatorT_std__vectorT_std__vectorT_Vec3f_std__allocatorT_Vec3f_t_t_std__allocatorT_std__vectorT_Vec3f_std__allocatorT_Vec3f_t_t_t_t_t_t swig_types[101]
+#define SWIGTYPE_p_std__vectorT_unsigned_char_std__allocatorT_unsigned_char_t_t swig_types[102]
+#define SWIGTYPE_p_std__vectorT_unsigned_char_std__allocatorT_unsigned_char_t_t__allocator_type swig_types[103]
+#define SWIGTYPE_p_swig__SwigPyIterator swig_types[104]
+#define SWIGTYPE_p_unsigned_char swig_types[105]
+#define SWIGTYPE_p_unsigned_int swig_types[106]
+#define SWIGTYPE_p_unsigned_long swig_types[107]
+#define SWIGTYPE_p_unsigned_long_long swig_types[108]
+#define SWIGTYPE_p_value_type swig_types[109]
+static swig_type_info *swig_types[111];
+static swig_module_info swig_module = {swig_types, 110, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -26501,6 +26502,27 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_delete_SpinLock(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  SpinLock *arg1 = (SpinLock *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:delete_SpinLock",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_SpinLock, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_SpinLock" "', argument " "1"" of type '" "SpinLock *""'"); 
+  }
+  arg1 = reinterpret_cast< SpinLock * >(argp1);
+  delete arg1;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_SpinLock_Lock(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   SpinLock *arg1 = (SpinLock *) 0 ;
@@ -26536,27 +26558,6 @@ SWIGINTERN PyObject *_wrap_SpinLock_Unlock(PyObject *SWIGUNUSEDPARM(self), PyObj
   }
   arg1 = reinterpret_cast< SpinLock * >(argp1);
   (arg1)->Unlock();
-  resultobj = SWIG_Py_Void();
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_delete_SpinLock(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  SpinLock *arg1 = (SpinLock *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  
-  if (!PyArg_ParseTuple(args,(char *)"O:delete_SpinLock",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_SpinLock, SWIG_POINTER_DISOWN |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_SpinLock" "', argument " "1"" of type '" "SpinLock *""'"); 
-  }
-  arg1 = reinterpret_cast< SpinLock * >(argp1);
-  delete arg1;
   resultobj = SWIG_Py_Void();
   return resultobj;
 fail:
@@ -27469,6 +27470,39 @@ SWIGINTERN PyObject *_wrap_Archive_ReadRaw(PyObject *SWIGUNUSEDPARM(self), PyObj
   return resultobj;
 fail:
   if (alloc3 == SWIG_NEWOBJ) delete[] buf3;
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Archive_ExistsNode(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Archive *arg1 = (Archive *) 0 ;
+  std::string arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  bool result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:Archive_ExistsNode",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Archive, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Archive_ExistsNode" "', argument " "1"" of type '" "Archive *""'"); 
+  }
+  arg1 = reinterpret_cast< Archive * >(argp1);
+  {
+    std::string *ptr = (std::string *)0;
+    int res = SWIG_AsPtr_std_string(obj1, &ptr);
+    if (!SWIG_IsOK(res) || !ptr) {
+      SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), "in method '" "Archive_ExistsNode" "', argument " "2"" of type '" "std::string""'"); 
+    }
+    arg2 = *ptr;
+    if (SWIG_IsNewObj(res)) delete ptr;
+  }
+  result = (bool)(arg1)->ExistsNode(arg2);
+  resultobj = SWIG_From_bool(static_cast< bool >(result));
+  return resultobj;
+fail:
   return NULL;
 }
 
@@ -72088,28 +72122,6 @@ SWIGINTERN PyObject *Graph_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject
   return SWIG_Py_Void();
 }
 
-SWIGINTERN PyObject *_wrap_new_Engine(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  int64 arg1 ;
-  long long val1 ;
-  int ecode1 = 0 ;
-  PyObject * obj0 = 0 ;
-  Engine *result = 0 ;
-  
-  if (!PyArg_ParseTuple(args,(char *)"O:new_Engine",&obj0)) SWIG_fail;
-  ecode1 = SWIG_AsVal_long_SS_long(obj0, &val1);
-  if (!SWIG_IsOK(ecode1)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_Engine" "', argument " "1"" of type '" "int64""'");
-  } 
-  arg1 = static_cast< int64 >(val1);
-  result = (Engine *)new Engine(arg1);
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Engine, SWIG_POINTER_NEW |  0 );
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
 SWIGINTERN PyObject *_wrap_delete_Engine(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Engine *arg1 = (Engine *) 0 ;
@@ -73295,6 +73307,220 @@ SWIGINTERN PyObject *_wrap_Engine_getCurrentContext(PyObject *SWIGUNUSEDPARM(sel
   return resultobj;
 fail:
   return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_Engine(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Engine *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)":new_Engine")) SWIG_fail;
+  result = (Engine *)new Engine();
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Engine, SWIG_POINTER_NEW |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Engine_DC_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Engine *arg1 = (Engine *) 0 ;
+  int64 arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  long long val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:Engine_DC_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Engine, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Engine_DC_set" "', argument " "1"" of type '" "Engine *""'"); 
+  }
+  arg1 = reinterpret_cast< Engine * >(argp1);
+  ecode2 = SWIG_AsVal_long_SS_long(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Engine_DC_set" "', argument " "2"" of type '" "int64""'");
+  } 
+  arg2 = static_cast< int64 >(val2);
+  if (arg1) (arg1)->DC = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Engine_DC_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Engine *arg1 = (Engine *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  int64 result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Engine_DC_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Engine, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Engine_DC_get" "', argument " "1"" of type '" "Engine *""'"); 
+  }
+  arg1 = reinterpret_cast< Engine * >(argp1);
+  result = (int64) ((arg1)->DC);
+  resultobj = SWIG_From_long_SS_long(static_cast< long long >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Engine_RC_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Engine *arg1 = (Engine *) 0 ;
+  int64 arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  long long val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:Engine_RC_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Engine, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Engine_RC_set" "', argument " "1"" of type '" "Engine *""'"); 
+  }
+  arg1 = reinterpret_cast< Engine * >(argp1);
+  ecode2 = SWIG_AsVal_long_SS_long(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Engine_RC_set" "', argument " "2"" of type '" "int64""'");
+  } 
+  arg2 = static_cast< int64 >(val2);
+  if (arg1) (arg1)->RC = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Engine_RC_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Engine *arg1 = (Engine *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  int64 result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Engine_RC_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Engine, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Engine_RC_get" "', argument " "1"" of type '" "Engine *""'"); 
+  }
+  arg1 = reinterpret_cast< Engine * >(argp1);
+  result = (int64) ((arg1)->RC);
+  resultobj = SWIG_From_long_SS_long(static_cast< long long >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Engine_WC_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Engine *arg1 = (Engine *) 0 ;
+  int64 arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  long long val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:Engine_WC_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Engine, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Engine_WC_set" "', argument " "1"" of type '" "Engine *""'"); 
+  }
+  arg1 = reinterpret_cast< Engine * >(argp1);
+  ecode2 = SWIG_AsVal_long_SS_long(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Engine_WC_set" "', argument " "2"" of type '" "int64""'");
+  } 
+  arg2 = static_cast< int64 >(val2);
+  if (arg1) (arg1)->WC = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Engine_WC_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Engine *arg1 = (Engine *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  int64 result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Engine_WC_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Engine, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Engine_WC_get" "', argument " "1"" of type '" "Engine *""'"); 
+  }
+  arg1 = reinterpret_cast< Engine * >(argp1);
+  result = (int64) ((arg1)->WC);
+  resultobj = SWIG_From_long_SS_long(static_cast< long long >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN int Swig_var_Engine_wcs_set(PyObject *_val) {
+  {
+    void *argp = 0;
+    int res = SWIG_ConvertPtr(_val, &argp, SWIGTYPE_p_std__mapT_long_long_long_long_std__lessT_long_long_t_std__allocatorT_std__pairT_long_long_const_long_long_t_t_t,  0  | 0);
+    if (!SWIG_IsOK(res)) {
+      SWIG_exception_fail(SWIG_ArgError(res), "in variable '""Engine::wcs""' of type '""std::map< int64,int64,std::less< int64 >,std::allocator< std::pair< int64 const,int64 > > >""'");
+    }
+    if (!argp) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in variable '""Engine::wcs""' of type '""std::map< int64,int64,std::less< int64 >,std::allocator< std::pair< int64 const,int64 > > >""'");
+    } else {
+      std::map< int64,int64,std::less< int64 >,std::allocator< std::pair< int64 const,int64 > > > * temp;
+      temp  = reinterpret_cast< std::map< int64,int64,std::less< int64 >,std::allocator< std::pair< int64 const,int64 > > > * >(argp);
+      Engine::wcs = *temp;
+      if (SWIG_IsNewObj(res)) delete temp;
+    }
+  }
+  return 0;
+fail:
+  return 1;
+}
+
+
+SWIGINTERN PyObject *Swig_var_Engine_wcs_get(void) {
+  PyObject *pyobj = 0;
+  
+  pyobj = SWIG_NewPointerObj(SWIG_as_voidptr(&Engine::wcs), SWIGTYPE_p_std__mapT_long_long_long_long_std__lessT_long_long_t_std__allocatorT_std__pairT_long_long_const_long_long_t_t_t,  0 );
+  return pyobj;
+}
+
+
+SWIGINTERN PyObject *_wrap_Engine_wcs_get(PyObject *SWIGUNUSEDPARM(self), PyObject *SWIGUNUSEDPARM(args)) {
+  return Swig_var_Engine_wcs_get();
+}
+
+
+SWIGINTERN PyObject *_wrap_Engine_wcs_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *value;
+  int res;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:set",&value)) return NULL;
+  res = Swig_var_Engine_wcs_set(value);
+  return !res ? SWIG_Py_Void() : NULL;
 }
 
 
@@ -83198,9 +83424,9 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"delete_Keyboard", _wrap_delete_Keyboard, METH_VARARGS, NULL},
 	 { (char *)"Keyboard_swigregister", Keyboard_swigregister, METH_VARARGS, NULL},
 	 { (char *)"new_SpinLock", _wrap_new_SpinLock, METH_VARARGS, NULL},
+	 { (char *)"delete_SpinLock", _wrap_delete_SpinLock, METH_VARARGS, NULL},
 	 { (char *)"SpinLock_Lock", _wrap_SpinLock_Lock, METH_VARARGS, NULL},
 	 { (char *)"SpinLock_Unlock", _wrap_SpinLock_Unlock, METH_VARARGS, NULL},
-	 { (char *)"delete_SpinLock", _wrap_delete_SpinLock, METH_VARARGS, NULL},
 	 { (char *)"SpinLock_swigregister", SpinLock_swigregister, METH_VARARGS, NULL},
 	 { (char *)"new_Archive", _wrap_new_Archive, METH_VARARGS, NULL},
 	 { (char *)"delete_Archive", _wrap_delete_Archive, METH_VARARGS, NULL},
@@ -83228,6 +83454,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"Archive_ReadVectorFloat", _wrap_Archive_ReadVectorFloat, METH_VARARGS, NULL},
 	 { (char *)"Archive_WriteRaw", _wrap_Archive_WriteRaw, METH_VARARGS, NULL},
 	 { (char *)"Archive_ReadRaw", _wrap_Archive_ReadRaw, METH_VARARGS, NULL},
+	 { (char *)"Archive_ExistsNode", _wrap_Archive_ExistsNode, METH_VARARGS, NULL},
 	 { (char *)"Archive_SelfTest", _wrap_Archive_SelfTest, METH_VARARGS, NULL},
 	 { (char *)"Archive_swigregister", Archive_swigregister, METH_VARARGS, NULL},
 	 { (char *)"new_Encoder", _wrap_new_Encoder, METH_VARARGS, NULL},
@@ -84193,7 +84420,6 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"Graph_SelfTest", _wrap_Graph_SelfTest, METH_VARARGS, NULL},
 	 { (char *)"Graph_getBatch", _wrap_Graph_getBatch, METH_VARARGS, NULL},
 	 { (char *)"Graph_swigregister", Graph_swigregister, METH_VARARGS, NULL},
-	 { (char *)"new_Engine", _wrap_new_Engine, METH_VARARGS, NULL},
 	 { (char *)"delete_Engine", _wrap_delete_Engine, METH_VARARGS, NULL},
 	 { (char *)"Engine_Destroy", _wrap_Engine_Destroy, METH_VARARGS, NULL},
 	 { (char *)"Engine_GetDC", _wrap_Engine_GetDC, METH_VARARGS, NULL},
@@ -84220,6 +84446,15 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"Engine_SetPolygonOffset", _wrap_Engine_SetPolygonOffset, METH_VARARGS, NULL},
 	 { (char *)"Engine_Render", _wrap_Engine_Render, METH_VARARGS, NULL},
 	 { (char *)"Engine_getCurrentContext", _wrap_Engine_getCurrentContext, METH_VARARGS, NULL},
+	 { (char *)"new_Engine", _wrap_new_Engine, METH_VARARGS, NULL},
+	 { (char *)"Engine_DC_set", _wrap_Engine_DC_set, METH_VARARGS, NULL},
+	 { (char *)"Engine_DC_get", _wrap_Engine_DC_get, METH_VARARGS, NULL},
+	 { (char *)"Engine_RC_set", _wrap_Engine_RC_set, METH_VARARGS, NULL},
+	 { (char *)"Engine_RC_get", _wrap_Engine_RC_get, METH_VARARGS, NULL},
+	 { (char *)"Engine_WC_set", _wrap_Engine_WC_set, METH_VARARGS, NULL},
+	 { (char *)"Engine_WC_get", _wrap_Engine_WC_get, METH_VARARGS, NULL},
+	 { (char *)"Engine_wcs_get", _wrap_Engine_wcs_get, METH_VARARGS, NULL},
+	 { (char *)"Engine_wcs_set", _wrap_Engine_wcs_set, METH_VARARGS, NULL},
 	 { (char *)"Engine_swigregister", Engine_swigregister, METH_VARARGS, NULL},
 	 { (char *)"EngineResource_type_set", _wrap_EngineResource_type_set, METH_VARARGS, NULL},
 	 { (char *)"EngineResource_type_get", _wrap_EngineResource_type_get, METH_VARARGS, NULL},
@@ -84499,6 +84734,7 @@ static swig_type_info _swigt__p_polygon_set_t = {"_p_polygon_set_t", "polygon_se
 static swig_type_info _swigt__p_polygon_t = {"_p_polygon_t", "polygon_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_size_type = {"_p_size_type", "size_type *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__invalid_argument = {"_p_std__invalid_argument", "std::invalid_argument *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__mapT_long_long_long_long_std__lessT_long_long_t_std__allocatorT_std__pairT_long_long_const_long_long_t_t_t = {"_p_std__mapT_long_long_long_long_std__lessT_long_long_t_std__allocatorT_std__pairT_long_long_const_long_long_t_t_t", "std::map< int64,int64,std::less< int64 >,std::allocator< std::pair< int64 const,int64 > > > *|std::map< long long,long long,std::less< long long >,std::allocator< std::pair< long long const,long long > > > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__mapT_std__string_std__string_std__lessT_std__string_t_std__allocatorT_std__pairT_std__string_const_std__string_t_t_t = {"_p_std__mapT_std__string_std__string_std__lessT_std__string_t_std__allocatorT_std__pairT_std__string_const_std__string_t_t_t", "std::map< std::string,std::string,std::less< std::string >,std::allocator< std::pair< std::string const,std::string > > > *|PropertySet *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__tr1__shared_ptrT_Batch_t = {"_p_std__tr1__shared_ptrT_Batch_t", "std::tr1::shared_ptr< Batch > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__tr1__shared_ptrT_EngineResource_t = {"_p_std__tr1__shared_ptrT_EngineResource_t", "std::tr1::shared_ptr< EngineResource > *", 0, 0, (void*)0, 0};
@@ -84610,6 +84846,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_polygon_t,
   &_swigt__p_size_type,
   &_swigt__p_std__invalid_argument,
+  &_swigt__p_std__mapT_long_long_long_long_std__lessT_long_long_t_std__allocatorT_std__pairT_long_long_const_long_long_t_t_t,
   &_swigt__p_std__mapT_std__string_std__string_std__lessT_std__string_t_std__allocatorT_std__pairT_std__string_const_std__string_t_t_t,
   &_swigt__p_std__tr1__shared_ptrT_Batch_t,
   &_swigt__p_std__tr1__shared_ptrT_EngineResource_t,
@@ -84721,6 +84958,7 @@ static swig_cast_info _swigc__p_polygon_set_t[] = {  {&_swigt__p_polygon_set_t, 
 static swig_cast_info _swigc__p_polygon_t[] = {  {&_swigt__p_polygon_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_size_type[] = {  {&_swigt__p_size_type, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__invalid_argument[] = {  {&_swigt__p_std__invalid_argument, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__mapT_long_long_long_long_std__lessT_long_long_t_std__allocatorT_std__pairT_long_long_const_long_long_t_t_t[] = {  {&_swigt__p_std__mapT_long_long_long_long_std__lessT_long_long_t_std__allocatorT_std__pairT_long_long_const_long_long_t_t_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__mapT_std__string_std__string_std__lessT_std__string_t_std__allocatorT_std__pairT_std__string_const_std__string_t_t_t[] = {  {&_swigt__p_std__mapT_std__string_std__string_std__lessT_std__string_t_std__allocatorT_std__pairT_std__string_const_std__string_t_t_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__tr1__shared_ptrT_Batch_t[] = {  {&_swigt__p_std__tr1__shared_ptrT_Batch_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__tr1__shared_ptrT_EngineResource_t[] = {  {&_swigt__p_std__tr1__shared_ptrT_EngineResource_t, 0, 0, 0},{0, 0, 0, 0}};
@@ -84832,6 +85070,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_polygon_t,
   _swigc__p_size_type,
   _swigc__p_std__invalid_argument,
+  _swigc__p_std__mapT_long_long_long_long_std__lessT_long_long_t_std__allocatorT_std__pairT_long_long_const_long_long_t_t_t,
   _swigc__p_std__mapT_std__string_std__string_std__lessT_std__string_t_std__allocatorT_std__pairT_std__string_const_std__string_t_t_t,
   _swigc__p_std__tr1__shared_ptrT_Batch_t,
   _swigc__p_std__tr1__shared_ptrT_EngineResource_t,
@@ -85481,6 +85720,7 @@ SWIG_init(void) {
   SWIG_Python_SetConstant(d, "ENGINE_ENABLE_FBO",SWIG_From_int(static_cast< int >(0)));
   SWIG_Python_SetConstant(d, "ENGINE_ENABLE_SHADERS",SWIG_From_int(static_cast< int >(0)));
   SWIG_Python_SetConstant(d, "ENGINE_ENABLE_SHADOW_SHADER",SWIG_From_int(static_cast< int >(0)));
+  SWIG_Python_SetConstant(d, "USE_JUCE",SWIG_From_int(static_cast< int >(1)));
   SWIG_Python_SetConstant(d, "Keyboard_Key_Left",SWIG_From_int(static_cast< int >(Keyboard::Key_Left)));
   SWIG_Python_SetConstant(d, "Keyboard_Key_Up",SWIG_From_int(static_cast< int >(Keyboard::Key_Up)));
   SWIG_Python_SetConstant(d, "Keyboard_Key_Right",SWIG_From_int(static_cast< int >(Keyboard::Key_Right)));
@@ -85545,6 +85785,7 @@ SWIG_init(void) {
   SWIG_Python_SetConstant(d, "Engine_CULL_DISABLE",SWIG_From_int(static_cast< int >(Engine::CULL_DISABLE)));
   SWIG_Python_SetConstant(d, "Engine_CULL_CCW",SWIG_From_int(static_cast< int >(Engine::CULL_CCW)));
   SWIG_Python_SetConstant(d, "Engine_CULL_CW",SWIG_From_int(static_cast< int >(Engine::CULL_CW)));
+  SWIG_addvarlink(SWIG_globals(),(char*)"Engine_wcs",Swig_var_Engine_wcs_get, Swig_var_Engine_wcs_set);
   SWIG_Python_SetConstant(d, "EngineResource_RESOURCE_UNKNOWN",SWIG_From_int(static_cast< int >(EngineResource::RESOURCE_UNKNOWN)));
   SWIG_Python_SetConstant(d, "EngineResource_RESOURCE_ARRAY_BUFFER",SWIG_From_int(static_cast< int >(EngineResource::RESOURCE_ARRAY_BUFFER)));
   SWIG_Python_SetConstant(d, "EngineResource_RESOURCE_RENDER_BUFFER",SWIG_From_int(static_cast< int >(EngineResource::RESOURCE_RENDER_BUFFER)));

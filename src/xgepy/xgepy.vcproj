@@ -195,7 +195,7 @@
 				<Tool
 					Name="VCCustomBuildTool"
 					Description="Swig CPython"
-					CommandLine="swig.exe -c++ -python -I&quot;$(SolutionDir)src&quot; -o $(ProjectName).cpp &quot;$(InputDir)$(InputFilename)&quot;&#x0D;&#x0A;"
+					CommandLine="&quot;C:\Program Files\swig\swig.exe&quot; -c++ -python -I&quot;$(SolutionDir)src&quot; -o $(ProjectName).cpp &quot;$(InputDir)$(InputFilename)&quot;&#x0D;&#x0A;"
 					Outputs="$(ProjectDir)$(ProjectName).cpp"
 				/>
 			</FileConfiguration>
@@ -205,7 +205,7 @@
 				<Tool
 					Name="VCCustomBuildTool"
 					Description="Swig CPython"
-					CommandLine="swig.exe -c++ -python -I&quot;$(SolutionDir)src&quot; -o $(ProjectName).cpp &quot;$(InputDir)$(InputFilename)&quot;&#x0D;&#x0A;"
+					CommandLine="&quot;C:\Program Files\swig\swig.exe&quot; -c++ -python -I&quot;$(SolutionDir)src&quot; -o $(ProjectName).cpp &quot;$(InputDir)$(InputFilename)&quot;&#x0D;&#x0A;"
 					Outputs="$(ProjectDir)$(ProjectName).cpp"
 				/>
 			</FileConfiguration>

@@ -10,17 +10,17 @@ int main(int nargs,char** argv)
 {	
 
 
-	{
-		//=Plasm::getBatches(Plasm::cube(3,0,1));
-		//Batch::Save(":prova.batches.xml",batches);
+	//{
+	//	//=Plasm::getBatches(Plasm::cube(3,0,1));
+	//	//Batch::Save(":prova.batches.xml",batches);
 
-		std::vector<SmartPointer<Batch> > batches=Batch::Open(":symbols/Human.mesh.gz");
+	//	std::vector<SmartPointer<Batch> > batches=Batch::Open(":symbols/Human.mesh.gz");
 
-		Batch::saveObj(":symbols/human.obj",batches);
+	//	Batch::saveObj(":symbols/human.obj",batches);
 
-	
-		return 0;
-	}
+	//
+	//	return 0;
+	//}
 		
 	//pisa model
 	if (false)
@@ -146,6 +146,31 @@ int main(int nargs,char** argv)
 		return 0;
 	}
 	
+	/*if (true)
+	{
+		std::vector<SmartPointer<Batch> >  batches=Plasm::getBatches(Plasm::open(":models/temple.hpc.xml"));
+		SmartPointer<Octree> octree(new Octree(batches));
+		Viewer viewer(octree);
+		viewer.Run();
+		viewer.Wait();
+		return 0;
+	}*/
+
+
+	//test two background viewer sharing VBO
+	if (true)
+	{
+		std::vector<SmartPointer<Batch> >  batches=Plasm::getBatches(Plasm::open(":models/temple.hpc.xml"));
+		SmartPointer<Octree> octree(new Octree(batches));
+		Viewer v1(octree);
+		Viewer v2(octree);
+		v1.Run();
+		v2.Run();
+		v1.Wait();
+		v2.Wait();
+	}
+
+	Plasm::SelfTest();
 
 		//self testing
 	Engine::PrintStatistics();

@@ -124,6 +124,9 @@ public:
 	//wait for all process to end
 	virtual void Wait();
 
+	//! wait for a single worker
+	virtual void Wait(int nworker);
+
 	// to sleep a certain amount of millisec
 	static void Sleep(unsigned int msec);
 

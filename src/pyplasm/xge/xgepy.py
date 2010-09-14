@@ -589,6 +589,7 @@ ENGINE_ENABLE_TESSELLATOR = _xgepy.ENGINE_ENABLE_TESSELLATOR
 ENGINE_ENABLE_FBO = _xgepy.ENGINE_ENABLE_FBO
 ENGINE_ENABLE_SHADERS = _xgepy.ENGINE_ENABLE_SHADERS
 ENGINE_ENABLE_SHADOW_SHADER = _xgepy.ENGINE_ENABLE_SHADOW_SHADER
+USE_JUCE = _xgepy.USE_JUCE
 class Utils(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, Utils, name, value)
@@ -842,10 +843,10 @@ class SpinLock(_object):
         this = _xgepy.new_SpinLock(max_delta_time)
         try: self.this.append(this)
         except: self.this = this
-    def Lock(self): return _xgepy.SpinLock_Lock(self)
-    def Unlock(self): return _xgepy.SpinLock_Unlock(self)
     __swig_destroy__ = _xgepy.delete_SpinLock
     __del__ = lambda self : None;
+    def Lock(self): return _xgepy.SpinLock_Lock(self)
+    def Unlock(self): return _xgepy.SpinLock_Unlock(self)
 SpinLock_swigregister = _xgepy.SpinLock_swigregister
 SpinLock_swigregister(SpinLock)
 
@@ -885,6 +886,7 @@ class Archive(_object):
     def ReadVectorFloat(self, *args): return _xgepy.Archive_ReadVectorFloat(self, *args)
     def WriteRaw(self, *args): return _xgepy.Archive_WriteRaw(self, *args)
     def ReadRaw(self, *args): return _xgepy.Archive_ReadRaw(self, *args)
+    def ExistsNode(self, *args): return _xgepy.Archive_ExistsNode(self, *args)
     __swig_getmethods__["SelfTest"] = lambda x: _xgepy.Archive_SelfTest
     if _newclass:SelfTest = staticmethod(_xgepy.Archive_SelfTest)
 Archive_swigregister = _xgepy.Archive_swigregister
@@ -2912,10 +2914,6 @@ class Engine(_object):
     CULL_DISABLE = _xgepy.Engine_CULL_DISABLE
     CULL_CCW = _xgepy.Engine_CULL_CCW
     CULL_CW = _xgepy.Engine_CULL_CW
-    def __init__(self, *args): 
-        this = _xgepy.new_Engine(*args)
-        try: self.this.append(this)
-        except: self.this = this
     __swig_destroy__ = _xgepy.delete_Engine
     __del__ = lambda self : None;
     def Destroy(self): return _xgepy.Engine_Destroy(self)
@@ -2946,6 +2944,22 @@ class Engine(_object):
     def Render(self, *args): return _xgepy.Engine_Render(self, *args)
     __swig_getmethods__["getCurrentContext"] = lambda x: _xgepy.Engine_getCurrentContext
     if _newclass:getCurrentContext = staticmethod(_xgepy.Engine_getCurrentContext)
+    def __init__(self): 
+        this = _xgepy.new_Engine()
+        try: self.this.append(this)
+        except: self.this = this
+    __swig_setmethods__["DC"] = _xgepy.Engine_DC_set
+    __swig_getmethods__["DC"] = _xgepy.Engine_DC_get
+    if _newclass:DC = _swig_property(_xgepy.Engine_DC_get, _xgepy.Engine_DC_set)
+    __swig_setmethods__["RC"] = _xgepy.Engine_RC_set
+    __swig_getmethods__["RC"] = _xgepy.Engine_RC_get
+    if _newclass:RC = _swig_property(_xgepy.Engine_RC_get, _xgepy.Engine_RC_set)
+    __swig_setmethods__["WC"] = _xgepy.Engine_WC_set
+    __swig_getmethods__["WC"] = _xgepy.Engine_WC_get
+    if _newclass:WC = _swig_property(_xgepy.Engine_WC_get, _xgepy.Engine_WC_set)
+    __swig_setmethods__["wcs"] = _xgepy.Engine_wcs_set
+    __swig_getmethods__["wcs"] = _xgepy.Engine_wcs_get
+    if _newclass:wcs = _swig_property(_xgepy.Engine_wcs_get, _xgepy.Engine_wcs_set)
 Engine_swigregister = _xgepy.Engine_swigregister
 Engine_swigregister(Engine)
 

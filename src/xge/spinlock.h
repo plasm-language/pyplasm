@@ -1,12 +1,8 @@
 #ifndef _SPIN_LOCK_H__
 
 #include <xge/xge.h>
-
-#ifdef Darwin
-#include <libkern/OSAtomic.h>
-#endif
-
 #include <xge/thread.h>
+
 
 /*!
 Class for very fast lock with active sleep
@@ -18,6 +14,8 @@ public:
 
 	//! default constructor
 	inline SpinLock(int max_delta_time=SPIN_LOCK_DEFAULT_MAX_DELTA_TIME);
+
+	inline ~SpinLock();
 
 	//! lock a resource
 	inline void Lock();
@@ -31,10 +29,8 @@ private:
 
 #ifdef _WINDOWS
 	long value;
-#endif
-
-#ifdef Darwin
-	OSSpinLock value;
+#else
+	pthread_spinlock_t __lock;
 #endif
 
 	int  max_delta_time;

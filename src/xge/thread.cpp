@@ -124,20 +124,27 @@ bool Thread::Done()
 
 //------------------------------------------------------------------------
 //------------------------------------------------------------------------
+void Thread::Wait(int nworker)
+{
+	if (workers[nworker].running)
+	{
+		#ifdef WIN32
+		WaitForSingleObject(workers[nworker].winhandle, 0xFFFFFFFF);
+		#else	
+		void* status;
+		pthread_join(workers[nworker].thread,&status);
+		#endif
+	}
+}
+
+//------------------------------------------------------------------------
+//------------------------------------------------------------------------
 void Thread::Wait()
 {
 	//wait all threads
 	for (int i=0;i<nworkers;i++)
 	{
-		if (workers[i].running)
-		{
-			#ifdef WIN32
-			WaitForSingleObject(workers[i].winhandle, 0xFFFFFFFF);
-			#else	
-			void* status;
-			pthread_join(workers[i].thread,&status);
-			#endif
-		}
+		Wait(i);
 	}
 }	
 

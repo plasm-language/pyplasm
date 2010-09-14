@@ -1,5 +1,7 @@
 #include <xge/xge.h>
 #include <xge/engine.h>
+
+
 #include <GL/glew.h>
 
 //check opengl error
@@ -23,107 +25,260 @@ std::map<int64,int64> Engine::wcs;
 //special shutting down signals
 static bool _shutting_down=false;
 
-//force the creation of the context at the beginnint
-Engine* Engine::_shared_context=new Engine();
+#ifndef USE_JUCE
+static Engine* _shared_context=new Engine();
 
+#else //USE_JUCE
+
+#define DONT_SET_USING_JUCE_NAMESPACE 1
+#include <juce/juce_amalgamated.h>
+
+//create as Juce has been properly initialized
+static Engine* _shared_context=0;
+
+#endif //USE_JUCE
+
+
+///////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+void Engine::initializeGL()
+{
+	ReleaseAssert(this->RC);
+	this->WC =(int64)(new GLEWContext());
+	Engine::wcs[this->RC]=this->WC;
+
+	bool ok=this->Bind();
+	ReleaseAssert(ok);
+
+	#define glewGetContext() ((GLEWContext*)this->WC)
+
+	#ifdef Darwin
+	static bool _glew_init_needed=true;
+	#else
+	bool _glew_init_needed=true;
+	#endif
+
+	if (_glew_init_needed)
+	{
+		_glew_init_needed=false;
+		int retcode=glewInit();
+		ReleaseAssert(retcode==GLEW_OK);
+		ReleaseAssert(glewIsSupported("GL_VERSION_2_0"));
+	}
+	
+	glEnable(GL_LIGHTING);
+	glEnable(GL_POINT_SMOOTH);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_NORMALIZE);
+	glShadeModel(GL_SMOOTH);
+	glDepthFunc(GL_LEQUAL);
+	glDisable(GL_COLOR_MATERIAL);
+	glDisable(GL_CULL_FACE);
+	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+	glClearDepth(1.0f);
+	glClearColor(0.3f,0.4f,0.5f, 0.00f);
+
+	glLightModelf(GL_LIGHT_MODEL_TWO_SIDE,0);
+	static float white[]={+1.00f,+1.00f,+1.00f,+1.00f};
+	glLightfv(GL_LIGHT0,GL_AMBIENT ,white);
+	glLightfv(GL_LIGHT0,GL_DIFFUSE ,white);
+	glLightfv(GL_LIGHT0,GL_SPECULAR,white);
+	glLightfv(GL_LIGHT0, GL_EMISSION, white);
+
+	glActiveTexture       (GL_TEXTURE1);
+	glClientActiveTexture (GL_TEXTURE1);
+	glTexParameteri       (GL_TEXTURE_2D , GL_TEXTURE_WRAP_S     ,GL_REPEAT);
+	glTexParameteri       (GL_TEXTURE_2D , GL_TEXTURE_WRAP_T     ,GL_REPEAT);
+	glTexParameterf       (GL_TEXTURE_2D , GL_TEXTURE_MAG_FILTER ,GL_LINEAR);
+	glTexEnvf             (GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE   ,GL_MODULATE);
+	glTexParameteri       (GL_TEXTURE_2D  ,GL_TEXTURE_MIN_FILTER ,GL_NEAREST_MIPMAP_LINEAR);
+
+	glActiveTexture       (GL_TEXTURE0);
+	glClientActiveTexture (GL_TEXTURE0);
+	glTexParameteri       (GL_TEXTURE_2D , GL_TEXTURE_WRAP_S     ,GL_REPEAT);
+	glTexParameteri       (GL_TEXTURE_2D , GL_TEXTURE_WRAP_T     ,GL_REPEAT);
+	glTexParameterf       (GL_TEXTURE_2D , GL_TEXTURE_MAG_FILTER ,GL_LINEAR);
+	glTexEnvf             (GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE   ,GL_MODULATE);
+	glTexParameteri       (GL_TEXTURE_2D  ,GL_TEXTURE_MIN_FILTER ,GL_NEAREST_MIPMAP_LINEAR);
+
+	#undef glewGetContext
+
+	this->Unbind();
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 Engine::Engine()
 {
-	//important before the CreateContext will use this
-	_shared_context=this;
-	this->DC=0;
-	CreateContext();
-	ReleaseAssert(this->DC && this->RC);
-	this->WC =(int64)(new GLEWContext());
-	this->wcs[this->RC]=this->WC;
-	Initialize();
+	#ifdef USE_JUCE
+	{ 
+		this->DC=0;
+		this->RC=0;
+		this->WC=0;
+	}
+	#else
+	{
+		ReleaseAssert(!_shared_context);
+		_shared_context=this;
+		HINSTANCE hInstance = GetModuleHandle(NULL);
+		WNDCLASS  wc;
+		wc.style         = 0;                           
+		wc.lpfnWndProc   = (WNDPROC)DefWindowProc;         
+		wc.cbClsExtra    = 0;                           
+		wc.cbWndExtra    = 0;                           
+		wc.hInstance     = hInstance;                  
+		wc.hIcon         = LoadIcon(NULL, IDI_WINLOGO); 
+		wc.hCursor       = LoadCursor(NULL, IDC_ARROW); 
+		wc.hbrBackground = NULL;                        
+		wc.lpszMenuName  = NULL;                        
+		wc.lpszClassName = L"_xge_engine_dc";              
+		BOOL ok=RegisterClass(&wc);
+		HWND hWnd=CreateWindow(L"_xge_engine_dc",L"_xge_engine_dc",WS_OVERLAPPEDWINDOW | WS_CLIPSIBLINGS | WS_CLIPCHILDREN, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,NULL,NULL,hInstance,NULL);		ReleaseAssert(hWnd);
+		this->DC = (int64)::GetDC(hWnd);ReleaseAssert(this->DC);
+		PIXELFORMATDESCRIPTOR pfd;
+		ZeroMemory( &pfd, sizeof( pfd ) );
+		pfd.nSize = sizeof( pfd );
+		pfd.nVersion = 1;
+		pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL |  PFD_DOUBLEBUFFER | PFD_SWAP_COPY;
+		pfd.iPixelType = PFD_TYPE_RGBA;
+		pfd.cColorBits = 32;
+		pfd.cAlphaBits = 8;
+		pfd.cDepthBits = 24;
+		pfd.iLayerType = PFD_MAIN_PLANE;
+		int format = ChoosePixelFormat((HDC)this->DC, &pfd );
+		ok=SetPixelFormat((HDC)this->DC, format, &pfd );
+		ReleaseAssert(ok);
+		HGLRC context = wglCreateContext((HDC)this->DC);
+		ReleaseAssert(context);
+		this->RC=(int64)context;ReleaseAssert(this->RC);
+		ok=wglMakeCurrent((HDC)DC,(HGLRC)context);
+		ReleaseAssert(ok);
+		ok=wglUseFontBitmapsW((HDC)DC, 0, 256, FONT_DISPLAY_LIST_BASE);
+		ReleaseAssert(ok);
+		wglMakeCurrent(0,0);
+		initializeGL();
+		
+	}
+	#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
+
+#ifndef USE_JUCE
+
 Engine::Engine(int64 DC)
 {
 	ReleaseAssert(DC);
 	this->DC=DC;
-	CreateContext();
-	ReleaseAssert(this->RC);
-	this->WC =(int64)(new GLEWContext());
-	this->wcs[this->RC]=this->WC;
-	Initialize();
 
-
-}
-
-
-///////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////
-void Engine::Initialize()
-{
-	//initialize glew for necessary opengl extension
-	bool ok=this->Bind();
-	
+	PIXELFORMATDESCRIPTOR pfd;
+	ZeroMemory( &pfd, sizeof( pfd ) );
+	pfd.nSize = sizeof( pfd );
+	pfd.nVersion = 1;
+	pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL |  PFD_DOUBLEBUFFER | PFD_SWAP_COPY;
+	pfd.iPixelType = PFD_TYPE_RGBA;
+	pfd.cColorBits = 32;
+	pfd.cAlphaBits = 8;
+	pfd.cDepthBits = 24;
+	pfd.iLayerType = PFD_MAIN_PLANE;
+	int format = ChoosePixelFormat((HDC)this->DC, &pfd );
+	BOOL ok=SetPixelFormat((HDC)this->DC, format, &pfd );
 	ReleaseAssert(ok);
+
+	//create the Windows HGLRC context
+	HGLRC context = wglCreateContext((HDC)this->DC);
+	ReleaseAssert(context);
+	this->RC=(int64)context;ReleaseAssert(this->RC);
+
+	//shared context
+	ReleaseAssert(_shared_context);
+	_shared_context->lock.Lock();
 	{
-		#define glewGetContext() ((GLEWContext*)this->WC)
-
-		bool _need_glew_init=true;
-
-		//do only one time!
-		#ifdef Darwin
-		_need_glew_init=this==_shared_context;
-		#endif
-
-		if (_need_glew_init)
-		{
-			int retcode=glewInit();
-			ReleaseAssert(retcode==GLEW_OK);
-			ReleaseAssert(glewIsSupported("GL_VERSION_2_0"));
-		}
-
-		glEnable(GL_LIGHTING);
-		glEnable(GL_POINT_SMOOTH);
-		glEnable(GL_DEPTH_TEST);
-		glEnable(GL_NORMALIZE);
-		glShadeModel(GL_SMOOTH);
-		glDepthFunc(GL_LEQUAL);
-		glDisable(GL_COLOR_MATERIAL);
-		glDisable(GL_CULL_FACE);
-		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-		glClearDepth(1.0f);
-		//glClearColor(0.6f,0.8f,1, 0.00f);
-		glClearColor(0.3f,0.4f,0.5f, 0.00f);
-
-		glLightModelf(GL_LIGHT_MODEL_TWO_SIDE,0);
-		static float white[]={+1.00f,+1.00f,+1.00f,+1.00f};
-		glLightfv(GL_LIGHT0,GL_AMBIENT ,white);
-		glLightfv(GL_LIGHT0,GL_DIFFUSE ,white);
-		glLightfv(GL_LIGHT0,GL_SPECULAR,white);
-		glLightfv(GL_LIGHT0, GL_EMISSION, white);
-
-		glActiveTexture       (GL_TEXTURE1);
-		glClientActiveTexture (GL_TEXTURE1);
-		glTexParameteri (GL_TEXTURE_2D , GL_TEXTURE_WRAP_S     ,GL_REPEAT);
-		glTexParameteri (GL_TEXTURE_2D , GL_TEXTURE_WRAP_T     ,GL_REPEAT);
-		glTexParameterf (GL_TEXTURE_2D , GL_TEXTURE_MAG_FILTER ,GL_LINEAR);
-		glTexEnvf       (GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE   ,GL_MODULATE);
-		glTexParameteri (GL_TEXTURE_2D  ,GL_TEXTURE_MIN_FILTER ,GL_NEAREST_MIPMAP_LINEAR);
-
-		glActiveTexture       (GL_TEXTURE0);
-		glClientActiveTexture (GL_TEXTURE0);
-		glTexParameteri (GL_TEXTURE_2D , GL_TEXTURE_WRAP_S     ,GL_REPEAT);
-		glTexParameteri (GL_TEXTURE_2D , GL_TEXTURE_WRAP_T     ,GL_REPEAT);
-		glTexParameterf (GL_TEXTURE_2D , GL_TEXTURE_MAG_FILTER ,GL_LINEAR);
-		glTexEnvf       (GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE   ,GL_MODULATE);
-		glTexParameteri (GL_TEXTURE_2D  ,GL_TEXTURE_MIN_FILTER ,GL_NEAREST_MIPMAP_LINEAR);
-
-		#undef glewGetContext
+		BOOL ok=wglShareLists((HGLRC)_shared_context->RC,context);
+		ReleaseAssert(ok);
 	}
-	this->Unbind();
+	_shared_context->lock.Unlock();
+
+	initializeGL();
 }
 
+#endif
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////
+bool Engine::Bind()
+{
+	bool ret;
+	this->lock.Lock();
+	ReleaseAssert(DC && RC);
+
+	#ifndef USE_JUCE
+		BOOL ok=wglMakeCurrent((HDC)DC,(HGLRC)RC);
+		ret=(ok!=0);
+	#else
+		juce::OpenGLContext* context=(juce::OpenGLContext*)this->RC;
+		ret=context && context->makeActive();
+	#endif
+
+	return ret;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+bool Engine::Unbind()
+{
+	bool ret;
+	ReleaseAssert(DC && RC);
+
+	#ifndef USE_JUCE
+		BOOL ok=wglMakeCurrent(NULL,NULL);
+		ret=(ok!=0);
+	#else
+		juce::OpenGLContext* context=(juce::OpenGLContext*)this->RC;
+		ret=context && context->makeInactive();
+	#endif
+
+	this->lock.Unlock();
+	return ret;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////
+int64 Engine::getCurrentContext()
+{
+	int64 ret;
+	#ifndef USE_JUCE
+		ret=(int64)wglGetCurrentContext();
+	#else
+		ret=(int64)juce::OpenGLContext::getCurrentContext();
+	#endif
+	return ret;
+}
+
+
+////////////////////////////////////////////////////////////
+void Engine::FlushScreen()
+{
+	#ifndef USE_JUCE
+		wglSwapLayerBuffers((HDC)this->DC, WGL_SWAP_MAIN_PLANE);
+	#else
+		juce::OpenGLContext* context=(juce::OpenGLContext*)this->RC;
+		if (context) context->swapBuffers();
+	#endif
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+void Engine::DestroyContext()
+{
+	#ifndef USE_JUCE
+		ReleaseAssert(this->RC);
+		wglDeleteContext((HGLRC)this->RC);
+	#else
+		;//nothing to do
+	#endif
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -146,6 +301,415 @@ void Engine::PrintStatistics()
 	Log::printf("[OpenGL Engine] object texture        %d\n",_locked_objects[EngineResource::RESOURCE_TEXTURE]);
 	Log::printf("\n");
 }
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////
+#ifndef USE_JUCE
+
+static LONG WINAPI viewer_dispatcher(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{ 
+	Viewer* viewer=(Viewer*)GetWindowLongPtr(hWnd, GWL_USERDATA);
+
+	POINT point;
+	GetCursorPos(&point);ScreenToClient(hWnd, &point);
+	
+	switch(uMsg) 
+	{
+		case WM_CLOSE  : viewer->Close()                              ;return 0; 
+		case WM_NCPAINT: viewer->Redisplay()                          ;break; 
+		case WM_SIZE   : viewer->Resize(LOWORD(lParam),HIWORD(lParam));break; 
+		case WM_CHAR   : viewer->Keyboard(wParam,point.x,point.y)     ;return 0; 
+
+		case WM_KEYDOWN:
+			if (LOWORD(wParam)>=Keyboard::Key_Left && LOWORD(wParam)<=Keyboard::Key_Down)
+				viewer->Keyboard(LOWORD(wParam),point.x,point.y);
+			return 0; 
+
+		case WM_LBUTTONDOWN:case WM_MBUTTONDOWN:case WM_RBUTTONDOWN:
+		{
+			MouseEvent args;
+			args.type  =MouseEvent::MousePressed;
+			args.button=((uMsg==WM_LBUTTONDOWN)?MouseEvent::LeftButton:(uMsg==WM_RBUTTONDOWN?MouseEvent::RightButton:MouseEvent::MidButton));
+			args.x=LOWORD(lParam);
+			args.y=HIWORD(lParam);
+			viewer->Mouse(args);
+			return 0; 
+		}
+		case WM_LBUTTONUP:case WM_MBUTTONUP:case WM_RBUTTONUP:
+		{
+			MouseEvent args;
+			args.type=MouseEvent::MouseReleased;
+			args.button=((uMsg==WM_LBUTTONDOWN)?MouseEvent::LeftButton:(uMsg==WM_RBUTTONDOWN?MouseEvent::RightButton:MouseEvent::MidButton));
+			args.x=LOWORD(lParam);
+			args.y=HIWORD(lParam);
+			viewer->Mouse(args);
+			return 0; 
+		}
+		case WM_MOUSEWHEEL:
+		{
+			MouseEvent args;
+			args.type=MouseEvent::MouseWheel;
+			args.button=MouseEvent::NoButton;
+			args.delta=GET_WHEEL_DELTA_WPARAM(wParam);
+			args.x=point.x;args.y=point.y;
+			viewer->Mouse(args);
+			return 0; 
+		}
+		case WM_MOUSEMOVE:
+		{
+			MouseEvent args;
+			args.type=MouseEvent::MouseMoved;
+			args.button=((wParam & MK_LBUTTON)?MouseEvent::LeftButton :0) | ((wParam & MK_MBUTTON)?MouseEvent::MidButton  :0) | ((wParam & MK_RBUTTON)?MouseEvent::RightButton:0);
+			args.x=LOWORD(lParam);args.y=HIWORD(lParam);
+			viewer->Mouse(args);
+			return 0; 
+		}			
+	}
+
+	return DefWindowProc(hWnd, uMsg, wParam, lParam); 
+} 
+
+
+void Viewer::doJob(int nworker)
+{
+	//***************************
+	//this is the driver
+	//***************************
+	if (nworker==0)
+	{
+		//it's important to create the window in this thread otherwise it does not work
+		HINSTANCE hInstance = GetModuleHandle(NULL);
+		WNDCLASS  wc;
+		wc.style         = 0;                           
+		wc.lpfnWndProc   = (WNDPROC)viewer_dispatcher;         
+		wc.cbClsExtra    = 0;                           
+		wc.cbWndExtra    = 0;                           
+		wc.hInstance     = hInstance;                  
+		wc.hIcon         = LoadIcon(NULL, IDI_WINLOGO); 
+		wc.hCursor       = LoadCursor(NULL, IDC_ARROW); 
+		wc.hbrBackground = NULL;                        
+		wc.lpszMenuName  = NULL;                        
+		wc.lpszClassName = L"XgeViewer";              
+		BOOL ok=RegisterClass(&wc);
+
+		HWND hWnd=CreateWindow(L"XgeViewer",L"XgeViewer",WS_OVERLAPPEDWINDOW | WS_CLIPSIBLINGS | WS_CLIPCHILDREN, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,NULL,NULL,hInstance,NULL);
+		ReleaseAssert(hWnd);
+
+		SetWindowLongPtr(hWnd,GWLP_USERDATA, (LONG_PTR)this);
+		ShowWindow(hWnd, SW_SHOW);
+		SetForegroundWindow(hWnd);
+		UpdateWindow(hWnd);
+		HDC hDC=GetDC(hWnd);
+		this->engine=new Engine((int64)hDC);	
+
+		while (true)
+		{
+			//signal to close the window
+			if (m_close)
+				break;
+
+			MSG msg;
+			if (GetMessage(&msg, hWnd, 0, 0)) 
+			{
+				TranslateMessage(&msg); 
+				DispatchMessage (&msg);
+			}
+
+			Thread::Sleep(10);//CPU polite
+		}
+
+		this->m_close=true;
+		Thread::Wait(1);
+		delete this->engine;
+		this->engine=0;
+
+		ReleaseDC(hWnd,hDC);
+		DestroyWindow(hWnd);
+		hWnd=0;
+		return;
+	}
+
+	//************************
+	//*** rendering thread ***
+	//************************
+	
+	while (!this->engine) Thread::Sleep(10);
+	this->engine->Bind();
+	while (true)
+	{
+		while (!m_redisplay && !m_close) Thread::Sleep(10);
+		if (m_close) break;
+		m_redisplay=false;
+		this->Render();
+	}
+	this->engine->Unbind();
+}
+
+#else //USE_JUCE
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+class Juce_OpenGLComponent  : public juce::OpenGLComponent
+{
+public:
+	Viewer* viewer;
+
+	Juce_OpenGLComponent() :viewer(0)
+		{}
+
+    virtual void newOpenGLContextCreated()
+		{;}
+
+	virtual void resized()
+		{if (viewer)  viewer->Resize(getWidth(),getHeight());}
+
+	virtual void mouseMove(const juce::MouseEvent& e)
+	{
+		if (!viewer) return;
+		MouseEvent args;
+		args.type=MouseEvent::MouseMoved;
+		args.x=e.x;args.y=e.y;
+		viewer->Mouse(args);
+	}
+
+	virtual void mouseDrag(const juce::MouseEvent& e)
+	{
+		if (!viewer) return;
+		MouseEvent args;
+		args.type  =MouseEvent::MouseMoved;
+		     if (e.mods.isLeftButtonDown  ()) args.button=MouseEvent::LeftButton;
+		else if (e.mods.isMiddleButtonDown()) args.button=MouseEvent::MidButton;
+		else if (e.mods.isRightButtonDown ()) args.button=MouseEvent::RightButton;
+		else return;
+		args.x=e.x;args.y=e.y;
+		viewer->Mouse(args);
+	}
+
+	virtual void mouseDown(const juce::MouseEvent& e)
+	{
+		if (!viewer) return;
+		MouseEvent args;
+		args.type  =MouseEvent::MousePressed;
+		     if (e.mods.isLeftButtonDown  ()) args.button=MouseEvent::LeftButton;
+		else if (e.mods.isMiddleButtonDown()) args.button=MouseEvent::MidButton;
+		else if (e.mods.isRightButtonDown ()) args.button=MouseEvent::RightButton;
+		else return;
+		args.x=e.x;args.y=e.y;
+		viewer->Mouse(args);
+	}
+
+	virtual void mouseUp(const juce::MouseEvent& e)
+	{
+		if (!viewer) return;
+		MouseEvent args;
+		args.type  =MouseEvent::MouseReleased;
+		     if (e.mods.isLeftButtonDown  ()) args.button=MouseEvent::LeftButton;
+		else if (e.mods.isMiddleButtonDown()) args.button=MouseEvent::MidButton;
+		else if (e.mods.isRightButtonDown ()) args.button=MouseEvent::RightButton;
+		else return;
+		args.x=e.x;
+		args.y=e.y;
+		viewer->Mouse(args);
+	}
+
+	virtual void mouseWheelMove(const juce::MouseEvent& e, float wheelIncrementX,float wheelIncrementY)
+	{	
+		if (!viewer) return;
+		MouseEvent args;
+		args.type=MouseEvent::MouseWheel;
+		args.button=MouseEvent::NoButton;
+		args.delta=wheelIncrementY>0?120:-120;
+		viewer->Mouse(args);
+	}
+
+	virtual bool keyPressed (const juce::KeyPress& key)
+	{	
+		if (!viewer) return false;
+		int code=key.getKeyCode();
+		     if (code==juce::KeyPress::leftKey)  code=Keyboard::Key_Left ;
+		else if (code==juce::KeyPress::rightKey) code=Keyboard::Key_Right;
+		else if (code==juce::KeyPress::upKey)    code=Keyboard::Key_Up   ;
+		else if (code==juce::KeyPress::downKey)  code=Keyboard::Key_Down ; 
+		viewer->Keyboard(code,this->getMouseXYRelative().getX(),this->getMouseXYRelative().getY());
+		return false;
+	}
+
+	virtual bool renderAndSwapBuffers()
+	{
+		if (!viewer) return false;
+		viewer->Redisplay();
+		return true;
+	}
+
+    virtual void renderOpenGL()
+		{throw "internal error";}
+};
+
+class Juce_Component  : public juce::Component
+{
+public:
+	Juce_Component  ()  {}
+    ~Juce_Component ()  {deleteAllChildren();}
+    void resized    ()  
+	{
+		juce::Component* first_child=this->getChildComponent(0);
+		if (!first_child) return;
+		first_child->setBounds (0, 0, getWidth(), getHeight());
+	}
+
+};
+
+class Juce_DocumentWindow  : public juce::DocumentWindow
+{
+public:
+
+	Viewer* viewer;
+
+	Juce_DocumentWindow  (Viewer* viewer,juce::String title=T("PyPlasm Viewer")) 
+		:DocumentWindow(title,juce::Colours::azure,juce::DocumentWindow::allButtons, true) 
+		{this->viewer=viewer;}
+	
+	~Juce_DocumentWindow() 
+		{}
+
+    void closeButtonPressed()
+		{if (viewer) viewer->Close();}
+};
+
+ 
+class Juce_Application : public juce::JUCEApplication
+{
+public:
+	Juce_Application                                ()                                 {}
+	~Juce_Application                               ()                                 {}
+    void                 shutdown                   ()                                 {}
+	const juce::String   getApplicationName         ()                                 {return "PyPlasm Viewer";}
+    const juce::String   getApplicationVersion      ()                                 {return "1.0";}
+    bool                 moreThanOneInstanceAllowed ()                                 {return true;}
+	void                 anotherInstanceStarted     (const juce::String&)              {}
+	void                 initialise                 (const juce::String& commandLine)  {}
+};
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+void Viewer::doJob(int nworker)
+{
+	//***************************
+	//this is the driver
+	//***************************
+	if (nworker==0)
+	{
+		//need to initialize
+		if (!_shared_context)
+		{
+			juce::initialiseJuce_GUI();
+			juce::JUCEApplication::createInstance = (juce::JUCEApplication::CreateInstanceFunction)-1;//need not to be 0 
+			Juce_Application* app=new Juce_Application();
+			bool bOk=app->initialiseApp("dummy");
+			ReleaseAssert(bOk);
+
+			//create the shared context
+			Juce_DocumentWindow*  win         = new Juce_DocumentWindow(0,T("Shared context"));
+			Juce_Component*       component   = new Juce_Component();
+			Juce_OpenGLComponent* glcomponent = new Juce_OpenGLComponent();
+
+			glcomponent->setPixelFormat(juce::OpenGLPixelFormat(/*RGB*/8,/*alpha*/8,/*depth*/16,0));
+
+			win->setUsingNativeTitleBar(true);		
+			win->setResizable (true,true);
+			win->setContentComponent(component);
+			win->setVisible(true);
+			component->addAndMakeVisible (glcomponent);
+			glcomponent->makeCurrentContextActive (); 
+			glcomponent->makeCurrentContextInactive();
+			win->centreWithSize (1024, 768);
+
+			Engine* engine=new Engine();
+			engine->DC= (int64)win;
+			engine->RC= (int64)(glcomponent->getCurrentContext());ReleaseAssert(engine->RC);
+
+			//initialize glew
+			engine->initializeGL();
+			_shared_context=engine;
+		}
+
+		//create the window
+		Juce_DocumentWindow*  win         = new Juce_DocumentWindow(this);
+		Juce_Component*       component   = new Juce_Component();
+		Juce_OpenGLComponent* glcomponent = new Juce_OpenGLComponent();
+		
+		glcomponent->viewer=this;
+		glcomponent->setPixelFormat(juce::OpenGLPixelFormat(/*RGB*/8,/*alpha*/8,/*depth*/16,0));
+		glcomponent->setWantsKeyboardFocus(true);
+
+		win->setUsingNativeTitleBar(true);		
+		win->setResizable (true,true);
+		win->setContentComponent(component);
+		win->setVisible(true);
+		component->addAndMakeVisible (glcomponent);
+
+		//share context
+		_shared_context->lock.Lock();
+		glcomponent->shareWith((juce::OpenGLContext*)_shared_context->RC);
+		_shared_context->lock.Unlock();
+
+		//force the creation of the context (shared!)
+		glcomponent->makeCurrentContextActive (); 
+		glcomponent->makeCurrentContextInactive();
+		win->centreWithSize (1024, 768);
+
+		//dont' have the bundle
+		#ifdef Darwin
+		{
+			ProcessSerialNumber psn;
+			GetCurrentProcess(&psn);
+			TransformProcessType(&psn, kProcessTransformToForegroundApplication);
+			SetFrontProcess(&psn);
+		}
+		#endif
+
+		//this is the new engine
+		Engine* engine=new Engine();
+		engine->DC= (int64)win;
+		engine->RC= (int64)glcomponent->getCurrentContext();ReleaseAssert(engine->RC);
+		engine->initializeGL();
+
+		this->engine=engine;
+
+		//creation done! ENTER in the main loop
+		while (!this->m_close && juce::MessageManager::getInstance()->runDispatchLoopUntil(100))
+			;
+
+		//wait for the threading task to safely quit
+		this->m_close=true;
+		Thread::Wait(1);
+
+		delete this->engine;
+		this->engine=0;
+		delete win;
+		return;
+	}
+
+	//************************
+	//*** rendering thread ***
+	//************************
+	
+	while (!this->engine) Thread::Sleep(10);
+	this->engine->Bind();
+	while (true)
+	{
+		while (!m_redisplay && !m_close)  Thread::Sleep(10);
+		if (m_close) break;
+		m_redisplay=false;
+		this->Render();
+	}
+	this->engine->Unbind();
+}
+
+#endif //USE_JUCE
+
+
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -583,8 +1147,6 @@ void Engine::Render(SmartPointer<Batch> _batch)
 		glFrontFace(front_face); */
 	}
 
-
-
 	//draw the primitives
 	glPushMatrix();
 	{
@@ -815,13 +1377,9 @@ void Engine::removeFromGpu(EngineResource* resource)
 	resource->size=0;
 
 	if (!bValidContext) 
-	{
 		_shared_context->Unbind(); 
-	}
 	else 
-	{
 		_shared_context->lock.Unlock();
-	}
 }
 
 

@@ -334,12 +334,15 @@ void Viewer::Close()
 //////////////////////////////////////////////////////////////////////////////////////
 void Viewer::Run()
 {
-#ifdef Darwin
-	//macosx does not support GUI in multiple thread
+#if USE_JUCE
+	//juce does not support GUI in multiple thread
 	workers[1].running=false;
-	pthread_create( &workers[1].thread, NULL, startfun, (void*) &workers[1]);
+	#ifdef WIN32
+	workers[1].winhandle=CreateThread( NULL, 0, startfun, &workers[1] , 0, NULL); 
+	#else
+	pthread_create( &workers[1].thread, NULL, startfun, (void*) &workers[i]);
+	#endif
 	workers[1].running=true; //the GUI must be in the main thread
-	
 	workers[0].running=true;
 	doJob(0);
 	workers[0].running=false;

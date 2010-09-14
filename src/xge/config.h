@@ -78,4 +78,10 @@
 
 #endif //ENGINE_ENABLE_SHADOW_SHADER
 
+
+///////////////////////////////////////////////////////////////
+//all the gui is handled by JUCE
+#define USE_JUCE 1 
+
+
 #endif //_CONFIG_H__

@@ -23,7 +23,9 @@ public:
 	};
 
 	//! build a rendering context based on an existing control
+	#ifndef USE_JUCE
 	Engine(int64 DC);
+	#endif
 
 	//~destructor
 	~Engine();
@@ -80,13 +82,21 @@ public:
 	//! access the current context
 	static int64 getCurrentContext();
 
-private:
+	//the shared context
+	
+	Engine();
 
 	//coordinates of the engine
 	int64  DC,RC,WC;
 
 	//from RC to WC
 	static std::map<int64,int64> wcs;
+
+
+private:
+
+	//main gl initialization (must have the bind!)
+	void initializeGL();
 
 	//for Bind/Unbind
 	SpinLock lock;
@@ -98,12 +108,6 @@ private:
 	//! deallocate from GPU
 	static void removeFromGpu(EngineResource* resource);
 
-	//the shared context
-	static Engine* _shared_context;
-
-	//create the shared context
-	Engine();
-
 	//os specific function
 	void CreateContext() ;
 
@@ -112,9 +116,6 @@ private:
 
 	//for text rendering
 	static int FONT_DISPLAY_LIST_BASE;
-
-	//! first init setup
-	void Initialize();
 	
 	//
 	friend class Viewer;

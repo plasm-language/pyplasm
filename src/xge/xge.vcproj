@@ -478,6 +478,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\viewer.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\viewer.h"
 				>
 			</File>
@@ -506,26 +510,30 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="OS"
+				Name="juce"
 				>
 				<File
-					RelativePath=".\GL.engine.os.linux.cpp"
+					RelativePath="..\..\libs\juce\juce_amalgamated.cpp"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
-					RelativePath=".\GL.engine.os.macosx.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\GL.engine.os.win32.cpp"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Viewer"
-				>
-				<File
-					RelativePath=".\viewer.cpp"
+					RelativePath="..\..\libs\juce\juce_amalgamated.h"
 					>
 				</File>
 			</Filter>
