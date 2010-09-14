@@ -57318,14 +57318,19 @@ private:
 	friend class OpenGLComponentWatcher;
 	friend class ScopedPointer <OpenGLComponentWatcher>;
 	ScopedPointer <OpenGLComponentWatcher> componentWatcher;
-	ScopedPointer <OpenGLContext> context;
+	
 	OpenGLContext* contextToShareListsWith;
 
 	CriticalSection contextLock;
 	OpenGLPixelFormat preferredPixelFormat;
 	bool needToUpdateViewport;
 
+//GS
+protected:
 	OpenGLContext* createContext();
+	ScopedPointer <OpenGLContext> context;
+
+private:
 	void updateContextPosition();
 	void internalRepaint (int x, int y, int w, int h);
 

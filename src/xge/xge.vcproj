@@ -478,6 +478,26 @@
 				>
 			</File>
 			<File
+				RelativePath=".\GL.engine.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GL.engine.fbo.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GL.engine.shader.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GL.engine.shader.shadow.cpp.broker"
+				>
+			</File>
+			<File
+				RelativePath=".\GL.engine.tessellator.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\viewer.cpp"
 				>
 			</File>
@@ -485,30 +505,6 @@
 				RelativePath=".\viewer.h"
 				>
 			</File>
-			<Filter
-				Name="OpenGL Engine"
-				>
-				<File
-					RelativePath=".\GL.engine.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\GL.engine.fbo.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\GL.engine.shader.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\GL.engine.shader.shadow.cpp.broker"
-					>
-				</File>
-				<File
-					RelativePath=".\GL.engine.tessellator.cpp"
-					>
-				</File>
-			</Filter>
 			<Filter
 				Name="juce"
 				>

@@ -455,8 +455,16 @@ class Juce_OpenGLComponent  : public juce::OpenGLComponent
 public:
 	Viewer* viewer;
 
-	Juce_OpenGLComponent() :viewer(0)
-		{}
+	Juce_OpenGLComponent(bool isSharedContext=false) :viewer(0)
+	{
+		//force the creation of the context
+		if (isSharedContext)
+		{
+			this->context=this->createContext();
+			this->makeCurrentContextActive (); 
+			this->makeCurrentContextInactive();
+		}
+	}
 
     virtual void newOpenGLContextCreated()
 		{;}
@@ -609,27 +617,14 @@ void Viewer::doJob(int nworker)
 			bool bOk=app->initialiseApp("dummy");
 			ReleaseAssert(bOk);
 
-			//create the shared context
-			Juce_DocumentWindow*  win         = new Juce_DocumentWindow(0,T("Shared context"));
-			Juce_Component*       component   = new Juce_Component();
-			Juce_OpenGLComponent* glcomponent = new Juce_OpenGLComponent();
-
+			Juce_OpenGLComponent* glcomponent=new Juce_OpenGLComponent(true);
 			glcomponent->setPixelFormat(juce::OpenGLPixelFormat(/*RGB*/8,/*alpha*/8,/*depth*/16,0));
 
-			win->setUsingNativeTitleBar(true);		
-			win->setResizable (true,true);
-			win->setContentComponent(component);
-			win->setVisible(true);
-			component->addAndMakeVisible (glcomponent);
-			glcomponent->makeCurrentContextActive (); 
-			glcomponent->makeCurrentContextInactive();
-			win->centreWithSize (1024, 768);
-
 			Engine* engine=new Engine();
-			engine->DC= (int64)win;
-			engine->RC= (int64)(glcomponent->getCurrentContext());ReleaseAssert(engine->RC);
+			engine->DC= (int64)-1; //fake DC
+			engine->RC= (int64)(glcomponent->getCurrentContext());
+			ReleaseAssert(engine->RC);
 
-			//initialize glew
 			engine->initializeGL();
 			_shared_context=engine;
 		}
