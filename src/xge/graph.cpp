@@ -3248,6 +3248,8 @@ static inline unsigned int mkpol_find_closure(SmartPointer<Graph> g,unsigned int
 ////////////////////////////////////////////////////////////////////////////////
 static SmartPointer<Graph> mkpol_inner(Matf& VmatT,Matf& HmatT,int pointdim,int npoints,const float* points,float tolerance,int nrec)
 {
+  int error_qhull;
+
 	//base case, 0 dimension
 	if (!pointdim)
 	{
@@ -3297,7 +3299,7 @@ static SmartPointer<Graph> mkpol_inner(Matf& VmatT,Matf& HmatT,int pointdim,int 
 
 	//OPTIONS: i==vertices incidence Pp=does not print warnings, n=print hyperplane normals with offsets, En max roundoff error, Qs search all points for initial simplex,QbB scale input to unit cube centered at the origin
 	char qhull_opts[256];sprintf(qhull_opts,"qhull i Pp E%e Qs",tolerance);
-	int error_qhull=qh_new_qhull(pointdim,npoints,(float*)points,(boolT)false,qhull_opts, NULL, __devnull);
+	error_qhull=qh_new_qhull(pointdim,npoints,(float*)points,(boolT)false,qhull_opts, NULL, __devnull);
 
 	if (error_qhull)	
 	{

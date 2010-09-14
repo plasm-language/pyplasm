@@ -1199,7 +1199,7 @@ static MzPlasmFn scmfun[]=
 /////////////////////////////////////////////////////////////
 int main(int argn,char** argv)
 {
-	#if defined(Darwin)
+	#if defined(PLATFORM_Darwin)
 	// required for threads safety
 	int dummy;
 	scheme_set_stack_base(&dummy, 1); 

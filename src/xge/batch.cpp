@@ -1,7 +1,7 @@
 
 #include <xge/xge.h>
-#include <xge/Batch.h>
-#include <xge/Pick.h>
+#include <xge/batch.h>
+#include <xge/pick.h>
 
 Color4f Batch::DefaultAmbientColor   =  Color4f(0.2f,0.2f,0.2f,1);
 Color4f Batch::DefaultDiffuseColor   =  Color4f(0.8f,0.8f,0.8f,1);

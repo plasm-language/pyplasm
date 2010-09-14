@@ -1,30 +1,54 @@
 # get main configuration from inc file
 include ../../Makefile.inc
 
-CXXFLAGS+=-DGLEW_MX -DGLEW_STATIC -fpermissive
-# -DFREEIMAGE_LIB
+# I'm using multiple context for glew
+CXXFLAGS+=-DGLEW_MX -DGLEW_STATIC -fpermissive -DXGE_EXPORTS -I./ -I../ -I../../libs -I../../libs/FreeImage -I../../libs/glew 
 
 # all source code in this directory
 SRC_CPP=$(shell ls *.cpp)
-OBJS=$(SRC_CPP:.cpp=.o)
+OBJS=$(SRC_CPP:.cpp=.o) juce_amalgamated.o
 
-# file to produce
+
+# LINUX  configuration
+ifeq ($(PLATFORM_NAME),PLATFORM_Linux)
+CXXFLAGS+=-I "/usr/include" -I "/usr/include/freetype2"
+LIB_NAME=libxge.so
+LINK_OPT=-shared  -lz -lfreeimage -lGL -lGLU -lfreetype -lrt -lX11 -lGL -lGLU -lXinerama -lasound
+endif
+
+
+# DARWIN configuration
+ifeq ($(PLATFORM_NAME),PLATFORM_Darwin)
 LIB_NAME=libxge.dylib
+LINK_OPT=-dynamiclib -lz ../../libs/FreeImage/libFreeImage.a -framework Carbon -framework AGL -framework OpenGL -framework Cocoa -framework IOKit -framework CoreAudio -framework CoreMIDI -framework WebKit -framework DiscRecording -framework QuartzCore -framework QTKit -framework QuickTime
+endif
 
-# cpp configuration
-CXXFLAGS+=-DXGE_EXPORTS -I./ -I../ -I../../libs -I../../libs/FreeImage -I../../libs/glew
 
 all: ${LIB_NAME}
 	@echo "Library done"
 
 ${LIB_NAME}: $(OBJS) 
-	g++ -fPIC -dynamiclib -o $@ ${OBJS} ${LIBS} ../../libs/zlib/libzlib.a ../../libs/tinyxml/libtinyxml.a ../../libs/qhull/libqhull.a ../../libs/glew/libglew.a ../../libs/FreeImage/libFreeImage.a -framework Carbon -framework AGL -framework OpenGL 
+	g++ -fPIC -o $@ ${OBJS} ${LIBS} ../../libs/tinyxml/libtinyxml.a ../../libs/qhull/libqhull.a ../../libs/glew/libglew.a $(LINK_OPT) 
+
+
+ifeq ($(PLATFORM_NAME),PLATFORM_Linux)
+juce_amalgamated.o: 
+	$(CXX) -c $(CXXFLAGS) -o $@ ../../libs/juce/juce_amalgamated.cpp
+endif
+
+ifeq ($(PLATFORM_NAME),PLATFORM_Darwin)
+juce_amalgamated.o:
+	$(CXX) -c $(CXXFLAGS) -o $@ ../../libs/juce/juce_amalgamated.mm
+endif
 
 depend:
 	makedepend -I../ -Y. *.cpp *.c *.h
 
+
 clean:
-	rm -Rf Debug/ Release/ *.o *.a *.user *.dylib
+	rm -Rf Debug/ Release/ *.o *.a *.user *.dylib *.so
+
+
 # DO NOT DELETE
 
 DllMain.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
@@ -36,9 +60,8 @@ DllMain.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 DllMain.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 DllMain.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 DllMain.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-DllMain.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-DllMain.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-DllMain.o: ../xge/plasm.h
+DllMain.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+DllMain.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 GL.engine.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 GL.engine.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h
 GL.engine.o: ../xge/thread.h ../xge/spinlock.hxx ../xge/mempool.h
@@ -49,8 +72,8 @@ GL.engine.o: ../xge/box.h ../xge/ray.h ../xge/quaternion.h
 GL.engine.o: ../xge/localsystem.h ../xge/vector.h ../xge/color4f.h
 GL.engine.o: ../xge/frustum.h ../xge/texture.h ../xge/manipulator.h
 GL.engine.o: ../xge/batch.h ../xge/pick.h ../xge/graph.h ../xge/graph.hxx
-GL.engine.o: ../xge/engine.h ../xge/viewer.h ../xge/Octree.h ../xge/octree.h
-GL.engine.o: ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h ../xge/plasm.h
+GL.engine.o: ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+GL.engine.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 GL.engine.fbo.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 GL.engine.fbo.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h
 GL.engine.fbo.o: ../xge/thread.h ../xge/spinlock.hxx ../xge/mempool.h
@@ -61,51 +84,8 @@ GL.engine.fbo.o: ../xge/box.h ../xge/ray.h ../xge/quaternion.h
 GL.engine.fbo.o: ../xge/localsystem.h ../xge/vector.h ../xge/color4f.h
 GL.engine.fbo.o: ../xge/frustum.h ../xge/texture.h ../xge/manipulator.h
 GL.engine.fbo.o: ../xge/batch.h ../xge/pick.h ../xge/graph.h ../xge/graph.hxx
-GL.engine.fbo.o: ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-GL.engine.fbo.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h
-GL.engine.fbo.o: ../xge/Batch.h ../xge/plasm.h
-GL.engine.os.linux.o: ../xge/xge.h ../xge/config.h ../xge/utils.h
-GL.engine.os.linux.o: ../xge/log.h ../xge/clock.h ../xge/keyboard.h
-GL.engine.os.linux.o: ../xge/spinlock.h ../xge/thread.h ../xge/spinlock.hxx
-GL.engine.os.linux.o: ../xge/mempool.h ../xge/mempool.hxx ../xge/archive.h
-GL.engine.os.linux.o: ../xge/encoder.h ../xge/filesystem.h
-GL.engine.os.linux.o: ../xge/mouseevent.h ../xge/vec.h ../xge/triangle.h
-GL.engine.os.linux.o: ../xge/plane.h ../xge/mat.h ../xge/ball.h ../xge/box.h
-GL.engine.os.linux.o: ../xge/ray.h ../xge/quaternion.h ../xge/localsystem.h
-GL.engine.os.linux.o: ../xge/vector.h ../xge/color4f.h ../xge/frustum.h
-GL.engine.os.linux.o: ../xge/texture.h ../xge/manipulator.h ../xge/batch.h
-GL.engine.os.linux.o: ../xge/pick.h ../xge/graph.h ../xge/graph.hxx
-GL.engine.os.linux.o: ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-GL.engine.os.linux.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h
-GL.engine.os.linux.o: ../xge/Batch.h ../xge/plasm.h
-GL.engine.os.macosx.o: ../xge/xge.h ../xge/config.h ../xge/utils.h
-GL.engine.os.macosx.o: ../xge/log.h ../xge/clock.h ../xge/keyboard.h
-GL.engine.os.macosx.o: ../xge/spinlock.h ../xge/thread.h ../xge/spinlock.hxx
-GL.engine.os.macosx.o: ../xge/mempool.h ../xge/mempool.hxx ../xge/archive.h
-GL.engine.os.macosx.o: ../xge/encoder.h ../xge/filesystem.h
-GL.engine.os.macosx.o: ../xge/mouseevent.h ../xge/vec.h ../xge/triangle.h
-GL.engine.os.macosx.o: ../xge/plane.h ../xge/mat.h ../xge/ball.h ../xge/box.h
-GL.engine.os.macosx.o: ../xge/ray.h ../xge/quaternion.h ../xge/localsystem.h
-GL.engine.os.macosx.o: ../xge/vector.h ../xge/color4f.h ../xge/frustum.h
-GL.engine.os.macosx.o: ../xge/texture.h ../xge/manipulator.h ../xge/batch.h
-GL.engine.os.macosx.o: ../xge/pick.h ../xge/graph.h ../xge/graph.hxx
-GL.engine.os.macosx.o: ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-GL.engine.os.macosx.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h
-GL.engine.os.macosx.o: ../xge/Batch.h ../xge/plasm.h
-GL.engine.os.win32.o: ../xge/xge.h ../xge/config.h ../xge/utils.h
-GL.engine.os.win32.o: ../xge/log.h ../xge/clock.h ../xge/keyboard.h
-GL.engine.os.win32.o: ../xge/spinlock.h ../xge/thread.h ../xge/spinlock.hxx
-GL.engine.os.win32.o: ../xge/mempool.h ../xge/mempool.hxx ../xge/archive.h
-GL.engine.os.win32.o: ../xge/encoder.h ../xge/filesystem.h
-GL.engine.os.win32.o: ../xge/mouseevent.h ../xge/vec.h ../xge/triangle.h
-GL.engine.os.win32.o: ../xge/plane.h ../xge/mat.h ../xge/ball.h ../xge/box.h
-GL.engine.os.win32.o: ../xge/ray.h ../xge/quaternion.h ../xge/localsystem.h
-GL.engine.os.win32.o: ../xge/vector.h ../xge/color4f.h ../xge/frustum.h
-GL.engine.os.win32.o: ../xge/texture.h ../xge/manipulator.h ../xge/batch.h
-GL.engine.os.win32.o: ../xge/pick.h ../xge/graph.h ../xge/graph.hxx
-GL.engine.os.win32.o: ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-GL.engine.os.win32.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h
-GL.engine.os.win32.o: ../xge/Batch.h ../xge/plasm.h
+GL.engine.fbo.o: ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+GL.engine.fbo.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 GL.engine.shader.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 GL.engine.shader.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h
 GL.engine.shader.o: ../xge/thread.h ../xge/spinlock.hxx ../xge/mempool.h
@@ -117,9 +97,8 @@ GL.engine.shader.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 GL.engine.shader.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 GL.engine.shader.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h
 GL.engine.shader.o: ../xge/graph.h ../xge/graph.hxx ../xge/engine.h
-GL.engine.shader.o: ../xge/viewer.h ../xge/Octree.h ../xge/octree.h
-GL.engine.shader.o: ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-GL.engine.shader.o: ../xge/plasm.h
+GL.engine.shader.o: ../xge/viewer.h ../xge/octree.h ../xge/unwrapper.h
+GL.engine.shader.o: ../xge/bake.h ../xge/plasm.h
 GL.engine.tessellator.o: ../xge/xge.h ../xge/config.h ../xge/utils.h
 GL.engine.tessellator.o: ../xge/log.h ../xge/clock.h ../xge/keyboard.h
 GL.engine.tessellator.o: ../xge/spinlock.h ../xge/thread.h
@@ -132,9 +111,8 @@ GL.engine.tessellator.o: ../xge/quaternion.h ../xge/localsystem.h
 GL.engine.tessellator.o: ../xge/vector.h ../xge/color4f.h ../xge/frustum.h
 GL.engine.tessellator.o: ../xge/texture.h ../xge/manipulator.h ../xge/batch.h
 GL.engine.tessellator.o: ../xge/pick.h ../xge/graph.h ../xge/graph.hxx
-GL.engine.tessellator.o: ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-GL.engine.tessellator.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h
-GL.engine.tessellator.o: ../xge/Batch.h ../xge/plasm.h
+GL.engine.tessellator.o: ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+GL.engine.tessellator.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 archive.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 archive.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 archive.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -144,9 +122,8 @@ archive.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 archive.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 archive.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 archive.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-archive.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-archive.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-archive.o: ../xge/plasm.h
+archive.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+archive.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 bake.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 bake.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 bake.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -156,9 +133,8 @@ bake.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 bake.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 bake.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 bake.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-bake.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-bake.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-bake.o: ../xge/plasm.h
+bake.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+bake.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 ball.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 ball.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 ball.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -168,9 +144,8 @@ ball.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 ball.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 ball.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 ball.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-ball.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-ball.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-ball.o: ../xge/plasm.h
+ball.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+ball.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 batch.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 batch.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 batch.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -180,9 +155,8 @@ batch.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 batch.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 batch.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 batch.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-batch.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-batch.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-batch.o: ../xge/plasm.h ../xge/Pick.h
+batch.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+batch.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 batch.obj.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 batch.obj.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h
 batch.obj.o: ../xge/thread.h ../xge/spinlock.hxx ../xge/mempool.h
@@ -193,8 +167,8 @@ batch.obj.o: ../xge/box.h ../xge/ray.h ../xge/quaternion.h
 batch.obj.o: ../xge/localsystem.h ../xge/vector.h ../xge/color4f.h
 batch.obj.o: ../xge/frustum.h ../xge/texture.h ../xge/manipulator.h
 batch.obj.o: ../xge/batch.h ../xge/pick.h ../xge/graph.h ../xge/graph.hxx
-batch.obj.o: ../xge/engine.h ../xge/viewer.h ../xge/Octree.h ../xge/octree.h
-batch.obj.o: ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h ../xge/plasm.h
+batch.obj.o: ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+batch.obj.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 batch.ply.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 batch.ply.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h
 batch.ply.o: ../xge/thread.h ../xge/spinlock.hxx ../xge/mempool.h
@@ -205,8 +179,8 @@ batch.ply.o: ../xge/box.h ../xge/ray.h ../xge/quaternion.h
 batch.ply.o: ../xge/localsystem.h ../xge/vector.h ../xge/color4f.h
 batch.ply.o: ../xge/frustum.h ../xge/texture.h ../xge/manipulator.h
 batch.ply.o: ../xge/batch.h ../xge/pick.h ../xge/graph.h ../xge/graph.hxx
-batch.ply.o: ../xge/engine.h ../xge/viewer.h ../xge/Octree.h ../xge/octree.h
-batch.ply.o: ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h ../xge/plasm.h
+batch.ply.o: ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+batch.ply.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 batch.ptx.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 batch.ptx.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h
 batch.ptx.o: ../xge/thread.h ../xge/spinlock.hxx ../xge/mempool.h
@@ -217,8 +191,8 @@ batch.ptx.o: ../xge/box.h ../xge/ray.h ../xge/quaternion.h
 batch.ptx.o: ../xge/localsystem.h ../xge/vector.h ../xge/color4f.h
 batch.ptx.o: ../xge/frustum.h ../xge/texture.h ../xge/manipulator.h
 batch.ptx.o: ../xge/batch.h ../xge/pick.h ../xge/graph.h ../xge/graph.hxx
-batch.ptx.o: ../xge/engine.h ../xge/viewer.h ../xge/Octree.h ../xge/octree.h
-batch.ptx.o: ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h ../xge/plasm.h
+batch.ptx.o: ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+batch.ptx.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 box.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 box.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 box.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -228,9 +202,8 @@ box.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 box.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 box.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 box.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-box.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-box.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-box.o: ../xge/plasm.h
+box.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+box.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 encoder.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 encoder.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 encoder.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -240,9 +213,8 @@ encoder.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 encoder.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 encoder.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 encoder.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-encoder.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-encoder.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-encoder.o: ../xge/plasm.h
+encoder.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+encoder.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 filesystem.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 filesystem.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h
 filesystem.o: ../xge/thread.h ../xge/spinlock.hxx ../xge/mempool.h
@@ -253,8 +225,8 @@ filesystem.o: ../xge/box.h ../xge/ray.h ../xge/quaternion.h
 filesystem.o: ../xge/localsystem.h ../xge/vector.h ../xge/color4f.h
 filesystem.o: ../xge/frustum.h ../xge/texture.h ../xge/manipulator.h
 filesystem.o: ../xge/batch.h ../xge/pick.h ../xge/graph.h ../xge/graph.hxx
-filesystem.o: ../xge/engine.h ../xge/viewer.h ../xge/Octree.h ../xge/octree.h
-filesystem.o: ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h ../xge/plasm.h
+filesystem.o: ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+filesystem.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 frustum.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 frustum.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 frustum.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -264,9 +236,8 @@ frustum.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 frustum.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 frustum.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 frustum.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-frustum.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-frustum.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-frustum.o: ../xge/plasm.h
+frustum.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+frustum.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 graph.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 graph.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 graph.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -276,9 +247,8 @@ graph.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 graph.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 graph.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 graph.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-graph.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-graph.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-graph.o: ../xge/plasm.h
+graph.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+graph.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 graph.import.svg.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 graph.import.svg.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h
 graph.import.svg.o: ../xge/thread.h ../xge/spinlock.hxx ../xge/mempool.h
@@ -290,9 +260,8 @@ graph.import.svg.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 graph.import.svg.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 graph.import.svg.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h
 graph.import.svg.o: ../xge/graph.h ../xge/graph.hxx ../xge/engine.h
-graph.import.svg.o: ../xge/viewer.h ../xge/Octree.h ../xge/octree.h
-graph.import.svg.o: ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-graph.import.svg.o: ../xge/plasm.h
+graph.import.svg.o: ../xge/viewer.h ../xge/octree.h ../xge/unwrapper.h
+graph.import.svg.o: ../xge/bake.h ../xge/plasm.h
 keyboard.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 keyboard.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h
 keyboard.o: ../xge/thread.h ../xge/spinlock.hxx ../xge/mempool.h
@@ -303,8 +272,8 @@ keyboard.o: ../xge/box.h ../xge/ray.h ../xge/quaternion.h
 keyboard.o: ../xge/localsystem.h ../xge/vector.h ../xge/color4f.h
 keyboard.o: ../xge/frustum.h ../xge/texture.h ../xge/manipulator.h
 keyboard.o: ../xge/batch.h ../xge/pick.h ../xge/graph.h ../xge/graph.hxx
-keyboard.o: ../xge/engine.h ../xge/viewer.h ../xge/Octree.h ../xge/octree.h
-keyboard.o: ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h ../xge/plasm.h
+keyboard.o: ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+keyboard.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 log.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 log.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 log.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -314,9 +283,8 @@ log.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 log.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 log.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 log.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-log.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-log.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-log.o: ../xge/plasm.h
+log.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+log.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 manipulator.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 manipulator.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h
 manipulator.o: ../xge/thread.h ../xge/spinlock.hxx ../xge/mempool.h
@@ -327,10 +295,8 @@ manipulator.o: ../xge/box.h ../xge/ray.h ../xge/quaternion.h
 manipulator.o: ../xge/localsystem.h ../xge/vector.h ../xge/color4f.h
 manipulator.o: ../xge/frustum.h ../xge/texture.h ../xge/manipulator.h
 manipulator.o: ../xge/batch.h ../xge/pick.h ../xge/graph.h ../xge/graph.hxx
-manipulator.o: ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-manipulator.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h
-manipulator.o: ../xge/Batch.h ../xge/plasm.h ../xge/Manipulator.h
-manipulator.o: ../xge/Viewer.h
+manipulator.o: ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+manipulator.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 mat.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 mat.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 mat.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -340,9 +306,8 @@ mat.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 mat.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 mat.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 mat.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-mat.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-mat.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-mat.o: ../xge/plasm.h
+mat.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+mat.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 mempool.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 mempool.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 mempool.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -352,9 +317,8 @@ mempool.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 mempool.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 mempool.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 mempool.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-mempool.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-mempool.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-mempool.o: ../xge/plasm.h
+mempool.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+mempool.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 octree.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 octree.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 octree.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -364,9 +328,8 @@ octree.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 octree.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 octree.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 octree.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-octree.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-octree.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-octree.o: ../xge/plasm.h
+octree.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+octree.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 plane.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 plane.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 plane.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -376,9 +339,8 @@ plane.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 plane.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 plane.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 plane.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-plane.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-plane.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-plane.o: ../xge/plasm.h
+plane.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+plane.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 plasm.boolop.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 plasm.boolop.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h
 plasm.boolop.o: ../xge/thread.h ../xge/spinlock.hxx ../xge/mempool.h
@@ -389,9 +351,8 @@ plasm.boolop.o: ../xge/box.h ../xge/ray.h ../xge/quaternion.h
 plasm.boolop.o: ../xge/localsystem.h ../xge/vector.h ../xge/color4f.h
 plasm.boolop.o: ../xge/frustum.h ../xge/texture.h ../xge/manipulator.h
 plasm.boolop.o: ../xge/batch.h ../xge/pick.h ../xge/graph.h ../xge/graph.hxx
-plasm.boolop.o: ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-plasm.boolop.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h
-plasm.boolop.o: ../xge/Batch.h ../xge/plasm.h
+plasm.boolop.o: ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+plasm.boolop.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 plasm.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 plasm.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 plasm.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -401,9 +362,8 @@ plasm.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 plasm.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 plasm.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 plasm.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-plasm.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-plasm.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-plasm.o: ../xge/plasm.h
+plasm.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+plasm.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 plasm.xml.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 plasm.xml.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h
 plasm.xml.o: ../xge/thread.h ../xge/spinlock.hxx ../xge/mempool.h
@@ -414,8 +374,8 @@ plasm.xml.o: ../xge/box.h ../xge/ray.h ../xge/quaternion.h
 plasm.xml.o: ../xge/localsystem.h ../xge/vector.h ../xge/color4f.h
 plasm.xml.o: ../xge/frustum.h ../xge/texture.h ../xge/manipulator.h
 plasm.xml.o: ../xge/batch.h ../xge/pick.h ../xge/graph.h ../xge/graph.hxx
-plasm.xml.o: ../xge/engine.h ../xge/viewer.h ../xge/Octree.h ../xge/octree.h
-plasm.xml.o: ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h ../xge/plasm.h
+plasm.xml.o: ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+plasm.xml.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 quaternion.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 quaternion.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h
 quaternion.o: ../xge/thread.h ../xge/spinlock.hxx ../xge/mempool.h
@@ -426,8 +386,8 @@ quaternion.o: ../xge/box.h ../xge/ray.h ../xge/quaternion.h
 quaternion.o: ../xge/localsystem.h ../xge/vector.h ../xge/color4f.h
 quaternion.o: ../xge/frustum.h ../xge/texture.h ../xge/manipulator.h
 quaternion.o: ../xge/batch.h ../xge/pick.h ../xge/graph.h ../xge/graph.hxx
-quaternion.o: ../xge/engine.h ../xge/viewer.h ../xge/Octree.h ../xge/octree.h
-quaternion.o: ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h ../xge/plasm.h
+quaternion.o: ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+quaternion.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 ray.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 ray.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 ray.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -437,9 +397,8 @@ ray.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 ray.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 ray.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 ray.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-ray.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-ray.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-ray.o: ../xge/plasm.h
+ray.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+ray.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 stdafx.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 stdafx.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 stdafx.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -449,9 +408,8 @@ stdafx.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 stdafx.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 stdafx.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 stdafx.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-stdafx.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-stdafx.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-stdafx.o: ../xge/plasm.h
+stdafx.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+stdafx.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 texture.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 texture.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 texture.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -461,9 +419,8 @@ texture.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 texture.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 texture.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 texture.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-texture.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-texture.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-texture.o: ../xge/plasm.h ../xge/Texture.h ../xge/Viewer.h
+texture.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+texture.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 thread.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 thread.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 thread.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -473,9 +430,8 @@ thread.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 thread.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 thread.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 thread.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-thread.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-thread.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-thread.o: ../xge/plasm.h
+thread.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+thread.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 unwrapper.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 unwrapper.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h
 unwrapper.o: ../xge/thread.h ../xge/spinlock.hxx ../xge/mempool.h
@@ -486,8 +442,8 @@ unwrapper.o: ../xge/box.h ../xge/ray.h ../xge/quaternion.h
 unwrapper.o: ../xge/localsystem.h ../xge/vector.h ../xge/color4f.h
 unwrapper.o: ../xge/frustum.h ../xge/texture.h ../xge/manipulator.h
 unwrapper.o: ../xge/batch.h ../xge/pick.h ../xge/graph.h ../xge/graph.hxx
-unwrapper.o: ../xge/engine.h ../xge/viewer.h ../xge/Octree.h ../xge/octree.h
-unwrapper.o: ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h ../xge/plasm.h
+unwrapper.o: ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+unwrapper.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 utils.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 utils.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 utils.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -497,9 +453,8 @@ utils.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 utils.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 utils.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 utils.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-utils.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-utils.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-utils.o: ../xge/plasm.h
+utils.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+utils.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 vec.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 vec.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 vec.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -509,9 +464,8 @@ vec.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 vec.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 vec.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 vec.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-vec.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-vec.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-vec.o: ../xge/plasm.h
+vec.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+vec.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 vector.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 vector.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 vector.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -521,9 +475,8 @@ vector.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 vector.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 vector.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 vector.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-vector.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-vector.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-vector.o: ../xge/plasm.h ../xge/Vector.h
+vector.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+vector.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 viewer.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 viewer.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 viewer.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -533,9 +486,8 @@ viewer.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 viewer.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 viewer.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 viewer.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-viewer.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-viewer.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-viewer.o: ../xge/plasm.h
+viewer.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+viewer.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 archive.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 archive.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 archive.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -545,9 +497,8 @@ archive.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 archive.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 archive.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 archive.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-archive.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-archive.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-archive.o: ../xge/plasm.h
+archive.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+archive.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 bake.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 bake.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 bake.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -557,9 +508,8 @@ bake.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 bake.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 bake.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 bake.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-bake.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-bake.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-bake.o: ../xge/plasm.h
+bake.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+bake.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 ball.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 ball.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 ball.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -569,9 +519,8 @@ ball.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 ball.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 ball.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 ball.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-ball.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-ball.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-ball.o: ../xge/plasm.h
+ball.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+ball.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 batch.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 batch.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 batch.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -581,9 +530,8 @@ batch.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 batch.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 batch.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 batch.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-batch.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-batch.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-batch.o: ../xge/plasm.h
+batch.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+batch.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 box.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 box.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 box.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -593,9 +541,8 @@ box.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 box.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 box.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 box.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-box.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-box.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-box.o: ../xge/plasm.h
+box.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+box.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 clock.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 clock.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 clock.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -605,9 +552,8 @@ clock.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 clock.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 clock.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 clock.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-clock.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-clock.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-clock.o: ../xge/plasm.h
+clock.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+clock.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 color4f.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 color4f.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 color4f.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -617,9 +563,8 @@ color4f.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 color4f.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 color4f.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 color4f.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-color4f.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-color4f.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-color4f.o: ../xge/plasm.h
+color4f.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+color4f.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 encoder.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 encoder.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 encoder.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -629,9 +574,8 @@ encoder.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 encoder.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 encoder.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 encoder.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-encoder.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-encoder.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-encoder.o: ../xge/plasm.h
+encoder.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+encoder.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 engine.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 engine.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 engine.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -641,9 +585,8 @@ engine.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 engine.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 engine.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 engine.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-engine.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-engine.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-engine.o: ../xge/plasm.h
+engine.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+engine.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 filesystem.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 filesystem.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h
 filesystem.o: ../xge/thread.h ../xge/spinlock.hxx ../xge/mempool.h
@@ -654,8 +597,8 @@ filesystem.o: ../xge/box.h ../xge/ray.h ../xge/quaternion.h
 filesystem.o: ../xge/localsystem.h ../xge/vector.h ../xge/color4f.h
 filesystem.o: ../xge/frustum.h ../xge/texture.h ../xge/manipulator.h
 filesystem.o: ../xge/batch.h ../xge/pick.h ../xge/graph.h ../xge/graph.hxx
-filesystem.o: ../xge/engine.h ../xge/viewer.h ../xge/Octree.h ../xge/octree.h
-filesystem.o: ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h ../xge/plasm.h
+filesystem.o: ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+filesystem.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 frustum.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 frustum.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 frustum.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -665,9 +608,8 @@ frustum.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 frustum.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 frustum.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 frustum.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-frustum.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-frustum.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-frustum.o: ../xge/plasm.h
+frustum.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+frustum.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 graph.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 graph.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 graph.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -677,9 +619,8 @@ graph.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 graph.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 graph.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 graph.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-graph.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-graph.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-graph.o: ../xge/plasm.h
+graph.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+graph.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 keyboard.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 keyboard.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h
 keyboard.o: ../xge/thread.h ../xge/spinlock.hxx ../xge/mempool.h
@@ -690,8 +631,8 @@ keyboard.o: ../xge/box.h ../xge/ray.h ../xge/quaternion.h
 keyboard.o: ../xge/localsystem.h ../xge/vector.h ../xge/color4f.h
 keyboard.o: ../xge/frustum.h ../xge/texture.h ../xge/manipulator.h
 keyboard.o: ../xge/batch.h ../xge/pick.h ../xge/graph.h ../xge/graph.hxx
-keyboard.o: ../xge/engine.h ../xge/viewer.h ../xge/Octree.h ../xge/octree.h
-keyboard.o: ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h ../xge/plasm.h
+keyboard.o: ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+keyboard.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 localsystem.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 localsystem.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h
 localsystem.o: ../xge/thread.h ../xge/spinlock.hxx ../xge/mempool.h
@@ -702,9 +643,8 @@ localsystem.o: ../xge/box.h ../xge/ray.h ../xge/quaternion.h
 localsystem.o: ../xge/localsystem.h ../xge/vector.h ../xge/color4f.h
 localsystem.o: ../xge/frustum.h ../xge/texture.h ../xge/manipulator.h
 localsystem.o: ../xge/batch.h ../xge/pick.h ../xge/graph.h ../xge/graph.hxx
-localsystem.o: ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-localsystem.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h
-localsystem.o: ../xge/Batch.h ../xge/plasm.h
+localsystem.o: ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+localsystem.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 log.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 log.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 log.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -714,9 +654,8 @@ log.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 log.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 log.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 log.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-log.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-log.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-log.o: ../xge/plasm.h
+log.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+log.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 manipulator.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 manipulator.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h
 manipulator.o: ../xge/thread.h ../xge/spinlock.hxx ../xge/mempool.h
@@ -727,9 +666,8 @@ manipulator.o: ../xge/box.h ../xge/ray.h ../xge/quaternion.h
 manipulator.o: ../xge/localsystem.h ../xge/vector.h ../xge/color4f.h
 manipulator.o: ../xge/frustum.h ../xge/texture.h ../xge/manipulator.h
 manipulator.o: ../xge/batch.h ../xge/pick.h ../xge/graph.h ../xge/graph.hxx
-manipulator.o: ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-manipulator.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h
-manipulator.o: ../xge/Batch.h ../xge/plasm.h
+manipulator.o: ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+manipulator.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 mat.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 mat.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 mat.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -739,9 +677,8 @@ mat.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 mat.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 mat.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 mat.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-mat.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-mat.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-mat.o: ../xge/plasm.h
+mat.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+mat.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 mempool.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 mempool.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 mempool.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -751,9 +688,8 @@ mempool.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 mempool.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 mempool.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 mempool.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-mempool.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-mempool.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-mempool.o: ../xge/plasm.h
+mempool.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+mempool.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 mouseevent.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 mouseevent.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h
 mouseevent.o: ../xge/thread.h ../xge/spinlock.hxx ../xge/mempool.h
@@ -764,8 +700,8 @@ mouseevent.o: ../xge/box.h ../xge/ray.h ../xge/quaternion.h
 mouseevent.o: ../xge/localsystem.h ../xge/vector.h ../xge/color4f.h
 mouseevent.o: ../xge/frustum.h ../xge/texture.h ../xge/manipulator.h
 mouseevent.o: ../xge/batch.h ../xge/pick.h ../xge/graph.h ../xge/graph.hxx
-mouseevent.o: ../xge/engine.h ../xge/viewer.h ../xge/Octree.h ../xge/octree.h
-mouseevent.o: ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h ../xge/plasm.h
+mouseevent.o: ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+mouseevent.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 octree.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 octree.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 octree.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -775,9 +711,8 @@ octree.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 octree.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 octree.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 octree.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-octree.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-octree.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-octree.o: ../xge/plasm.h
+octree.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+octree.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 pick.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 pick.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 pick.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -787,9 +722,8 @@ pick.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 pick.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 pick.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 pick.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-pick.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-pick.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-pick.o: ../xge/plasm.h
+pick.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+pick.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 plane.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 plane.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 plane.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -799,9 +733,8 @@ plane.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 plane.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 plane.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 plane.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-plane.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-plane.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-plane.o: ../xge/plasm.h
+plane.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+plane.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 plasm.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 plasm.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 plasm.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -811,9 +744,8 @@ plasm.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 plasm.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 plasm.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 plasm.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-plasm.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-plasm.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-plasm.o: ../xge/plasm.h
+plasm.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+plasm.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 quaternion.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 quaternion.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h
 quaternion.o: ../xge/thread.h ../xge/spinlock.hxx ../xge/mempool.h
@@ -824,8 +756,8 @@ quaternion.o: ../xge/box.h ../xge/ray.h ../xge/quaternion.h
 quaternion.o: ../xge/localsystem.h ../xge/vector.h ../xge/color4f.h
 quaternion.o: ../xge/frustum.h ../xge/texture.h ../xge/manipulator.h
 quaternion.o: ../xge/batch.h ../xge/pick.h ../xge/graph.h ../xge/graph.hxx
-quaternion.o: ../xge/engine.h ../xge/viewer.h ../xge/Octree.h ../xge/octree.h
-quaternion.o: ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h ../xge/plasm.h
+quaternion.o: ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+quaternion.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 ray.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 ray.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 ray.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -835,9 +767,8 @@ ray.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 ray.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 ray.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 ray.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-ray.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-ray.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-ray.o: ../xge/plasm.h
+ray.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+ray.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 spinlock.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 spinlock.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h
 spinlock.o: ../xge/thread.h ../xge/spinlock.hxx ../xge/mempool.h
@@ -848,8 +779,8 @@ spinlock.o: ../xge/box.h ../xge/ray.h ../xge/quaternion.h
 spinlock.o: ../xge/localsystem.h ../xge/vector.h ../xge/color4f.h
 spinlock.o: ../xge/frustum.h ../xge/texture.h ../xge/manipulator.h
 spinlock.o: ../xge/batch.h ../xge/pick.h ../xge/graph.h ../xge/graph.hxx
-spinlock.o: ../xge/engine.h ../xge/viewer.h ../xge/Octree.h ../xge/octree.h
-spinlock.o: ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h ../xge/plasm.h
+spinlock.o: ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+spinlock.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 texture.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 texture.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 texture.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -859,9 +790,8 @@ texture.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 texture.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 texture.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 texture.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-texture.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-texture.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-texture.o: ../xge/plasm.h
+texture.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+texture.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 thread.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 thread.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 thread.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -871,9 +801,8 @@ thread.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 thread.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 thread.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 thread.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-thread.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-thread.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-thread.o: ../xge/plasm.h
+thread.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+thread.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 triangle.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 triangle.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h
 triangle.o: ../xge/thread.h ../xge/spinlock.hxx ../xge/mempool.h
@@ -884,8 +813,8 @@ triangle.o: ../xge/box.h ../xge/ray.h ../xge/quaternion.h
 triangle.o: ../xge/localsystem.h ../xge/vector.h ../xge/color4f.h
 triangle.o: ../xge/frustum.h ../xge/texture.h ../xge/manipulator.h
 triangle.o: ../xge/batch.h ../xge/pick.h ../xge/graph.h ../xge/graph.hxx
-triangle.o: ../xge/engine.h ../xge/viewer.h ../xge/Octree.h ../xge/octree.h
-triangle.o: ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h ../xge/plasm.h
+triangle.o: ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+triangle.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 unwrapper.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 unwrapper.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h
 unwrapper.o: ../xge/thread.h ../xge/spinlock.hxx ../xge/mempool.h
@@ -896,8 +825,8 @@ unwrapper.o: ../xge/box.h ../xge/ray.h ../xge/quaternion.h
 unwrapper.o: ../xge/localsystem.h ../xge/vector.h ../xge/color4f.h
 unwrapper.o: ../xge/frustum.h ../xge/texture.h ../xge/manipulator.h
 unwrapper.o: ../xge/batch.h ../xge/pick.h ../xge/graph.h ../xge/graph.hxx
-unwrapper.o: ../xge/engine.h ../xge/viewer.h ../xge/Octree.h ../xge/octree.h
-unwrapper.o: ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h ../xge/plasm.h
+unwrapper.o: ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+unwrapper.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 utils.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 utils.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 utils.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -907,9 +836,8 @@ utils.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 utils.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 utils.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 utils.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-utils.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-utils.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-utils.o: ../xge/plasm.h
+utils.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+utils.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 vec.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 vec.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 vec.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -919,9 +847,8 @@ vec.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 vec.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 vec.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 vec.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-vec.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-vec.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-vec.o: ../xge/plasm.h
+vec.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+vec.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 vector.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 vector.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 vector.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -931,9 +858,8 @@ vector.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 vector.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 vector.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 vector.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-vector.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-vector.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-vector.o: ../xge/plasm.h
+vector.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+vector.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 viewer.o: ../xge/xge.h ../xge/config.h ../xge/utils.h ../xge/log.h
 viewer.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 viewer.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -943,9 +869,8 @@ viewer.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 viewer.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 viewer.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 viewer.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-viewer.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-viewer.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-viewer.o: ../xge/plasm.h
+viewer.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+viewer.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h
 xge.o: ../xge/config.h ../xge/utils.h ../xge/xge.h ../xge/log.h
 xge.o: ../xge/clock.h ../xge/keyboard.h ../xge/spinlock.h ../xge/thread.h
 xge.o: ../xge/spinlock.hxx ../xge/mempool.h ../xge/mempool.hxx
@@ -955,6 +880,5 @@ xge.o: ../xge/mat.h ../xge/ball.h ../xge/box.h ../xge/ray.h
 xge.o: ../xge/quaternion.h ../xge/localsystem.h ../xge/vector.h
 xge.o: ../xge/color4f.h ../xge/frustum.h ../xge/texture.h
 xge.o: ../xge/manipulator.h ../xge/batch.h ../xge/pick.h ../xge/graph.h
-xge.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/Octree.h
-xge.o: ../xge/octree.h ../xge/unwrapper.h ../xge/bake.h ../xge/Batch.h
-xge.o: ../xge/plasm.h
+xge.o: ../xge/graph.hxx ../xge/engine.h ../xge/viewer.h ../xge/octree.h
+xge.o: ../xge/unwrapper.h ../xge/bake.h ../xge/plasm.h

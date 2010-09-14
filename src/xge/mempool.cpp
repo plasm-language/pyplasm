@@ -35,7 +35,7 @@ int MemPool::SelfTest()
 	Log::printf("Testing MemPool...\n");
 
 	void* allocated[2][MEMPOOL_TABLE_SIZE];
-	
+
 	for (int size=1;size<MEMPOOL_TABLE_SIZE;size++)
 	{
 		allocated[0][size]=getSingleton()->malloc(size);
@@ -58,5 +58,4 @@ int MemPool::SelfTest()
 	}
 
 	return 0;
-
 }

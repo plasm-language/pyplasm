@@ -40,14 +40,16 @@ typedef unsigned long long int      uint64;
 #define getcwd         _getcwd
 #endif 
 
-//Darwin specific stuff
-#ifdef Darwin
+//includes for NIX
+#ifndef _WINDOWS 
+#include <stdlib.h>
+#include <string.h>
 #include <tr1/memory>
 #include <stdexcept>
 #include <strings.h>
 #include <sys/time.h>
 #define strcmpi strcasecmp
-#endif //Darwin
+#endif
 
 // general headers
 #define _USE_MATH_DEFINES

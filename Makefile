@@ -21,36 +21,41 @@ distrib-win32:
 	cp Release/_xgepy.pyd         distrib/win32/pyplasm/xge/_xgepy.pyd
 	chmod -R a+rwx distrib/win32
 
+distrib-linux:
+	echo "Creating distrib/linux"
+	rm -Rf  $(PYTHON_SITE_PACKAGES)/pyplasm
+	cp -r src/pyplasm             $(PYTHON_SITE_PACKAGES)/pyplasm
+	cp PLaSM.html                 $(PYTHON_SITE_PACKAGES)/pyplasm/ 
+	cp README.txt                 $(PYTHON_SITE_PACKAGES)/pyplasm/  
+	cp src/xge/libxge.so          $(PYTHON_SITE_PACKAGES)/pyplasm/xge/libxge.so
+	cp src/xgemain/xgemain        $(PYTHON_SITE_PACKAGES)/pyplasm/xge/xgemain
+	cp src/xgepy/libxgepy.so      $(PYTHON_SITE_PACKAGES)/pyplasm/xge/_xgepy.so
+	chmod -R a+rwx                $(PYTHON_SITE_PACKAGES)/pyplasm
+	rm -Rf   distrib/linux
+	mkdir -p distrib/linux
+	cp -r $(PYTHON_SITE_PACKAGES)/pyplasm distrib/linux
+	chmod -R a+rwx distrib/linux
+
 distrib-macosx:
 	echo "Creating distrib/macosx"
-	rm -Rf  $(PYTHON_LIBRARY)/lib/python2.6/site-packages/pyplasm
-	cp -r src/pyplasm             $(PYTHON_LIBRARY)/lib/python2.6/site-packages/pyplasm
-	cp PLaSM.html                 $(PYTHON_LIBRARY)/lib/python2.6/site-packages/pyplasm/ 
-	cp README.txt                 $(PYTHON_LIBRARY)/lib/python2.6/site-packages/pyplasm/  
-	cp src/xge/libxge.dylib       $(PYTHON_LIBRARY)/lib/python2.6/site-packages/pyplasm/xge/libxge.dylib
-	cp src/xgemain/xgemain        $(PYTHON_LIBRARY)/lib/python2.6/site-packages/pyplasm/xge/xgemain
-	cp src/xgepy/libxgepy.dylib   $(PYTHON_LIBRARY)/lib/python2.6/site-packages/pyplasm/xge/_xgepy.so
-	install_name_tool -change libxge.dylib $(PYTHON_LIBRARY)/lib/python2.6/site-packages//pyplasm/xge/libxge.dylib $(PYTHON_LIBRARY)/lib/python2.6/site-packages/pyplasm/xge/_xgepy.so
+	rm -Rf   $(PYTHON_SITE_PACKAGES)/pyplasm 
+	cp -r src/pyplasm             $(PYTHON_SITE_PACKAGES)/pyplasm
+	cp PLaSM.html                 $(PYTHON_SITE_PACKAGES)/pyplasm/ 
+	cp README.txt                 $(PYTHON_SITE_PACKAGES)/pyplasm/  
+	cp src/xge/libxge.dylib       $(PYTHON_SITE_PACKAGES)/pyplasm/xge/libxge.dylib
+	cp src/xgemain/xgemain        $(PYTHON_SITE_PACKAGES)/pyplasm/xge/xgemain
+	cp src/xgepy/libxgepy.dylib   $(PYTHON_SITE_PACKAGES)/pyplasm/xge/_xgepy.so
+	install_name_tool -change libxge.dylib $(PYTHON_SITE_PACKAGES)/pyplasm/xge/libxge.dylib $(PYTHON_SITE_PACKAGES)/pyplasm/xge/_xgepy.so
+	chmod -R a+rwx                $(PYTHON_SITE_PACKAGES)/pyplasm
 	rm -Rf   distrib/macosx
 	mkdir -p distrib/macosx
-	cp -r $(PYTHON_LIBRARY)/lib/python2.6/site-packages/pyplasm distrib/macosx
-
-distrib-sources: clean
-	tar cvzf distrib/pyplasm.sources.tar.gz * \
-		--exclude distrib \
-		--exclude pyplasm.sources.tar.gz \
-		--exclude src/mzplasm \
-		--exclude libs/Scintilla \
-		--exclude libs/FreeImage/FreeImage.lib \
-		--exclude libs/FreeImage/FreeImaged.lib \
-		--exclude libs/FreeImage/libfreeimage.a  \
-		--exclude src/swig.test \
-		--exclude src/xgecs \
-		--exclude src/Trs.Sdk.Xge 
-		--exclude doc
+	cp -r $(PYTHON_SITE_PACKAGES)/pyplasm distrib/macosx
+	chmod -R a+rwx distrib/macosx
 
 clean:  
-	rm -f *.ncb *.suo $(shell find . -iname "*.scorzell.user") $(shell find . -iname "exposed_decl.pypp.txt") $(shell find . -iname ".DS_Store") $(shell find . -iname "*~")  $(shell find . -iname "._*") $(shell find . -iname "*.bak") 
+	rm -f *.ncb *.suo $(shell find . -iname "*.scorzell.user") 
+	rm -f $(shell find . -iname "exposed_decl.pypp.txt") $(shell find . -iname ".DS_Store") $(shell find . -iname "*~")  
+	rm -f $(shell find . -iname "._*") $(shell find . -iname "*.bak") 
 	rm -Rf Debug/ Release/
 	cd libs/qhull    && make clean
 	cd libs/tinyxml  && make clean
@@ -63,3 +68,7 @@ clean:
 	rm -Rf src/xgecs/Debug src/xgecs/Release
 	rm -Rf src/swig.test/bin src/swig.test/obj
 	rm -Rf src/Trs.Sdk.Xge/bin src/Trs.Sdk.Xge/obj 
+	rm -f temp/*
+	rm -Rf distrib/*
+
+

@@ -323,7 +323,7 @@ protected:
 	static std::stack<int> current_ops;
 
 	//! stop benchmark (internal use)
-	static inline void Plasm::STOP(int opcode,bool bInnerCall=false)
+	static inline void STOP(int opcode,bool bInnerCall=false)
 	{
 		DebugAssert(opcode==current_ops.top());
 		int msec=(int)(Clock()-stats[opcode].t1);
@@ -337,7 +337,7 @@ protected:
 	}
 
 	//! start benchmark (internal use)
-	static inline void Plasm::START(int opcode)
+	static inline void START(int opcode)
 	{
 		//recursive call (do not think it supports recursive calls of the same function)
 		if (current_ops.size()) STOP(current_ops.top(),true); //accumulate timing here

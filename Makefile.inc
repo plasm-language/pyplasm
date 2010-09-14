@@ -1,19 +1,27 @@
 
 # platform name
-PLATFORM_NAME=$(shell uname)
+PLATFORM_NAME=PLATFORM_$(shell uname)
 
-# could be changed to -O3?
-OPTIMIZATION=-O2
+# current gcc optimization
+OPTIMIZATION=-O3
 
-# Python headers (make sure it is version 2.6!)
-PYTHON_LIBRARY=/Library/Frameworks/Python.framework/Versions/2.6
+
+# --- LINUX ---
+ifeq ($(PLATFORM_NAME),PLATFORM_Linux)
+PYTHON_INCLUDE_DIRECTORY=/usr/include/python2.6
+PYTHON_LIB_DIRECTORY=
+PYTHON_SITE_PACKAGES=/usr/lib/python2.6/dist-packages
+endif
+
+# ---- DARWIN ----
+ifeq ($(PLATFORM_NAME),PLATFORM_Darwin)
+PYTHON_INCLUDE_DIRECTORY=/Library/Frameworks/Python.framework/Versions/2.6/include/python2.6
+PYTHON_LIB_DIRECTORY=-L/Library/Frameworks/Python.framework/Versions/2.6/lib/python2.6/config/
+PYTHON_SITE_PACKAGES=/Library/Frameworks/Python.framework/Versions/2.6/lib/python2.6/site-packages
+endif
 
 # C++ compilation flags
-CXXFLAGS=-w -fPIC ${OPTIMIZATION} -D${PLATFORM_NAME} -I${PYTHON_LIBRARY}/include/python2.6 
-
-# C++ linking common libraries 
-LIBS=-framework CoreFoundation -framework OpenGL -framework Python  
-
+CXXFLAGS=-w -fPIC ${OPTIMIZATION} -D${PLATFORM_NAME} 
 
 
 

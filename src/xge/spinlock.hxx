@@ -1,41 +1,35 @@
 
-
-
 ////////////////////////////////////////////////
 inline SpinLock::SpinLock(int max_delta_time)
 {
 	static int _id=1;
 	this->id=(_id++);
-
-	#ifdef _WINDOWS
-		this->value=0;
-	#else
-		pthread_spin_init (&__lock,0);
-	#endif
-
+	this->value=0;
 	this->max_delta_time=max_delta_time;
-}
-
-////////////////////////////////////////////////
-inline SpinLock::~SpinLock()
-{
-	#ifdef _WINDOWS
-		;
-	#else
-		pthread_spin_destroy (&__lock);
-	#endif
 }
 
 ////////////////////////////////////////////////
 inline void SpinLock::Lock()
 {
-	
 	#ifdef _WINDOWS
-		 while(InterlockedExchange(&value,1)==1) 
-			 Thread::Sleep(Utils::IntRand(1,max_delta_time));
+	{
+		while(InterlockedExchange(&value,1)==1) 
+			Thread::Sleep(Utils::IntRand(1,max_delta_time));
+	}
+	#elif defined(PLATFORM_Darwin)
+	{
+		while (!OSSpinLockTry(&value))
+			Thread::Sleep(Utils::IntRand(1,max_delta_time));
+	}
+	#elif defined(PLATFORM_Linux)
+	{
+		while(__sync_lock_test_and_set(&value,1)==1) 
+			Thread::Sleep(Utils::IntRand(1,max_delta_time));
+	}
 	#else
-		while (!pthread_spin_trylock (&__lock))
-			 Thread::Sleep(Utils::IntRand(1,max_delta_time));
+	{
+		bogus
+	}
 	#endif
 }
 
@@ -43,8 +37,21 @@ inline void SpinLock::Lock()
 inline void SpinLock::Unlock()
 {
 	#ifdef _WINDOWS
+	{
 		InterlockedExchange(&value,0);
+	}
+	#elif defined(PLATFORM_Darwin)
+	{
+		OSSpinLockUnlock(&value);
+	}
+	#elif defined(PLATFORM_Linux)
+	{
+		__sync_lock_test_and_set(&value,0);
+	}
 	#else
-		pthread_spin_unlock (&__lock)
+	{
+		bogus
+	}
 	#endif
+
 }

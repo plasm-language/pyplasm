@@ -27,7 +27,7 @@ inline SinglePool::~SinglePool()
 ////////////////////////////////////////////////////////////////////////////
 inline void* SinglePool::malloc()
 {
-	_lock.Lock();
+        _lock.Lock();
 
 	void* ret;
 

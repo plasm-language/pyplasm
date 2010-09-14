@@ -1,6 +1,6 @@
 
 #include <xge/xge.h>
-#include <xge/Manipulator.h>
+#include <xge/manipulator.h>
 
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -362,7 +362,7 @@ void Manipulator::Render(Engine* engine)
 
 
 ///////////////////////////////////////////////////////////////////////
-#include <xge/Viewer.h>
+#include <xge/viewer.h>
 
 class ManipulatorSelfTest: public Viewer
 {

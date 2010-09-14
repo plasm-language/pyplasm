@@ -21,10 +21,10 @@ public:
 	~SinglePool();
 
 	//malloc
-	void* SinglePool::malloc();
+	void* malloc();
 
 	//free
-	void SinglePool::free(void* p);
+	void free(void* p);
 
 protected:
 
@@ -51,16 +51,16 @@ public:
 	static MemPool* getSingleton();
 
 	//! equivalent to C malloc
-	void* MemPool::malloc(int size);
+	void* malloc(int size);
 	 
 	//! equivalent to C free (but you must know the size)
-	void MemPool::free(int size,void* p);
+	void free(int size,void* p);
 
 	//! equivalent to C calloc
-	void* MemPool::calloc(int num,int size);
+	void* calloc(int num,int size);
 
 	//! equivalent to C realloc (but you must know the previous size)
-	void* MemPool::realloc(int old_size,void* p,int new_size);
+	void* realloc(int old_size,void* p,int new_size);
 
 	//SelfTest
 	static int SelfTest();

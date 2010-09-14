@@ -1,3 +1,7 @@
+#if PLATFORM_Darwin
+#include <Carbon/Carbon.h>
+#endif
+
 #include <xge/xge.h>
 #include <xge/engine.h>
 
@@ -52,7 +56,7 @@ void Engine::initializeGL()
 
 	#define glewGetContext() ((GLEWContext*)this->WC)
 
-	#ifdef Darwin
+	#ifdef PLATFORM_Darwin
 	static bool _glew_init_needed=true;
 	#else
 	bool _glew_init_needed=true;
@@ -601,6 +605,9 @@ public:
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
 void Viewer::doJob(int nworker)
 {
 	//***************************
@@ -617,6 +624,8 @@ void Viewer::doJob(int nworker)
 			bool bOk=app->initialiseApp("dummy");
 			ReleaseAssert(bOk);
 
+#if 0	
+			//this works only in windows!
 			Juce_OpenGLComponent* glcomponent=new Juce_OpenGLComponent(true);
 			glcomponent->setPixelFormat(juce::OpenGLPixelFormat(/*RGB*/8,/*alpha*/8,/*depth*/16,0));
 
@@ -627,6 +636,33 @@ void Viewer::doJob(int nworker)
 
 			engine->initializeGL();
 			_shared_context=engine;
+#else
+
+			Juce_DocumentWindow*  win         = new Juce_DocumentWindow(0,"shared context");
+			Juce_Component*       component   = new Juce_Component();
+			Juce_OpenGLComponent* glcomponent = new Juce_OpenGLComponent();
+		
+			glcomponent->viewer=0;
+			glcomponent->setPixelFormat(juce::OpenGLPixelFormat(/*RGB*/8,/*alpha*/8,/*depth*/16,0));
+			win->setUsingNativeTitleBar(true);		
+			win->setResizable (true,true);
+			win->setContentComponent(component);
+			win->setVisible(true);
+			component->addAndMakeVisible (glcomponent);
+;
+			glcomponent->makeCurrentContextActive (); 
+			glcomponent->makeCurrentContextInactive();
+
+			win->setVisible(false);
+			win->centreWithSize (1024, 768);
+
+			Engine* engine=new Engine();
+			engine->DC= (int64)win;
+			engine->RC= (int64)glcomponent->getCurrentContext();ReleaseAssert(engine->RC);
+			engine->initializeGL();
+			_shared_context=engine;
+
+#endif
 		}
 
 		//create the window
@@ -655,7 +691,7 @@ void Viewer::doJob(int nworker)
 		win->centreWithSize (1024, 768);
 
 		//dont' have the bundle
-		#ifdef Darwin
+		#ifdef PLATFORM_Darwin
 		{
 			ProcessSerialNumber psn;
 			GetCurrentProcess(&psn);

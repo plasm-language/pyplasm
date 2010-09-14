@@ -53,7 +53,10 @@ int Ballf::SelfTest()
 	P.push_back(1.0f);P.push_back(-1.0f);P.push_back(+1.0f);P.push_back(+1.0f);
 
 	Ballf b=Ballf::bestFittingBall(3,P);
-	ReleaseAssert(b.dim()==3 && b.center.fuzzyEqual(Vecf(1.0f, 0.0f,0.0f,0.0f)) && Utils::FuzzyEqual(b.radius,Vecf(0.0f, 1.0f,1.0f,1.0f).module()));
+	
+	ReleaseAssert(b.dim()==3);
+	ReleaseAssert(b.center.fuzzyEqual(Vecf(1.0f, 0.0f,0.0f,0.0f)));
+	ReleaseAssert(Utils::FuzzyEqual(b.radius,Vecf(0.0f, 1.0f,1.0f,1.0f).module(),1e-6));
 
 	return 0;
 }

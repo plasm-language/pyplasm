@@ -2,7 +2,7 @@
 #include <xge/xge.h>
 #include <xge/plasm.h>
 #include <xge/clock.h>
-#include <xge/Octree.h>
+#include <xge/octree.h>
 
 
 

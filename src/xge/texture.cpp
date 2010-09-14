@@ -1,11 +1,11 @@
 
 #include <xge/xge.h>
-#include <xge/Texture.h>
+#include <xge/texture.h>
 #include <xge/mempool.h>
-#include <xge/Viewer.h>
+#include <xge/viewer.h>
 
 
-#include <freeimage.h>
+#include <FreeImage.h>
 
 //all loaded textures
 static std::map<std::string,SmartPointer<Texture> > textures_in_cache;
@@ -330,7 +330,7 @@ SmartPointer<Texture> Texture::open(std::string filename,bool bUseCacheIfPossibl
 
 			for (int X=0;X<width;X++)
 			{
-			#ifdef Darwin
+			#if 0
 				dst[0]=src[FI_RGBA_BLUE  ];
 				dst[1]=src[FI_RGBA_GREEN];
 				dst[2]=src[FI_RGBA_RED];
@@ -357,7 +357,7 @@ SmartPointer<Texture> Texture::open(std::string filename,bool bUseCacheIfPossibl
 
 			for (int X=0;X<width;X++)
 			{
-			#ifdef Darwin
+			#if 0
 				dst[0]=src[FI_RGBA_RED  ];
 				dst[1]=src[FI_RGBA_GREEN];
 				dst[2]=src[FI_RGBA_BLUE ];
@@ -449,7 +449,7 @@ bool Texture::save(std::string filename)
 		for (int i=0;i<tot;i++,dst+=3,src+=3) 
 		{
 		//bug in the inversion
-		#ifdef Darwin
+		#if 0
 			dst[FI_RGBA_BLUE  ]=src[0]; 
 			dst[FI_RGBA_GREEN ]=src[1]; 
 			dst[FI_RGBA_RED   ]=src[2]; 
@@ -465,7 +465,7 @@ bool Texture::save(std::string filename)
 	{
 		for (int i=0;i<tot;i++,src+=4,dst+=4) 
 		{
-		#ifdef Darwin
+		#if 0
 			dst[FI_RGBA_BLUE  ]=src[0];
 			dst[FI_RGBA_GREEN ]=src[1];
 			dst[FI_RGBA_RED    ]=src[2];
@@ -615,7 +615,7 @@ int Texture::SelfTest()
 	}
 	
 	//test PPM load/save  (broken in macosx)
-	#ifndef Darwin
+	#ifndef PLATFORM_Darwin
 	if (true)
 	{
 		bool ret=gioconda->save(":temp/gioconda.copy.ppm");
@@ -630,7 +630,7 @@ int Texture::SelfTest()
 	#endif
 
 	//test TIFF load/save (broken in macosx)
-	#ifndef Darwin
+	#ifndef PLATFORM_Darwin
 	if (true)
 	{
 		bool ret=gioconda->save(":temp/gioconda.copy.tif");

@@ -124,7 +124,7 @@ int main(int nargs,char** argv)
 	//		viewer.Wait();
 	//		return 0;
 	//	}
-	//	
+	//
 
 	//self testing
 	Engine::PrintStatistics();

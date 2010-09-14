@@ -340,7 +340,7 @@ void Viewer::Run()
 	#ifdef WIN32
 	workers[1].winhandle=CreateThread( NULL, 0, startfun, &workers[1] , 0, NULL); 
 	#else
-	pthread_create( &workers[1].thread, NULL, startfun, (void*) &workers[i]);
+	pthread_create( &workers[1].thread, NULL, startfun, (void*) &workers[1]);
 	#endif
 	workers[1].running=true; //the GUI must be in the main thread
 	workers[0].running=true;

@@ -1,6 +1,6 @@
 
 #include <xge/xge.h>
-#include <xge/Vector.h>
+#include <xge/vector.h>
 
 
 
