@@ -1,5 +1,6 @@
 
-
+CFLAGS+=-fPIC
+CXXFLAGS+=-fPIC
 
 #SRC_C=$(shell ls *.c)
 

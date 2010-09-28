@@ -330,15 +330,10 @@ SmartPointer<Texture> Texture::open(std::string filename,bool bUseCacheIfPossibl
 
 			for (int X=0;X<width;X++)
 			{
-			#if 0
-				dst[0]=src[FI_RGBA_BLUE  ];
-				dst[1]=src[FI_RGBA_GREEN];
-				dst[2]=src[FI_RGBA_RED];
-			#else
 				dst[0]=src[FI_RGBA_RED  ];
 				dst[1]=src[FI_RGBA_GREEN];
 				dst[2]=src[FI_RGBA_BLUE ];
-			#endif
+
 				dst+=3;
 				src+=3;
 			}
@@ -357,15 +352,10 @@ SmartPointer<Texture> Texture::open(std::string filename,bool bUseCacheIfPossibl
 
 			for (int X=0;X<width;X++)
 			{
-			#if 0
 				dst[0]=src[FI_RGBA_RED  ];
 				dst[1]=src[FI_RGBA_GREEN];
 				dst[2]=src[FI_RGBA_BLUE ];
-			#else
-				dst[0]=src[FI_RGBA_BLUE  ];
-				dst[1]=src[FI_RGBA_GREEN ];
-				dst[2]=src[FI_RGBA_RED   ];
-			#endif
+
 				dst[3]=src[FI_RGBA_ALPHA];
 				dst+=4;
 				src+=4;
@@ -448,16 +438,9 @@ bool Texture::save(std::string filename)
 		
 		for (int i=0;i<tot;i++,dst+=3,src+=3) 
 		{
-		//bug in the inversion
-		#if 0
-			dst[FI_RGBA_BLUE  ]=src[0]; 
-			dst[FI_RGBA_GREEN ]=src[1]; 
-			dst[FI_RGBA_RED   ]=src[2]; 
-		#else
 			dst[FI_RGBA_RED  ]=src[0]; 
 			dst[FI_RGBA_GREEN]=src[1]; 
 			dst[FI_RGBA_BLUE ]=src[2];  
-		#endif
 		}
 	}
 	//BBGGRRaa
@@ -465,15 +448,9 @@ bool Texture::save(std::string filename)
 	{
 		for (int i=0;i<tot;i++,src+=4,dst+=4) 
 		{
-		#if 0
-			dst[FI_RGBA_BLUE  ]=src[0];
-			dst[FI_RGBA_GREEN ]=src[1];
-			dst[FI_RGBA_RED    ]=src[2];
-		#else
 			dst[FI_RGBA_RED  ]=src[0];
 			dst[FI_RGBA_GREEN]=src[1];
 			dst[FI_RGBA_BLUE ]=src[2];
-		#endif
 			dst[FI_RGBA_ALPHA]=src[3];
 		}
 	}

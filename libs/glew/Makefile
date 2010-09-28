@@ -1,6 +1,9 @@
 
 CPPFLAGS=-fPIC -O2 -DGLEW_MX -I./
 
+CFLAGS+=-fPIC
+CXXFLAGS+=-fPIC
+
 SRC_C=$(shell ls *.c)
 
 #SRC_CPP=$(shell ls *.cpp)

@@ -1,8 +1,10 @@
+#include <xge/xge.h>
+
 #if PLATFORM_Darwin
 #include <Carbon/Carbon.h>
 #endif
 
-#include <xge/xge.h>
+
 #include <xge/engine.h>
 
 
@@ -649,7 +651,7 @@ void Viewer::doJob(int nworker)
 			win->setContentComponent(component);
 			win->setVisible(true);
 			component->addAndMakeVisible (glcomponent);
-;
+
 			glcomponent->makeCurrentContextActive (); 
 			glcomponent->makeCurrentContextInactive();
 
