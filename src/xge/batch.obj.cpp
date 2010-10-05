@@ -31,7 +31,7 @@ static inline void skipLine(FILE* file)
 void Batch::saveObj(std::string filename,std::vector<SmartPointer<Batch> > batches)
 {
 	FILE* file=fopen(FileSystem::FullPath(filename).c_str(),"wt");
-	ReleaseAssert(file);
+	XgeReleaseAssert(file);
 
 	Box3f box;
 	for (int I=0;I<(int)batches.size();I++)
@@ -50,7 +50,7 @@ void Batch::saveObj(std::string filename,std::vector<SmartPointer<Batch> > batch
 		SmartPointer<Batch> batch=batches[I];
 
 		//TODO: all other cases
-		ReleaseAssert(batch->primitive==Batch::TRIANGLES);
+		XgeReleaseAssert(batch->primitive==Batch::TRIANGLES);
 
 		Mat4f matrix=batch->matrix;
 
@@ -58,16 +58,16 @@ void Batch::saveObj(std::string filename,std::vector<SmartPointer<Batch> > batch
 
 		Mat4f inv=matrix.invert();
 
-		/*ReleaseAssert(batch->texture1);
-		ReleaseAssert(batch->texture1->width==batch->texture1->height);
+		/*XgeReleaseAssert(batch->texture1);
+		XgeReleaseAssert(batch->texture1->width==batch->texture1->height);
 		int texturedim=batch->texture1->width;*/
 
 		int nv=batch->vertices->size()/3;
 		int nt=nv/3;
 
-		ReleaseAssert(batch->vertices);
-		ReleaseAssert(batch->normals);
-		//ReleaseAssert(batch->texture1coords);
+		XgeReleaseAssert(batch->vertices);
+		XgeReleaseAssert(batch->normals);
+		//XgeReleaseAssert(batch->texture1coords);
 
 		float* vertex     = batch->vertices->mem();
 		float* normal     = batch->normals ->mem();
@@ -191,7 +191,7 @@ std::vector<SmartPointer<Batch> >  Batch::openObj(std::string filename)
 
 					if (V<0) V=((int)vertices.size()/3)+V; else V--;
 
-					ReleaseAssert(V>=0 && V<((int)vertices.size()/3));
+					XgeReleaseAssert(V>=0 && V<((int)vertices.size()/3));
 				
 					vertices_indices.push_back(V*3+0); 
 					vertices_indices.push_back(V*3+1);
@@ -201,19 +201,19 @@ std::vector<SmartPointer<Batch> >  Batch::openObj(std::string filename)
 					if (normals.size() && texcoords.size())
 					{
 						c=fgetc(file);
-						ReleaseAssert(c=='/');
+						XgeReleaseAssert(c=='/');
 						fscanf(file,"%d",&T);
 						if (T<0) V=((int)texcoords.size()/2)+T; else T--;
-						ReleaseAssert(T>=0 && T<((int)texcoords.size()/2));
+						XgeReleaseAssert(T>=0 && T<((int)texcoords.size()/2));
 
 						texcoords_indices.push_back(T*2+0);
 						texcoords_indices.push_back(T*2+1);
 
 						c=fgetc(file);
-						ReleaseAssert(c=='/');
+						XgeReleaseAssert(c=='/');
 						fscanf(file,"%d",&N);
 						if (N<0) N=((int)normals.size()/3)+N; else N--;
-						ReleaseAssert(N>=0 && N<((int)normals.size()/3));
+						XgeReleaseAssert(N>=0 && N<((int)normals.size()/3));
 
 						normals_indices.push_back(N*3+0);
 						normals_indices.push_back(N*3+1);
@@ -222,12 +222,12 @@ std::vector<SmartPointer<Batch> >  Batch::openObj(std::string filename)
 					else if (normals.size()) /* v//n */
 					{
 						c=fgetc(file);
-						ReleaseAssert(c=='/');
+						XgeReleaseAssert(c=='/');
 						c=fgetc(file);
-						ReleaseAssert(c=='/');
+						XgeReleaseAssert(c=='/');
 						fscanf(file,"%d",&N);
 						if (N<0) N=((int)normals.size()/3)+N; else N--;
-						ReleaseAssert(N>=0 && N<((int)normals.size()/3));
+						XgeReleaseAssert(N>=0 && N<((int)normals.size()/3));
 
 						normals_indices.push_back(N*3+0);
 						normals_indices.push_back(N*3+1);
@@ -236,10 +236,10 @@ std::vector<SmartPointer<Batch> >  Batch::openObj(std::string filename)
 					else if (texcoords.size())
 					{
 						c=fgetc(file);
-						ReleaseAssert(c=='/');
+						XgeReleaseAssert(c=='/');
 						fscanf(file,"%d",&T);
 						if (T<0) V=((int)texcoords.size()/2)+T; else T--;
-						ReleaseAssert(T>=0 && T<((int)texcoords.size()/2));
+						XgeReleaseAssert(T>=0 && T<((int)texcoords.size()/2));
 
 						texcoords_indices.push_back(T*2+0);
 						texcoords_indices.push_back(T*2+1);
@@ -251,7 +251,7 @@ std::vector<SmartPointer<Batch> >  Batch::openObj(std::string filename)
 					if (i<2) 
 					{
 						c=fgetc(file);
-						ReleaseAssert(c==' ');
+						XgeReleaseAssert(c==' ');
 					}
 				}
 				

@@ -126,6 +126,51 @@ int main(int nargs,char** argv)
 	//	}
 	//
 
+
+	//{
+
+
+	//	{
+	//		int pointdim=3;
+	//		int nplanes=18;
+
+	//		float planes[]=
+	//		{
+	//			+1,+1,      0,      0,  //x>=-1
+	//			+1,-1,      0,      0,  //x<=+1
+	//			+1, 0,     +1,      0,  //y>=-1
+	//			+1, 0,     -1,      0,  //y<=+1
+	//			+1, 0,      0,     +1,  //z>=-1
+	//			+1, 0,      0,     -1,  //z<=+1
+
+
+	//			-0.5,-1,      0,      0,  //x<=-0.5
+	//			-0.5, 1,      0,      0,  //x>=+0.5
+	//			-0.5, 0,     -1,      0,  //y<=-0.5
+	//			-0.5, 0,      1,      0,  //y>=+0.5
+	//			-0.5, 0,      0,     -1,  //z<=-0.5
+	//			-0.5, 0,      0,      1,   //z>=+0.5
+
+	//			-1,-1,      0,      0,  //x<=-1
+	//			-1,+1,      0,      0,  //x>=+1
+	//			-1, 0,     -1,      0,  //y<=-1
+	//			-1, 0,     +1,      0,  //y>=+1
+	//			-1, 0,      0,     -1,  //z<=-1
+	//			-1, 0,      0,     +1,  //z>=+1
+
+	//		};
+
+	//		float interior_point[]={0,0,0};
+	//		Matf Vmat,Hmat;
+	//		float tolerance=1e-6f;
+	//		SmartPointer<Graph> g=Graph::mkpolf(Vmat,Hmat,pointdim,nplanes,planes,interior_point,tolerance);
+
+	//		g->Print();
+	//	}
+
+	//	return 0;
+	//}
+
 	//self testing
 	Engine::PrintStatistics();
 	if (true)

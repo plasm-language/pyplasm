@@ -20,11 +20,11 @@ public:
 	inline          Vec2i(                           ) {this->x=0;this->y=0;}
 	inline          Vec2i(const Vec2i& src           ) {this->x=src.x;this->y=src.y;}
 	inline explicit Vec2i(int x,int y                ) {this->x=x;this->y=y;}
-	inline explicit Vec2i(const std::vector<int>& src) {DebugAssert (src.size()==2);this->x=src[0];this->y=src[1];}
+	inline explicit Vec2i(const std::vector<int>& src) {XgeDebugAssert (src.size()==2);this->x=src[0];this->y=src[1];}
 
 	//assignment operators
 	inline Vec2i& operator=(const Vec2i& src){this->x=src.x;this->y=src.y;return *this;}
-	inline Vec2i& operator=(const std::vector<int>& src) {DebugAssert (src.size()==2);this->x=src[0];this->y=src[1];return *this;}
+	inline Vec2i& operator=(const std::vector<int>& src) {XgeDebugAssert (src.size()==2);this->x=src[0];this->y=src[1];return *this;}
 
 	//scale & translate
 	inline Vec2i scale    (int scalex,int scaley) const {return Vec2i(this->x*scalex,this->y*scaley); }
@@ -34,12 +34,12 @@ public:
 	inline bool  operator==(const Vec2i&  b) const{const Vec2i& a=*this;return a.x==b.x && a.y==b.y;}
 
 	//get/set
-	inline int        get(int i          ){DebugAssert (i>=0 && i<=1);if (!i  ) return x;else      return y;}
-	inline void       set(int i,int value){DebugAssert (i>=0 && i<=1);if (!i  )  x=value;else      y=value;}
+	inline int        get(int i          ){XgeDebugAssert (i>=0 && i<=1);if (!i  ) return x;else      return y;}
+	inline void       set(int i,int value){XgeDebugAssert (i>=0 && i<=1);if (!i  )  x=value;else      y=value;}
 
 	//operator []
-	inline int&       operator[](int i)   {DebugAssert (i>=0 && i<=1);if (!i  ) return x;else      return y;}
-	inline const int& operator[](int i) const {DebugAssert (i>=0 && i<=1);if (!i  ) return x;else      return y;}
+	inline int&       operator[](int i)   {XgeDebugAssert (i>=0 && i<=1);if (!i  ) return x;else      return y;}
+	inline const int& operator[](int i) const {XgeDebugAssert (i>=0 && i<=1);if (!i  ) return x;else      return y;}
 }; 
 
 
@@ -417,7 +417,7 @@ public:
 		@endpy
 	*/
 	inline Vec3f& operator/=(float s)   
-		{ReleaseAssert(s);x/=s;y/=s;z/=s;return *this;}
+		{XgeReleaseAssert(s);x/=s;y/=s;z/=s;return *this;}
 	
 	//! operator +=Vec3f
 	/*! 
@@ -970,7 +970,7 @@ public:
 		@endpy
 	*/
 	inline Vec4f& operator/=(float s) 
-		{DebugAssert(s);x/=s;y/=s;z/=s;w/=s;return *this;}
+		{XgeDebugAssert(s);x/=s;y/=s;z/=s;w/=s;return *this;}
 
 	//! operator +=Vec4f
 	/*! 
@@ -1100,7 +1100,7 @@ public:
 	inline Vec4f operator/(const float coeff) const
 	{
 		const Vec4f& a=*this;
-		DebugAssert(coeff);
+		XgeDebugAssert(coeff);
 		return Vec4f(a.x/coeff,a.y/coeff,a.z/coeff,a.w/coeff);
 	}
 	
@@ -1497,7 +1497,7 @@ public:
 	*/
 	inline Vecf& operator+=(const Vecf& v)
 	{
-		DebugAssert(this->dim==v.dim);
+		XgeDebugAssert(this->dim==v.dim);
 		for (int i=0;i<=dim;i++) this->mem[i]+=v.mem[i];
 		return *this;
 	}
@@ -1512,7 +1512,7 @@ public:
 	*/
 	inline Vecf& operator-=(const Vecf& v)
 	{
-		DebugAssert(this->dim==v.dim);
+		XgeDebugAssert(this->dim==v.dim);
 		for (int i=0;i<=dim;i++) this->mem[i]-=v.mem[i];
 		return *this;
 	}
@@ -1585,7 +1585,7 @@ public:
 	inline float operator*(const Vecf& b) const 
 	{
 		const Vecf& a=*this;
-		DebugAssert(a.dim==b.dim);
+		XgeDebugAssert(a.dim==b.dim);
 		int dim=a.dim;
 		float ret=0;
 		for (int i=0;i<=dim;i++) ret+=a.mem[i]*b.mem[i];
@@ -1679,7 +1679,7 @@ public:
 	*/
 	inline Vecf Min(const Vecf& v) const
 	{
-		DebugAssert(v.dim==this->dim);
+		XgeDebugAssert(v.dim==this->dim);
 		Vecf ret(dim);
 		for (int i=0;i<=dim;i++) 
 			ret.mem[i]=min2((*this)[i],v[i]);
@@ -1694,7 +1694,7 @@ public:
 	*/
 	inline Vecf Max(const Vecf& v) const
 	{
-		DebugAssert(v.dim==this->dim);
+		XgeDebugAssert(v.dim==this->dim);
 		Vecf ret(dim);
 		for (int i=0;i<=dim;i++) 
 			ret.mem[i]=max2((*this)[i],v[i]);
@@ -1757,7 +1757,7 @@ public:
 	//! permutation
 	inline Vecf permutate(int n,const int* perm) const
 	{
-		DebugAssert(n==this->dim);
+		XgeDebugAssert(n==this->dim);
 		Vecf ret(dim);
 		for (int n=0;n<=dim;n++) 
 			ret.mem[n]=(*this)[perm[n]];

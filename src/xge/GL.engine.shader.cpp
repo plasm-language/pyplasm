@@ -41,11 +41,11 @@ SmartPointer<EngineResource> EngineShader::createShader(int target,std::string f
 	#define glewGetContext() ((GLEWContext*)glew_context)
 	{
 		unsigned int shader_id= glCreateShader( target);
-		ReleaseAssert(shader_id);
+		XgeReleaseAssert(shader_id);
 
 		unsigned long filesize;
 		char* source_code=(char*)FileSystem::ReadFile(filename,filesize,true);
-		ReleaseAssert(source_code);
+		XgeReleaseAssert(source_code);
 
 		glShaderSource( shader_id, 1, (const GLchar**)&source_code, NULL);
 		glCompileShader(shader_id);
@@ -99,11 +99,11 @@ SmartPointer<EngineResource> EngineShader::createProgram(std::vector< SmartPoint
 	#define glewGetContext() ((GLEWContext*)glew_context)
 	{
 		unsigned int program_id= glCreateProgram();
-		ReleaseAssert(program_id);
+		XgeReleaseAssert(program_id);
 
 		for (int i=0;i<(int)shaders.size();i++)
 		{
-			ReleaseAssert(shaders[i]->type==EngineResource::RESOURCE_SHADER);
+			XgeReleaseAssert(shaders[i]->type==EngineResource::RESOURCE_SHADER);
 			glAttachShader(program_id, shaders[i]->id);
 			glAttachShader(program_id, shaders[i]->id);
 		}
@@ -121,7 +121,7 @@ SmartPointer<EngineResource> EngineShader::createProgram(std::vector< SmartPoint
 		// Test linker result.
 		int linkSucceed = GL_FALSE;
 		glGetProgramiv(program_id, GL_LINK_STATUS, &linkSucceed);
-		ReleaseAssert(linkSucceed);
+		XgeReleaseAssert(linkSucceed);
 
 		ret.reset(new EngineResource(EngineResource::RESOURCE_PROGRAM,program_id,0));
 	}

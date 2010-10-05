@@ -81,7 +81,7 @@ inline OctreeNode::OctreeNode(Box3f world_box)
 
 inline OctreeNode::OctreeNode(OctreeNode* parent,int slot,Box3f box) 
 {
-	ReleaseAssert(parent && slot>=0 && slot<8 && box.isValid());
+	XgeReleaseAssert(parent && slot>=0 && slot<8 && box.isValid());
 
 	this->parent =parent;
 	this->depth  =parent->depth+1;
@@ -89,7 +89,7 @@ inline OctreeNode::OctreeNode(OctreeNode* parent,int slot,Box3f box)
 	memset(this->childs,0,sizeof(childs));
 
 	//set the parent child
-	ReleaseAssert(parent->childs[slot]==0);
+	XgeReleaseAssert(parent->childs[slot]==0);
 	parent->childs[slot]=this;
 }
 
@@ -237,21 +237,21 @@ public:
 	//! current node intersecting frustum
 	OctreeNode* getNode()
 	{
-		DebugAssert(!end());
+		XgeDebugAssert(!end());
 		return pq.top().node;
 	}
 
 	//! get the actual min distance
 	inline float getDistance()
 	{
-		DebugAssert(!end());
+		XgeDebugAssert(!end());
 		return pq.top().t;
 	}
 
 	//! go to the next node intersecting the frustum
 	void moveNext()
 	{
-		DebugAssert(!end());
+		XgeDebugAssert(!end());
 	
 		PqItem current=pq.top();
 		pq.pop();
@@ -348,21 +348,21 @@ public:
 	//! get the current node
 	inline OctreeNode* getNode()
 	{
-		DebugAssert(!end());
+		XgeDebugAssert(!end());
 		return pq.top().node;
 	}
 
 	//! get the actual min distance
 	inline float getMinDistance()
 	{
-		DebugAssert(!end());
+		XgeDebugAssert(!end());
 		return pq.top().tmin;
 	}
 
 	//! go to the next intersecting GdbNode
 	void moveNext()
 	{
-		DebugAssert(!end());
+		XgeDebugAssert(!end());
 		
 		PqItem current=pq.top();
 		pq.pop();

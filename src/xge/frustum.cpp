@@ -58,7 +58,7 @@ void Frustum::guessProjectionMatrix(Box3f box,float fov)
         zNear = zFar / 1000.0f; 
 
 	//necessary
-	DebugAssert(zFar>0 && zNear>0 && zFar>zNear);
+	XgeDebugAssert(zFar>0 && zNear>0 && zFar>zNear);
 
 	//assign projectin matrix (remember to call refresh!)
 	float aspect=this->width / (float)this->height;
@@ -110,7 +110,7 @@ void Frustum::refresh()
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void Frustum::guessBestPosition(const Box3f& box)
 {   
-	DebugAssert(box.isValid());
+	XgeDebugAssert(box.isValid());
 
     float maxdim = box.maxsize();
    

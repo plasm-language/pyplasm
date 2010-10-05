@@ -176,7 +176,7 @@ void Mat4f::print(FILE* file)
 Mat4f Mat4f::invert()  const
 {
 	float Det=determinant();
-	DebugAssert(Det);
+	XgeDebugAssert(Det);
 
 	float _mat[16]={
 			(mat[6]*mat[11]*mat[13] - mat[7]*mat[10]*mat[13] + mat[7]*mat[9]*mat[14] - mat[5]*mat[11]*mat[14] - mat[6]*mat[9]*mat[15] + mat[5]*mat[10]*mat[15]) / Det ,
@@ -332,22 +332,22 @@ int Mat4f::SelfTest()
 	};
 	Mat4f m3(_m3);
 
-	ReleaseAssert(identity.a11()==1.0f && identity.a22()==1.0f && identity.a33()==1.0f && identity.a44()==1.0f);
+	XgeReleaseAssert(identity.a11()==1.0f && identity.a22()==1.0f && identity.a33()==1.0f && identity.a44()==1.0f);
 
 	//equality and subtract
-	ReleaseAssert((identity-identity)==Mat4f::zero());
+	XgeReleaseAssert((identity-identity)==Mat4f::zero());
 
 	//transpose
-	ReleaseAssert(identity.transpose()==identity);
+	XgeReleaseAssert(identity.transpose()==identity);
 	float _m2t[16]={1,5,9,13,2,6,10,14,3,7,11,15,4,8,12,16};
-	ReleaseAssert(m2.transpose()==Mat4f(_m2t));
+	XgeReleaseAssert(m2.transpose()==Mat4f(_m2t));
 
 	//inverse
-	ReleaseAssert(identity.invert()==identity);
-	ReleaseAssert((m3.invert()*m3).almostIdentity(0.001f));
+	XgeReleaseAssert(identity.invert()==identity);
+	XgeReleaseAssert((m3.invert()*m3).almostIdentity(0.001f));
 
 	//addition/subtraction
-	ReleaseAssert((((m3+identity)-identity)-m3).almostZero(0.001f));
+	XgeReleaseAssert((((m3+identity)-identity)-m3).almostZero(0.001f));
 
 	//access
 	float _m4[16]={
@@ -367,21 +367,21 @@ int Mat4f::SelfTest()
 	};
 
 	Mat4f m5(_m5);
-	ReleaseAssert(m3==m4 && m3==m5);
+	XgeReleaseAssert(m3==m4 && m3==m5);
 
 	//multiplication
-	ReleaseAssert(m3*identity==m3);
-	ReleaseAssert((((m3*3.0f)*(1.0f/3.0f))-m3).almostZero(0.001f));
+	XgeReleaseAssert(m3*identity==m3);
+	XgeReleaseAssert((((m3*3.0f)*(1.0f/3.0f))-m3).almostZero(0.001f));
 
 
 	//multiplication for a vector
-	ReleaseAssert(
+	XgeReleaseAssert(
 		   m3*Vec4f(1,0,0,0)==m3.col(0) 
 		&& m3*Vec4f(0,1,0,0)==m3.col(1)
 		&& m3*Vec4f(0,0,1,0)==m3.col(2)
 		&& m3*Vec4f(0,0,0,1)==m3.col(3));
 
-	ReleaseAssert(
+	XgeReleaseAssert(
 		   Vec4f(1,0,0,0)*m3==m3.row(0) 
 		&& Vec4f(0,1,0,0)*m3==m3.row(1)
 		&& Vec4f(0,0,1,0)*m3==m3.row(2)
@@ -390,10 +390,10 @@ int Mat4f::SelfTest()
 	//scale and invert
 	Mat4f m6=Mat4f::scale(1,2,3);
 	float _m6_bis[16]={1/1.0f,0,0,0, 0,1/2.0f,0,0, 0,0,1/3.0f,0, 0,0,0,1};
-	ReleaseAssert(((m6 * Mat4f(_m6_bis))).almostIdentity(0.001f));
+	XgeReleaseAssert(((m6 * Mat4f(_m6_bis))).almostIdentity(0.001f));
 
 	//translate and invert
-	ReleaseAssert(((Mat4f::translate(-1,-2,-3) * Mat4f::translate(1,2,3))).almostIdentity(0.001f));
+	XgeReleaseAssert(((Mat4f::translate(-1,-2,-3) * Mat4f::translate(1,2,3))).almostIdentity(0.001f));
 
 	//rotation and multiplication
 	Mat4f m7=identity
@@ -404,7 +404,7 @@ int Mat4f::SelfTest()
 		* Mat4f::rotatey(+(float)M_PI/4.0f)
 		* Mat4f::rotatex(+(float)M_PI/4.0f);
 
-	ReleaseAssert(m7.almostIdentity(0.001f));
+	XgeReleaseAssert(m7.almostIdentity(0.001f));
 
 	//decompose
 	Vec3f angles((float)M_PI/4.0f,(float)M_PI/5.0f,(float)M_PI/6.0f);
@@ -420,7 +420,7 @@ int Mat4f::SelfTest()
 
 	Vec3f trans, rot, scale;
 	m8.decompose(trans,rot,scale);
-	ReleaseAssert(
+	XgeReleaseAssert(
 		(trans - Vec3f(1,2,3)).module()<=0.001f &&
 		(rot   - angles              ).module()<=0.001f &&
 		(scale - Vec3f(1,2,3)).module()<=0.001f);
@@ -430,12 +430,12 @@ int Mat4f::SelfTest()
 	Mat4f _ma=Mat4f::rotate(Vec3f(1,0,0),+angles.x);
 	Mat4f _mb=Mat4f::rotatex(+angles.x);
 
-	ReleaseAssert((Mat4f::rotate(Vec3f(1,0,0),+angles.x) - Mat4f::rotatex(+angles.x)).almostZero(0.001f));
-	ReleaseAssert((Mat4f::rotate(Vec3f(0,1,0),+angles.y) - Mat4f::rotatey(+angles.y)).almostZero(0.001f));
-	ReleaseAssert((Mat4f::rotate(Vec3f(0,0,1),+angles.z) - Mat4f::rotatez(+angles.z)).almostZero(0.001f));
-	ReleaseAssert((Mat4f::rotate(Vec3f(1,0,0),-angles.x) - Mat4f::rotatex(-angles.x)).almostZero(0.001f));
-	ReleaseAssert((Mat4f::rotate(Vec3f(0,1,0),-angles.y) - Mat4f::rotatey(-angles.y)).almostZero(0.001f));
-	ReleaseAssert((Mat4f::rotate(Vec3f(0,0,1),-angles.z) - Mat4f::rotatez(-angles.z)).almostZero(0.001f));
+	XgeReleaseAssert((Mat4f::rotate(Vec3f(1,0,0),+angles.x) - Mat4f::rotatex(+angles.x)).almostZero(0.001f));
+	XgeReleaseAssert((Mat4f::rotate(Vec3f(0,1,0),+angles.y) - Mat4f::rotatey(+angles.y)).almostZero(0.001f));
+	XgeReleaseAssert((Mat4f::rotate(Vec3f(0,0,1),+angles.z) - Mat4f::rotatez(+angles.z)).almostZero(0.001f));
+	XgeReleaseAssert((Mat4f::rotate(Vec3f(1,0,0),-angles.x) - Mat4f::rotatex(-angles.x)).almostZero(0.001f));
+	XgeReleaseAssert((Mat4f::rotate(Vec3f(0,1,0),-angles.y) - Mat4f::rotatey(-angles.y)).almostZero(0.001f));
+	XgeReleaseAssert((Mat4f::rotate(Vec3f(0,0,1),-angles.z) - Mat4f::rotatez(-angles.z)).almostZero(0.001f));
 
 	return 0;
 
@@ -531,20 +531,20 @@ int Matf::SelfTest()
 
 
 	Matf M1(0);M1.mem[0]=0.0f;
-	ReleaseAssert(M1.dim==0 && M1(0,0)==0.0f);
+	XgeReleaseAssert(M1.dim==0 && M1(0,0)==0.0f);
 
 	Matf M2(0,1,2,3);
-	ReleaseAssert(M2.dim==1 && M2(0,0)==0.0f && M2(0,1)==1.0f && M2(1,0)==2.0f && M2(1,1)==3.0f);
+	XgeReleaseAssert(M2.dim==1 && M2(0,0)==0.0f && M2(0,1)==1.0f && M2(1,0)==2.0f && M2(1,1)==3.0f);
 
 	Matf M3(0,1,2,3,4,5,6,7,8);
-	ReleaseAssert(M3.dim==2 
+	XgeReleaseAssert(M3.dim==2 
 		&& M3(0,0)==0.0f && M3(0,1)==1.0f && M3(0,2)==2.0f 
 		&& M3(1,0)==3.0f && M3(1,1)==4.0f && M3(1,2)==5.0f 
 		&& M3(2,0)==6.0f && M3(2,1)==7.0f && M3(2,2)==8.0f);
 
 	float _M4[16]={0,1,2,3, 4,5,6,7, 8,9,10,11, 12,13,14,15};
 	Matf M4(3,_M4);
-	ReleaseAssert(M4.dim==3
+	XgeReleaseAssert(M4.dim==3
 		&& M4(0,0)== 0.0f && M4(0,1)== 1.0f && M4(0,2)== 2.0f && M4(0,3)== 3.0f 
 		&& M4(1,0)== 4.0f && M4(1,1)== 5.0f && M4(1,2)== 6.0f && M4(1,3)== 7.0f 
 		&& M4(2,0)== 8.0f && M4(2,1)== 9.0f && M4(2,2)==10.0f && M4(2,3)==11.0f 
@@ -552,18 +552,18 @@ int Matf::SelfTest()
 
 
 	Matf m2(1);
-	ReleaseAssert(m2.dim==1 && m2(0,0)==1 && m2(0,1)==0 && m2(1,0)==0 && m2(1,1)==1);
+	XgeReleaseAssert(m2.dim==1 && m2(0,0)==1 && m2(0,1)==0 && m2(1,0)==0 && m2(1,1)==1);
 
 	Matf m3(2);
-	ReleaseAssert(m3.dim==2 && m3(0,0)==1 && m3(0,1)==0 && m3(0,2)==0 && m3(1,0)==0 && m3(1,1)==1 && m3(1,2)==0 && m3(2,0)==0 && m3(2,1)==0 && m3(2,2)==1);
+	XgeReleaseAssert(m3.dim==2 && m3(0,0)==1 && m3(0,1)==0 && m3(0,2)==0 && m3(1,0)==0 && m3(1,1)==1 && m3(1,2)==0 && m3(2,0)==0 && m3(2,1)==0 && m3(2,2)==1);
  
-	ReleaseAssert(m3.transpose()==m3);
+	XgeReleaseAssert(m3.transpose()==m3);
 
 	//transpose
 	{
 		Matf m(1,2,3,4);
 		m=m.transpose();
-		ReleaseAssert(m(0,0)==1 && m(0,1)==3 && m(1,0)==2 && m(1,1)==4);
+		XgeReleaseAssert(m(0,0)==1 && m(0,1)==3 && m(1,0)==2 && m(1,1)==4);
 	}
 
 	//assignment
@@ -571,76 +571,76 @@ int Matf::SelfTest()
 		Matf m(1,2,3,4);
 		Matf n(2);
 		n=m;
-		ReleaseAssert(n(0,0)==1 && n(0,1)==2 && n(1,0)==3 && n(1,1)==4);
+		XgeReleaseAssert(n(0,0)==1 && n(0,1)==2 && n(1,0)==3 && n(1,1)==4);
 	}
  
 	//zero matrix
-	ReleaseAssert(Matf::zero(3).almostZero(0));
+	XgeReleaseAssert(Matf::zero(3).almostZero(0));
 
 	//extract
 	{
 		Matf m(1,2,3,4);
 
 		//down size (1->0)
-		ReleaseAssert(m.extract(0).dim==0 && m.extract(0)==Matf(0));
+		XgeReleaseAssert(m.extract(0).dim==0 && m.extract(0)==Matf(0));
 		
 		//super size (1->2)
-		ReleaseAssert(m.extract(2).dim==2 && m.extract(2)==Matf(1,2,0, 3,4,0, 0,0,1));
+		XgeReleaseAssert(m.extract(2).dim==2 && m.extract(2)==Matf(1,2,0, 3,4,0, 0,0,1));
 	}
 
 	//swap rows
 	{
 		Matf m(1.0,2.0,3.0,4.0);
-		ReleaseAssert(m.dim==1);
+		XgeReleaseAssert(m.dim==1);
 
-		ReleaseAssert(m.swapRows(0,1)==Matf(3.0,4.0,1.0,2.0));
+		XgeReleaseAssert(m.swapRows(0,1)==Matf(3.0,4.0,1.0,2.0));
 		
 		std::vector<int> perm;
 		perm.push_back(1);
 		perm.push_back(0);
-		ReleaseAssert(m.swapRows(perm)==Matf(3.0,4.0,1.0,2.0));
+		XgeReleaseAssert(m.swapRows(perm)==Matf(3.0,4.0,1.0,2.0));
 	}
 
 	//swap cols
 	{
 		Matf m(1,2,3,4);
-		ReleaseAssert(m.dim==1);
+		XgeReleaseAssert(m.dim==1);
 
-		ReleaseAssert(m.swapCols(0,1)==Matf(2,1,4,3));
+		XgeReleaseAssert(m.swapCols(0,1)==Matf(2,1,4,3));
 		
 		std::vector<int> perm;
 		perm.push_back(1);
 		perm.push_back(0);
-		ReleaseAssert(m.swapCols(perm)==Matf(2,1,4,3));
+		XgeReleaseAssert(m.swapCols(perm)==Matf(2,1,4,3));
 	}
 
 	//plus/minus
 	{
-		ReleaseAssert(Matf(1,2,3,4)+Matf(10,20,30,40) == Matf(11,22,33,44));
-		ReleaseAssert(Matf(1,2,3,4)-Matf(10,20,30,40) == Matf(-9,-18,-27,-36));
+		XgeReleaseAssert(Matf(1,2,3,4)+Matf(10,20,30,40) == Matf(11,22,33,44));
+		XgeReleaseAssert(Matf(1,2,3,4)-Matf(10,20,30,40) == Matf(-9,-18,-27,-36));
 	}
 
 	//product
 	{
-		ReleaseAssert(Matf(1,2,3,4)*Matf(5,6,7,8)==Matf(19,22,43,50));
+		XgeReleaseAssert(Matf(1,2,3,4)*Matf(5,6,7,8)==Matf(19,22,43,50));
 	}
 
 	//product
 	{
-		ReleaseAssert((Matf(1,2,3,4)*0.1f).fuzzyEqual(Matf(0.1f,0.2f,0.3f,0.4f)));
+		XgeReleaseAssert((Matf(1,2,3,4)*0.1f).fuzzyEqual(Matf(0.1f,0.2f,0.3f,0.4f)));
 	}
 
 	//vector product
 	{
 		Matf m(1,2,3, 4,5,6, 7,8,9);
 		Vecf c0=m.col(0);
-		ReleaseAssert(m*Vecf(1.0f,0.0f,0.0f)==c0 && m*Vecf(0.0f,1.0f,0.0f)==m.col(1) && m*Vecf(0.0f,0.0f,1.0f)==m.col(2));
+		XgeReleaseAssert(m*Vecf(1.0f,0.0f,0.0f)==c0 && m*Vecf(0.0f,1.0f,0.0f)==m.col(1) && m*Vecf(0.0f,0.0f,1.0f)==m.col(2));
 	}
 
 	//plane product
 	{
 		Matf m(1,2,3, 4,5,6, 7,8,9);
-		ReleaseAssert(Vecf(1.0f,0.0f,0.0f)*m==m.row(0) && Vecf(0.0f,1.0f,0.0f)*m==m.row(1) && Vecf(0.0f,0.0f,1.0f)*m==m.row(2));
+		XgeReleaseAssert(Vecf(1.0f,0.0f,0.0f)*m==m.row(0) && Vecf(0.0f,1.0f,0.0f)*m==m.row(1) && Vecf(0.0f,0.0f,1.0f)*m==m.row(2));
 	}
 
 	//invert
@@ -653,7 +653,7 @@ int Matf::SelfTest()
 				for (int r=0;r<=dim;r++)
 				for (int c=0;c<=dim;c++) 
 					m.set(r,c,Utils::FloatRand(0,1));
-				ReleaseAssert((m.invert() * m).almostIdentity());
+				XgeReleaseAssert((m.invert() * m).almostIdentity());
 			}
 		}
 	}
@@ -667,10 +667,10 @@ int Matf::SelfTest()
 			Vecf s(0,Utils::FloatRand(0,1),Utils::FloatRand(0,1),Utils::FloatRand(0,1));
 			Matf mv=Matf::scaleV(s);
 			Matf mh=Matf::scaleH(s);
-			ReleaseAssert(mv.dim==dim && mh.dim==dim);
-			ReleaseAssert(mv.invert().fuzzyEqual(mh));
+			XgeReleaseAssert(mv.dim==dim && mh.dim==dim);
+			XgeReleaseAssert(mv.invert().fuzzyEqual(mh));
 			Vecf t=Vecf(v[0],v[1]*s[1],v[2]*s[2],v[3]*s[3]);
-			ReleaseAssert((mv*v).fuzzyEqual(t));
+			XgeReleaseAssert((mv*v).fuzzyEqual(t));
 		}
 	}
 	
@@ -683,9 +683,9 @@ int Matf::SelfTest()
 			Vecf s(0,Utils::FloatRand(0,1),Utils::FloatRand(0,1),Utils::FloatRand(0,1));
 			Matf mv=Matf::translateV(s);
 			Matf mh=Matf::translateH(s);
-			ReleaseAssert(mv.invert().fuzzyEqual(mh));
+			XgeReleaseAssert(mv.invert().fuzzyEqual(mh));
 			Vecf t=Vecf(v[0]+s[0],v[1]+s[1],v[2]+s[2],v[3]+s[3]);
-			ReleaseAssert((mv*v).fuzzyEqual(t));
+			XgeReleaseAssert((mv*v).fuzzyEqual(t));
 		}
 	}
 
@@ -699,20 +699,20 @@ int Matf::SelfTest()
 
 			Matf mv=Matf::rotateV(dim,1,2,a[1])*Matf::rotateV(dim,1,3,a[2])*Matf::rotateV(dim,2,3,a[3]);
 			Matf mh=Matf::rotateH(dim,2,3,a[3])*Matf::rotateH(dim,1,3,a[2])*Matf::rotateH(dim,1,2,a[1]);
-			ReleaseAssert(mv.invert().fuzzyEqual(mh));
+			XgeReleaseAssert(mv.invert().fuzzyEqual(mh));
 		}
 	}
 
 	//test congruency with mat4f
 	{
 		//x rotation
-		ReleaseAssert(Matf::rotateV(3 ,2,3,(float)M_PI/2).toMat4f().fuzzyEqual(Mat4f::rotatex((float)M_PI/2)));
+		XgeReleaseAssert(Matf::rotateV(3 ,2,3,(float)M_PI/2).toMat4f().fuzzyEqual(Mat4f::rotatex((float)M_PI/2)));
 
 		//y rotation
-		ReleaseAssert(Matf::rotateV(3 ,3,1,(float)M_PI/2).toMat4f().fuzzyEqual(Mat4f::rotatey((float)M_PI/2)));
+		XgeReleaseAssert(Matf::rotateV(3 ,3,1,(float)M_PI/2).toMat4f().fuzzyEqual(Mat4f::rotatey((float)M_PI/2)));
 
 		//z rotation
-		ReleaseAssert(Matf::rotateV(3 ,1,2,(float)M_PI/2).toMat4f().fuzzyEqual(Mat4f::rotatez((float)M_PI/2)));
+		XgeReleaseAssert(Matf::rotateV(3 ,1,2,(float)M_PI/2).toMat4f().fuzzyEqual(Mat4f::rotatez((float)M_PI/2)));
 	}
 	
 	return 0;

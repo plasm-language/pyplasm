@@ -53,8 +53,8 @@ int MemPool::SelfTest()
 		void* temp1=getSingleton()->malloc(size);
 		void* temp2=getSingleton()->malloc(size);
 
-		ReleaseAssert(temp1==allocated[0][size]);
-		ReleaseAssert(temp2==allocated[1][size]);
+		XgeReleaseAssert(temp1==allocated[0][size]);
+		XgeReleaseAssert(temp2==allocated[1][size]);
 	}
 
 	return 0;

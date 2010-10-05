@@ -35,7 +35,7 @@ Mat4f Plane4f::getProjectionMatrix(Vec3f Center)
 Matf Planef::getProjectionMatrix(Vecf Center)
 {
 	int Dim=this->dim;
-	ReleaseAssert(Center.dim==Dim && Center[0]==1.0f);
+	XgeReleaseAssert(Center.dim==Dim && Center[0]==1.0f);
 
 	Planef h(*this);
 	h.mem[0]=0;
@@ -64,7 +64,7 @@ Matf Planef::getProjectionMatrix(Vecf Center)
 	Vecf v(Dim);
 	v.mem[main_direction]=(h[main_direction]>0)?(+1.0f):(-1.0f);
 	Vecf w=h+v;
-	DebugAssert(w.module());
+	XgeDebugAssert(w.module());
 	w/=w.module();
 	Matf Rot1(Dim),Rot2(Dim);
 	for (int r=0;r<=Dim;r++)
@@ -710,7 +710,7 @@ Planef Planef::bestFittingPlane(int pointdim,int npoints,const float* points)
 	for (int I=0;I<npoints;I++)
 	{
 		float d=ret.getDistance(Vecf(pointdim,1.0f,points+I*pointdim));
-		DebugAssert(fabs(d)<0.001f);
+		XgeDebugAssert(fabs(d)<0.001f);
 	}
 	#endif
 
@@ -729,12 +729,12 @@ int Plane4f::SelfTest()
 
 	//from equation
 	Plane4f h(Vec3f(1,1,1),10.0f);
-	ReleaseAssert(fabs(h.getNormal().module()-1)<0.0001f && fabs(h.getDistance(Vec3f(0,0,0))-(-10.0f))<0.0001f);
+	XgeReleaseAssert(fabs(h.getNormal().module()-1)<0.0001f && fabs(h.getDistance(Vec3f(0,0,0))-(-10.0f))<0.0001f);
 
 	//three points
 	Vec3f O(2,3,-1);
 	h=Plane4f(O+Vec3f(1,0,0),O+Vec3f(0,1,0),O);
-	ReleaseAssert((h.getNormal()-Vec3f(0,0,1)).module()<0.0001f && fabs(h.getDistance(Vec3f(0,0,0))-(1.0f))<0.0001f);
+	XgeReleaseAssert((h.getNormal()-Vec3f(0,0,1)).module()<0.0001f && fabs(h.getDistance(Vec3f(0,0,0))-(1.0f))<0.0001f);
 
 	//fitting plane
 	h=Plane4f(Vec3f(1,1,1),1);
@@ -755,7 +755,7 @@ int Plane4f::SelfTest()
 	}
 
 	Plane4f hbis=Plane4f::bestFittingPlane(points);
-	ReleaseAssert(hbis.fuzzyEqual(h) || hbis.fuzzyEqual(-1.0f*h));
+	XgeReleaseAssert(hbis.fuzzyEqual(h) || hbis.fuzzyEqual(-1.0f*h));
 
 	//check the possibility to find a plane even with very little points
 	{
@@ -766,18 +766,18 @@ int Plane4f::SelfTest()
 
 		Plane4f h=Plane4f::bestFittingPlane(points);
 
-		ReleaseAssert(fabs(h.getDistance(Vec3f(&points[0])))<0.001f && fabs(h.getDistance(Vec3f(&points[3])))<0.001f);
+		XgeReleaseAssert(fabs(h.getDistance(Vec3f(&points[0])))<0.001f && fabs(h.getDistance(Vec3f(&points[3])))<0.001f);
 	}
 
 	//the ability to maintain the orientation of points in 3d
 	{
 		float points_ccw[]={0,0,0,1,0,0,1,1,0,2,1,0,2,0,0,3,0,0,3,2,0,0,2,0};
 		Plane4f h_ccw=Plane4f::bestFittingPlane(8,points_ccw);
-		ReleaseAssert(h_ccw[2]==1);
+		XgeReleaseAssert(h_ccw[2]==1);
 
 		float points_cw[]={0,2,0,3,2,0,3,0,0,2,0,0,2,1,0,1,1,0,1,0,0,0,0,0};
 		Plane4f h_cw=Plane4f::bestFittingPlane(8,points_cw);
-		ReleaseAssert(h_cw[2]==-1);
+		XgeReleaseAssert(h_cw[2]==-1);
 	}
 	
 	//all ok
@@ -794,13 +794,13 @@ int Planef::SelfTest()
 
 	Planef h(Vecf(0.0f,0.0f,0.0f,1.0f),3);//z>=3
 
-	ReleaseAssert(h.getDistance(Vecf(1.0f, 0.0f,0.0f,3.0f))== 0);
-	ReleaseAssert(h.getDistance(Vecf(1.0f, 0.0f,0.0f,0.0f))==-3);
+	XgeReleaseAssert(h.getDistance(Vecf(1.0f, 0.0f,0.0f,3.0f))== 0);
+	XgeReleaseAssert(h.getDistance(Vecf(1.0f, 0.0f,0.0f,0.0f))==-3);
 
-	ReleaseAssert(h.forceAbove(Vecf(1.0f, 0.0f,0.0f,10.0f))==   h);
-	ReleaseAssert(h.forceBelow(Vecf(1.0f, 0.0f,0.0f,10.0f))==-1*h);
+	XgeReleaseAssert(h.forceAbove(Vecf(1.0f, 0.0f,0.0f,10.0f))==   h);
+	XgeReleaseAssert(h.forceBelow(Vecf(1.0f, 0.0f,0.0f,10.0f))==-1*h);
 
-	ReleaseAssert(fabs(Planef(Vecf(0.0f,1.0f,1.0f,1.0f),0).getNormal().module()-1)<0.0001f);
+	XgeReleaseAssert(fabs(Planef(Vecf(0.0f,1.0f,1.0f,1.0f),0).getNormal().module()-1)<0.0001f);
 
 	//set best fitting plane with Vec3f(1.0,x,y,z)
 
@@ -828,17 +828,17 @@ int Planef::SelfTest()
 
 			Rayf r(O,D);
 			Vecf inters=r.intersection(h);
-			ReleaseAssert(inters[0]==1 && fabs(h.getDistance(inters))<0.001f);
+			XgeReleaseAssert(inters[0]==1 && fabs(h.getDistance(inters))<0.001f);
 
 			//NOTE: I'm removing the homo coordinae
 			for (int U=1;U<=dim;U++)
 				points.push_back(inters[U]);
 
-			ReleaseAssert(fabs(h.getDistance(inters))<0.001f);
+			XgeReleaseAssert(fabs(h.getDistance(inters))<0.001f);
 		}
 
 		Planef hbis=Planef::bestFittingPlane(dim,npoints,&points[0]);
-		ReleaseAssert(hbis.fuzzyEqual(h) || hbis.fuzzyEqual(-1.0f*h));
+		XgeReleaseAssert(hbis.fuzzyEqual(h) || hbis.fuzzyEqual(-1.0f*h));
 	}
 
 
@@ -867,13 +867,13 @@ int Planef::SelfTest()
 
 			Rayf r(O,D);
 			Vecf inters=r.intersection(h);
-			ReleaseAssert(inters[0]==1 && fabs(h.getDistance(inters))<0.001f);
+			XgeReleaseAssert(inters[0]==1 && fabs(h.getDistance(inters))<0.001f);
 
 			memcpy(points+i*dim,&inters.mem[1],sizeof(float)*dim);
 		}
 
 		Planef hbis=Planef::bestFittingPlane(dim,npoints,points);
-		ReleaseAssert(hbis.fuzzyEqual(h) || hbis.fuzzyEqual(-1.0f*h));
+		XgeReleaseAssert(hbis.fuzzyEqual(h) || hbis.fuzzyEqual(-1.0f*h));
 		delete [] points;
 	}
 
@@ -886,7 +886,7 @@ int Planef::SelfTest()
 			for (int I=0;I<dim*4;I++)
 			{
 				Vecf p=h.getRandomPoint();
-				ReleaseAssert (h.getDistance(p)<0.0001f);
+				XgeReleaseAssert (h.getDistance(p)<0.0001f);
 			}
 		}
 	}
@@ -901,14 +901,14 @@ int Planef::SelfTest()
 		points.push_back(-15.0f);points.push_back( 21.0f);points.push_back(33.0f);points.push_back(-0.7f);points.push_back(-46);
 
 		Planef h=Planef::bestFittingPlane(Dim,points);
-		ReleaseAssert(h.dim==Dim);
+		XgeReleaseAssert(h.dim==Dim);
 
 		//check if points are on the plane
 		for (int J=0;J<npoints;J++)
 		{
 			Vecf T(Dim,1,&points[J*Dim]);
 			float distance=fabs(h.getDistance(T));
-			ReleaseAssert(distance<0.001f);
+			XgeReleaseAssert(distance<0.001f);
 		}
 		
 	}

@@ -17,9 +17,9 @@ Esempio tipico di uso:
 
 	Decoder decoder(encoded_data);
 	int32 myint32=decoder.read_int32();
-	ReleaseAssert(myint32==100);
+	XgeReleaseAssert(myint32==100);
 	std::string mystring=decoder.read_string();
-	ReleaseAssert(mystring=="hello");
+	XgeReleaseAssert(mystring=="hello");
 */
 //=====================================================================
 

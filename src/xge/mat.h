@@ -21,7 +21,7 @@ public:
 	void Read(Archive& ar)
 	{
 		std::vector<float> v=ar.ReadVectorFloat("mat");
-		ReleaseAssert(v.size()==16);
+		XgeReleaseAssert(v.size()==16);
 
 		for (int i=0;i<16;i++) 
 			this->mat[i]=v[i];
@@ -532,7 +532,7 @@ public:
 	*/
 	inline Vec4f row(int n) const
 	{
-		DebugAssert(n>=0 && n<4);
+		XgeDebugAssert(n>=0 && n<4);
 		     if (n==0) return Vec4f(mat[ 0],mat[ 1],mat[ 2],mat[ 3]);
 		else if (n==1) return Vec4f(mat[ 4],mat[ 5],mat[ 6],mat[ 7]);
 		else if (n==2) return Vec4f(mat[ 8],mat[ 9],mat[10],mat[11]);
@@ -548,7 +548,7 @@ public:
 	*/
 	inline Vec4f col(int n) const
 	{
-		DebugAssert(n>=0 && n<4);
+		XgeDebugAssert(n>=0 && n<4);
 		     if (n==0) return Vec4f(mat[ 0],mat[ 4],mat[ 8],mat[12]);
 		else if (n==1) return Vec4f(mat[ 1],mat[ 5],mat[ 9],mat[13]);
 		else if (n==2) return Vec4f(mat[ 2],mat[ 6],mat[10],mat[14]);
@@ -700,7 +700,7 @@ public:
 		float Y=(mmat[ 4]*v.x+mmat[ 5]*v.y+mmat[ 6]*v.z+mmat[ 7]);
 		float Z=(mmat[ 8]*v.x+mmat[ 9]*v.y+mmat[10]*v.z+mmat[11]);
 		float W=(mmat[12]*v.x+mmat[13]*v.y+mmat[14]*v.z+mmat[15]);
-		DebugAssert(W);
+		XgeDebugAssert(W);
 		return Vec3f(X/W,Y/W,Z/W);
 	}
 
@@ -849,7 +849,7 @@ public:
 	{
 		this->dim=0;
 		mem=(float*)MemPool::getSingleton()->malloc(1* sizeof(float));
-		DebugAssert(mem);
+		XgeDebugAssert(mem);
 		mem[0]=1.0f;
 	}
 
@@ -865,7 +865,7 @@ public:
 	{
 		this->dim=src.dim;
 		this->mem=(float*)MemPool::getSingleton()->malloc(sizeof(float)*(dim+1)*(dim+1));
-		DebugAssert(mem);
+		XgeDebugAssert(mem);
 		memcpy(this->mem,src.mem,sizeof(float)*(dim+1)*(dim+1));
 	}
 
@@ -883,7 +883,7 @@ public:
 		//setup an identity matrix
 		this->dim=dim;
 		mem=(float*)MemPool::getSingleton()->calloc((dim+1)*(dim+1),sizeof(float));
-		DebugAssert(mem);
+		XgeDebugAssert(mem);
 		for (int i=0;i<=dim;i++) 
 			this->set(i,i,1.0f);
 	}
@@ -893,7 +893,7 @@ public:
 	{
 		this->dim=dim;
 		this->mem=(float*)MemPool::getSingleton()->malloc(sizeof(float)*(dim+1)*(dim+1));
-		DebugAssert(mem);
+		XgeDebugAssert(mem);
 		memcpy(this->mem,src,sizeof(float)*(dim+1)*(dim+1));
 	}
 
@@ -902,7 +902,7 @@ public:
 	{
 		this->dim=dim;
 		this->mem=(float*)MemPool::getSingleton()->malloc(sizeof(float)*(dim+1)*(dim+1));
-		DebugAssert(mem);
+		XgeDebugAssert(mem);
 		for (int i=0;i<(dim+1)*(dim+1);i++) 
 			this->mem[i]=(float)src[i];
 	}
@@ -918,7 +918,7 @@ public:
 	{
 		this->dim=1;
 		this->mem=(float*)MemPool::getSingleton()->malloc(sizeof(float)*(dim+1)*(dim+1));
-		DebugAssert(mem);
+		XgeDebugAssert(mem);
 		this->mem[0]=a00;this->mem[1]=a01;
 		this->mem[2]=a10;this->mem[3]=a11;
 	}
@@ -934,7 +934,7 @@ public:
 	{
 		this->dim=2;
 		this->mem=(float*)MemPool::getSingleton()->malloc(sizeof(float)*(dim+1)*(dim+1));
-		DebugAssert(mem);
+		XgeDebugAssert(mem);
 		this->mem[0]=a00;this->mem[1]=a01;this->mem[2]=a02;
 		this->mem[3]=a10;this->mem[4]=a11;this->mem[5]=a12;
 		this->mem[6]=a20;this->mem[7]=a21;this->mem[8]=a22;
@@ -960,7 +960,7 @@ public:
 			Utils::Error(HERE,"Matf(const std::vector<float>& src) invalid argument src, src.size()=%d but it's size must be>0",(int)src.size());
 
 		this->mem=(float*)MemPool::getSingleton()->malloc(sizeof(float)*(dim+1)*(dim+1));
-		DebugAssert(mem);
+		XgeDebugAssert(mem);
 		memcpy(this->mem,&src[0],sizeof(float)*(dim+1)*(dim+1));
 	}
 
@@ -978,7 +978,7 @@ public:
 	{
 		this->dim=3;
 		this->mem=(float*)MemPool::getSingleton()->malloc(sizeof(float)*(dim+1)*(dim+1));
-		DebugAssert(mem);
+		XgeDebugAssert(mem);
 
 		this->mem[ 0]=src.a44();this->mem[ 1]=src.a41();this->mem[ 2]=src.a42();this->mem[ 3]=src.a43();
 		this->mem[ 4]=src.a14();this->mem[ 5]=src.a11();this->mem[ 6]=src.a12();this->mem[ 7]=src.a13();
@@ -1122,7 +1122,7 @@ public:
 	*/
 	inline Vecf col(int c) const
 	{
-		DebugAssert(c>=0 && c<=dim);
+		XgeDebugAssert(c>=0 && c<=dim);
 		Vecf ret(this->dim);
 		for (int r=0;r<=dim;r++) 
 			ret.mem[r]=(*this)(r,c);
@@ -1133,12 +1133,12 @@ public:
 	inline Matf swapRows(const std::vector<int>& perm) const
 	{
 		int n=(int)(perm.size()-1);
-		DebugAssert(n==dim);
+		XgeDebugAssert(n==dim);
 		Matf ret(this->dim);
 		for (int r=0;r<=dim;r++)
 		for (int c=0;c<=dim;c++)  
 		{
-			DebugAssert(perm[r]>=0 && perm[r]<=dim);
+			XgeDebugAssert(perm[r]>=0 && perm[r]<=dim);
 			ret.set(r,c,(*this)(perm[r],c));
 		}
 		return ret;
@@ -1153,7 +1153,7 @@ public:
 	*/
 	inline Matf swapRows(int r1,int r2) const
 	{
-		DebugAssert(r1>=0 && r1<=dim && r2>=0 && r2<=dim);
+		XgeDebugAssert(r1>=0 && r1<=dim && r2>=0 && r2<=dim);
 
 		 //useless call
 		if (r1==r2) return *this;
@@ -1172,12 +1172,12 @@ public:
 	inline Matf swapCols(const std::vector<int>& perm) const
 	{
 		int n=(int)(perm.size()-1);
-		DebugAssert(n==dim);
+		XgeDebugAssert(n==dim);
 		Matf ret(this->dim);
 		for (int r=0;r<=dim;r++)
 		for (int c=0;c<=dim;c++)
 		{
-			DebugAssert(perm[c]>=0 && perm[c]<=dim);
+			XgeDebugAssert(perm[c]>=0 && perm[c]<=dim);
 			ret.set(r,c,(*this)(r,perm[c]));
 		}
 		return ret;
@@ -1192,7 +1192,7 @@ public:
 	*/
 	inline Matf swapCols(int c1,int c2) const
 	{
-		DebugAssert(c1>=0 && c1<=dim && c2>=0 && c2<=dim);
+		XgeDebugAssert(c1>=0 && c1<=dim && c2>=0 && c2<=dim);
 		if (c1==c2) return *this;
 		Matf ret(*this);
 		for (int r=0;r<=dim;r++) 
@@ -1384,7 +1384,7 @@ public:
 	inline Matf operator+(const Matf& b) const
 	{
 		const Matf& a=*this;
-		DebugAssert(a.dim==b.dim);
+		XgeDebugAssert(a.dim==b.dim);
 		int dim=a.dim;
 		Matf ret(dim);
 		for (int r=0;r<=dim;r++)
@@ -1402,7 +1402,7 @@ public:
 	inline Matf operator-(const Matf& b) const
 	{
 		const Matf& a=*this;
-		DebugAssert(a.dim==b.dim);
+		XgeDebugAssert(a.dim==b.dim);
 		int dim=a.dim;
 		Matf ret(dim);
 		for (int r=0;r<=dim;r++)
@@ -1448,7 +1448,7 @@ public:
 	inline static Matf scaleV(Vecf v)
 	{
 		Matf ret(v.dim);
-		DebugAssert(v[0]==0);
+		XgeDebugAssert(v[0]==0);
 		for (int i=1;i<=v.dim;i++) ret.set(i,i,v[i]);
 		return ret;
 
@@ -1463,7 +1463,7 @@ public:
 	inline static Matf scaleH(Vecf v)
 	{
 		Matf ret(v.dim);
-		DebugAssert(v[0]==0);
+		XgeDebugAssert(v[0]==0);
 		for (int i=1;i<=v.dim;i++)  ret.set(i,i,1.0f/v[i]);
 		return ret;
 	}
@@ -1478,7 +1478,7 @@ public:
 	inline static Matf translateV(Vecf v)
 	{
 		Matf ret(v.dim);
-		DebugAssert(v[0]==0);
+		XgeDebugAssert(v[0]==0);
 		for (int i=1;i<=v.dim;i++)  ret.set(i,0,v[i]);
 		return ret;
 	}
@@ -1492,7 +1492,7 @@ public:
 	inline static Matf translateH(Vecf v)
 	{
 		Matf ret(v.dim);
-		DebugAssert(v[0]==0);
+		XgeDebugAssert(v[0]==0);
 		for (int i=1;i<=v.dim;i++) ret.set(i,0,-v[i]);
 		return ret;
 	}
@@ -1506,7 +1506,7 @@ public:
 	*/
 	inline static Matf rotateV(int dim,int i,int j,float angle)
 	{
-		DebugAssert(i>=1 && i<=dim && j>=1 && j<=dim);
+		XgeDebugAssert(i>=1 && i<=dim && j>=1 && j<=dim);
 		Matf ret(dim);
 
 		//TODO:: probably I should consider sign here? but i break plasm!
@@ -1525,7 +1525,7 @@ public:
 	*/
 	inline static Matf rotateH(int dim,int i,int j,float angle)
 	{
-		DebugAssert(i>=1 && i<=dim && j>=1 && j<=dim);
+		XgeDebugAssert(i>=1 && i<=dim && j>=1 && j<=dim);
 		Matf ret(dim);
 
 		//TODO:: probably I should consider sign here? but i break plasm!
@@ -1561,7 +1561,7 @@ public:
 	inline Vecf operator*(const Vecf& v) const
 	{
 		const Matf& m=*this;
-		DebugAssert(m.dim==v.dim);
+		XgeDebugAssert(m.dim==v.dim);
 		int dim=v.dim;
 		Vecf ret(dim);
 		for (int r=0;r<=dim;r++)

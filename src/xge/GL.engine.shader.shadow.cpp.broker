@@ -102,7 +102,7 @@ void EngineShadowShader::Setup(Engine* engine,Vec3f light_dir,Frustum* frustum,B
 	//TODO: this is probably not an optimization, TO redo!
 	if (Near<=0  ) Near=1e-4f;
 	if (Far<=Near) Far=Near*100;
-	ReleaseAssert(Near>=0 && Far>Near);
+	XgeReleaseAssert(Near>=0 && Far>Near);
 	#endif //SHADOWMAP_MAXIMIZE_Z_USE
 
 	for (int S=0;S<SHADOWMAP_NUM_SPLITS;S++)
@@ -265,7 +265,7 @@ void EngineShadowShader::Bind(Engine* engine)
 
 	GLint current_shader;
 	glGetIntegerv(GL_CURRENT_PROGRAM,&current_shader);
-	ReleaseAssert(current_shader>0);
+	XgeReleaseAssert(current_shader>0);
 
 	//final image	
 	glBindTexture  (GL_TEXTURE_2D_ARRAY_EXT, depth_tex);

@@ -76,7 +76,7 @@ public:
 		int max_index=N.Abs().maxidx();
 
 		Vec3f xt,yt,zt;
-		ReleaseAssert(max_index>=0 && max_index<=2);
+		XgeReleaseAssert(max_index>=0 && max_index<=2);
 
 		switch(max_index)
 		{

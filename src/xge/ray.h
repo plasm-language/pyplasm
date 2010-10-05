@@ -87,7 +87,7 @@ public:
 	*/
 	inline Vec3f intersection(const Plane4f& plane4) const
 	{
-		DebugAssert(fabs(dir.module()-1)<0.0001); //should be normalize
+		XgeDebugAssert(fabs(dir.module()-1)<0.0001); //should be normalize
 		float t= -plane4.getDistance(origin)/(plane4.getNormal()*dir);
 		return origin+t*dir;
 	}
@@ -236,8 +236,8 @@ public:
 	*/
 	inline explicit Rayf(Vecf origin,Vecf dir)
 	{
-		DebugAssert(origin.dim==dir.dim);
-		DebugAssert(origin[0] && !dir[0]); //first is a point, the second is a direction
+		XgeDebugAssert(origin.dim==dir.dim);
+		XgeDebugAssert(origin[0] && !dir[0]); //first is a point, the second is a direction
 		this->origin=origin;
 		this->dir=dir.normalize(); //should alway be normalized
 	}
@@ -263,8 +263,8 @@ public:
 	*/
 	inline void setOrigin(const Vecf& origin)
 	{
-		DebugAssert(origin.dim==this->origin.dim);
-		DebugAssert(origin[0]); //must be a point
+		XgeDebugAssert(origin.dim==this->origin.dim);
+		XgeDebugAssert(origin[0]); //must be a point
 		this->origin=origin;
 	}
 
@@ -277,8 +277,8 @@ public:
 	*/
 	inline void setDir(Vecf dir,bool bNormalized=false)
 	{
-		DebugAssert(dir.dim==this->dir.dim);
-		DebugAssert(!dir[0]); //must be a vector
+		XgeDebugAssert(dir.dim==this->dir.dim);
+		XgeDebugAssert(!dir[0]); //must be a vector
 		this->dir=bNormalized?dir:dir.normalize();
 	}
 
@@ -293,7 +293,7 @@ public:
 	*/
 	inline Vecf intersection(const Planef& planef) const
 	{
-		DebugAssert(fabs(dir.module()-1)<0.0001); //should be normalize
+		XgeDebugAssert(fabs(dir.module()-1)<0.0001); //should be normalize
 		float t= -planef.getDistance(origin)/(planef*dir);
 		return origin+t*dir;
 	}

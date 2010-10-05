@@ -163,7 +163,7 @@ void Archive::InnerWrite(void* buffer,int memsize)
 		for (int ndone=0,nwrite=0;ndone!=memsize;ndone+=nwrite)
 		{
 			nwrite=(int)(gzfile?gzwrite(gzfile,(char*)buffer+ndone,memsize-ndone):fwrite((char*)buffer+ndone,1,memsize-ndone,file));
-			ReleaseAssert(nwrite);
+			XgeReleaseAssert(nwrite);
 		}
 	}
 }
@@ -186,7 +186,7 @@ void Archive::InnerRead(void* buffer,int memsize)
 		for (int ndone=0,nread=0;ndone!=memsize;ndone+=nread)
 		{
 			nread=(int)(gzfile?gzread(gzfile,(char*)buffer+ndone,memsize-ndone):fread((char*)buffer+ndone,1,memsize-ndone,file));
-			ReleaseAssert(nread);
+			XgeReleaseAssert(nread);
 		}
 	}
 }
@@ -223,7 +223,7 @@ void Archive::Pop(std::string name)
 {
 	if (bTextMode)
 	{
-		ReleaseAssert(xml_objects.top().name==name);
+		XgeReleaseAssert(xml_objects.top().name==name);
 		xml_objects.pop();
 	}
 }
@@ -259,7 +259,7 @@ int Archive::ReadInt(std::string name)
 	{
 		TiXmlElement* xml_element=CURNODE->ToElement();
 		const char* bOk=xml_element->Attribute(name.c_str(),&value);
-		ReleaseAssert(bOk);
+		XgeReleaseAssert(bOk);
 	}
 	else
 		InnerRead((char*)&value,sizeof(int));
@@ -289,7 +289,7 @@ unsigned int Archive::ReadUint(std::string name)
 
 		TiXmlElement* element=CURNODE->ToElement();
 		const char* bOk=element->Attribute(name.c_str(),&ivalue);
-		ReleaseAssert(bOk);
+		XgeReleaseAssert(bOk);
 		value=(unsigned int)ivalue;
 	}
 	else
@@ -359,7 +359,7 @@ float Archive::ReadFloat(std::string name)
 	{
 		double dvalue;
 		const char* bOk=CURNODE->ToElement()->Attribute(name.c_str(),&dvalue);
-		ReleaseAssert(bOk);
+		XgeReleaseAssert(bOk);
 		value=(float)dvalue;
 	}
 	else
@@ -393,7 +393,7 @@ std::string Archive::ReadString(std::string name)
 	if (bTextMode)
 	{
 		const char* svalue=CURNODE->ToElement()->Attribute(name.c_str());
-		ReleaseAssert(svalue);
+		XgeReleaseAssert(svalue);
 		value=svalue;
 	}
 	else
@@ -402,7 +402,7 @@ std::string Archive::ReadString(std::string name)
 		InnerRead(&len,sizeof(int));
 		char* temp=(char*)MemPool::getSingleton()->malloc(len+1);
 		InnerRead(temp,len+1);
-		DebugAssert(temp[len]==0);
+		XgeDebugAssert(temp[len]==0);
 		value=temp;
 		MemPool::getSingleton()->free(len+1,temp);
 	}
@@ -568,7 +568,7 @@ int Archive::SelfTest()
 	{
 		{
 			Archive ar;
-			ReleaseAssert(ar.Open(filenames[i],true));
+			XgeReleaseAssert(ar.Open(filenames[i],true));
 
 			ar.WriteString("string","hello");
 			ar.WriteInt("int"  ,20);
@@ -654,34 +654,34 @@ int Archive::SelfTest()
 
 		{
 			Archive ar;
-			ReleaseAssert(ar.Open(filenames[i],false));
+			XgeReleaseAssert(ar.Open(filenames[i],false));
 
 			std::string svalue=ar.ReadString("string");
-			ReleaseAssert(svalue=="hello");
+			XgeReleaseAssert(svalue=="hello");
 
 			int ivalue=ar.ReadInt("int");
-			ReleaseAssert(ivalue==20);
+			XgeReleaseAssert(ivalue==20);
 
 			float fvalue=ar.ReadFloat("float");
-			ReleaseAssert(fvalue==30);
+			XgeReleaseAssert(fvalue==30);
 
 			char p[4];
 			ar.Push("char_p_4");
 			ar.ReadRaw("data",p,sizeof(p));
-			ReleaseAssert(p[0]==1 && p[1]==2 && p[2]==3 && p[3]==4);
+			XgeReleaseAssert(p[0]==1 && p[1]==2 && p[2]==3 && p[3]==4);
 			ar.Pop("char_p_4");
 
 			Vec3f vec3f;
 			ar.Push("vec3f");
 			vec3f.Read(ar);
 			ar.Pop("vec3f");
-			ReleaseAssert(vec3f.x==1 && vec3f.y==2 && vec3f.z==3);
+			XgeReleaseAssert(vec3f.x==1 && vec3f.y==2 && vec3f.z==3);
 
 			std::vector<int> std_vector_int=ar.ReadVectorInt("stl_vector_int");
-			ReleaseAssert(std_vector_int.size()==3 && std_vector_int[0]==1 && std_vector_int[1]==2 && std_vector_int[2]==3);
+			XgeReleaseAssert(std_vector_int.size()==3 && std_vector_int[0]==1 && std_vector_int[1]==2 && std_vector_int[2]==3);
 
 			std::vector<float> std_vector_float=ar.ReadVectorFloat("std_vector_float");
-			ReleaseAssert(std_vector_float.size()==3 && std_vector_float[0]==10 && std_vector_float[1]==20 && std_vector_float[2]==30);
+			XgeReleaseAssert(std_vector_float.size()==3 && std_vector_float[0]==10 && std_vector_float[1]==20 && std_vector_float[2]==30);
 
 			std::vector<Vec3f> std_vector_vec3f;
 			ar.Push("stl_vector_vec3f");
@@ -697,26 +697,26 @@ int Archive::SelfTest()
 				}
 			}
 			ar.Pop("stl_vector_vec3f");
-			ReleaseAssert(std_vector_vec3f.size()==2 && std_vector_vec3f[0]==Vec3f(1,2,3) && std_vector_vec3f[1]==Vec3f(4,5,6));
+			XgeReleaseAssert(std_vector_vec3f.size()==2 && std_vector_vec3f[0]==Vec3f(1,2,3) && std_vector_vec3f[1]==Vec3f(4,5,6));
 
 			{
 				SmartPointer<Vec3f> sp_vec3f;
 				ar.Push("sp_vec3f");
 				sp_vec3f=ar.ReadSmartPointer<Vec3f>();
 				ar.Pop("sp_vec3f");
-				ReleaseAssert((*sp_vec3f)==Vec3f(1,2,3));
+				XgeReleaseAssert((*sp_vec3f)==Vec3f(1,2,3));
 
 				SmartPointer<Vec3f> sp_vec3f_null;
 				ar.Push("sp_vec3f_null");
 				sp_vec3f_null=ar.ReadSmartPointer<Vec3f>();
 				ar.Pop("sp_vec3f_null");
-				ReleaseAssert(!sp_vec3f_null);
+				XgeReleaseAssert(!sp_vec3f_null);
 
 				SmartPointer<Vec3f> sp_vec3f_bis;
 				ar.Push("sp_vec3f_bis");
 				sp_vec3f_bis=ar.ReadSmartPointer<Vec3f>();
 				ar.Pop("sp_vec3f_bis");
-				ReleaseAssert((*sp_vec3f_bis)==Vec3f(1,2,3) && sp_vec3f_bis.get()==sp_vec3f.get() && sp_vec3f_bis.use_count()==3); //2 counter from this, one from archive
+				XgeReleaseAssert((*sp_vec3f_bis)==Vec3f(1,2,3) && sp_vec3f_bis.get()==sp_vec3f.get() && sp_vec3f_bis.use_count()==3); //2 counter from this, one from archive
 			}
 				
 			{
@@ -737,8 +737,8 @@ int Archive::SelfTest()
 				ar.Pop("vector_sp_vec3f");
 
 				
-				ReleaseAssert(vector_sp_vec3f.size()==3 && *vector_sp_vec3f[0]==Vec3f(1,2,3) && !vector_sp_vec3f[1] && *vector_sp_vec3f[2]==Vec3f(1,2,3) );
-				ReleaseAssert(vector_sp_vec3f[0].get()==vector_sp_vec3f[2].get());
+				XgeReleaseAssert(vector_sp_vec3f.size()==3 && *vector_sp_vec3f[0]==Vec3f(1,2,3) && !vector_sp_vec3f[1] && *vector_sp_vec3f[2]==Vec3f(1,2,3) );
+				XgeReleaseAssert(vector_sp_vec3f[0].get()==vector_sp_vec3f[2].get());
 			}
 
 			uint64 data_64bit=ar.ReadUint64("data_64bit");
@@ -748,7 +748,7 @@ int Archive::SelfTest()
 			data_64bit_check|=0xffffffff;
 			--data_64bit_check;
 
-			ReleaseAssert(data_64bit==data_64bit_check);
+			XgeReleaseAssert(data_64bit==data_64bit_check);
 
 			ar.Close();
 		}

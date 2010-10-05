@@ -38,10 +38,6 @@ private:
 		
 	#elif defined(PLATFORM_Linux)
 		long value;
-		
-	#else
-		bogus
-		
 	#endif
 
 	int  max_delta_time;

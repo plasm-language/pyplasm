@@ -75,7 +75,7 @@ Decoder::~Decoder()
 void Decoder::Decode()
 {
 	//safety check
-	DebugAssert(tohandle_first>tohandle_last);
+	XgeDebugAssert(tohandle_first>tohandle_last);
 
 	while (pos<buffersize)
 	{
@@ -84,7 +84,7 @@ void Decoder::Decode()
 		//the end!
 		if (c == '=')
 		{
-			DebugAssert(char_count==2 || char_count==3);
+			XgeDebugAssert(char_count==2 || char_count==3);
 
 			if (char_count==2)
 			{
@@ -104,7 +104,7 @@ void Decoder::Decode()
 			return;
 		}
 
-		DebugAssert(c>=0 && c<256 && inalphabet[c]);
+		XgeDebugAssert(c>=0 && c<256 && inalphabet[c]);
 		bits += decoder[c];
 
 		char_count++;
@@ -125,7 +125,7 @@ void Decoder::Decode()
 		}
 	}
 
-	ReleaseAssert(false);
+	XgeReleaseAssert(false);
 }
 
 
@@ -139,7 +139,7 @@ inline void Encoder::NeedBytes(int howmuch)
 		this->buffer=(unsigned char*)MemPool::getSingleton()->realloc(buffersize,buffer,new_buffersize);
 		this->buffersize=new_buffersize;
 	}
-	DebugAssert((pos+howmuch)<=buffersize);
+	XgeDebugAssert((pos+howmuch)<=buffersize);
 }
 
 
@@ -150,7 +150,7 @@ const char* Encoder::c_str()
 	//last four bytes+padding
 	if (char_count)
 	{
-		DebugAssert(char_count==1 || char_count==2);
+		XgeDebugAssert(char_count==1 || char_count==2);
 		bits <<= 16 - (8 * char_count);
 		NeedBytes(4);
 		unsigned char* p=this->buffer+pos;
@@ -257,19 +257,19 @@ int Encoder::SelfTest()
 		std::string encoded_text=encoder.str();
 
 		Decoder decoder(encoded_text);
-		ReleaseAssert(decoder.ReadChar     ()==1);
-		ReleaseAssert(decoder.ReadUchar    ()==2);
-		ReleaseAssert(decoder.ReadShort    ()==3);
-		ReleaseAssert(decoder.ReadUshort   ()==4);
-		ReleaseAssert(decoder.ReadInt      ()==5);
-		ReleaseAssert(decoder.ReadUint     ()==6);
-		ReleaseAssert(decoder.ReadInt64    ()==myint64);
-		ReleaseAssert(decoder.ReadUint64   ()==myuint64);
-		ReleaseAssert(decoder.ReadFloat    ()==9.1f);
-		ReleaseAssert(decoder.ReadDouble   ()==10.2);
+		XgeReleaseAssert(decoder.ReadChar     ()==1);
+		XgeReleaseAssert(decoder.ReadUchar    ()==2);
+		XgeReleaseAssert(decoder.ReadShort    ()==3);
+		XgeReleaseAssert(decoder.ReadUshort   ()==4);
+		XgeReleaseAssert(decoder.ReadInt      ()==5);
+		XgeReleaseAssert(decoder.ReadUint     ()==6);
+		XgeReleaseAssert(decoder.ReadInt64    ()==myint64);
+		XgeReleaseAssert(decoder.ReadUint64   ()==myuint64);
+		XgeReleaseAssert(decoder.ReadFloat    ()==9.1f);
+		XgeReleaseAssert(decoder.ReadDouble   ()==10.2);
 
 		decoder.ReadRaw(sizeof(buff2),(unsigned char*)buff2);
-		ReleaseAssert(!memcmp(buff1,buff2,sizeof(buff1)));
+		XgeReleaseAssert(!memcmp(buff1,buff2,sizeof(buff1)));
 	}	
 
 	//more complete test (test alignment!)
@@ -302,7 +302,7 @@ int Encoder::SelfTest()
 					if ((j+towrite)>buffsize) towrite=buffsize-j;
 					encoder.WriteRaw(towrite,(unsigned char*)(temp1+j));
 				}
-				ReleaseAssert(j==buffsize);
+				XgeReleaseAssert(j==buffsize);
 
 				//deserialize
 				std::string encoded_text=encoder.str();
@@ -316,10 +316,10 @@ int Encoder::SelfTest()
 					if ((j+toread)>buffsize) toread=buffsize-j;
 					decoder.ReadRaw(toread,(unsigned char*)(temp2+j));
 				}
-				ReleaseAssert(j==buffsize);
+				XgeReleaseAssert(j==buffsize);
 
 				//test the 2 buffers are now the same
-				ReleaseAssert(!memcmp(temp1,temp2,buffsize));
+				XgeReleaseAssert(!memcmp(temp1,temp2,buffsize));
 
 			}
 

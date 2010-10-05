@@ -1,9 +1,12 @@
+
+
+
+
 #include <xge/xge.h>
 
 #if PLATFORM_Darwin
 #include <Carbon/Carbon.h>
 #endif
-
 
 #include <xge/engine.h>
 
@@ -49,12 +52,12 @@ static Engine* _shared_context=0;
 ///////////////////////////////////////////////////////////////////////////////////////////
 void Engine::initializeGL()
 {
-	ReleaseAssert(this->RC);
+	XgeReleaseAssert(this->RC);
 	this->WC =(int64)(new GLEWContext());
 	Engine::wcs[this->RC]=this->WC;
 
 	bool ok=this->Bind();
-	ReleaseAssert(ok);
+	XgeReleaseAssert(ok);
 
 	#define glewGetContext() ((GLEWContext*)this->WC)
 
@@ -68,8 +71,8 @@ void Engine::initializeGL()
 	{
 		_glew_init_needed=false;
 		int retcode=glewInit();
-		ReleaseAssert(retcode==GLEW_OK);
-		ReleaseAssert(glewIsSupported("GL_VERSION_2_0"));
+		XgeReleaseAssert(retcode==GLEW_OK);
+		XgeReleaseAssert(glewIsSupported("GL_VERSION_2_0"));
 	}
 	
 	glEnable(GL_LIGHTING);
@@ -125,7 +128,7 @@ Engine::Engine()
 	}
 	#else
 	{
-		ReleaseAssert(!_shared_context);
+		XgeReleaseAssert(!_shared_context);
 		_shared_context=this;
 		HINSTANCE hInstance = GetModuleHandle(NULL);
 		WNDCLASS  wc;
@@ -140,8 +143,8 @@ Engine::Engine()
 		wc.lpszMenuName  = NULL;                        
 		wc.lpszClassName = L"_xge_engine_dc";              
 		BOOL ok=RegisterClass(&wc);
-		HWND hWnd=CreateWindow(L"_xge_engine_dc",L"_xge_engine_dc",WS_OVERLAPPEDWINDOW | WS_CLIPSIBLINGS | WS_CLIPCHILDREN, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,NULL,NULL,hInstance,NULL);		ReleaseAssert(hWnd);
-		this->DC = (int64)::GetDC(hWnd);ReleaseAssert(this->DC);
+		HWND hWnd=CreateWindow(L"_xge_engine_dc",L"_xge_engine_dc",WS_OVERLAPPEDWINDOW | WS_CLIPSIBLINGS | WS_CLIPCHILDREN, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,NULL,NULL,hInstance,NULL);		XgeReleaseAssert(hWnd);
+		this->DC = (int64)::GetDC(hWnd);XgeReleaseAssert(this->DC);
 		PIXELFORMATDESCRIPTOR pfd;
 		ZeroMemory( &pfd, sizeof( pfd ) );
 		pfd.nSize = sizeof( pfd );
@@ -154,14 +157,14 @@ Engine::Engine()
 		pfd.iLayerType = PFD_MAIN_PLANE;
 		int format = ChoosePixelFormat((HDC)this->DC, &pfd );
 		ok=SetPixelFormat((HDC)this->DC, format, &pfd );
-		ReleaseAssert(ok);
+		XgeReleaseAssert(ok);
 		HGLRC context = wglCreateContext((HDC)this->DC);
-		ReleaseAssert(context);
-		this->RC=(int64)context;ReleaseAssert(this->RC);
+		XgeReleaseAssert(context);
+		this->RC=(int64)context;XgeReleaseAssert(this->RC);
 		ok=wglMakeCurrent((HDC)DC,(HGLRC)context);
-		ReleaseAssert(ok);
+		XgeReleaseAssert(ok);
 		ok=wglUseFontBitmapsW((HDC)DC, 0, 256, FONT_DISPLAY_LIST_BASE);
-		ReleaseAssert(ok);
+		XgeReleaseAssert(ok);
 		wglMakeCurrent(0,0);
 		initializeGL();
 		
@@ -176,7 +179,7 @@ Engine::Engine()
 
 Engine::Engine(int64 DC)
 {
-	ReleaseAssert(DC);
+	XgeReleaseAssert(DC);
 	this->DC=DC;
 
 	PIXELFORMATDESCRIPTOR pfd;
@@ -191,19 +194,19 @@ Engine::Engine(int64 DC)
 	pfd.iLayerType = PFD_MAIN_PLANE;
 	int format = ChoosePixelFormat((HDC)this->DC, &pfd );
 	BOOL ok=SetPixelFormat((HDC)this->DC, format, &pfd );
-	ReleaseAssert(ok);
+	XgeReleaseAssert(ok);
 
 	//create the Windows HGLRC context
 	HGLRC context = wglCreateContext((HDC)this->DC);
-	ReleaseAssert(context);
-	this->RC=(int64)context;ReleaseAssert(this->RC);
+	XgeReleaseAssert(context);
+	this->RC=(int64)context;XgeReleaseAssert(this->RC);
 
 	//shared context
-	ReleaseAssert(_shared_context);
+	XgeReleaseAssert(_shared_context);
 	_shared_context->lock.Lock();
 	{
 		BOOL ok=wglShareLists((HGLRC)_shared_context->RC,context);
-		ReleaseAssert(ok);
+		XgeReleaseAssert(ok);
 	}
 	_shared_context->lock.Unlock();
 
@@ -219,7 +222,7 @@ bool Engine::Bind()
 {
 	bool ret;
 	this->lock.Lock();
-	ReleaseAssert(DC && RC);
+	XgeReleaseAssert(DC && RC);
 
 	#ifndef USE_JUCE
 		BOOL ok=wglMakeCurrent((HDC)DC,(HGLRC)RC);
@@ -236,7 +239,7 @@ bool Engine::Bind()
 bool Engine::Unbind()
 {
 	bool ret;
-	ReleaseAssert(DC && RC);
+	XgeReleaseAssert(DC && RC);
 
 	#ifndef USE_JUCE
 		BOOL ok=wglMakeCurrent(NULL,NULL);
@@ -279,7 +282,7 @@ void Engine::FlushScreen()
 void Engine::DestroyContext()
 {
 	#ifndef USE_JUCE
-		ReleaseAssert(this->RC);
+		XgeReleaseAssert(this->RC);
 		wglDeleteContext((HGLRC)this->RC);
 	#else
 		;//nothing to do
@@ -400,7 +403,7 @@ void Viewer::doJob(int nworker)
 		BOOL ok=RegisterClass(&wc);
 
 		HWND hWnd=CreateWindow(L"XgeViewer",L"XgeViewer",WS_OVERLAPPEDWINDOW | WS_CLIPSIBLINGS | WS_CLIPCHILDREN, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,NULL,NULL,hInstance,NULL);
-		ReleaseAssert(hWnd);
+		XgeReleaseAssert(hWnd);
 
 		SetWindowLongPtr(hWnd,GWLP_USERDATA, (LONG_PTR)this);
 		ShowWindow(hWnd, SW_SHOW);
@@ -624,7 +627,7 @@ void Viewer::doJob(int nworker)
 			juce::JUCEApplication::createInstance = (juce::JUCEApplication::CreateInstanceFunction)-1;//need not to be 0 
 			Juce_Application* app=new Juce_Application();
 			bool bOk=app->initialiseApp("dummy");
-			ReleaseAssert(bOk);
+			XgeReleaseAssert(bOk);
 
 #if 0	
 			//this works only in windows!
@@ -634,7 +637,7 @@ void Viewer::doJob(int nworker)
 			Engine* engine=new Engine();
 			engine->DC= (int64)-1; //fake DC
 			engine->RC= (int64)(glcomponent->getCurrentContext());
-			ReleaseAssert(engine->RC);
+			XgeReleaseAssert(engine->RC);
 
 			engine->initializeGL();
 			_shared_context=engine;
@@ -660,7 +663,7 @@ void Viewer::doJob(int nworker)
 
 			Engine* engine=new Engine();
 			engine->DC= (int64)win;
-			engine->RC= (int64)glcomponent->getCurrentContext();ReleaseAssert(engine->RC);
+			engine->RC= (int64)glcomponent->getCurrentContext();XgeReleaseAssert(engine->RC);
 			engine->initializeGL();
 			_shared_context=engine;
 
@@ -705,7 +708,7 @@ void Viewer::doJob(int nworker)
 		//this is the new engine
 		Engine* engine=new Engine();
 		engine->DC= (int64)win;
-		engine->RC= (int64)glcomponent->getCurrentContext();ReleaseAssert(engine->RC);
+		engine->RC= (int64)glcomponent->getCurrentContext();XgeReleaseAssert(engine->RC);
 		engine->initializeGL();
 
 		this->engine=engine;
@@ -748,7 +751,7 @@ void Viewer::doJob(int nworker)
 ///////////////////////////////////////////////////////////////////////////////////////////
 EngineResource::EngineResource(int type,unsigned int id,int size)
 {
-	ReleaseAssert(type>RESOURCE_UNKNOWN);
+	XgeReleaseAssert(type>RESOURCE_UNKNOWN);
 	this->type=type;
 	this->id  =id;
 	this->size=size;
@@ -1009,7 +1012,7 @@ void Engine::Render(SmartPointer<Batch> _batch)
 	glGetError();
 
 	Batch& batch=(*_batch);
-	ReleaseAssert(batch.primitive>=0 && batch.vertices);
+	XgeReleaseAssert(batch.primitive>=0 && batch.vertices);
 
 	//material
 	if (!batch.colors)
@@ -1264,13 +1267,13 @@ void Engine::createArrayBuffer(SmartPointer<Vector> vector)
 			//generate
 			
 			glGenBuffersARB(1,&ret);
-			ReleaseAssert(ret);
+			XgeReleaseAssert(ret);
 			glBindBufferARB(GL_ARRAY_BUFFER_ARB, ret);
 			glBufferDataARB(GL_ARRAY_BUFFER_ARB, size, 0, GL_STATIC_DRAW_ARB);
 
 			glBindBufferARB(GL_ARRAY_BUFFER_ARB, ret);
 			void* gpu_data = glMapBufferARB(GL_ARRAY_BUFFER_ARB,GL_WRITE_ONLY_ARB);
-			ReleaseAssert(gpu_data);
+			XgeReleaseAssert(gpu_data);
 			memcpy(gpu_data,data,size);
 			glUnmapBufferARB(GL_ARRAY_BUFFER_ARB);
 			glBindBufferARB(GL_ARRAY_BUFFER_ARB,0);
@@ -1303,13 +1306,13 @@ void Engine::createTexture(SmartPointer<Texture> texture)
 		{
 			unsigned int _texture_id;
 			glGenTextures(1,&_texture_id);
-			ReleaseAssert(_texture_id); //problem happened
+			XgeReleaseAssert(_texture_id); //problem happened
 
 			glPixelStorei (GL_UNPACK_ALIGNMENT, 1);
 			glBindTexture (GL_TEXTURE_2D, _texture_id);
 			float maxsize;
 			glGetFloatv(GL_MAX_TEXTURE_SIZE,&maxsize); 
-			DebugAssert (texture->width<=maxsize && texture->height<=maxsize);
+			XgeDebugAssert (texture->width<=maxsize && texture->height<=maxsize);
 
 			unsigned int format=(texture->bpp==24)?GL_RGB:(texture->bpp==32?GL_RGBA:GL_LUMINANCE);
 			unsigned int type=GL_UNSIGNED_BYTE;
@@ -1365,7 +1368,7 @@ void Engine::removeFromGpu(EngineResource* resource)
 		_shared_context->lock.Lock();
 	}
 
-	ReleaseAssert(wcs.find(RC)!=wcs.end());
+	XgeReleaseAssert(wcs.find(RC)!=wcs.end());
 	int64 glew_context=Engine::wcs[RC];
 	#define glewGetContext() ((GLEWContext*)glew_context)
 

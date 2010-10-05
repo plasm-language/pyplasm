@@ -50,7 +50,7 @@ protected:
 	inline int popOpCode()
 	{
 		//[A-Za-z]
-		DebugAssert ((*cursor>='A' && *cursor<='Z') || (*cursor>='a' && *cursor<='z'));
+		XgeDebugAssert ((*cursor>='A' && *cursor<='Z') || (*cursor>='a' && *cursor<='z'));
 		int ret=*cursor++;
 		jump_spaces();
 		return ret;
@@ -151,7 +151,7 @@ protected:
 				}
 
 				contour=filtered;
-				DebugAssert(contour.size());
+				XgeDebugAssert(contour.size());
 			}
 			this->polygon.push_back(this->contour);
 		}
@@ -249,7 +249,7 @@ protected:
      
 		//TODO TRANSFORM
 		const char* transform=xnode->Attribute("transform");
-		//DebugAssert (!transform);
+		//XgeDebugAssert (!transform);
 
         // ____________________________________________________________________________________________ contour
 		if (!strcmpi(xname,"path"))
@@ -519,7 +519,7 @@ public:
 
 		unsigned long filesize;
 		unsigned char* buff=FileSystem::ReadFile(filename,filesize,true);
-		DebugAssert(filesize);
+		XgeDebugAssert(filesize);
 
 		Log::printf("parsing ...\n");
 		TiXmlDocument doc;
@@ -570,7 +570,7 @@ public:
 
 			tessellator.Run();
 
-			ReleaseAssert(tessellator.GetMatrix().almostIdentity());
+			XgeReleaseAssert(tessellator.GetMatrix().almostIdentity());
 
 			this->gout=tessellator.GetGraph();
 			Log::printf("...done\n");

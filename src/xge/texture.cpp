@@ -416,7 +416,7 @@ bool Texture::save(std::string filename)
 	unsigned char* dst=FreeImage_GetBits(bitmap);
 	int tot=this->width*this->height;
 
-	ReleaseAssert(FreeImage_GetPitch(bitmap)==this->width*(this->bpp/8));
+	XgeReleaseAssert(FreeImage_GetPitch(bitmap)==this->width*(this->bpp/8));
 
 	//AA
 	if (this->bpp==8)
@@ -456,7 +456,7 @@ bool Texture::save(std::string filename)
 	}
 	else
 	{
-		ReleaseAssert(false);
+		XgeReleaseAssert(false);
 	}
 
 	bool bSaved=FreeImage_Save(fif, bitmap, filename.c_str())>0;
@@ -556,12 +556,12 @@ int Texture::SelfTest()
 	if (true)
 	{
 		bool ret=gioconda->save(":temp/gioconda.copy.tga");
-		ReleaseAssert(gioconda->filename==":temp/gioconda.copy.tga");
+		XgeReleaseAssert(gioconda->filename==":temp/gioconda.copy.tga");
 
-		ReleaseAssert(ret);
+		XgeReleaseAssert(ret);
 		SmartPointer<Texture> back=Texture::open(":temp/gioconda.copy.tga",false,false);
 		SmartPointer<Texture> texture1=Texture::open(":images/gioconda.texture1.tga",false,false);
-		ReleaseAssert(back && texture1);
+		XgeReleaseAssert(back && texture1);
 		TextureViewer v(back,texture1);v.Run();v.Wait();
 	}
 
@@ -569,12 +569,12 @@ int Texture::SelfTest()
 	if (true)
 	{
 		bool ret=gioconda->save(":temp/gioconda.copy.png");
-		ReleaseAssert(gioconda->filename==":temp/gioconda.copy.png");
+		XgeReleaseAssert(gioconda->filename==":temp/gioconda.copy.png");
 
-		ReleaseAssert(ret);
+		XgeReleaseAssert(ret);
 		SmartPointer<Texture> back=Texture::open(":temp/gioconda.copy.png",false,false);
 		SmartPointer<Texture> texture1=Texture::open(":images/gioconda.texture1.png",false,false);
-		ReleaseAssert(back && texture1);
+		XgeReleaseAssert(back && texture1);
 		TextureViewer v(back,texture1);v.Run();v.Wait();
 	}
 
@@ -582,12 +582,12 @@ int Texture::SelfTest()
 	if (true)
 	{
 		bool ret=gioconda->save(":temp/gioconda.copy.jpg");
-		ReleaseAssert(gioconda->filename==":temp/gioconda.copy.jpg");
+		XgeReleaseAssert(gioconda->filename==":temp/gioconda.copy.jpg");
 
-		ReleaseAssert(ret);
+		XgeReleaseAssert(ret);
 		SmartPointer<Texture> back=Texture::open(":temp/gioconda.copy.jpg",false,false);
 		SmartPointer<Texture> texture1=Texture::open(":images/gioconda.texture1.jpg",false,false);
-		ReleaseAssert(back && texture1);
+		XgeReleaseAssert(back && texture1);
 		TextureViewer v(back,texture1);v.Run();v.Wait();
 	}
 	
@@ -596,12 +596,12 @@ int Texture::SelfTest()
 	if (true)
 	{
 		bool ret=gioconda->save(":temp/gioconda.copy.ppm");
-		ReleaseAssert(gioconda->filename==":temp/gioconda.copy.ppm");
+		XgeReleaseAssert(gioconda->filename==":temp/gioconda.copy.ppm");
 
-		ReleaseAssert(ret);
+		XgeReleaseAssert(ret);
 		SmartPointer<Texture> back=Texture::open(":temp/gioconda.copy.ppm",false,false);
 		SmartPointer<Texture> texture1=Texture::open(":images/gioconda.texture1.ppm",false,false);
-		ReleaseAssert(back && texture1);
+		XgeReleaseAssert(back && texture1);
 		TextureViewer v(back,texture1);v.Run();v.Wait();
 	}
 	#endif
@@ -611,11 +611,11 @@ int Texture::SelfTest()
 	if (true)
 	{
 		bool ret=gioconda->save(":temp/gioconda.copy.tif");
-		ReleaseAssert(gioconda->filename==":temp/gioconda.copy.tif");
-		ReleaseAssert(ret);
+		XgeReleaseAssert(gioconda->filename==":temp/gioconda.copy.tif");
+		XgeReleaseAssert(ret);
 		SmartPointer<Texture> back=Texture::open(":temp/gioconda.copy.tif",false,false);
 		SmartPointer<Texture> texture1=Texture::open(":images/gioconda.texture1.tif",false,false);
-		ReleaseAssert(back && texture1);
+		XgeReleaseAssert(back && texture1);
 		TextureViewer v(back,texture1);v.Run();v.Wait();
 	}
 	#endif
@@ -625,12 +625,12 @@ int Texture::SelfTest()
 	if (true)
 	{
 		bool ret=gioconda->save(":temp/gioconda.copy.bmp");
-		ReleaseAssert(gioconda->filename==":temp/gioconda.copy.bmp");
+		XgeReleaseAssert(gioconda->filename==":temp/gioconda.copy.bmp");
 
-		ReleaseAssert(ret);
+		XgeReleaseAssert(ret);
 		SmartPointer<Texture> back=Texture::open(":temp/gioconda.copy.bmp",false,false);
 		SmartPointer<Texture> texture1=Texture::open(":images/gioconda.texture1.bmp",false,false);
-		ReleaseAssert(back && texture1);
+		XgeReleaseAssert(back && texture1);
 		TextureViewer v(back,texture1);v.Run();v.Wait();
 	}
 

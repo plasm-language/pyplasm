@@ -843,10 +843,10 @@ class SpinLock(_object):
         this = _xgepy.new_SpinLock(max_delta_time)
         try: self.this.append(this)
         except: self.this = this
-    __swig_destroy__ = _xgepy.delete_SpinLock
-    __del__ = lambda self : None;
     def Lock(self): return _xgepy.SpinLock_Lock(self)
     def Unlock(self): return _xgepy.SpinLock_Unlock(self)
+    __swig_destroy__ = _xgepy.delete_SpinLock
+    __del__ = lambda self : None;
 SpinLock_swigregister = _xgepy.SpinLock_swigregister
 SpinLock_swigregister(SpinLock)
 
@@ -3343,6 +3343,7 @@ class Plasm(_object):
     PLASM_CUBE = _xgepy.Plasm_PLASM_CUBE
     PLASM_SIMPLEX = _xgepy.Plasm_PLASM_SIMPLEX
     PLASM_MKPOL = _xgepy.Plasm_PLASM_MKPOL
+    PLASM_MKPOLF = _xgepy.Plasm_PLASM_MKPOLF
     PLASM_STRUCT = _xgepy.Plasm_PLASM_STRUCT
     PLASM_COPY = _xgepy.Plasm_PLASM_COPY
     PLASM_GETSPACEDIM = _xgepy.Plasm_PLASM_GETSPACEDIM

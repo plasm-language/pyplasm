@@ -152,7 +152,7 @@ OctreeNode* Octree::getNode(const Box3f& obj_box,OctreeNode* node)
 		Box3f Cbox=Box3f::buildFromCenter(Cc,Vec3f(child_loose_len,child_loose_len,child_loose_len));
 
 		//VERY important this box contains the child box
-		DebugAssert(node_box.contains(Cbox));
+		XgeDebugAssert(node_box.contains(Cbox));
 
 		//entirely fits in the child
 		if (Cbox.contains(obj_box)) 

@@ -33,7 +33,7 @@ static std::string prefix="";
 //______________________________________________________________________________
 static SmartPointer<Hpc> openXmlNode(TiXmlNode* xnode,std::map<int, SmartPointer<Vector>  >& arrays)
 {
-	ReleaseAssert(!strcmpi(xnode->Value(),"node"));
+	XgeReleaseAssert(!strcmpi(xnode->Value(),"node"));
 	SmartPointer<Hpc> node(new Hpc);
 
 	SmartPointer<Batch> batch(new Batch());
@@ -124,7 +124,7 @@ static SmartPointer<Hpc> openXmlNode(TiXmlNode* xnode,std::map<int, SmartPointer
 		}
 
 		//unknown node type
-		ReleaseAssert(false);
+		XgeReleaseAssert(false);
 	}
 
 	if (batch->primitive>=0)
@@ -218,14 +218,14 @@ void Plasm::convertOldXml(char* infilename,char* outfilename,char* prefix)
 
 	TiXmlNode* xnode=doc.FirstChild();
 	const char* xname=xnode->Value();
-	ReleaseAssert(!strcmpi(xname,"mesh"));
+	XgeReleaseAssert(!strcmpi(xname,"mesh"));
 	
 	//geometry
 	std::map<int, SmartPointer<Vector >  > arrays;
 	TiXmlNode* xgeometry=getChild(xnode,"arrays");
 	for (TiXmlNode* xchild= xgeometry->FirstChild(); xchild != 0; xchild = xchild->NextSibling())
 	{
-		ReleaseAssert(!strcmpi(xchild->Value(),"array"));
+		XgeReleaseAssert(!strcmpi(xchild->Value(),"array"));
 
 		int id    =atoi(getAttribute(xchild,"id"  )->Value());
 		int size  =atoi(getAttribute(xchild,"size")->Value());

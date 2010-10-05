@@ -18,7 +18,7 @@ public:
 	//get point
 	inline Vec2i getPoint(int ref) const
 	{
-		DebugAssert(ref>=0 && ref<=2);
+		XgeDebugAssert(ref>=0 && ref<=2);
 		if (ref==0) return p0;
 		if (ref==1) return p1;
 		            return p2;
@@ -27,7 +27,7 @@ public:
 	//get point
 	inline Vec2i& getRefPoint(int ref)
 	{
-		DebugAssert(ref>=0 && ref<=2);
+		XgeDebugAssert(ref>=0 && ref<=2);
 		if (ref==0) return p0;
 		if (ref==1) return p1;
 		            return p2;
@@ -52,7 +52,7 @@ public:
 		if (p0.x>=min2(p1.x,p2.x) && p0.x<=max2(p1.x,p2.x)) return p0.x;
 		if (p1.x>=min2(p0.x,p2.x) && p1.x<=max2(p0.x,p2.x)) return p1.x;
 		if (p2.x>=min2(p0.x,p1.x) && p2.x<=max2(p0.x,p1.x)) return p2.x;
-		DebugAssert(0);
+		XgeDebugAssert(0);
 		return 0;
 	}
 
@@ -62,7 +62,7 @@ public:
 		if (p0.y>=min2(p1.y,p2.y) && p0.y<=max2(p1.y,p2.y)) return p0.y;
 		if (p1.y>=min2(p0.y,p2.y) && p1.y<=max2(p0.y,p2.y)) return p1.y;
 		if (p2.y>=min2(p0.y,p1.y) && p2.y<=max2(p0.y,p1.y)) return p2.y;
-		DebugAssert(0);
+		XgeDebugAssert(0);
 		return 0;
 	}
 

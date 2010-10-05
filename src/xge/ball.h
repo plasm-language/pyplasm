@@ -387,7 +387,7 @@ public:
 	*/
 	inline explicit Ballf(float radius,Vecf center)
 	{
-		DebugAssert(center[0]==1); //must be a point
+		XgeDebugAssert(center[0]==1); //must be a point
 		this->radius=radius;
 		this->center=center;
 	}
@@ -431,14 +431,14 @@ public:
 	{
 		Ballf ret;
 		int npoints=(int)points.size()/(pointdim+1);
-		DebugAssert(npoints*(pointdim+1)==points.size());
+		XgeDebugAssert(npoints*(pointdim+1)==points.size());
 		ret.center=Vecf(pointdim);
 
 		//media pesata
 		float coeff=(1.0f/npoints);
 		for (int i=0;i<npoints;i++)
 		{
-			ReleaseAssert(points[i*(pointdim+1)]==1.0f);
+			XgeReleaseAssert(points[i*(pointdim+1)]==1.0f);
 			ret.center+=coeff*Vecf(pointdim,&points[i*(pointdim+1)]);
 		}
 

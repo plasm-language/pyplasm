@@ -52,7 +52,7 @@ GraphNavigator::~GraphNavigator()
 ////////////////////////////////////////////////////////////////
 void Graph::graph_cell_union(Graph* g,bool bUp,unsigned int& ndstcells,unsigned int* dstcells,const unsigned int nsrccells,const unsigned int* srccells)
 {
-	DebugAssert(dstcells!=srccells);
+	XgeDebugAssert(dstcells!=srccells);
 	unsigned int i;
 
 	ndstcells=0;
@@ -75,11 +75,11 @@ void Graph::graph_cell_union(Graph* g,bool bUp,unsigned int& ndstcells,unsigned 
 			if (++(g->NodeTmp(*it))==1) 
 				dstcells[ndstcells++]=*it;
 
-			DebugAssert(g->NodeTmp(*it)<=nsrccells); //should not happen
+			XgeDebugAssert(g->NodeTmp(*it)<=nsrccells); //should not happen
 		}	
 	}
 
-	DebugAssert(ndstcells<=GRAPH_MAX_CELLS_PER_LEVEL);
+	XgeDebugAssert(ndstcells<=GRAPH_MAX_CELLS_PER_LEVEL);
 }
 
 
@@ -98,7 +98,7 @@ void Graph::graph_cell_intersection(Graph* g,bool bUp,unsigned int& ndstcells,un
 		for(GraphIterator it=(bUp)?g->goUp(srccells[i]):g->goDw(srccells[i]);!it.end();it++)
 			if (++(g->NodeTmp(*it))==nsrccells) dstcells[ndstcells++]=*it;
 
-	DebugAssert(ndstcells<=GRAPH_MAX_CELLS_PER_LEVEL);
+	XgeDebugAssert(ndstcells<=GRAPH_MAX_CELLS_PER_LEVEL);
 }
 
 
@@ -163,7 +163,7 @@ SmartPointer<Batch> Graph::getBatch()
 	}
 
 	//export triangles
-	DebugAssert(view_cell_level==2);
+	XgeDebugAssert(view_cell_level==2);
 
 	//necessary condition for normals to be correctly orientated
 	fixBoundaryFaceOrientation(0);
@@ -216,7 +216,7 @@ SmartPointer<Batch> Graph::getBatch()
 
 			Vec3f normal=(g->pointdim==3 && g->NodeData(*it))?Vec3f(g->getGeometry(*it)+1):Vec3f(0,0,1);
 
-			DebugAssert(normal.isValid());
+			XgeDebugAssert(normal.isValid());
 
 			//mantain good orientation (depending on the exported normal)
 			if (((v1-v0).cross(v2-v0) * normal)<0) {Swap(Vec3f,v0,v2);}
@@ -240,8 +240,8 @@ SmartPointer<Batch> Graph::getBatch()
 	}
 
 	//safety check
-	DebugAssert(pv==batch->vertices->mem()+ntriangles*9);
-	DebugAssert(pn==batch->normals->mem ()+ntriangles*9);
+	XgeDebugAssert(pv==batch->vertices->mem()+ntriangles*9);
+	XgeDebugAssert(pn==batch->normals->mem ()+ntriangles*9);
 
 	return SmartPointer<Batch>(new Batch(*this->batch));
 }
@@ -251,7 +251,7 @@ SmartPointer<Batch> Graph::getBatch()
 Boxf Graph::getBoundingBox(unsigned int C,SmartPointer<Matf> vmat,SmartPointer<Matf> hmat)
 {
 	//safety check
-	DebugAssert(!vmat || vmat->dim>=pointdim);
+	XgeDebugAssert(!vmat || vmat->dim>=pointdim);
 
 	GraphNavigator navigator;
 	int npoints=findCells(0,C,navigator);
@@ -274,7 +274,7 @@ Boxf Graph::getBoundingBox(unsigned int C,SmartPointer<Matf> vmat,SmartPointer<M
 Planef Graph::getFittingPlane(unsigned int C,SmartPointer<Matf> vmat,SmartPointer<Matf> hmat)
 {
 	//safety check
-	DebugAssert(!vmat || vmat->dim>=pointdim);
+	XgeDebugAssert(!vmat || vmat->dim>=pointdim);
 
 	//get cached result if possible
 	if (pointdim>=2 && Level(C)==(pointdim-1) && !vmat && NodeData(C))  
@@ -300,7 +300,7 @@ Planef Graph::getFittingPlane(unsigned int C,SmartPointer<Matf> vmat,SmartPointe
 	}
 	
 	Planef plane=Planef::bestFittingPlane(Dim,npoints,&points[0]);
-	DebugAssert(plane.dim==Dim);
+	XgeDebugAssert(plane.dim==Dim);
 
 	//cache results
 	if (pointdim>=2 && Level(C)==(pointdim-1) && !vmat)
@@ -316,7 +316,7 @@ Planef Graph::getFittingPlane(unsigned int C,SmartPointer<Matf> vmat,SmartPointe
 ////////////////////////////////////////////////////////////////////////
 Ballf Graph::getBoundingBall(unsigned int C,SmartPointer<Matf> vmat,SmartPointer<Matf> hmat)
 {
-	DebugAssert(!vmat || vmat->dim>=pointdim);
+	XgeDebugAssert(!vmat || vmat->dim>=pointdim);
 
 	float* b=0;
 
@@ -343,7 +343,7 @@ Ballf Graph::getBoundingBall(unsigned int C,SmartPointer<Matf> vmat,SmartPointer
 	}
 
 	Ballf bball=Ballf::bestFittingBall(Dim,points);
-	DebugAssert(bball.isValid() && bball.dim()==Dim);
+	XgeDebugAssert(bball.isValid() && bball.dim()==Dim);
 
 	//cache results if possible
 	if (pointdim>=2 && Level(C)==pointdim && !vmat)
@@ -361,7 +361,7 @@ Ballf Graph::getBoundingBall(unsigned int C,SmartPointer<Matf> vmat,SmartPointer
 void Graph::toUnitBox(Matf& vmat,Matf& hmat)
 {
 	//safety check
-	DebugAssert(vmat.dim==this->pointdim && hmat.dim==this->pointdim);
+	XgeDebugAssert(vmat.dim==this->pointdim && hmat.dim==this->pointdim);
 
 	Boxf bbox=getBoundingBox(0); //get overall bounding box
 
@@ -555,7 +555,7 @@ void Graph::fixBoundaryFaceOrientation(unsigned int Face)
 	}
 
 	//only boundary face
-	DebugAssert(getNUp(Face)==1);
+	XgeDebugAssert(getNUp(Face)==1);
 
 	//must calculate the plane because it has not already been computed
 	if (!NodeData(Face)) 
@@ -566,13 +566,13 @@ void Graph::fixBoundaryFaceOrientation(unsigned int Face)
 
 	//since it is a boundary face it has only one up cell
 	//eventually reverse the orientation if wrong
-	DebugAssert(getNUp(Face)==1);
+	XgeDebugAssert(getNUp(Face)==1);
 	Ballf bball=getBoundingBall(getFirstUpNode(Face));
 
 	if (bball.isValid())
 	{
 		Planef plane(this->pointdim,getGeometry(Face));
-		DebugAssert(bball.center[0]==1); //must be a point
+		XgeDebugAssert(bball.center[0]==1); //must be a point
 		plane=plane.forceBelow(bball.center);
 		memcpy(getGeometry(Face),plane.mem,sizeof(float)*(pointdim+1));
 	}
@@ -659,22 +659,22 @@ void Graph::check(unsigned int N)
 	{
 		for (i=goDw(N);!i.end();i++)
 		{
-			DebugAssert(getArch(i.getArch()).N1==N);
+			XgeDebugAssert(getArch(i.getArch()).N1==N);
 			last=*i;
 		}
 
 		unsigned int _tmp=getLastDwNode(N);
-		DebugAssert(last==_tmp);
+		XgeDebugAssert(last==_tmp);
 	}
 
 	if (!goUp(N).end())
 	{
 		for (i=goUp(N);!i.end();i++)
 		{
-			DebugAssert(getArch(i.getArch()).N0==N);
+			XgeDebugAssert(getArch(i.getArch()).N0==N);
 			last=*i;
 		}
-		DebugAssert(last==getLastUpNode(N));
+		XgeDebugAssert(last==getLastUpNode(N));
 	}
 
 	unsigned int cont;
@@ -686,14 +686,14 @@ void Graph::check(unsigned int N)
 		{
 			if (getN1(j.getArch())==N)
 			{
-				DebugAssert(j.getArch()==i.getArch());
+				XgeDebugAssert(j.getArch()==i.getArch());
 				break;
 			}
 		}
 
-		DebugAssert(!j.end());
+		XgeDebugAssert(!j.end());
 	}
-	DebugAssert(cont==getNDw(N));
+	XgeDebugAssert(cont==getNDw(N));
 
 	for (cont=0,i=goUp(N);!i.end();i++,cont++)
 	{
@@ -703,24 +703,24 @@ void Graph::check(unsigned int N)
 		{
 			if (getN0(j.getArch())==N)
 			{
-				DebugAssert(j.getArch()==i.getArch());
+				XgeDebugAssert(j.getArch()==i.getArch());
 				break;
 			}
 		}
 
-		DebugAssert(!j.end());
+		XgeDebugAssert(!j.end());
 	}
-	DebugAssert(cont==getNUp(N));
+	XgeDebugAssert(cont==getNUp(N));
 
 
 
 	int lvl=Level(N);
 
 	if (lvl>0)
-		DebugAssert(getNDw(N)>Level(N));
+		XgeDebugAssert(getNDw(N)>Level(N));
 
 	if (lvl==1)
-		DebugAssert(getNDw(N)==2);
+		XgeDebugAssert(getNDw(N)==2);
 
 	if (lvl==2)
 	{
@@ -735,7 +735,7 @@ void Graph::check(unsigned int N)
 			if (p1!=prev0 && p1!=prev1) 
 				Swap(unsigned int,p1,p2);
 			
-			DebugAssert(p1==prev0 || p1==prev1) ;
+			XgeDebugAssert(p1==prev0 || p1==prev1) ;
 
 			if (pointdim==3 && NodeData(N))
 			{	
@@ -745,16 +745,16 @@ void Graph::check(unsigned int N)
 				float acc=0;
 				for (int ii=0;ii<=pointdim;ii++)
 				{
-					DebugAssert(  !isnan(plane[ii]) && !isnan(vertex[ii])  );
+					XgeDebugAssert(  !isnan(plane[ii]) && !isnan(vertex[ii])  );
 					acc+=plane[ii]*vertex[ii];
 				}
-				DebugAssert(fabs(acc)<1e-1);
+				XgeDebugAssert(fabs(acc)<1e-1);
 			}
 		}
 	}
 
 	if (Level(N)==(unsigned int)(pointdim-1))
-		DebugAssert(getNUp(N)<=2);
+		XgeDebugAssert(getNUp(N)<=2);
 }
 
 
@@ -763,7 +763,7 @@ void Graph::check(unsigned int N)
 ////////////////////////////////////////////////////////////////
 bool Graph::orderFace2d(unsigned int face)
 {
-	DebugAssert(Level(face)==2);
+	XgeDebugAssert(Level(face)==2);
 
 	unsigned int first   = getFirstDwArch(face);
 	unsigned int tomatch = first;
@@ -945,7 +945,7 @@ void Graph::render(int view_cell_level,bool bDisplayOffetLines,bool bShowNormals
 				{
 					if (g->NodeData(F)) //only when it has normals, should have!
 					{
-						float* N=g->getGeometry(F);DebugAssert(N);
+						float* N=g->getGeometry(F);XgeDebugAssert(N);
 						glNormal3f(N[1],N[2],N[3]);
 					}
 					else
@@ -1113,7 +1113,7 @@ SmartPointer<Graph> Graph::extrude(float From,float To)
 
 	#ifdef _DEBUG
 	//safety check
-	for (int i=0;i<=this->pointdim;i++) DebugAssert(this->getNCells(i)==navigator.nnav[i]);
+	for (int i=0;i<=this->pointdim;i++) XgeDebugAssert(this->getNCells(i)==navigator.nnav[i]);
 	#endif
 
 	unsigned int* fullcells=navigator.nav[pointdim];
@@ -1243,7 +1243,7 @@ SmartPointer<Graph> Graph::join(unsigned int N,float coord)
 
 	#ifdef _DEBUG
 	//safety check
-	for (int i=0;i<=this->pointdim;i++) DebugAssert(this->getNCells(i)==navigator.nnav[i]);
+	for (int i=0;i<=this->pointdim;i++) XgeDebugAssert(this->getNCells(i)==navigator.nnav[i]);
 	#endif
 
 	SmartPointer<Graph> ret(new Graph(pointdim+1));
@@ -1251,7 +1251,7 @@ SmartPointer<Graph> Graph::join(unsigned int N,float coord)
 	unsigned int Njoin=ret->addNode(0);
 	float* _coords=ret->getGeometry(Njoin,true);
 	_coords[pointdim+1]=coord;
-	DebugAssert(getNode(N).Level==pointdim);
+	XgeDebugAssert(getNode(N).Level==pointdim);
 
 	unsigned int Cjoin=ret->addNode(pointdim+1);
 	ret->addArch(Cjoin,Njoin);
@@ -1351,7 +1351,7 @@ SmartPointer<Graph> Graph::power(
 			int L2=L-L1;
 			if (!(L2>=0 && L2<=pdim2)) continue; //out of good range for g2
 
-			DebugAssert((L1+L2)==L);
+			XgeDebugAssert((L1+L2)==L);
 			for (GraphListIterator it1=g1->each(L1);!it1.end();it1++)
 			for (GraphListIterator it2=g2->each(L2);!it2.end();it2++)
 			{
@@ -1362,9 +1362,9 @@ SmartPointer<Graph> Graph::power(
 				//store geometric coordinates
 				if (!L)
 				{
-					DebugAssert(!L1 && !L2);
-					float* coord1 = g1->getGeometry(C1);DebugAssert(coord1[0]==1.0f);
-					float* coord2 = g2->getGeometry(C2);DebugAssert(coord2[0]==1.0f);
+					XgeDebugAssert(!L1 && !L2);
+					float* coord1 = g1->getGeometry(C1);XgeDebugAssert(coord1[0]==1.0f);
+					float* coord2 = g2->getGeometry(C2);XgeDebugAssert(coord2[0]==1.0f);
 
 					float*  coord=g->getGeometry(C,true);
 					coord[0]=1.0f;
@@ -1379,7 +1379,7 @@ SmartPointer<Graph> Graph::power(
 						for (GraphIterator it1sub=g1->goDw(C1);!it1sub.end();it1sub++)
 						{
 							std::pair<unsigned int,unsigned int> sub1(*it1sub,C2);
-							DebugAssert(prvmap.find(sub1)!=prvmap.end());
+							XgeDebugAssert(prvmap.find(sub1)!=prvmap.end());
 							g->addArch(prvmap[sub1],C);
 						}
 					}
@@ -1389,7 +1389,7 @@ SmartPointer<Graph> Graph::power(
 						for (GraphIterator it2sub=g2->goDw(C2);!it2sub.end();it2sub++)
 						{
 							std::pair<unsigned int,unsigned int> sub2(C1,*it2sub);
-							DebugAssert(prvmap.find(sub2)!=prvmap.end());
+							XgeDebugAssert(prvmap.find(sub2)!=prvmap.end());
 							g->addArch(prvmap[sub2],C);
 						}
 					}
@@ -1399,7 +1399,7 @@ SmartPointer<Graph> Graph::power(
 					if (L==2) 
 					{
 						bool bok=g->orderFace2d(C);
-						DebugAssert(bok);
+						XgeDebugAssert(bok);
 					}
 
 					//produce information about planes (only when DIM>=2, when DIM=1 the following condition never occur)
@@ -1412,43 +1412,43 @@ SmartPointer<Graph> Graph::power(
 					//double connectivity (only for dimension>0 and max dim cells)
 					if (L && L==(pdim1+pdim2))
 					{
-						DebugAssert(L1==pdim1 && L2==pdim2); //max dim cells
+						XgeDebugAssert(L1==pdim1 && L2==pdim2); //max dim cells
 
 						//casi speciali quando L1==0 o L2==0 in quel caso non double linked!
 						if (!L1 && !L2)
 						{
 							std::pair<unsigned int,unsigned int> V(C1,C2);
-							DebugAssert(zermap.find(V)!=zermap.end());
+							XgeDebugAssert(zermap.find(V)!=zermap.end());
 							g->addArch(C,zermap[V]);
 						}
 						else if (!L1)
 						{
-							DebugAssert(L2);
+							XgeDebugAssert(L2);
 							for (GraphIterator it2sub=g2->goUp(C2);!it2sub.end();it2sub++)
 							{
 								std::pair<unsigned int,unsigned int> V(C1,*it2sub);
-								DebugAssert(zermap.find(V)!=zermap.end());
+								XgeDebugAssert(zermap.find(V)!=zermap.end());
 								g->addArch(C,zermap[V]);
 							}
 						}
 						else if (!L2)
 						{
-							DebugAssert(L1);
+							XgeDebugAssert(L1);
 							for (GraphIterator it1sub=g1->goUp(C1);!it1sub.end();it1sub++)
 							{
 								std::pair<unsigned int,unsigned int> V(*it1sub,C2);
-								DebugAssert(zermap.find(V)!=zermap.end());
+								XgeDebugAssert(zermap.find(V)!=zermap.end());
 								g->addArch(C,zermap[V]);
 							}
 						}
 						else
 						{
-							DebugAssert(L1 && L2);
+							XgeDebugAssert(L1 && L2);
 							for (GraphIterator it1sub=g1->goUp(C1);!it1sub.end();it1sub++)
 							for (GraphIterator it2sub=g2->goUp(C2);!it2sub.end();it2sub++)
 							{
 								std::pair<unsigned int,unsigned int> V(*it1sub,*it2sub);
-								DebugAssert(zermap.find(V)!=zermap.end());
+								XgeDebugAssert(zermap.find(V)!=zermap.end());
 								g->addArch(C,zermap[V]);
 							}
 						}
@@ -1473,8 +1473,8 @@ SmartPointer<Graph> Graph::power(
 	int sdim1=_g1vmat? (_g1vmat->dim) : (pdim1);
 	int sdim2=_g2vmat? (_g2vmat->dim) : (pdim2);
 
-	VmatT=Matf(sdim1+sdim2); Matf g1vmat(pdim1),g1hmat(pdim1); if (_g1vmat) {DebugAssert(_g1vmat->dim>=pdim1);g1vmat=(*_g1vmat);g1hmat=(*_g1hmat);}
-	HmatT=Matf(sdim1+sdim2); Matf g2vmat(pdim2),g2hmat(pdim2); if (_g2vmat) {DebugAssert(_g2vmat->dim>=pdim2);g2vmat=(*_g2vmat);g2hmat=(*_g2hmat);}
+	VmatT=Matf(sdim1+sdim2); Matf g1vmat(pdim1),g1hmat(pdim1); if (_g1vmat) {XgeDebugAssert(_g1vmat->dim>=pdim1);g1vmat=(*_g1vmat);g1hmat=(*_g1hmat);}
+	HmatT=Matf(sdim1+sdim2); Matf g2vmat(pdim2),g2hmat(pdim2); if (_g2vmat) {XgeDebugAssert(_g2vmat->dim>=pdim2);g2vmat=(*_g2vmat);g2hmat=(*_g2hmat);}
 
 	//copy matrix from g1 (first the submatrix without homo components then homo components)
 	for (int r=1,R=1;R<=sdim1;r++,R++) 
@@ -1589,14 +1589,14 @@ Graph::SplitResult Graph::split(GraphNavigator& navigator,
 			//even when if flat try to use the strict classification 
 			if (npos_strict==(int)npoints)
 			{
-				DebugAssert(!nneg_strict);
+				XgeDebugAssert(!nneg_strict);
 				Ca=cell;
 				return SPLIT_OK;
 			}
 
 			if (nneg_strict==(int)npoints)
 			{
-				DebugAssert(!npos_strict);
+				XgeDebugAssert(!npos_strict);
 				Cb=cell;
 				return SPLIT_OK;
 			}
@@ -1642,7 +1642,7 @@ Graph::SplitResult Graph::split(GraphNavigator& navigator,
 				/* classificazione in senso stretto, senza constraint */
 				unsigned int face=navd[i];
 
-				DebugAssert(getNDw(face)>d && (d!=1 || getNDw(face)==2));
+				XgeDebugAssert(getNDw(face)>d && (d!=1 || getNDw(face)==2));
 
 				if (d!=celllvl)
 				{
@@ -1684,13 +1684,13 @@ Graph::SplitResult Graph::split(GraphNavigator& navigator,
 				}
 
 				/* simula la creazione dell'intersezione per poi controllarla dopo! */
-				DebugAssert(getNode(face).Sign!=SIGN_UNK);
+				XgeDebugAssert(getNode(face).Sign!=SIGN_UNK);
 
 				if (getNode(face).Sign!=SIGN_BOT) 
 					continue;
 				
 				/* ulteriore controllo (le due celle che verranno create devono essere piene) */
-				DebugAssert(npos && nneg && !nzer);
+				XgeDebugAssert(npos && nneg && !nzer);
 
 				if ((npos+1)<=d || (nneg+1)<=d)
 					goto ERROR_IN_CLASSIFICATION;
@@ -1711,7 +1711,7 @@ Graph::SplitResult Graph::split(GraphNavigator& navigator,
 				for (GraphIterator linkm=goDw(face);!linkm.end();linkm++)
 				{
 					unsigned int down=*linkm;
-					DebugAssert(getNode(down).Sign!=SIGN_ZER && getNode(down).Sign!=SIGN_UNK);
+					XgeDebugAssert(getNode(down).Sign!=SIGN_ZER && getNode(down).Sign!=SIGN_UNK);
 
 					switch (getNode(down).Sign)
 					{
@@ -1721,7 +1721,7 @@ Graph::SplitResult Graph::split(GraphNavigator& navigator,
 							for (GraphIterator linkn=goDw(down);!linkn.end();linkn++)
 							{
 								unsigned int downdown=*linkn;
-								DebugAssert(getNode(downdown).Sign==getNode(down).Sign || getNode(downdown).Sign==SIGN_ZER);
+								XgeDebugAssert(getNode(downdown).Sign==getNode(down).Sign || getNode(downdown).Sign==SIGN_ZER);
 
 								if (getNode(downdown).Sign==SIGN_ZER && !findArch(downdown,mapface))
 									addArch(downdown,mapface);
@@ -1798,7 +1798,7 @@ DO_SYMBOLIC_SPLIT:
 				case SIGN_POS:addArch(Ca,v);break;
 				case SIGN_NEG:addArch(Cb,v);break;
 				case SIGN_ZER:addArch(Ca ,v);addArch(Cb,v);break;
-				default:DebugAssert(0);break;
+				default:XgeDebugAssert(0);break;
 			}			
 		}
 	}
@@ -1812,7 +1812,7 @@ DO_SYMBOLIC_SPLIT:
 		{
 			unsigned int face=navk[i];
 
-			DebugAssert(getNode(face).Sign==SIGN_BOT);
+			XgeDebugAssert(getNode(face).Sign==SIGN_BOT);
 
 			/* must split in two cells cell+ and cell-. create a k-1 cell which split the cell */
 			unsigned int cminus = (k!=celllvl)?addNode(k):Cb ;getNode(cminus).Sign = SIGN_NEG;
@@ -1827,7 +1827,7 @@ DO_SYMBOLIC_SPLIT:
 			if (k==celllvl) 
 				Ce=newface;
 
-			DebugAssert(getNode(newface).Sign==SIGN_ZER);
+			XgeDebugAssert(getNode(newface).Sign==SIGN_ZER);
 
 			/* plane information */
 			if (k==(pointdim-1))
@@ -1911,7 +1911,7 @@ DO_SYMBOLIC_SPLIT:
 				{
 					case SIGN_POS:ArchData(addArch(facedown,cplus ))=archinfo;break;
 					case SIGN_NEG:ArchData(addArch(facedown,cminus))=archinfo;break;
-					default:DebugAssert(0);break;
+					default:XgeDebugAssert(0);break;
 				}
 
 				/* voglio mantenere l'ordinamento per le 2-facce */
@@ -1934,7 +1934,7 @@ DO_SYMBOLIC_SPLIT:
 				remArch(Arch);
 			}
 
-			DebugAssert(k!=2 || linked);
+			XgeDebugAssert(k!=2 || linked);
 
 			if (k!=2)
 			{
@@ -1975,7 +1975,7 @@ DO_SYMBOLIC_SPLIT:
 				}
 			}
 
-			DebugAssert(Level(newface)!=1 || getNDw(newface)==2);
+			XgeDebugAssert(Level(newface)!=1 || getNDw(newface)==2);
 			remNode(face);
 		}
 	}
@@ -1989,8 +1989,8 @@ DO_SYMBOLIC_SPLIT:
 void Graph::transform(SmartPointer<Matf> vmat,SmartPointer<Matf> hmat)
 {
 	//only full dimension
-	DebugAssert(!vmat || vmat->dim==this->pointdim);
-	DebugAssert(!hmat || hmat->dim==this->pointdim);
+	XgeDebugAssert(!vmat || vmat->dim==this->pointdim);
+	XgeDebugAssert(!hmat || hmat->dim==this->pointdim);
 
 	//useless call
 	if (!vmat && !hmat)
@@ -2003,7 +2003,7 @@ void Graph::transform(SmartPointer<Matf> vmat,SmartPointer<Matf> hmat)
 			float* point=getGeometry(*i);
 			Vecf v(pointdim,point);
 			v = (*vmat) * v;
-			DebugAssert(v[0]);
+			XgeDebugAssert(v[0]);
 			v/=v[0];
 			v.mem[0]=1;
 			memcpy(point,v.mem,sizeof(float)*(pointdim+1));
@@ -2038,7 +2038,7 @@ void Graph::transform(SmartPointer<Matf> vmat,SmartPointer<Matf> hmat)
 
 void Graph::translate(Vecf vt)
 {
-	DebugAssert(vt[0]==0 && vt.dim==(this->pointdim));
+	XgeDebugAssert(vt[0]==0 && vt.dim==(this->pointdim));
 	SmartPointer<Matf> vmat(new Matf(Matf::translateV(vt)));
 	SmartPointer<Matf> hmat(new Matf(Matf::translateH(vt)));
 	transform(vmat,hmat);
@@ -2047,7 +2047,7 @@ void Graph::translate(Vecf vt)
 
 void Graph::scale(Vecf vs)
 {	
-	DebugAssert(vs[0]==0 && vs.dim==(this->pointdim));
+	XgeDebugAssert(vs[0]==0 && vs.dim==(this->pointdim));
 	SmartPointer<Matf> vmat(new Matf(Matf::scaleV(vs)));
 	SmartPointer<Matf> hmat(new Matf(Matf::scaleH(vs)));
 	transform(vmat,hmat);
@@ -2055,7 +2055,7 @@ void Graph::scale(Vecf vs)
 
 void Graph::rotate(int ax1,int ax2,float alpha)
 {
-	DebugAssert(pointdim>=2 && ax1>=1 && ax2>=1);
+	XgeDebugAssert(pointdim>=2 && ax1>=1 && ax2>=1);
 	SmartPointer<Matf> vmat(new Matf(Matf::rotateV(pointdim,ax1,ax2,alpha)));
 	SmartPointer<Matf> hmat(new Matf(Matf::rotateH(pointdim,ax1,ax2,alpha)));
 	transform(vmat,hmat);
@@ -2065,13 +2065,13 @@ void Graph::rotate(int ax1,int ax2,float alpha)
 void Graph::permutate(const std::vector<int>& P)
 {
 	int dim=(int)(P.size()-1);
-	DebugAssert(dim==(this->pointdim));
+	XgeDebugAssert(dim==(this->pointdim));
 	//convert to a good transformation matrix
 	std::vector<int> perm(dim+1);
 	for (int i=0;i<=dim;i++) perm[P[i]]=i;
 	SmartPointer<Matf> vmat(new Matf(Matf(dim).swapCols(perm)));
 	SmartPointer<Matf> hmat(new Matf(Matf(dim).swapRows(perm)));
-	DebugAssert(((*vmat)*(*hmat)).almostIdentity());
+	XgeDebugAssert(((*vmat)*(*hmat)).almostIdentity());
 	transform(vmat,hmat);
 }
 
@@ -2234,14 +2234,14 @@ void Graph::triangulate(unsigned int N)
 		for (unsigned int cont=0;cont<nnewfaces;cont++)
 		{
 			unsigned int NewCell = newfaces[cont];
-			DebugAssert(Level(NewCell)==celllvl && getNUp(NewCell)==0);
+			XgeDebugAssert(Level(NewCell)==celllvl && getNUp(NewCell)==0);
 			findCells(0,NewCell,navigator,false); //cannot do fast mode since I need here to make the list double linked 
 			unsigned int npoints=navigator.nnav[0];
 			unsigned int *points=navigator.nav[0];
 			for (int n=0;n<(int)npoints;n++) 
 				addArch(NewCell,points[n]);
 			
-			DebugAssert(getNUp(NewCell)==(celllvl+1) && getNDw(NewCell)==(celllvl+1));
+			XgeDebugAssert(getNUp(NewCell)==(celllvl+1) && getNDw(NewCell)==(celllvl+1));
 		}
 	}
 }
@@ -2266,18 +2266,18 @@ int GraphKMem::SelfTest()
 	Log::printf("Testing GraphKMem...\n");
 
 	GraphKMem m(sizeof(float));
-	ReleaseAssert(m.itemsize()==sizeof(float));
+	XgeReleaseAssert(m.itemsize()==sizeof(float));
 
 	//block/release operation
 	unsigned int Ki=m.alloc();
 	*((float*)m[Ki])=10.0f;
 	unsigned int Kj=m.alloc();
 	*((float*)m[Kj])=30.0f;
-	ReleaseAssert(m.getNBlocked()==2);
+	XgeReleaseAssert(m.getNBlocked()==2);
 	m.free(Ki);
-	ReleaseAssert(m.getNBlocked()==1);
+	XgeReleaseAssert(m.getNBlocked()==1);
 	m.free(Kj);
-	ReleaseAssert(m.getNBlocked()==0);
+	XgeReleaseAssert(m.getNBlocked()==0);
 
 	//resize operation
 	struct A {int a,b;};
@@ -2287,13 +2287,13 @@ int GraphKMem::SelfTest()
 	(*((struct A*)n[Kk])).a=11;
 	(*((struct A*)n[Kk])).b=22;
 	n.resize(sizeof(struct B));
-	ReleaseAssert(((*((struct B*)n[Kk])).a)==11);
+	XgeReleaseAssert(((*((struct B*)n[Kk])).a)==11);
 
 	//clone
 	GraphKMem l(n);
 	n.flush();
-	ReleaseAssert(n.getNBlocked()==0);
-	ReleaseAssert(((*((struct B*)l[Kk])).a)==11);
+	XgeReleaseAssert(n.getNBlocked()==0);
+	XgeReleaseAssert(((*((struct B*)l[Kk])).a)==11);
 
 	return 0;
 
@@ -2344,23 +2344,23 @@ int Graph::SelfTest()
 	{
 		Graph g(1);
 
-		unsigned int N0=g.addNode(0);ReleaseAssert(g.Level(N0)==0);g.NodeData(N0)=0;g.Sign(N0)=0;g.NodeTmp(N0)=0;
-		unsigned int N1=g.addNode(0);ReleaseAssert(g.Level(N1)==0);g.NodeData(N1)=1;g.Sign(N1)=1;g.NodeTmp(N1)=1;
-		unsigned int N2=g.addNode(0);ReleaseAssert(g.Level(N2)==0);g.NodeData(N2)=2;g.Sign(N2)=2;g.NodeTmp(N2)=2;
+		unsigned int N0=g.addNode(0);XgeReleaseAssert(g.Level(N0)==0);g.NodeData(N0)=0;g.Sign(N0)=0;g.NodeTmp(N0)=0;
+		unsigned int N1=g.addNode(0);XgeReleaseAssert(g.Level(N1)==0);g.NodeData(N1)=1;g.Sign(N1)=1;g.NodeTmp(N1)=1;
+		unsigned int N2=g.addNode(0);XgeReleaseAssert(g.Level(N2)==0);g.NodeData(N2)=2;g.Sign(N2)=2;g.NodeTmp(N2)=2;
 
-		unsigned int E01=g.addNode(1);g.addArch(N0,E01);g.addArch(N1,E01);ReleaseAssert(g.Level(E01)==1);g.NodeData(E01)=3;g.Sign(E01)=3;g.NodeTmp(E01)=3;
-		unsigned int E12=g.addNode(1);g.addArch(N1,E12);g.addArch(N2,E12);ReleaseAssert(g.Level(E12)==1);g.NodeData(E12)=4;g.Sign(E12)=4;g.NodeTmp(E12)=4;
-		unsigned int E20=g.addNode(1);g.addArch(N2,E20);g.addArch(N0,E20);ReleaseAssert(g.Level(E20)==1);g.NodeData(E20)=5;g.Sign(E20)=5;g.NodeTmp(E20)=5;
+		unsigned int E01=g.addNode(1);g.addArch(N0,E01);g.addArch(N1,E01);XgeReleaseAssert(g.Level(E01)==1);g.NodeData(E01)=3;g.Sign(E01)=3;g.NodeTmp(E01)=3;
+		unsigned int E12=g.addNode(1);g.addArch(N1,E12);g.addArch(N2,E12);XgeReleaseAssert(g.Level(E12)==1);g.NodeData(E12)=4;g.Sign(E12)=4;g.NodeTmp(E12)=4;
+		unsigned int E20=g.addNode(1);g.addArch(N2,E20);g.addArch(N0,E20);XgeReleaseAssert(g.Level(E20)==1);g.NodeData(E20)=5;g.Sign(E20)=5;g.NodeTmp(E20)=5;
 
-		unsigned int F=g.addNode(2);ReleaseAssert(g.Level(F)==2);g.Sign(F)=6;g.NodeTmp(F)=6;
+		unsigned int F=g.addNode(2);XgeReleaseAssert(g.Level(F)==2);g.Sign(F)=6;g.NodeTmp(F)=6;
 		g.NodeData(F)=6;
 		g.addArch(E01,F);
 		g.addArch(E12,F);
 		g.addArch(E20,F);
 
-		ReleaseAssert(g.getNCells(0)==3);
-		ReleaseAssert(g.getNCells(1)==3);
-		ReleaseAssert(g.getNCells(2)==1);
+		XgeReleaseAssert(g.getNCells(0)==3);
+		XgeReleaseAssert(g.getNCells(1)==3);
+		XgeReleaseAssert(g.getNCells(2)==1);
 
 		g.ArchData(g.getFirstDwArch(F))=100;
 		g.ArchData(g.getLastDwArch (F))=200;
@@ -2376,128 +2376,128 @@ int Graph::SelfTest()
 		g2=g;
 		g.clear();
 
-		ReleaseAssert(g2.getNumNode()==7 && g2.getNumArch()==9);
+		XgeReleaseAssert(g2.getNumNode()==7 && g2.getNumArch()==9);
 
-		ReleaseAssert(g2.NodeData( N0)==0);
-		ReleaseAssert(g2.NodeData( N1)==1);
-		ReleaseAssert(g2.NodeData( N2)==2);
-		ReleaseAssert(g2.NodeData(E01)==3);
-		ReleaseAssert(g2.NodeData(E12)==4);
-		ReleaseAssert(g2.NodeData(E20)==5);
-		ReleaseAssert(g2.NodeData( F )==6);
+		XgeReleaseAssert(g2.NodeData( N0)==0);
+		XgeReleaseAssert(g2.NodeData( N1)==1);
+		XgeReleaseAssert(g2.NodeData( N2)==2);
+		XgeReleaseAssert(g2.NodeData(E01)==3);
+		XgeReleaseAssert(g2.NodeData(E12)==4);
+		XgeReleaseAssert(g2.NodeData(E20)==5);
+		XgeReleaseAssert(g2.NodeData( F )==6);
 
-		ReleaseAssert(g2.Sign( N0)==0);
-		ReleaseAssert(g2.Sign( N1)==1);
-		ReleaseAssert(g2.Sign( N2)==2);
-		ReleaseAssert(g2.Sign(E01)==3);
-		ReleaseAssert(g2.Sign(E12)==4);
-		ReleaseAssert(g2.Sign(E20)==5);
-		ReleaseAssert(g2.Sign( F )==6);
+		XgeReleaseAssert(g2.Sign( N0)==0);
+		XgeReleaseAssert(g2.Sign( N1)==1);
+		XgeReleaseAssert(g2.Sign( N2)==2);
+		XgeReleaseAssert(g2.Sign(E01)==3);
+		XgeReleaseAssert(g2.Sign(E12)==4);
+		XgeReleaseAssert(g2.Sign(E20)==5);
+		XgeReleaseAssert(g2.Sign( F )==6);
 
-		ReleaseAssert(g2.NodeTmp( N0)==0);
-		ReleaseAssert(g2.NodeTmp( N1)==1);
-		ReleaseAssert(g2.NodeTmp( N2)==2);
-		ReleaseAssert(g2.NodeTmp(E01)==3);
-		ReleaseAssert(g2.NodeTmp(E12)==4);
-		ReleaseAssert(g2.NodeTmp(E20)==5);
-		ReleaseAssert(g2.NodeTmp( F )==6);
+		XgeReleaseAssert(g2.NodeTmp( N0)==0);
+		XgeReleaseAssert(g2.NodeTmp( N1)==1);
+		XgeReleaseAssert(g2.NodeTmp( N2)==2);
+		XgeReleaseAssert(g2.NodeTmp(E01)==3);
+		XgeReleaseAssert(g2.NodeTmp(E12)==4);
+		XgeReleaseAssert(g2.NodeTmp(E20)==5);
+		XgeReleaseAssert(g2.NodeTmp( F )==6);
 
-		ReleaseAssert(g2.ArchData(g2.getFirstDwArch(F))==100);
-		ReleaseAssert(g2.ArchData(g2.getLastDwArch (F))==200);
+		XgeReleaseAssert(g2.ArchData(g2.getFirstDwArch(F))==100);
+		XgeReleaseAssert(g2.ArchData(g2.getLastDwArch (F))==200);
 
-		ReleaseAssert(g2.getNDw(F  )==3);
-		ReleaseAssert(g2.getNDw(E01)==2);
-		ReleaseAssert(g2.getNDw(E12)==2);
-		ReleaseAssert(g2.getNDw(E20)==2);
-		ReleaseAssert(g2.getNDw(N0 )==0);
-		ReleaseAssert(g2.getNDw(N1 )==0);
-		ReleaseAssert(g2.getNDw(N2 )==0);
+		XgeReleaseAssert(g2.getNDw(F  )==3);
+		XgeReleaseAssert(g2.getNDw(E01)==2);
+		XgeReleaseAssert(g2.getNDw(E12)==2);
+		XgeReleaseAssert(g2.getNDw(E20)==2);
+		XgeReleaseAssert(g2.getNDw(N0 )==0);
+		XgeReleaseAssert(g2.getNDw(N1 )==0);
+		XgeReleaseAssert(g2.getNDw(N2 )==0);
 
-		ReleaseAssert(g2.getNUp(F )==0);
-		ReleaseAssert(g2.getNUp(E01)==1);
-		ReleaseAssert(g2.getNUp(E12)==1);
-		ReleaseAssert(g2.getNUp(E20)==1);
-		ReleaseAssert(g2.getNUp(N0 )==2);
-		ReleaseAssert(g2.getNUp(N1 )==2);
-		ReleaseAssert(g2.getNUp(N2 )==2);
+		XgeReleaseAssert(g2.getNUp(F )==0);
+		XgeReleaseAssert(g2.getNUp(E01)==1);
+		XgeReleaseAssert(g2.getNUp(E12)==1);
+		XgeReleaseAssert(g2.getNUp(E20)==1);
+		XgeReleaseAssert(g2.getNUp(N0 )==2);
+		XgeReleaseAssert(g2.getNUp(N1 )==2);
+		XgeReleaseAssert(g2.getNUp(N2 )==2);
 
-		ReleaseAssert(g2.getFirstDwArch(F)==g2.getFirstUpArch(E01));
-		ReleaseAssert(g2.getLastDwArch (F)==g2.getFirstUpArch(E20));
-		ReleaseAssert(g2.getNextDwArch(g2.getFirstDwArch(F))==g2.getFirstUpArch(E12));
-		ReleaseAssert(g2.getPrevDwArch(g2.getLastDwArch(F))==g2.getFirstUpArch(E12));
+		XgeReleaseAssert(g2.getFirstDwArch(F)==g2.getFirstUpArch(E01));
+		XgeReleaseAssert(g2.getLastDwArch (F)==g2.getFirstUpArch(E20));
+		XgeReleaseAssert(g2.getNextDwArch(g2.getFirstDwArch(F))==g2.getFirstUpArch(E12));
+		XgeReleaseAssert(g2.getPrevDwArch(g2.getLastDwArch(F))==g2.getFirstUpArch(E12));
 
-		ReleaseAssert(g2.getFirstDwNode(F)==E01);
-		ReleaseAssert(g2.getLastDwNode (F)==E20);
+		XgeReleaseAssert(g2.getFirstDwNode(F)==E01);
+		XgeReleaseAssert(g2.getLastDwNode (F)==E20);
 
-		ReleaseAssert(g2.getFirstUpNode(N0)==E01);
-		ReleaseAssert(g2.getLastUpNode (N0)==E20);
+		XgeReleaseAssert(g2.getFirstUpNode(N0)==E01);
+		XgeReleaseAssert(g2.getLastUpNode (N0)==E20);
 
 
 		GraphIterator it=g2.goDw(F);
-		ReleaseAssert(it.getArch()==g2.getFirstDwArch(F) && it.getNode()==g2.getFirstDwNode(F));
+		XgeReleaseAssert(it.getArch()==g2.getFirstDwArch(F) && it.getNode()==g2.getFirstDwNode(F));
 		it++;
-		ReleaseAssert(it.getArch()==g2.getNextDwArch(g2.getFirstDwArch(F)) && it.getNode()==E12);
+		XgeReleaseAssert(it.getArch()==g2.getNextDwArch(g2.getFirstDwArch(F)) && it.getNode()==E12);
 		it++;
-		ReleaseAssert(it.getArch()==g2.getLastDwArch(F) && it.getNode()==E20);
+		XgeReleaseAssert(it.getArch()==g2.getLastDwArch(F) && it.getNode()==E20);
 		it++;
-		ReleaseAssert(it.end());
+		XgeReleaseAssert(it.end());
 
 		std::map<unsigned int,bool> map;
 
 		GraphListIterator jt=g2.each(0);
-		ReleaseAssert((*jt==N0 || *jt==N1 || *jt==N2) && map.find(*jt)==map.end());map[*jt]=true;
+		XgeReleaseAssert((*jt==N0 || *jt==N1 || *jt==N2) && map.find(*jt)==map.end());map[*jt]=true;
 		jt++;
-		ReleaseAssert((*jt==N0 || *jt==N1 || *jt==N2) && map.find(*jt)==map.end());map[*jt]=true;
+		XgeReleaseAssert((*jt==N0 || *jt==N1 || *jt==N2) && map.find(*jt)==map.end());map[*jt]=true;
 		jt++;
-		ReleaseAssert((*jt==N0 || *jt==N1 || *jt==N2) && map.find(*jt)==map.end());map[*jt]=true;
+		XgeReleaseAssert((*jt==N0 || *jt==N1 || *jt==N2) && map.find(*jt)==map.end());map[*jt]=true;
 		jt++;
-		ReleaseAssert(jt.end());
+		XgeReleaseAssert(jt.end());
 
 		jt=g2.each(1);
-		ReleaseAssert((*jt==E01 || *jt==E12 || *jt==E20) && map.find(*jt)==map.end());map[*jt]=true;
+		XgeReleaseAssert((*jt==E01 || *jt==E12 || *jt==E20) && map.find(*jt)==map.end());map[*jt]=true;
 		jt++;
-		ReleaseAssert((*jt==E01 || *jt==E12 || *jt==E20) && map.find(*jt)==map.end());map[*jt]=true;
+		XgeReleaseAssert((*jt==E01 || *jt==E12 || *jt==E20) && map.find(*jt)==map.end());map[*jt]=true;
 		jt++;
-		ReleaseAssert((*jt==E01 || *jt==E12 || *jt==E20) && map.find(*jt)==map.end());map[*jt]=true;
+		XgeReleaseAssert((*jt==E01 || *jt==E12 || *jt==E20) && map.find(*jt)==map.end());map[*jt]=true;
 		jt++;
-		ReleaseAssert(jt.end());
+		XgeReleaseAssert(jt.end());
 
 		jt=g2.each(2);
-		ReleaseAssert((*jt==F) && map.find(*jt)==map.end());map[*jt]=true;
+		XgeReleaseAssert((*jt==F) && map.find(*jt)==map.end());map[*jt]=true;
 		jt++;
-		ReleaseAssert(jt.end());
+		XgeReleaseAssert(jt.end());
 
 		unsigned int A=g2.getFirstDwArch(F);
-		ReleaseAssert(g2.getN0(A)==E01 && g2.getN1(A)==F);
+		XgeReleaseAssert(g2.getN0(A)==E01 && g2.getN1(A)==F);
 
-		//ReleaseAssert(g2.findCommonNode(E01,E12,DIRECTION_UP)==F);
-		//ReleaseAssert(g2.findCommonNode(E01,E12,DIRECTION_DOWN)==N1);
+		//XgeReleaseAssert(g2.findCommonNode(E01,E12,DIRECTION_UP)==F);
+		//XgeReleaseAssert(g2.findCommonNode(E01,E12,DIRECTION_DOWN)==N1);
 		//unsigned int Node;
-		//ReleaseAssert(g2.findCommonNodes(E01,E12,&Node,DIRECTION_UP)==1 && Node==F);
-		//ReleaseAssert(g2.findCommonNodes(E01,E12,&Node,DIRECTION_DOWN)==1 && Node==N1);
+		//XgeReleaseAssert(g2.findCommonNodes(E01,E12,&Node,DIRECTION_UP)==1 && Node==F);
+		//XgeReleaseAssert(g2.findCommonNodes(E01,E12,&Node,DIRECTION_DOWN)==1 && Node==N1);
 
 		g2.swapDwOrder(g2.getFirstDwArch(F),g2.getLastDwArch(F));
-		ReleaseAssert(g2.getFirstDwNode(F)==E20 && g2.getLastDwNode(F)==E01);
+		XgeReleaseAssert(g2.getFirstDwNode(F)==E20 && g2.getLastDwNode(F)==E01);
 		g2.swapDwOrder(g2.getFirstDwArch(F),g2.getLastDwArch(F));
-		ReleaseAssert(g2.getFirstDwNode(F)==E01 && g2.getLastDwNode(F)==E20);
+		XgeReleaseAssert(g2.getFirstDwNode(F)==E01 && g2.getLastDwNode(F)==E20);
 
 		g2.remArch(N0,E01);
-		ReleaseAssert(g2.getNDw(E01)==1 && g2.getNUp(N0)==1);
+		XgeReleaseAssert(g2.getNDw(E01)==1 && g2.getNUp(N0)==1);
 		g2.addArch(N0,E01);
-		ReleaseAssert(g2.getNDw(E01)==2 && g2.getNUp(N0)==2);
+		XgeReleaseAssert(g2.getNDw(E01)==2 && g2.getNUp(N0)==2);
 
-		ReleaseAssert(g2.findArch(N0,E01) && !g2.findArch(N0,F));
+		XgeReleaseAssert(g2.findArch(N0,E01) && !g2.findArch(N0,F));
 
 		GraphNavigator navigator;
 		int num=g2.findCells(0,F,navigator);
-		ReleaseAssert(num==3 
+		XgeReleaseAssert(num==3 
 			&& (navigator.nav[0][0]==N0 || navigator.nav[0][0]==N1 || navigator.nav[0][0]==N2)
 			&& (navigator.nav[0][1]==N0 || navigator.nav[0][1]==N1 || navigator.nav[0][1]==N2)
 			&& (navigator.nav[0][2]==N0 || navigator.nav[0][2]==N1 || navigator.nav[0][2]==N2));
 
 
 		num=g2.findCells(2,N0,navigator);
-		ReleaseAssert(num==1 && navigator.nav[2][0]==F );
+		XgeReleaseAssert(num==1 && navigator.nav[2][0]==F );
 
 		g2.check();
 	}
@@ -2510,15 +2510,15 @@ int Graph::SelfTest()
 			SmartPointer<Graph> cube=cuboid(pointdim);
 
 			for (int i=0;i<=pointdim;i++)
-				ReleaseAssert(cube->getNCells(i)==cube_num_cells[pointdim][i]);
+				XgeReleaseAssert(cube->getNCells(i)==cube_num_cells[pointdim][i]);
 
 			//check double connectivity
 			if (pointdim>=1)
 			{
-				ReleaseAssert(cube->getNUp(*cube->each(pointdim))==cube_num_cells[pointdim][0]);
+				XgeReleaseAssert(cube->getNUp(*cube->each(pointdim))==cube_num_cells[pointdim][0]);
 
 				for (GraphListIterator it=cube->each(0);!it.end();it++)
-					ReleaseAssert(cube->getNDw(*it)==1 && cube->getNUp(*it)==pointdim);
+					XgeReleaseAssert(cube->getNDw(*it)==1 && cube->getNUp(*it)==pointdim);
 			}
 
 			cube->check();
@@ -2533,16 +2533,16 @@ int Graph::SelfTest()
 			SmartPointer<Graph> s=simplex(pointdim);
 			
 			for (int i=0;i<=pointdim;i++)
-				ReleaseAssert(s->getNCells(i)==simplex_num_cells[pointdim][i]);
+				XgeReleaseAssert(s->getNCells(i)==simplex_num_cells[pointdim][i]);
 
 
 			//check double connectivity
 			if (pointdim>=1)
 			{
-				ReleaseAssert(s->getNUp(*s->each(pointdim))==simplex_num_cells[pointdim][0]);
+				XgeReleaseAssert(s->getNUp(*s->each(pointdim))==simplex_num_cells[pointdim][0]);
 
 				for (GraphListIterator it=s->each(0);!it.end();it++)
-					ReleaseAssert(s->getNDw(*it)==1 && s->getNUp(*it)==pointdim);
+					XgeReleaseAssert(s->getNDw(*it)==1 && s->getNUp(*it)==pointdim);
 			}
 
 			s->check();
@@ -2559,7 +2559,7 @@ int Graph::SelfTest()
 		cube->check();
 
 		for (int i=0;i<=pointdim;i++)
-			ReleaseAssert(cube->getNCells(i)==0);
+			XgeReleaseAssert(cube->getNCells(i)==0);
 
 		cube.reset();
 	}
@@ -2576,7 +2576,7 @@ int Graph::SelfTest()
 				unsigned int F=*it;
 				Planef h=cube->getFittingPlane(F);
 
-				ReleaseAssert(
+				XgeReleaseAssert(
 					   h.fuzzyEqual(Planef(-1.0, 1.0, 0.0, 0.0)) 
 					|| h.fuzzyEqual(Planef(-1.0, 0.0, 1.0, 0.0))
 					|| h.fuzzyEqual(Planef(-1.0, 0.0, 0.0 ,1.0))
@@ -2603,7 +2603,7 @@ int Graph::SelfTest()
 				Planef h=cube->getFittingPlane(F);
 
 
-				ReleaseAssert(
+				XgeReleaseAssert(
 					   h.fuzzyEqual(Planef(-2.0, 1.0, 0.0, 0.0)) 
 					|| h.fuzzyEqual(Planef(-2.0, 0.0, 1.0, 0.0))
 					|| h.fuzzyEqual(Planef(-2.0, 0.0, 0.0 ,1.0))
@@ -2630,7 +2630,7 @@ int Graph::SelfTest()
 				Planef h=cube->getFittingPlane(F);
 
 
-				ReleaseAssert(
+				XgeReleaseAssert(
 					   h.fuzzyEqual(Planef( 0.0, 1.0, 0.0, 0.0)) 
 					|| h.fuzzyEqual(Planef( 0.0, 0.0, 1.0, 0.0))
 					|| h.fuzzyEqual(Planef( 0.0, 0.0, 0.0 ,1.0))
@@ -2657,7 +2657,7 @@ int Graph::SelfTest()
 				unsigned int F=*it;
 				Planef h=cube->getFittingPlane(F);
 
-				ReleaseAssert(
+				XgeReleaseAssert(
 					   h.fuzzyEqual(Planef( 0.0, 1.0, 0.0, 0.0)) 
 					|| h.fuzzyEqual(Planef(-1.0, 0.0, 1.0, 0.0))
 					|| h.fuzzyEqual(Planef(-1.0, 0.0, 0.0 ,1.0))
@@ -2684,7 +2684,7 @@ int Graph::SelfTest()
 				Vecf pos(pointdim,cube->getGeometry(V));
 				Boxf bbox1=cube->getBoundingBox(V);
 				Boxf bbox2(pointdim);bbox2.add(pos);
-				ReleaseAssert(bbox1.fuzzyEqual(bbox2));
+				XgeReleaseAssert(bbox1.fuzzyEqual(bbox2));
 
 				Ballf bball1=cube->getBoundingBall(V);
 
@@ -2694,7 +2694,7 @@ int Graph::SelfTest()
 					_list.push_back(pos[U]);
 				
 				Ballf bball2=Ballf::bestFittingBall(pos.dim,_list);
-				ReleaseAssert(bball1.fuzzyEqual(bball2));
+				XgeReleaseAssert(bball1.fuzzyEqual(bball2));
 			}
 
 			//check that the bounding box for the faces are flat on the fitting plane
@@ -2703,7 +2703,7 @@ int Graph::SelfTest()
 				unsigned int F=*it;
 				Planef h=cube->getFittingPlane(F);
 				Boxf bbox=cube->getBoundingBox(F);
-				ReleaseAssert(Utils::FuzzyEqual(h.getDistance(bbox.p1),0)  && Utils::FuzzyEqual(h.getDistance(bbox.p2),0));
+				XgeReleaseAssert(Utils::FuzzyEqual(h.getDistance(bbox.p1),0)  && Utils::FuzzyEqual(h.getDistance(bbox.p2),0));
 			}
 
 			unsigned int C=*cube->each(pointdim);
@@ -2714,7 +2714,7 @@ int Graph::SelfTest()
 			points[1]=Vecf(pointdim);points[1].set(1.0f);points[1].mem[0]=1;
 
 			Boxf bbox2=Boxf(points[0],points[1]);
-			ReleaseAssert(bbox1.fuzzyEqual(bbox2));
+			XgeReleaseAssert(bbox1.fuzzyEqual(bbox2));
 
 			Ballf bball1=cube->getBoundingBall(C);
 
@@ -2727,7 +2727,7 @@ int Graph::SelfTest()
 				_list.push_back(points[1][U]);
 
 			Ballf bball2=Ballf::bestFittingBall(pointdim,_list);
-			ReleaseAssert(bball1.fuzzyEqual(bball2));
+			XgeReleaseAssert(bball1.fuzzyEqual(bball2));
 
 			cube->check();
 		}
@@ -2747,7 +2747,7 @@ int Graph::SelfTest()
 			unsigned int F=*it;
 			Planef h=cube->getFittingPlane(F);
 	
-			ReleaseAssert(
+			XgeReleaseAssert(
 				   h.fuzzyEqual(Planef(-1.0, 1.0, 0.0, 0.0)) 
 				|| h.fuzzyEqual(Planef(-1.0, 0.0, 1.0, 0.0))
 				|| h.fuzzyEqual(Planef(-1.0, 0.0, 0.0 ,1.0))
@@ -2787,9 +2787,9 @@ int Graph::SelfTest()
 
 			Vecf v2=Vecf(3,cube->getGeometry(V));
 			v2=v2.permutate(3,&perm[0]);
-			ReleaseAssert(v2==v1);
+			XgeReleaseAssert(v2==v1);
 			
-			ReleaseAssert(
+			XgeReleaseAssert(
 				   v1==Vecf(1.0, 3.0, 1.0, 2.0)
 				|| v1==Vecf(1.0, 4.0, 1.0, 2.0)
 				|| v1==Vecf(1.0, 3.0, 2.0 ,2.0)
@@ -2806,16 +2806,16 @@ int Graph::SelfTest()
 		SmartPointer<Graph> cube=cuboid(2);
 		cube->embed(3); //embed in 3dim space
 
-		ReleaseAssert(cube->getNCells(2)==1 && cube->getNCells(3)==0);
+		XgeReleaseAssert(cube->getNCells(2)==1 && cube->getNCells(3)==0);
 		unsigned int F=*(cube->each(2));
 
 		//now the previous full cell is a boundary cell with plane information
-		ReleaseAssert(cube->NodeData(F) && cube->getGeometry(F)[3]==1.0f);
+		XgeReleaseAssert(cube->NodeData(F) && cube->getGeometry(F)[3]==1.0f);
 		
 		for (GraphListIterator it=cube->each(0);!it.end();it++)
 		{
 			Vecf v1(3,cube->getGeometry(*it));
-			ReleaseAssert(
+			XgeReleaseAssert(
 				   v1==Vecf(1.0, 0.0, 0.0, 0.0)
 				|| v1==Vecf(1.0, 1.0, 0.0, 0.0)
 				|| v1==Vecf(1.0, 0.0, 1.0 ,0.0)
@@ -2830,17 +2830,17 @@ int Graph::SelfTest()
 	{
 		{
 			SmartPointer<Graph> cube=cuboid(2);
-			ReleaseAssert(cube->getNCells(0)==4 && cube->getNCells(1)==4 && cube->getNCells(2)==1);
+			XgeReleaseAssert(cube->getNCells(0)==4 && cube->getNCells(1)==4 && cube->getNCells(2)==1);
 			cube->triangulate(0);
-			ReleaseAssert(cube->getNCells(0)==4 && cube->getNCells(1)==5 && cube->getNCells(2)==2);
+			XgeReleaseAssert(cube->getNCells(0)==4 && cube->getNCells(1)==5 && cube->getNCells(2)==2);
 			cube->check();
 		}
 
 		{
 			SmartPointer<Graph> cube=cuboid(3);
-			ReleaseAssert(cube->getNCells(0)==8 && cube->getNCells(1)==12 && cube->getNCells(2)==6  && cube->getNCells(3)==1);
+			XgeReleaseAssert(cube->getNCells(0)==8 && cube->getNCells(1)==12 && cube->getNCells(2)==6  && cube->getNCells(3)==1);
 			cube->triangulate(0);
-			ReleaseAssert(cube->getNCells(0)==9 && cube->getNCells(1)==26 && cube->getNCells(2)==30 && cube->getNCells(3)==12);
+			XgeReleaseAssert(cube->getNCells(0)==9 && cube->getNCells(1)==26 && cube->getNCells(2)==30 && cube->getNCells(3)==12);
 			cube->check();
 		}
 	}
@@ -2866,7 +2866,7 @@ int Graph::SelfTest()
 		g.addArch(E30,F);
 
 		bool ok=g.orderFace2d(F);
-		ReleaseAssert(ok);
+		XgeReleaseAssert(ok);
 
 		unsigned int M0=g.getFirstDwNode(g.getLastDwNode(F));
 		unsigned int M1=g.getLastDwNode(g.getLastDwNode(F) );
@@ -2876,7 +2876,7 @@ int Graph::SelfTest()
 			unsigned int E=*it;
 			unsigned int N0=g.getFirstDwNode(E);
 			unsigned int N1=g.getLastDwNode(E);
-			ReleaseAssert((M0==N0 || M0==N1) || (M1==N0 || M1==N1));
+			XgeReleaseAssert((M0==N0 || M0==N1) || (M1==N0 || M1==N1));
 			M0=N0;
 			M1=N1;
 		}
@@ -2887,7 +2887,7 @@ int Graph::SelfTest()
 			unsigned int E34=g.addNode(1);g.addArch(N3,E34);g.addArch(N4,E34);
 			g.addArch(E34,F);
 			bool ok=g.orderFace2d(F);
-			ReleaseAssert(!ok);
+			XgeReleaseAssert(!ok);
 		}
 	}
 
@@ -2916,7 +2916,7 @@ int Graph::SelfTest()
 				
 				if (v.fuzzyEqual(compare,0.0001f))
 				{
-					ReleaseAssert(found_in_hull.find(I)==found_in_hull.end());
+					XgeReleaseAssert(found_in_hull.find(I)==found_in_hull.end());
 					found_in_hull.insert(I);
 					break;
 				}
@@ -2935,8 +2935,8 @@ int Graph::SelfTest()
 
 		Matf g_vmat(pointdim),g_hmat(pointdim);
 		SmartPointer<Graph> g=Graph::mkpol(g_vmat,g_hmat,pointdim,npoints,points,1e-6f);
-		ReleaseAssert(g->getNCells(0)==hull_npoints);
-		ReleaseAssert(g_vmat.dim==3 && g->pointdim==2);
+		XgeReleaseAssert(g->getNCells(0)==hull_npoints);
+		XgeReleaseAssert(g_vmat.dim==3 && g->pointdim==2);
 		std::set<int> found_in_hull;
 
 		for (GraphListIterator it=g->each(0);!it.end();it++)
@@ -2952,7 +2952,7 @@ int Graph::SelfTest()
 				
 				if (v.fuzzyEqual(compare,0.0001f))
 				{
-					ReleaseAssert(found_in_hull.find(I)==found_in_hull.end());
+					XgeReleaseAssert(found_in_hull.find(I)==found_in_hull.end());
 					found_in_hull.insert(I);
 					break;
 				}
@@ -2982,7 +2982,7 @@ int Graph::SelfTest()
 			SmartPointer<Graph> g=Graph::mkpol(g_vmat,g_hmat,pointdim,npoints,points,1e-4f);
 
 			//check that g has space dim > point dim
-			ReleaseAssert(g_vmat.dim==pointdim && g->pointdim==(g_vmat.dim-1));
+			XgeReleaseAssert(g_vmat.dim==pointdim && g->pointdim==(g_vmat.dim-1));
 
 			//...and all points transformed belongs to the plane
 			for (GraphListIterator it=g->each(0);!it.end();it++)
@@ -2991,7 +2991,7 @@ int Graph::SelfTest()
 				memcpy(&v.mem[0],g->getGeometry(*it),sizeof(float)*(g->pointdim+1));
 				v=g_vmat * v;
 				float Distance=fabs(h.getDistance(v));
-				ReleaseAssert(Distance<0.001f);
+				XgeReleaseAssert(Distance<0.001f);
 			}
 
 			delete [] points;
@@ -3025,17 +3025,17 @@ int Graph::SelfTest()
 
 			//check number of cells
 			for (int i=0;i<=pointdim;i++)
-				ReleaseAssert(cube->getNCells(i)==cube_num_cells[pointdim][i]);
+				XgeReleaseAssert(cube->getNCells(i)==cube_num_cells[pointdim][i]);
 
 			cube->check();
 
 			//check double connectivity
 			if (pointdim>=1)
 			{
-				ReleaseAssert(cube->getNUp(*cube->each(pointdim))==cube_num_cells[pointdim][0]);
+				XgeReleaseAssert(cube->getNUp(*cube->each(pointdim))==cube_num_cells[pointdim][0]);
 
 				for (GraphListIterator it=cube->each(0);!it.end();it++)
-					ReleaseAssert(cube->getNDw(*it)==1 && cube->getNUp(*it)==pointdim);
+					XgeReleaseAssert(cube->getNDw(*it)==1 && cube->getNUp(*it)==pointdim);
 			}
 
 			MemPool::getSingleton()->free(npoints*pointdim*sizeof(float),points);
@@ -3054,9 +3054,9 @@ int Graph::SelfTest()
 		unsigned int Id=0xffff;
 		int max_try=3;
 		int retcode=cube3->split(nav,C,h,start_tolerance,max_try,Cb,Ca,Ce,Id);
-		ReleaseAssert(retcode==SPLIT_OK);
-		ReleaseAssert(cube3->getNCells(0)==12 && cube3->getNCells(1)==20 && cube3->getNCells(2)==11 && cube3->getNCells(3)==2);
-		ReleaseAssert(cube3->Level(Ce)==2 && cube3->getNode(Ce).Id==Id);
+		XgeReleaseAssert(retcode==SPLIT_OK);
+		XgeReleaseAssert(cube3->getNCells(0)==12 && cube3->getNCells(1)==20 && cube3->getNCells(2)==11 && cube3->getNCells(3)==2);
+		XgeReleaseAssert(cube3->Level(Ce)==2 && cube3->getNode(Ce).Id==Id);
 	}
 
 
@@ -3067,7 +3067,7 @@ int Graph::SelfTest()
 		{
 			Log::printf("   symbolic power of cube(%d) * cube(%d)...\n",L1,L2);
 			int pointdim=L1+L2;
-			ReleaseAssert(pointdim<=10);
+			XgeReleaseAssert(pointdim<=10);
 
 			SmartPointer<Graph> g1=Graph::cuboid(L1);
 			SmartPointer<Graph> g2=Graph::cuboid(L2);
@@ -3075,19 +3075,19 @@ int Graph::SelfTest()
 			Matf V(L1+L2);
 			Matf H(L1+L2);
 			SmartPointer<Graph> cube=Graph::power(V,H,g1,SmartPointer<Matf>(),SmartPointer<Matf>(),g2,SmartPointer<Matf>(),SmartPointer<Matf>());
-			ReleaseAssert(V.almostIdentity(0.0f) && H.almostIdentity(0.0f));
-			ReleaseAssert(cube->pointdim==pointdim);
+			XgeReleaseAssert(V.almostIdentity(0.0f) && H.almostIdentity(0.0f));
+			XgeReleaseAssert(cube->pointdim==pointdim);
 
 			for (int i=0;i<=pointdim;i++)
-				ReleaseAssert(cube->getNCells(i)==cube_num_cells[pointdim][i]);
+				XgeReleaseAssert(cube->getNCells(i)==cube_num_cells[pointdim][i]);
 
 			//check double connectivity
 			if (pointdim>=1)
 			{
-				ReleaseAssert(cube->getNUp(*cube->each(pointdim))==cube_num_cells[pointdim][0]);
+				XgeReleaseAssert(cube->getNUp(*cube->each(pointdim))==cube_num_cells[pointdim][0]);
 
 				for (GraphListIterator it=cube->each(0);!it.end();it++)
-					ReleaseAssert(cube->getNDw(*it)==1 && cube->getNUp(*it)==pointdim);
+					XgeReleaseAssert(cube->getNDw(*it)==1 && cube->getNUp(*it)==pointdim);
 			}
 		}
 	}
@@ -3107,7 +3107,7 @@ int Graph::SelfTest()
 			SmartPointer<Matf> VmatT(new Matf(pointdim));
 			SmartPointer<Matf> HmatT(new Matf(pointdim));
 			SmartPointer<Graph> cube=Graph::power(*VmatT.get(),*HmatT.get(),g1,SmartPointer<Matf>(),SmartPointer<Matf>(),g2,SmartPointer<Matf>(),SmartPointer<Matf>());
-			ReleaseAssert(cube->pointdim==pointdim && VmatT->dim==pointdim && HmatT->dim==pointdim);
+			XgeReleaseAssert(cube->pointdim==pointdim && VmatT->dim==pointdim && HmatT->dim==pointdim);
 
 			//check bounding box
 			Boxf bbox=cube->getBoundingBox(0,VmatT,HmatT);
@@ -3129,7 +3129,7 @@ int Graph::SelfTest()
 			}
 			
 			//cube->print();
-			ReleaseAssert(bbox.fuzzyEqual(Boxf(p0,p1)));
+			XgeReleaseAssert(bbox.fuzzyEqual(Boxf(p0,p1)));
 		}
 	}
 
@@ -3141,10 +3141,10 @@ int Graph::SelfTest()
 		SmartPointer<Matf> VmatT(new Matf(0));
 		SmartPointer<Matf> HmatT(new Matf(0));
 		SmartPointer<Graph> power=Graph::power(*VmatT.get(),*HmatT.get(),g1,g1vmat,g1hmat,g2,g2vmat,g2hmat);
-		ReleaseAssert(power->pointdim==(g1->pointdim+g2->pointdim) && VmatT->dim==HmatT->dim && VmatT->dim==(g1vmat->dim+g2vmat->dim));
-		ReleaseAssert(power->getNCells(power->pointdim)==1); //should produce only one cell!
+		XgeReleaseAssert(power->pointdim==(g1->pointdim+g2->pointdim) && VmatT->dim==HmatT->dim && VmatT->dim==(g1vmat->dim+g2vmat->dim));
+		XgeReleaseAssert(power->getNCells(power->pointdim)==1); //should produce only one cell!
 		Boxf bbox=power->getBoundingBox(0,VmatT,HmatT);
-		ReleaseAssert(bbox.fuzzyEqual(Boxf(Vecf(1.0f, 1.0f,3.0f,7.0f, -1.0f,-3.0f,-7.0f ),Vecf(1.0f, 2.0f,4.0f,7.0f, 0.0f,-2.0f,-7.0f))));
+		XgeReleaseAssert(bbox.fuzzyEqual(Boxf(Vecf(1.0f, 1.0f,3.0f,7.0f, -1.0f,-3.0f,-7.0f ),Vecf(1.0f, 2.0f,4.0f,7.0f, 0.0f,-2.0f,-7.0f))));
 	}
 
 
@@ -3328,16 +3328,16 @@ static SmartPointer<Graph> mkpol_inner(Matf& VmatT,Matf& HmatT,int pointdim,int 
 			Vecf vg= T * Vecf(Dim,1,cursor_src);
 
 			//make sure the last coordinates gets cancelled (== points are in plane xn=0)
-			DebugAssert(fabs(vg[Dim])<1e-4 && vg[0]); 
+			XgeDebugAssert(fabs(vg[Dim])<1e-4 && vg[0]); 
 			if (vg[0]!=1) {vg/=vg[0];vg.mem[0]=1;}
 			memcpy(cursor_dst,&vg.mem[1],sizeof(float)*(pointdim-1)); //exclude the homogeneous coordinate
 		}	
 
 		//try in lower dimension
 		SmartPointer<Graph> g=mkpol_inner(VmatT,HmatT,pointdim-1,npoints,projected_points,tolerance,nrec+1);
-		DebugAssert(g);
+		XgeDebugAssert(g);
 
-		DebugAssert(VmatT.dim==HmatT.dim && VmatT.dim==(pointdim-1));
+		XgeDebugAssert(VmatT.dim==HmatT.dim && VmatT.dim==(pointdim-1));
 
 		//apply the projection
 		VmatT=vmat * VmatT.extract(pointdim);
@@ -3373,10 +3373,10 @@ static SmartPointer<Graph> mkpol_inner(Matf& VmatT,Matf& HmatT,int pointdim,int 
 		unsigned int V=g->addVertex(point);
 		if (!first_boundary_vertex) first_boundary_vertex=V;
 		last_boundary_vertex=V;
-		DebugAssert(V==++nv); //it is necessary for keeping the stability between g and g (both ggraph)
+		XgeDebugAssert(V==++nv); //it is necessary for keeping the stability between g and g (both ggraph)
 		mapv[vertex->id]=V;
 	}
-	DebugAssert(first_boundary_vertex && last_boundary_vertex && last_boundary_vertex>first_boundary_vertex);
+	XgeDebugAssert(first_boundary_vertex && last_boundary_vertex && last_boundary_vertex>first_boundary_vertex);
 
 	//build faces
 	int num_boundary_faces=qh num_facets;
@@ -3396,7 +3396,7 @@ static SmartPointer<Graph> mkpol_inner(Matf& VmatT,Matf& HmatT,int pointdim,int 
 			g->addArch(V,F,Graph::DIRECTION_UP_AND_DOWN); //this link should be bidirectional!
 		}
 	}
-	DebugAssert(first_boundary_face && last_boundary_face && last_boundary_face>first_boundary_face);
+	XgeDebugAssert(first_boundary_face && last_boundary_face && last_boundary_face>first_boundary_face);
 
 	//do not need anymore
 	qh_freeqhull(qh_ALL);
@@ -3413,7 +3413,7 @@ static SmartPointer<Graph> mkpol_inner(Matf& VmatT,Matf& HmatT,int pointdim,int 
 			g->addArch(Up,*it);
 
 		bool bOk=g->orderFace2d(Up);
-		DebugAssert(bOk);
+		XgeDebugAssert(bOk);
 		return g;
 	}
 
@@ -3461,7 +3461,7 @@ static SmartPointer<Graph> mkpol_inner(Matf& VmatT,Matf& HmatT,int pointdim,int 
 
 		unsigned int     N=item.first ; //hasse node
 		unsigned int  face=item.second; //the set of vertices
-		DebugAssert(N);
+		XgeDebugAssert(N);
 
 		// labels
 		const int FAILED   =0;
@@ -3502,7 +3502,7 @@ static SmartPointer<Graph> mkpol_inner(Matf& VmatT,Matf& HmatT,int pointdim,int 
 			unsigned int vclosure = IT->second.first;
 			int&    label   = IT->second.second;
 
-			DebugAssert(label==CANDIDATE);
+			XgeDebugAssert(label==CANDIDATE);
 
 			for (GraphIterator JT=g->goDw(vclosure);!JT.end();JT++)
 			{
@@ -3522,7 +3522,7 @@ static SmartPointer<Graph> mkpol_inner(Matf& VmatT,Matf& HmatT,int pointdim,int 
 			//not erased the label, from candidate->minimal
 			if (label!=FAILED) 
 			{
-				DebugAssert(label==CANDIDATE);
+				XgeDebugAssert(label==CANDIDATE);
 				label=MINIMAL; 
 			}
 		}
@@ -3572,7 +3572,7 @@ static SmartPointer<Graph> mkpol_inner(Matf& VmatT,Matf& HmatT,int pointdim,int 
 							}
 						}
 						//must have find it
-						DebugAssert(g->NodeData(L));
+						XgeDebugAssert(g->NodeData(L));
 					}
 				}
 				else
@@ -3605,7 +3605,7 @@ static SmartPointer<Graph> mkpol_inner(Matf& VmatT,Matf& HmatT,int pointdim,int 
 	}
 
 	//safety check
-	DebugAssert(!num_closure_faces);
+	XgeDebugAssert(!num_closure_faces);
 
 	//remove faces boundary created in the first stage
 	for (unsigned int F=first_boundary_face;F<=last_boundary_face;F++)
@@ -3628,7 +3628,7 @@ static SmartPointer<Graph> mkpol_inner(Matf& VmatT,Matf& HmatT,int pointdim,int 
 			if (lvl==2)
 			{
 				bool bOk=g->orderFace2d(*it);
-				DebugAssert(bOk);
+				XgeDebugAssert(bOk);
 			}
 		}
 	}
@@ -3642,7 +3642,7 @@ static SmartPointer<Graph> mkpol_inner(Matf& VmatT,Matf& HmatT,int pointdim,int 
 
 SmartPointer<Graph> Graph::mkpol(Matf& Vmat,Matf& Hmat,int pointdim,int npoints,std::vector<float> points,float tolerance)
 {
-	DebugAssert((int)points.size()==pointdim*npoints);
+	XgeDebugAssert((int)points.size()==pointdim*npoints);
 	return mkpol(Vmat,Hmat,pointdim,npoints,&points[0],tolerance);
 }
 
@@ -3693,3 +3693,160 @@ SmartPointer<Graph> Graph::mkpol(Matf& VmatT,Matf& HmatT,int pointdim,int npoint
 	return ret;
 
 }
+
+
+#if 0
+
+////////////////////////////////////////////////////////////////////////////////
+static SmartPointer<Graph> mkpolf_inner(Matf& VmatT,Matf& HmatT,int pointdim,int nplanes,const float* _planes,float* interior_point,float tolerance,int nrec)
+{
+	int error_qhull;
+
+	//base case, 0 dimension
+	if (!pointdim)
+	{
+		SmartPointer<Graph> g(new Graph(0));
+		Vecf v(0);v.mem[0]=1.0f;
+		g->addVertex(v);
+		VmatT=Matf(0); //identity matrices
+		HmatT=Matf(0);
+		return g;
+	}
+
+	//other cases, cannot be a full cell!
+	if (nplanes<(pointdim+1))
+		return SmartPointer<Graph>();
+
+	//QHULL need homo in last position and correct orientation
+    int planes_size=sizeof(float)*(pointdim+1)*nplanes;
+	float* planes=(float*)MemPool::getSingleton()->malloc(planes_size);
+	{
+		Vecf InteriorP(pointdim,1.0f,interior_point);
+		const float* src=_planes;
+		float*       dst= planes;
+		for (int P=0;P<nplanes;P++,src+=(pointdim+1),dst+=(pointdim+1))
+		{	
+			//qhull needs plane with correct orientation
+			Planef h(pointdim,src);
+			h=h.forceBelow(InteriorP);
+
+			memcpy(&dst[0],&h.mem[1],sizeof(float)*pointdim);
+			dst[pointdim]=h.mem[0]; //homo in last position
+		}
+	}
+
+	//base case, 1 dimension (not supported, todo!)
+	if (pointdim==1)
+	{
+		MemPool::getSingleton()->free(planes_size,planes);
+		return SmartPointer<Graph>();
+	}
+
+	//to avoid warnings from qhull
+	#ifdef _WINDOWS
+	static FILE* __devnull=fopen("nul","w");
+	#else
+	static FILE* __devnull=fopen("/dev/null","w");
+	#endif
+
+	if (__devnull==0) __devnull=stdout;
+
+	//OPTIONS: H==qhalf  Fp==intersection coordinates Pp=does not print warnings, En max roundoff error 
+	char qhull_opts[256];sprintf(qhull_opts,"qhull H Fp Pp E%e ",tolerance);
+
+	//interior point
+	strcat(qhull_opts," H");
+	for (int N=0;N<pointdim;N++) sprintf(qhull_opts+strlen(qhull_opts),"%.e%s",interior_point[N],N<(pointdim-1)?",":"");
+
+	error_qhull=qh_new_qhull(pointdim+1,nplanes,(float*)planes,(boolT)false,qhull_opts, __devnull, __devnull);
+
+	if (error_qhull)	
+	{
+		qh_freeqhull(qh_ALL);
+		MemPool::getSingleton()->free(planes_size,planes);
+		return SmartPointer<Graph>();
+	}
+
+	//initialize matrices, in this dimension is ok!
+	VmatT=Matf(pointdim);
+	HmatT=Matf(pointdim);
+
+	//loop through the faces and build vertex/facet incidence matrix
+	SmartPointer<Graph> g(new Graph(pointdim)); 
+
+	//build vertices
+	int num_boundary_vertices=qh num_vertices;
+	int num_boundary_faces   =qh num_facets;
+	unsigned int first_boundary_vertex=0,last_boundary_vertex=0;
+	unsigned int first_boundary_face  =0,last_boundary_face  =0;
+	std::map<unsigned int,unsigned int> mapv; //map for vertices
+	std::map<unsigned int,unsigned int> mapf; //map for faces
+
+	//add vertices
+	{
+		int nv=0;
+		facetT* facet;FORALLfacets  //NOTE: in qhull they are listed in FORALLfacets
+		{
+			Vecf point(pointdim,1.0f,facet->normal);
+
+			unsigned int V=g->addVertex(point);
+			if (!first_boundary_vertex) first_boundary_vertex=V;
+			last_boundary_vertex=V;
+			XgeDebugAssert(V==++nv); //it is necessary for keeping the stability between g and g (both ggraph)
+			mapv[facet->id]=V;
+		}
+		XgeDebugAssert(first_boundary_vertex && last_boundary_vertex && last_boundary_vertex>first_boundary_vertex);
+	}
+
+
+	//add faces
+	{
+		vertexT *vertex;FORALLvertices //NOTE: in qhull they are listed in FORALLvertices
+		{
+			unsigned int F=g->addNode(pointdim-1); //I do not add plane equation, QHULL return only the the normal! not the offset
+			if (!first_boundary_face) first_boundary_face=F;
+			last_boundary_face=F;
+			mapf[vertex->id]=F;
+		}
+		XgeDebugAssert(first_boundary_face && last_boundary_face && last_boundary_face>first_boundary_face);
+	}
+
+	//add connection point-faces
+	{
+		facetT* facet;FORALLfacets  //NOTE: these are the vertices
+		{
+			vertexT *vertex, **vertexp; FOREACHvertex_(facet->vertices)  //NOTE: these are the faces
+			{
+				unsigned int V=mapv[facet->id ];
+				unsigned int F=mapf[vertex->id];
+				g->addArch(V,F,Graph::DIRECTION_UP_AND_DOWN); //this link should be bidirectional!
+			}
+		}
+	}
+
+	//do not need anymore
+	qh_freeqhull(qh_ALL);
+
+	//full lattice representation
+	setFullLattice(g,first_boundary_face,last_boundary_face);
+
+	//necessary since I do not have the offsets for planes
+	g->fixBoundaryFaceOrientation(0);
+
+	MemPool::getSingleton()->free(planes_size,planes);
+	return g;
+}
+
+SmartPointer<Graph> Graph::mkpolf(Matf& VmatT,Matf& HmatT,int pointdim,int nplanes,const float* planes,float* interior_point,float tolerance)
+{
+	return mkpolf_inner(VmatT,HmatT,pointdim,nplanes,planes,interior_point,tolerance,0);
+}
+
+SmartPointer<Graph> Graph::mkpolf(Matf& Vmat,Matf& Hmat,int pointdim,int nplanes,std::vector<float> planes,std::vector<float> interior_point,float tolerance)
+{
+	XgeDebugAssert((int)planes.size()==((pointdim+1)*nplanes) && (int)interior_point.size()==pointdim);
+	return mkpolf_inner(Vmat,Hmat,pointdim,nplanes,&planes[0],&interior_point[0],tolerance,0);
+}
+
+
+#endif

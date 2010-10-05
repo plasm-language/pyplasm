@@ -137,7 +137,7 @@ void EngineTessellator::Run(double windingRule, bool ccw)
 	tessellate_t* t=new tessellate_t;
 	t->ccw = ccw;
 	t->tess = gluNewTess();
-	DebugAssert(t->tess);
+	XgeDebugAssert(t->tess);
 
 	gluTessCallback( t->tess, GLU_TESS_ERROR       ,(GLvoid  (CALLBACK*)())callback_error);
 	gluTessCallback( t->tess, GLU_TESS_VERTEX_DATA ,(GLvoid  (CALLBACK*)())callback_vertex);
@@ -221,9 +221,9 @@ void EngineTessellator::Run(double windingRule, bool ccw)
 		//***  triangle *** 
 		unsigned int T=0;
 
-		if (!T) {T=m_g->findFirstCommonNode(E01,E12,Graph::DIRECTION_UP);DebugAssert(!T || m_g->findArch(E20,T,Graph::DIRECTION_UP)!=0);}
-		if (!T) {T=m_g->findFirstCommonNode(E12,E20,Graph::DIRECTION_UP);DebugAssert(!T || m_g->findArch(E01,T,Graph::DIRECTION_UP)!=0);}
-		if (!T) {T=m_g->findFirstCommonNode(E20,E01,Graph::DIRECTION_UP);DebugAssert(!T || m_g->findArch(E12,T,Graph::DIRECTION_UP)!=0);}
+		if (!T) {T=m_g->findFirstCommonNode(E01,E12,Graph::DIRECTION_UP);XgeDebugAssert(!T || m_g->findArch(E20,T,Graph::DIRECTION_UP)!=0);}
+		if (!T) {T=m_g->findFirstCommonNode(E12,E20,Graph::DIRECTION_UP);XgeDebugAssert(!T || m_g->findArch(E01,T,Graph::DIRECTION_UP)!=0);}
+		if (!T) {T=m_g->findFirstCommonNode(E20,E01,Graph::DIRECTION_UP);XgeDebugAssert(!T || m_g->findArch(E12,T,Graph::DIRECTION_UP)!=0);}
 
 		//if the triangle does not exists
 		if (!T)

@@ -169,7 +169,7 @@ inline unsigned int Graph::addNode(unsigned char L)
 ///////////////////////////////////////////////////////// inline
 inline unsigned int Graph::addVertex(const Vecf& v)
 {
-	DebugAssert(v.dim==this->pointdim);
+	XgeDebugAssert(v.dim==this->pointdim);
 	unsigned int V=addNode(0);
 	float* coord=getGeometry(V,true);
 	memcpy(coord,v.mem,db.itemsize());
@@ -222,7 +222,7 @@ inline unsigned int Graph::addFace2d(const std::vector<int>& verts)
 ///////////////////////////////////////////////////////// inline
 inline unsigned int Graph::addPlane(const Vecf& h)
 {
-	DebugAssert(h.dim==this->pointdim);
+	XgeDebugAssert(h.dim==this->pointdim);
 	unsigned int H=addNode(pointdim-1);
 	float* coord=getGeometry(H,true);
 	memcpy(coord,h.mem,db.itemsize());
@@ -299,11 +299,11 @@ inline void Graph::addArchDirection(unsigned int A,Direction dir,unsigned int _A
 
 	//important when a.N0_prev=A.N0_next=0 means that the arch exists only for dir=DIRECTION_DOWN
 	//               a.N1_prev=A.N1_next=0 means that the arch exists only for dir=DIRECTION_UP
-	DebugAssert(dir!=DIRECTION_UP_AND_DOWN);
+	XgeDebugAssert(dir!=DIRECTION_UP_AND_DOWN);
 
 	if (dir==DIRECTION_UP)
 	{
-		DebugAssert(!a.N0_prev && !a.N0_next);
+		XgeDebugAssert(!a.N0_prev && !a.N0_next);
 
 		if (!(n0.Nup++)) 
 			{n0.Up=a.N0_prev=a.N0_next=K;}
@@ -321,7 +321,7 @@ inline void Graph::addArchDirection(unsigned int A,Direction dir,unsigned int _A
 
 	if (dir==DIRECTION_DOWN)
 	{
-		DebugAssert(!a.N1_prev && !a.N1_next);
+		XgeDebugAssert(!a.N1_prev && !a.N1_next);
 
 		if (!(n1.Ndw++)) 
 			{n1.Dw=a.N1_prev=a.N1_next=K;}
@@ -383,7 +383,7 @@ inline unsigned int Graph::findVertex(const Vecf& to_compare)
 ///////////////////////////////////////////////////////// inline
 inline unsigned int Graph::findFirstCommonNode(unsigned int N,unsigned int M,Direction dir)
 {
-	DebugAssert(N!=M);
+	XgeDebugAssert(N!=M);
 
 	if (dir & DIRECTION_UP)
 	{
@@ -410,7 +410,7 @@ inline void Graph::remArch(unsigned int arch,Direction dir)
 	//if the arch goes up (== is inserted in the node)
 	if ((dir & DIRECTION_UP) && (a.N0_prev && a.N0_next))
 	{
-		DebugAssert(n0.Nup>0);
+		XgeDebugAssert(n0.Nup>0);
 
 		if (!(--n0.Nup))
 			{n0.Up=0;}
@@ -426,7 +426,7 @@ inline void Graph::remArch(unsigned int arch,Direction dir)
 	 
 	if ((dir & DIRECTION_DOWN)  && (a.N1_prev && a.N1_next)) 
 	{
-		DebugAssert(n1.Ndw>0);
+		XgeDebugAssert(n1.Ndw>0);
 
 		if (!(--n1.Ndw))
 			{n1.Dw=0;}
@@ -453,7 +453,7 @@ inline void Graph::swapDwOrder(unsigned int A,unsigned int B)
 
 	GraphArch& a=getArch(A);
 	GraphArch& b=getArch(B);
-	DebugAssert(a.N1==b.N1);
+	XgeDebugAssert(a.N1==b.N1);
 
 	unsigned int Ap=a.N1_prev,An=a.N1_next;
 	unsigned int Bp=b.N1_prev,Bn=b.N1_next;	
@@ -552,7 +552,7 @@ inline float* Graph::getGeometry(unsigned int N,bool bCreateIfNotExists)
 inline Vecf Graph::getVecf(unsigned int N)
 {
 	float* coord=getGeometry(N);
-	DebugAssert(coord!=0);
+	XgeDebugAssert(coord!=0);
 	return Vecf(this->pointdim,coord);
 }
 
@@ -583,8 +583,8 @@ inline int Graph::getMaxDimCells()
 ///////////////////////////////////////////////////////// inline
 inline bool Graph::contains(unsigned int C,const Vecf& point,float tolerance)
 {
-	DebugAssert(point.dim==this->pointdim);
-	DebugAssert(tolerance>0);
+	XgeDebugAssert(point.dim==this->pointdim);
+	XgeDebugAssert(tolerance>0);
 
 	//test all cells
 	if (!C)
@@ -605,7 +605,7 @@ inline bool Graph::contains(unsigned int C,const Vecf& point,float tolerance)
 	if (this->pointdim==1)
 	{
 		float value=point[1];
-		DebugAssert(getNDw(C)==2);
+		XgeDebugAssert(getNDw(C)==2);
 		unsigned int V0=getFirstDwNode(C);float v0=getGeometry(V0)[1];
 		unsigned int V1=getLastDwNode (C);float v1=getGeometry(V1)[1];
 		if (v0>v1) {Swap(float,v0,v1);}
@@ -665,13 +665,13 @@ inline unsigned int	             GraphListIterator::getPrevNode()										    {
 inline void                  GraphListIterator::goForward()                                             {this->operator++(1);}
 
 inline unsigned int                GraphNavigator::getNCells (int level      )                                {return nnav[level];}
-inline unsigned int                GraphNavigator::getCell   (int level,int i)                                {DebugAssert(i>=0 && i<(int)nnav[level]);return nav[level][i];}
+inline unsigned int                GraphNavigator::getCell   (int level,int i)                                {XgeDebugAssert(i>=0 && i<(int)nnav[level]);return nav[level][i];}
 
 //constructor
 inline GraphKMem::GraphKMem(int itemsize)
 {
 	//should at least contain a pointer to the next element inside mem
-	DebugAssert(itemsize>=sizeof(unsigned int));
+	XgeDebugAssert(itemsize>=sizeof(unsigned int));
 	this->m_itemsize=itemsize;
 	this->m_mem=0;
 	flush();
@@ -832,7 +832,7 @@ inline void GraphKMem::resize(int new_itemsize)
 	if (new_itemsize==m_itemsize)
 		return;
 
-	DebugAssert(new_itemsize>=sizeof(unsigned int));
+	XgeDebugAssert(new_itemsize>=sizeof(unsigned int));
 
 	int old_size=m_max*m_itemsize;
 	int new_size=m_max*new_itemsize;

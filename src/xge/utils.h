@@ -147,7 +147,7 @@ public:
 	static inline std::string Replace(std::string source, std::string find, std::string replace,bool caseSensitive=true) 
 	{
 		//TODO: other cases
-		ReleaseAssert(caseSensitive==true);
+		XgeReleaseAssert(caseSensitive==true);
 
 		for (int j;(j=(int)source.find(find))!=std::string::npos;)
 			source.replace(j, find.length(),replace);

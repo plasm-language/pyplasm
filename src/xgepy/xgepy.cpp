@@ -26502,27 +26502,6 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_delete_SpinLock(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  SpinLock *arg1 = (SpinLock *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  
-  if (!PyArg_ParseTuple(args,(char *)"O:delete_SpinLock",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_SpinLock, SWIG_POINTER_DISOWN |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_SpinLock" "', argument " "1"" of type '" "SpinLock *""'"); 
-  }
-  arg1 = reinterpret_cast< SpinLock * >(argp1);
-  delete arg1;
-  resultobj = SWIG_Py_Void();
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
 SWIGINTERN PyObject *_wrap_SpinLock_Lock(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   SpinLock *arg1 = (SpinLock *) 0 ;
@@ -26558,6 +26537,27 @@ SWIGINTERN PyObject *_wrap_SpinLock_Unlock(PyObject *SWIGUNUSEDPARM(self), PyObj
   }
   arg1 = reinterpret_cast< SpinLock * >(argp1);
   (arg1)->Unlock();
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_delete_SpinLock(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  SpinLock *arg1 = (SpinLock *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:delete_SpinLock",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_SpinLock, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_SpinLock" "', argument " "1"" of type '" "SpinLock *""'"); 
+  }
+  arg1 = reinterpret_cast< SpinLock * >(argp1);
+  delete arg1;
   resultobj = SWIG_Py_Void();
   return resultobj;
 fail:
@@ -83424,9 +83424,9 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"delete_Keyboard", _wrap_delete_Keyboard, METH_VARARGS, NULL},
 	 { (char *)"Keyboard_swigregister", Keyboard_swigregister, METH_VARARGS, NULL},
 	 { (char *)"new_SpinLock", _wrap_new_SpinLock, METH_VARARGS, NULL},
-	 { (char *)"delete_SpinLock", _wrap_delete_SpinLock, METH_VARARGS, NULL},
 	 { (char *)"SpinLock_Lock", _wrap_SpinLock_Lock, METH_VARARGS, NULL},
 	 { (char *)"SpinLock_Unlock", _wrap_SpinLock_Unlock, METH_VARARGS, NULL},
+	 { (char *)"delete_SpinLock", _wrap_delete_SpinLock, METH_VARARGS, NULL},
 	 { (char *)"SpinLock_swigregister", SpinLock_swigregister, METH_VARARGS, NULL},
 	 { (char *)"new_Archive", _wrap_new_Archive, METH_VARARGS, NULL},
 	 { (char *)"delete_Archive", _wrap_delete_Archive, METH_VARARGS, NULL},
@@ -85811,6 +85811,7 @@ SWIG_init(void) {
   SWIG_Python_SetConstant(d, "Plasm_PLASM_CUBE",SWIG_From_int(static_cast< int >(Plasm::PLASM_CUBE)));
   SWIG_Python_SetConstant(d, "Plasm_PLASM_SIMPLEX",SWIG_From_int(static_cast< int >(Plasm::PLASM_SIMPLEX)));
   SWIG_Python_SetConstant(d, "Plasm_PLASM_MKPOL",SWIG_From_int(static_cast< int >(Plasm::PLASM_MKPOL)));
+  SWIG_Python_SetConstant(d, "Plasm_PLASM_MKPOLF",SWIG_From_int(static_cast< int >(Plasm::PLASM_MKPOLF)));
   SWIG_Python_SetConstant(d, "Plasm_PLASM_STRUCT",SWIG_From_int(static_cast< int >(Plasm::PLASM_STRUCT)));
   SWIG_Python_SetConstant(d, "Plasm_PLASM_COPY",SWIG_From_int(static_cast< int >(Plasm::PLASM_COPY)));
   SWIG_Python_SetConstant(d, "Plasm_PLASM_GETSPACEDIM",SWIG_From_int(static_cast< int >(Plasm::PLASM_GETSPACEDIM)));

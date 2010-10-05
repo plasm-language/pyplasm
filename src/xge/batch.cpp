@@ -487,7 +487,7 @@ SmartPointer<Batch> Batch::Circle(float angle_delta)
 ///////////////////////////////////////////////////////////////
 SmartPointer<Batch> Batch::getTriangles(const std::vector<int>& triangle_indices)
 {
-	DebugAssert(this->primitive==Batch::TRIANGLES);
+	XgeDebugAssert(this->primitive==Batch::TRIANGLES);
 
 	SmartPointer<Batch> ret(new Batch(*this));
 	

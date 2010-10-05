@@ -71,11 +71,11 @@ typedef unsigned long long int      uint64;
 //Some defines
 #define SmartPointer std::tr1::shared_ptr
 
-// DebugAssert and ReleaseAssert
+// XgeDebugAssert and XgeReleaseAssert
 #define __stringify__(x) #x
 #define __to_string__(x) __stringify__(x)
 #define HERE __FILE__ ":" __to_string__(__LINE__)
-#define ReleaseAssert(_Expression) \
+#define XgeReleaseAssert(_Expression) \
 {\
 	if (!(_Expression)) \
 		Utils::Error(HERE,#_Expression);\
@@ -84,9 +84,9 @@ typedef unsigned long long int      uint64;
 
 
 #ifdef _DEBUG
-#define DebugAssert(_Expression) ReleaseAssert(_Expression)
+#define XgeDebugAssert(_Expression) XgeReleaseAssert(_Expression)
 #else
-#define DebugAssert(_Expression) ((void)0)
+#define XgeDebugAssert(_Expression) ((void)0)
 #endif //_DEBUG
 
 //all XGE headers here

@@ -22,7 +22,7 @@ static Triangle2i triangleProject(int texturedim,float factor,const Vec3f& v0,co
 		 if (v01>=v12 && v01>=v20) {if (v12>=v20) {idx[0]=0;idx[1]=1;idx[2]=2;} else {idx[0]=1;idx[1]=0;idx[2]=2;}}
 	else if (v12>=v01 && v12>=v20) {if (v01>=v20) {idx[0]=2;idx[1]=1;idx[2]=0;} else {idx[0]=1;idx[1]=2;idx[2]=0;}}
 	else if (v20>=v01 && v20>=v12) {if (v01>=v12) {idx[0]=2;idx[1]=0;idx[2]=1;} else {idx[0]=0;idx[1]=2;idx[2]=1;}}
-	else                           {DebugAssert(0);}
+	else                           {XgeDebugAssert(0);}
 
 	Vec3f vdiff[3]=
 	{	
@@ -34,7 +34,7 @@ static Triangle2i triangleProject(int texturedim,float factor,const Vec3f& v0,co
 	double len[3]={vdiff[0].module(),vdiff[1].module(),vdiff[2].module()};
 
 	//safety check
-	DebugAssert(len[0]>=0 && len[1]>=0 && len[2]>=0 && len[0]>=len[1] && len[1]>=len[2]);
+	XgeDebugAssert(len[0]>=0 && len[1]>=0 && len[2]>=0 && len[0]>=len[1] && len[1]>=len[2]);
 
 	int width=0,middle=0,height=0;
 	for (float actual_factor=factor;actual_factor;actual_factor*=0.9f)
@@ -54,7 +54,7 @@ static Triangle2i triangleProject(int texturedim,float factor,const Vec3f& v0,co
 	if (middle==width) middle--; 
 
 	//safety check
-	DebugAssert(width>=2 && height>=2 && middle>0 && middle<width);
+	XgeDebugAssert(width>=2 && height>=2 && middle>0 && middle<width);
 
 	Triangle2i ret;
 	ret.getRefPoint(idx[0]).x=0;
@@ -75,7 +75,7 @@ static Triangle2i triangleProject(int texturedim,float factor,const Vec3f& v0,co
 ///////////////////////////////////////////////////////////////////////
 static bool triangleRender(const Triangle2i& triangle,SmartPointer<Texture> _rgb,SmartPointer<Texture> _alpha,Color4f color,const Box2i& box, bool bWrite)
 {
-	DebugAssert(_rgb->bpp==24 && _alpha->bpp==8 && _rgb->width==_alpha->width && _rgb->height==_alpha->height);
+	XgeDebugAssert(_rgb->bpp==24 && _alpha->bpp==8 && _rgb->width==_alpha->width && _rgb->height==_alpha->height);
 
 	int x1=triangle.p0.x,y1=triangle.p0.y;
 	int x2=triangle.p1.x,y2=triangle.p1.y;
@@ -91,7 +91,7 @@ static bool triangleRender(const Triangle2i& triangle,SmartPointer<Texture> _rgb
 	//must be completely be contained in the current area
 	if (!(minx>=box.left() && maxx<=box.right() && miny>=box.bottom() && maxy<=box.top()))
 	{
-		DebugAssert(!bWrite);
+		XgeDebugAssert(!bWrite);
 		return false;
 	}
 
@@ -148,7 +148,7 @@ static bool triangleRender(const Triangle2i& triangle,SmartPointer<Texture> _rgb
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 static bool triangleFits(Triangle2i& triangle,SmartPointer<Texture> rgb,SmartPointer<Texture> alpha,std::set<Box2i>& queue,Color4f color)
 {
-	DebugAssert(rgb->width==rgb->height);
+	XgeDebugAssert(rgb->width==rgb->height);
 
 	int texturedim=rgb->width;
 
@@ -185,7 +185,7 @@ static bool triangleFits(Triangle2i& triangle,SmartPointer<Texture> rgb,SmartPoi
 		while (candidates[0].right()<box.right())
 		{
 			//safety check
-			DebugAssert(
+			XgeDebugAssert(
 				   candidates[0].right()==candidates[1].right() 
 				&& candidates[1].right()==candidates[2].right() 
 				&& candidates[2].right()==candidates[3].right());
@@ -461,7 +461,7 @@ std::vector< SmartPointer<Batch> > Unwrapper::Unwrap(Mat4f _T1,SmartPointer<Batc
 
 	for (std::vector<SmartPointer<Batch> >::iterator ct=ret.begin();ct!=ret.end();ct++)
 	{
-		DebugAssert((*ct)->primitive==Batch::TRIANGLES);
+		XgeDebugAssert((*ct)->primitive==Batch::TRIANGLES);
 
 		float* t= (*ct)->texture1coords->mem();
 

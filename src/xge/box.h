@@ -23,16 +23,16 @@ public:
 
 
 	//width/height/area
-	inline int  width () const {DebugAssert(isValid());return right()-left();}
-	inline int  height() const {DebugAssert(isValid());return top()-bottom();}
+	inline int  width () const {XgeDebugAssert(isValid());return right()-left();}
+	inline int  height() const {XgeDebugAssert(isValid());return top()-bottom();}
 	inline int  area  () const {return width()*height();}
 
 	//if valud
 	inline bool isValid  () const {return right()>left() && top()>bottom() ;}
 
 	//containment
-	inline bool contains(const Vec2i p   ) const{DebugAssert(this->isValid());return p.x>=left() && p.x<=right() && p.y>=bottom() && p.y<=top();}
-	inline bool contains(const Box2i& box) const{DebugAssert(this->isValid() && box.isValid());return  this->contains(box.p1) && this->contains(box.p2);}
+	inline bool contains(const Vec2i p   ) const{XgeDebugAssert(this->isValid());return p.x>=left() && p.x<=right() && p.y>=bottom() && p.y<=top();}
+	inline bool contains(const Box2i& box) const{XgeDebugAssert(this->isValid() && box.isValid());return  this->contains(box.p1) && this->contains(box.p2);}
 
 	//sort operator
 	bool operator <(const Box2i& b) const
@@ -183,7 +183,7 @@ public:
 	*/
 	inline Vec3f getPoint(int i) const
 	{
-		DebugAssert(i>=0 && i<8 && isValid());
+		XgeDebugAssert(i>=0 && i<8 && isValid());
 		if (i==0) return Vec3f(p1.x,p1.y,p1.z);
 		if (i==1) return Vec3f(p2.x,p1.y,p1.z);
 		if (i==2) return Vec3f(p2.x,p2.y,p1.z);
@@ -198,7 +198,7 @@ public:
 	//! return the planes of a box
 	inline Plane4f getPlane(int i) const
 	{
-		DebugAssert(i>=0 && i<6 && isValid());
+		XgeDebugAssert(i>=0 && i<6 && isValid());
 
 		if (i==0) return Plane4f(-1,0,0,+p1.x); //x<=p1.x
 		if (i==1) return Plane4f(+1,0,0,-p2.x); //x>=p2.x
@@ -361,7 +361,7 @@ public:
 	*/
 	inline Vec3f center() const
 	{
-		DebugAssert(isValid());
+		XgeDebugAssert(isValid());
 		return 0.5*(p1+p2);
 	}
 
@@ -377,7 +377,7 @@ public:
 	*/
 	inline bool contains(const Vec3f& v) const
 	{
-		DebugAssert(isValid());
+		XgeDebugAssert(isValid());
 		return v.x>=p1.x && v.x<=p2.x &&
 			   v.y>=p1.y && v.y<=p2.y &&
 			   v.z>=p1.z && v.z<=p2.z;
@@ -633,7 +633,7 @@ public:
 	*/
 	inline explicit Boxf(Vecf p1,Vecf p2)
 	{
-		DebugAssert(p1.dim==p2.dim);
+		XgeDebugAssert(p1.dim==p2.dim);
 		reset(p1.dim);
 		add(p1);
 		add(p2);
@@ -655,7 +655,7 @@ public:
 	*/
 	inline explicit Boxf(int dim,float from,float to)
 	{
-		DebugAssert(from<to);
+		XgeDebugAssert(from<to);
 		reset(dim);
 		Vecf p1(dim);p1.set(from);p1.set(0,1.0f);add(p1);
 		Vecf p2(dim);p2.set(to  );p2.set(0,1.0f);add(p2);
@@ -676,7 +676,7 @@ public:
 	*/
 	inline void reset(int dim)
 	{
-		DebugAssert(dim>=0);
+		XgeDebugAssert(dim>=0);
 		p1=Vecf(dim);p1.set(+FLT_MAX);p1.set(0,1.0f); //they are points
 		p2=Vecf(dim);p2.set(-FLT_MAX);p2.set(0,1.0f);
 	}
@@ -712,7 +712,7 @@ public:
 	*/
 	inline void add(const Vecf& v)
 	{
-		DebugAssert(v.dim==p1.dim);
+		XgeDebugAssert(v.dim==p1.dim);
 		this->p1 = this->p1.Min(v);
 		this->p2 = this->p2.Max(v);
 	}
@@ -754,8 +754,8 @@ public:
 	*/
 	inline bool isValid() const
 	{
-		DebugAssert(p1.dim==p2.dim);
-		DebugAssert(p1[0]==1 && p2[0]==1);//should be points
+		XgeDebugAssert(p1.dim==p2.dim);
+		XgeDebugAssert(p1[0]==1 && p2[0]==1);//should be points
 
 		for (int i=1;i<=p1.dim;i++)
 		{
@@ -778,7 +778,7 @@ public:
 	*/
 	inline Vecf center() const
 	{
-		DebugAssert(isValid());
+		XgeDebugAssert(isValid());
 		Vecf ret(p1.dim);
 		ret.set(0,1.0f); //is a point
 		for (int i=1;i<=p1.dim;i++) 
@@ -816,7 +816,7 @@ public:
 		//the returned value is a vector (first position should be zero)
 		if (!isValid()) return Vecf(p1.dim); //all zeros
 		Vecf ret=(p2-p1);
-		DebugAssert(ret[0]==0);
+		XgeDebugAssert(ret[0]==0);
 		return ret;
 	}
 
@@ -831,7 +831,7 @@ public:
 	*/
 	inline int minsizeidx() const
 	{
-		DebugAssert(isValid());
+		XgeDebugAssert(isValid());
 		Vecf d=size();
 		int ret=0; //invalid
 		for (int i=1;i<=p1.dim;i++) if (!ret || (d[i]<d[ret] || (d[i]==d[ret] && i>ret))) ret=i;
@@ -849,7 +849,7 @@ public:
 	*/
 	inline int maxsizeidx() const
 	{
-		DebugAssert(isValid());
+		XgeDebugAssert(isValid());
 		Vecf d=size();
 		int ret=0; //invalid
 		for (int i=1;i<=p1.dim;i++) if (!ret || (d[i]>d[ret] || (d[i]==d[ret] && i<ret))) ret=i;
@@ -938,7 +938,7 @@ public:
 	*/
 	inline Boxf scale(float percent) const
 	{
-		DebugAssert(isValid());
+		XgeDebugAssert(isValid());
 		Vecf c=center();
 		Vecf new_half_size=size()*(percent*0.5f);
 		return Boxf(c-new_half_size,c+new_half_size);
@@ -1002,7 +1002,7 @@ public:
 	*/
 	inline bool contains(const Vecf& p) const
 	{
-		DebugAssert(isValid() && p.dim==this->p1.dim);
+		XgeDebugAssert(isValid() && p.dim==this->p1.dim);
 		for (int I=1;I<=p1.dim;I++) if (p[I]<this->p1[I] || p[I]>this->p2[I]) return false;
 		return true;
 	}
@@ -1035,7 +1035,7 @@ public:
 	inline bool isAbove(const Planef& h) const
 	{
 		const Boxf& aabb=*this;
-		DebugAssert(aabb.isValid() && aabb.dim()==h.dim);
+		XgeDebugAssert(aabb.isValid() && aabb.dim()==h.dim);
 		float acc=h.mem[0];
 		for (int I=1;I<=h.dim;I++) acc+=h.mem[I]*(h.mem[I]>=0?aabb.p1[I]:aabb.p2[I]);
 		return (acc>=0);
@@ -1051,7 +1051,7 @@ public:
 	inline bool isBelow(const Planef& h) const
 	{
 		const Boxf& aabb=*this;
-		DebugAssert(aabb.isValid() && aabb.dim()==h.dim);
+		XgeDebugAssert(aabb.isValid() && aabb.dim()==h.dim);
 		float acc=h.mem[0];
 		for (int I=1;I<=h.dim;I++) acc+=h.mem[I]*(h.mem[I]<=0?aabb.p1[I]:aabb.p2[I]);
 		return (acc<=0);

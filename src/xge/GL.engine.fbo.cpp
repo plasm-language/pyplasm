@@ -10,10 +10,10 @@ EngineFbo::EngineFbo(SmartPointer<Texture> tex,bool bEnableDepthText)
 {
 	//do not instantiate inside a context
 	int64 RC=(int64)wglGetCurrentContext();
-	ReleaseAssert(!RC);
+	XgeReleaseAssert(!RC);
 
 	//supported only these modality (or luminance or RGB)
-	DebugAssert(tex->bpp==8 || tex->bpp==24);
+	XgeDebugAssert(tex->bpp==8 || tex->bpp==24);
 
 	this->bDepthText = bDepthText;
 	this->tex        = tex;
@@ -34,14 +34,14 @@ EngineFbo::EngineFbo(SmartPointer<Texture> tex,bool bEnableDepthText)
 	BOOL ok=RegisterClass(&wc);
 
 	//can be already registered
-	//ReleaseAssert(ok);
+	//XgeReleaseAssert(ok);
 	
 	HWND hWnd=CreateWindow(L"EngineFbo",L"EngineFbo",
 		WS_OVERLAPPEDWINDOW | WS_CLIPSIBLINGS | WS_CLIPCHILDREN, 
 		CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
 		NULL,NULL,hInstance,NULL);		
 
-	ReleaseAssert(hWnd);
+	XgeReleaseAssert(hWnd);
 
 	this->Window=(int64)hWnd;
 	
@@ -86,7 +86,7 @@ SmartPointer<EngineResource> EngineFbo::createFrameBuffer()
 	#define glewGetContext() ((GLEWContext*)this->engine->WC)
 	unsigned int _frame_buffer_id;
 	glGenFramebuffersEXT(1, &_frame_buffer_id);
-	ReleaseAssert(_frame_buffer_id);
+	XgeReleaseAssert(_frame_buffer_id);
 	return SmartPointer<EngineResource>(new EngineResource(EngineResource::RESOURCE_FRAME_BUFFER,_frame_buffer_id,0));
 	#undef glewGetContext
 }
@@ -99,7 +99,7 @@ SmartPointer<EngineResource> EngineFbo::createRenderBuffer(int target,int storag
 	#define glewGetContext() ((GLEWContext*)this->engine->WC)
 	unsigned int render_buffer_id;
 	glGenRenderbuffersEXT(1, &render_buffer_id); 
-	ReleaseAssert(render_buffer_id);
+	XgeReleaseAssert(render_buffer_id);
 	glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, render_buffer_id); 
 	glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, storage_type,width,height ); 
 	glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, target, GL_RENDERBUFFER_EXT, render_buffer_id); 

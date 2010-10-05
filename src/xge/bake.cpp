@@ -71,10 +71,10 @@ void Bake::Add(Mat4f T,SmartPointer<Batch> batch)
 		return;
 
 	//necessary condition!
-	ReleaseAssert(batch->texture1->width==batch->texture1->height);
+	XgeReleaseAssert(batch->texture1->width==batch->texture1->height);
 
 	//necessary condition for the ribbake to work
-	ReleaseAssert(batch->texture1->filename.find(".tif")!=std::string::npos);
+	XgeReleaseAssert(batch->texture1->filename.find(".tif")!=std::string::npos);
 
 	//keep track of all texture1 textures inserted
 	if (texture1_map.find(batch->texture1.get())==texture1_map.end())
@@ -118,7 +118,7 @@ bool Bake::Export()
 		fprintf(rib_world_file,"ObjectBegin \"myworld\"\n");
 		for (std::map<Texture*,std::vector<SmartPointer<Batch> > >::iterator it=texture1_map.begin();it!=texture1_map.end();it++)
 		{
-			ReleaseAssert(it->first->width==it->first->height);
+			XgeReleaseAssert(it->first->width==it->first->height);
 			int texturedim=it->first->width;
 
 			for (int I=0;I<(int)it->second.size();I++)
@@ -156,7 +156,7 @@ bool Bake::Export()
 				return false;
 			}
 
-			ReleaseAssert(it->first->width==it->first->height);
+			XgeReleaseAssert(it->first->width==it->first->height);
 			int texturedim=it->first->width; 
 
 			for (int I=0;I<(int)it->second.size();I++)
@@ -212,7 +212,7 @@ bool Bake::Export()
 			return false;
 		}
 
-		ReleaseAssert(rib_file);
+		XgeReleaseAssert(rib_file);
 		fprintf(rib_file,"version 3.03\n");
 		fprintf(rib_file,Utils::Format("Option \"searchpath\" \"shader\" [\"shaders:%s:&:$RIBDIR\"]\n",FileSystem::FullPath(":shaders/rib").c_str()).c_str()); 
 
@@ -255,7 +255,7 @@ bool Bake::Export()
 		int Frame=0;
 		for (std::map<Texture* , std::vector<SmartPointer<Batch> > >::iterator it=texture1_map.begin();it!=texture1_map.end();it++,Frame++)
 		{
-			ReleaseAssert(it->first->width==it->first->height);
+			XgeReleaseAssert(it->first->width==it->first->height);
 			int texturedim=it->first->width; 
 			
 			fprintf(rib_file,"FrameBegin %d\n",Frame);
@@ -377,7 +377,7 @@ bool Bake::PostProcess()
 		SmartPointer<Texture> rib_texture=Texture::open(texture1->filename,false,false); //not use cached, neither use cache
 
 		//need a post processing
-		ReleaseAssert(rib_texture->bpp==32 && rib_texture->width==rib_texture->height);
+		XgeReleaseAssert(rib_texture->bpp==32 && rib_texture->width==rib_texture->height);
 		int texturedim=rib_texture->width;
 	    
 		//rgb or gray (internally cause a regeneration!)
@@ -387,7 +387,7 @@ bool Bake::PostProcess()
 		for (int x=0;x<texturedim;x++)
 		{
 			//the alpha channel should be 0 or 1
-			ReleaseAssert(rib_texture->getPixel(x,y)[3]==0 || rib_texture->getPixel(x,y)[3]==255);
+			XgeReleaseAssert(rib_texture->getPixel(x,y)[3]==0 || rib_texture->getPixel(x,y)[3]==255);
 			float R=rib_texture->getPixel(x,y)[0],G=rib_texture->getPixel(x,y)[1],B=rib_texture->getPixel(x,y)[2];;
 
 			if (DebugMode)
@@ -399,7 +399,7 @@ bool Bake::PostProcess()
 			if (rib_texture->getPixel(x,y)[3]) continue;
 
 			//should receive a black color
-			ReleaseAssert(!R && !G && !B);
+			XgeReleaseAssert(!R && !G && !B);
 	        
 			int nmean=0;
 			R=0.0f,G=0.0f,B=0.0f;

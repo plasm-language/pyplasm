@@ -5,7 +5,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
 float Ray3f::intersectLine(float v0[2],float v1[2])
 {
-	DebugAssert(origin.z==0 && dir.z==0);
+	XgeDebugAssert(origin.z==0 && dir.z==0);
 
 	#define PERP(v)   Vec3f(v.y,-v.x,0)
 	#define DOT(a,b) ((a)*(b))
@@ -42,7 +42,7 @@ float Ray3f::intersectTriangle(const Vec3f& v0,const Vec3f& v1,const Vec3f& v2) 
 	#define DIFF(dst,a,b)       dst[0]=a[0]-b[0];dst[1]=a[1]-b[1];dst[2]=a[2]-b[2];
 	#define MODULE(a)           sqrt(a[0]*a[0]+a[1]*a[1]+a[2]*a[2])
 
-	DebugAssert(fabs(1-MODULE(dir))<0.001); //should be normalized
+	XgeDebugAssert(fabs(1-MODULE(dir))<0.001); //should be normalized
 
 	float e1[3];DIFF(e1,v1,v0);
 	float e2[3];DIFF(e2,v2,v0);
@@ -98,7 +98,7 @@ bool Ray3f::intersectBox(float& tmin,float& tmax,Box3f box) const
 	if (tzmax < tmax) tmax = tzmax;
 
 	//safety check
-	DebugAssert(tmin<=tmax);
+	XgeDebugAssert(tmin<=tmax);
 	return true;
 }
 
@@ -113,17 +113,17 @@ int Ray3f::SelfTest()
 
 
 	Ray3f r(Vec3f(0,0,0),Vec3f(1,1,1));
-	ReleaseAssert((r.dir.module()-1)<0.0001f);
+	XgeReleaseAssert((r.dir.module()-1)<0.0001f);
 
 	Ray3f r2(r);
 	r2.setOrigin(r.origin+Vec3f(0.0001f,0,0));
-	ReleaseAssert(r==r && r!=r2);
+	XgeReleaseAssert(r==r && r!=r2);
 
-	ReleaseAssert(r.getPoint(0).fuzzyEqual(Vec3f(0,0,0)) && r.getPoint(1).fuzzyEqual(Vec3f(1,1,1).normalize())) ;
+	XgeReleaseAssert(r.getPoint(0).fuzzyEqual(Vec3f(0,0,0)) && r.getPoint(1).fuzzyEqual(Vec3f(1,1,1).normalize())) ;
 
 	//intersection
 	Vec3f i=Ray3f(Vec3f(0,0,0),Vec3f(0,0,1)).intersection(Plane4f(Vec3f(0,0,1),+2));
-	ReleaseAssert(i.fuzzyEqual(Vec3f(0,0,2)));
+	XgeReleaseAssert(i.fuzzyEqual(Vec3f(0,0,2)));
 
 
 	//intersect line
@@ -132,15 +132,15 @@ int Ray3f::SelfTest()
 		float p0[]={1,-1.01f};
 		float p1[]={1,+1.01f};
 		float dist=ray.intersectLine(p0,p1);
-		ReleaseAssert(fabs(dist-1.0f)<0.001f);
+		XgeReleaseAssert(fabs(dist-1.0f)<0.001f);
 
 		ray=Ray3f(Vec3f(0,0,0),Vec3f(1,1,0));
 		dist=ray.intersectLine(p0,p1);
-		ReleaseAssert(fabs(dist-sqrt(2.0f))<0.001f);
+		XgeReleaseAssert(fabs(dist-sqrt(2.0f))<0.001f);
 
 		ray=Ray3f(Vec3f(0,0,0),Vec3f(0,1,0));
 		dist=ray.intersectLine(p0,p1);
-		ReleaseAssert(dist==-1);
+		XgeReleaseAssert(dist==-1);
 	}
 
 	//intertect triangle
@@ -152,15 +152,15 @@ int Ray3f::SelfTest()
 		Vec3f p2(1.01f,1.01f,1);
 
 		 float dist=ray.intersectTriangle(p0,p1,p2);
-		 ReleaseAssert(fabs(dist-1.0)<0.001f);
+		 XgeReleaseAssert(fabs(dist-1.0)<0.001f);
 
 		ray=Ray3f(Vec3f(0,0,0),Vec3f(1,1,1));
 		dist=ray.intersectTriangle(p0,p1,p2);
-		ReleaseAssert(fabs(dist-sqrt(3.0f))<0.001f);
+		XgeReleaseAssert(fabs(dist-sqrt(3.0f))<0.001f);
 
 		ray=Ray3f(Vec3f(0,0,0),Vec3f(1,0,0));
 		dist=ray.intersectTriangle(p0,p1,p2);
-		ReleaseAssert(dist==-1);
+		XgeReleaseAssert(dist==-1);
 	}
 
 	//intersect box
@@ -169,29 +169,29 @@ int Ray3f::SelfTest()
 		float tmin,tmax;
 		
 		box=Box3f(Vec3f(-1,-1,-1),Vec3f(+1,+1,+1));
-		ReleaseAssert(Ray3f(Vec3f(0,0,0),Vec3f(0,0,1)).intersectBox(tmin,tmax,box) && Utils::FuzzyEqual(tmin,-1) && Utils::FuzzyEqual(tmax,+1));
-		ReleaseAssert(Ray3f(Vec3f(0,0,0),Vec3f(0,1,0)).intersectBox(tmin,tmax,box) && Utils::FuzzyEqual(tmin,-1) && Utils::FuzzyEqual(tmax,+1));
-		ReleaseAssert(Ray3f(Vec3f(0,0,0),Vec3f(1,0,0)).intersectBox(tmin,tmax,box) && Utils::FuzzyEqual(tmin,-1) && Utils::FuzzyEqual(tmax,+1));
+		XgeReleaseAssert(Ray3f(Vec3f(0,0,0),Vec3f(0,0,1)).intersectBox(tmin,tmax,box) && Utils::FuzzyEqual(tmin,-1) && Utils::FuzzyEqual(tmax,+1));
+		XgeReleaseAssert(Ray3f(Vec3f(0,0,0),Vec3f(0,1,0)).intersectBox(tmin,tmax,box) && Utils::FuzzyEqual(tmin,-1) && Utils::FuzzyEqual(tmax,+1));
+		XgeReleaseAssert(Ray3f(Vec3f(0,0,0),Vec3f(1,0,0)).intersectBox(tmin,tmax,box) && Utils::FuzzyEqual(tmin,-1) && Utils::FuzzyEqual(tmax,+1));
 
 		box=Box3f(Vec3f(0,0,0),Vec3f(1,1,1));
 
 		//test limit cases
-		ReleaseAssert(Ray3f(Vec3f(-1,+1e-4f,+1e-4f),Vec3f(1,0,0)).intersectBox(tmin,tmax,box) && Utils::FuzzyEqual(tmin,1) && Utils::FuzzyEqual(tmax,+2));
-		ReleaseAssert(Ray3f(Vec3f(+1e-4f,-1,+1e-4f),Vec3f(0,1,0)).intersectBox(tmin,tmax,box) && Utils::FuzzyEqual(tmin,1) && Utils::FuzzyEqual(tmax,+2));
-		ReleaseAssert(Ray3f(Vec3f(+1e-4f,+1e-4f,-1),Vec3f(0,0,1)).intersectBox(tmin,tmax,box) && Utils::FuzzyEqual(tmin,1) && Utils::FuzzyEqual(tmax,+2));
+		XgeReleaseAssert(Ray3f(Vec3f(-1,+1e-4f,+1e-4f),Vec3f(1,0,0)).intersectBox(tmin,tmax,box) && Utils::FuzzyEqual(tmin,1) && Utils::FuzzyEqual(tmax,+2));
+		XgeReleaseAssert(Ray3f(Vec3f(+1e-4f,-1,+1e-4f),Vec3f(0,1,0)).intersectBox(tmin,tmax,box) && Utils::FuzzyEqual(tmin,1) && Utils::FuzzyEqual(tmax,+2));
+		XgeReleaseAssert(Ray3f(Vec3f(+1e-4f,+1e-4f,-1),Vec3f(0,0,1)).intersectBox(tmin,tmax,box) && Utils::FuzzyEqual(tmin,1) && Utils::FuzzyEqual(tmax,+2));
 
-		ReleaseAssert(!Ray3f(Vec3f(-1,-1e-4f,-1e-4f),Vec3f(1,0,0)).intersectBox(tmin,tmax,box));
-		ReleaseAssert(!Ray3f(Vec3f(-1e-4f,-1,-1e-4f),Vec3f(0,1,0)).intersectBox(tmin,tmax,box));
-		ReleaseAssert(!Ray3f(Vec3f(-1e-4f,-1e-4f,-1),Vec3f(0,0,1)).intersectBox(tmin,tmax,box));
+		XgeReleaseAssert(!Ray3f(Vec3f(-1,-1e-4f,-1e-4f),Vec3f(1,0,0)).intersectBox(tmin,tmax,box));
+		XgeReleaseAssert(!Ray3f(Vec3f(-1e-4f,-1,-1e-4f),Vec3f(0,1,0)).intersectBox(tmin,tmax,box));
+		XgeReleaseAssert(!Ray3f(Vec3f(-1e-4f,-1e-4f,-1),Vec3f(0,0,1)).intersectBox(tmin,tmax,box));
 
-		ReleaseAssert(!Ray3f(Vec3f(-1,0,0),Vec3f(0,1,0)).intersectBox(tmin,tmax,box));
-		ReleaseAssert(!Ray3f(Vec3f(-1,0,0),Vec3f(0,0,1)).intersectBox(tmin,tmax,box));
+		XgeReleaseAssert(!Ray3f(Vec3f(-1,0,0),Vec3f(0,1,0)).intersectBox(tmin,tmax,box));
+		XgeReleaseAssert(!Ray3f(Vec3f(-1,0,0),Vec3f(0,0,1)).intersectBox(tmin,tmax,box));
 
-		ReleaseAssert(!Ray3f(Vec3f(0,-1,0),Vec3f(1,0,0)).intersectBox(tmin,tmax,box));
-		ReleaseAssert(!Ray3f(Vec3f(0,-1,0),Vec3f(0,0,1)).intersectBox(tmin,tmax,box));
+		XgeReleaseAssert(!Ray3f(Vec3f(0,-1,0),Vec3f(1,0,0)).intersectBox(tmin,tmax,box));
+		XgeReleaseAssert(!Ray3f(Vec3f(0,-1,0),Vec3f(0,0,1)).intersectBox(tmin,tmax,box));
 
-		ReleaseAssert(!Ray3f(Vec3f(0,0,-1),Vec3f(1,0,0)).intersectBox(tmin,tmax,box));
-		ReleaseAssert(!Ray3f(Vec3f(0,0,-1),Vec3f(0,1,0)).intersectBox(tmin,tmax,box));
+		XgeReleaseAssert(!Ray3f(Vec3f(0,0,-1),Vec3f(1,0,0)).intersectBox(tmin,tmax,box));
+		XgeReleaseAssert(!Ray3f(Vec3f(0,0,-1),Vec3f(0,1,0)).intersectBox(tmin,tmax,box));
 	}
 
 	return 0;
@@ -228,7 +228,7 @@ int Rayf::SelfTest()
 
 			Rayf ray(Origin,Dir);
 			Vecf point=ray.intersection(plane);
-			ReleaseAssert(fabs(plane.getDistance(point))<0.0001f);
+			XgeReleaseAssert(fabs(plane.getDistance(point))<0.0001f);
 		}
 	}
 	

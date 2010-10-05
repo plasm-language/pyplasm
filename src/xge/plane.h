@@ -128,7 +128,7 @@ public:
 	inline void normalize() 
 	{
 		float m=getNormal().module();
-		DebugAssert(m && !isnan(m) && finite(m));
+		XgeDebugAssert(m && !isnan(m) && finite(m));
 		this->x/=m;
 		this->y/=m;
 		this->z/=m;
@@ -167,7 +167,7 @@ public:
 	static Plane4f bestFittingPlane(const std::vector<float>& points)
 	{
 		int npoints=(int)points.size()/3;
-		ReleaseAssert(npoints*3==points.size());
+		XgeReleaseAssert(npoints*3==points.size());
 		return bestFittingPlane(npoints,&points[0]);
 	}
 
@@ -306,7 +306,7 @@ public:
 	*/
 	inline explicit Planef(int dim):Vecf(dim)
 	{
-		DebugAssert(dim>=1); //the plane should be in the form D+ax+... 
+		XgeDebugAssert(dim>=1); //the plane should be in the form D+ax+... 
 		this->mem[0  ]=0;
 		this->mem[dim]=1;// Xlast>=0
 	}
@@ -350,14 +350,14 @@ public:
 	//! constructor of dim-D plane from a C array of float
 	inline explicit Planef(int dim,const float* src): Vecf(dim,src)
 	{
-		DebugAssert(dim>=1);
+		XgeDebugAssert(dim>=1);
 		normalize();
 	}
 
 	//! constructor of dim-D plane from a C array of double
 	inline explicit Planef(int dim,const double* src): Vecf(dim,src)
 	{
-		DebugAssert(dim>=1);
+		XgeDebugAssert(dim>=1);
 		normalize();
 	}
 
@@ -370,7 +370,7 @@ public:
 	*/
 	inline Planef(const Vecf& src):Vecf(src)
 	{
-		DebugAssert(dim>=1);
+		XgeDebugAssert(dim>=1);
 		normalize();
 	}
 
@@ -387,8 +387,8 @@ public:
 	inline explicit Planef(Vecf n,float d)
 		:Vecf(n.dim)
 	{
-		DebugAssert(!n[0]); //should be a vector
-		DebugAssert(dim>=1);
+		XgeDebugAssert(!n[0]); //should be a vector
+		XgeDebugAssert(dim>=1);
 		this->mem[0]=-d; 
 		n=n.normalize();
 		for (int i=1;i<=dim;i++) this->mem[i]=n[i];
@@ -403,7 +403,7 @@ public:
 	*/
 	inline explicit Planef(Vecf n,Vecf p):Vecf(n.dim)
 	{
-		DebugAssert(!n[0] && n.dim==p.dim && dim>=1);
+		XgeDebugAssert(!n[0] && n.dim==p.dim && dim>=1);
 		n=n.normalize();
 		for (int i=1;i<=dim;i++) this->mem[i]=n[i];
 		this->mem[0]=-(float)getDistance(p);
@@ -421,7 +421,7 @@ public:
 		float m=getNormal().module();
 
 //#ifdef _DEBUG
-//		DebugAssert(m && !isnan(m) && finite(m));
+//		XgeDebugAssert(m && !isnan(m) && finite(m));
 //		for (int i=0;i<=dim;i++) this->mem[i]/=m;
 //#else //_DEBUG
 		if (m && !isnan(m) && finite(m))
@@ -443,7 +443,7 @@ public:
 	static Planef bestFittingPlane(int pointdim,const std::vector<float>& points)
 	{
 		int npoints=(int)points.size()/pointdim;
-		ReleaseAssert(npoints*pointdim==(int)points.size());
+		XgeReleaseAssert(npoints*pointdim==(int)points.size());
 		return bestFittingPlane(pointdim,npoints,&points[0]);
 	}
 
@@ -484,7 +484,7 @@ public:
 	*/
 	inline float getDistance(const Vecf& point) const
 	{
-		DebugAssert(point.dim==this->dim);
+		XgeDebugAssert(point.dim==this->dim);
 		return getDistance(point.mem);
 	}	
 
@@ -532,9 +532,9 @@ public:
 	*/
 	inline Vecf projectPoint(Vecf p)
 	{
-		DebugAssert(p[0]==1.0f); //should be a point
+		XgeDebugAssert(p[0]==1.0f); //should be a point
 		Vecf ret=p-getDistance(p)*getNormal();
-		DebugAssert(getDistance(ret)<0.001f);
+		XgeDebugAssert(getDistance(ret)<0.001f);
 		return ret;
 	}
 
@@ -579,7 +579,7 @@ public:
 	*/
 	inline int getMainDirection() const
 	{
-		DebugAssert(this->dim>=1);
+		XgeDebugAssert(this->dim>=1);
 		int ret=1;
 		for (int i=2;i<=dim;i++) if (fabs((*this)[i])>fabs((*this)[ret])) ret=i;
 		return ret;

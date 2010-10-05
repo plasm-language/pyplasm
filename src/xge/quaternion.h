@@ -106,7 +106,7 @@ public:
 	*/
 	inline explicit Quaternion(Vec3f axis, float angle)
 	{
-		// DebugAssert:  axis[] is unit length
+		// XgeDebugAssert:  axis[] is unit length
 		//
 		// The quaternion representing the rotation is
 		//   q = cos(A/2)+sin(A/2)*(x*i+y*j+z*k)
@@ -515,7 +515,7 @@ public:
 	*/
 	inline Quaternion UnitInverse() const
 	{
-		// DebugAssert:  'this' is unit length
+		// XgeDebugAssert:  'this' is unit length
 		return Quaternion(w,-x,-y,-z);
 	}
 
@@ -652,7 +652,7 @@ public:
 	*/
 	static  inline void Intermediate(const Quaternion& rkQ0,const Quaternion& rkQ1, const Quaternion& rkQ2,Quaternion& rkA, Quaternion& rkB)
 	{
-		// DebugAssert:  q0, q1, q2 are unit quaternions
+		// XgeDebugAssert:  q0, q1, q2 are unit quaternions
 		Quaternion kQ0inv = rkQ0.UnitInverse();
 		Quaternion kQ1inv = rkQ1.UnitInverse();
 		Quaternion rkP0 = kQ0inv*rkQ1;

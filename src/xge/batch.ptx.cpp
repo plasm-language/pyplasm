@@ -41,16 +41,16 @@ std::vector<SmartPointer<Batch> > Batch::openPtx(std::string filename,bool bUseR
 
 		//note: the color should be int by I prefer using float
 		int nfound=fscanf(file,"%f %f %f %f %f %f %f",&v.x,&v.y,&v.z, &reflactance, &c.x,&c.y,&c.z );
-		ReleaseAssert(nfound==7); 
+		XgeReleaseAssert(nfound==7); 
 
 		if (bUseReflectance)
 			c=Vec3f(reflactance,reflactance,reflactance);
 		else
 			c/=255.0f;
 	
-		ReleaseAssert(c.x>=0 && c.x<=1); 
-		ReleaseAssert(c.y>=0 && c.y<=1);
-		ReleaseAssert(c.z>=0 && c.z<=1);
+		XgeReleaseAssert(c.x>=0 && c.x<=1); 
+		XgeReleaseAssert(c.y>=0 && c.y<=1);
+		XgeReleaseAssert(c.z>=0 && c.z<=1);
 
 		*V++=v.x;*V++=v.y;*V++=v.z;
 		*C++=c.x;*C++=c.y;*C++=c.z;

@@ -178,7 +178,7 @@ inline void PlasmBoolOperation::face_set_push(face_t**& prev,Graph* g,unsigned i
 
 inline PlasmBoolOperation::face_t PlasmBoolOperation::face_set_pop(face_t*& head)
 {
-	DebugAssert(head);
+	XgeDebugAssert(head);
 	face_t ret=(*head);
 	ret.next=0;
 	face_t* tmp=head;
@@ -211,7 +211,7 @@ PlasmBoolOperation::PlasmBoolOperation(Plasm::BoolOpCode code,int pointdim,bool 
 	
 	START(TIME_FETCH);
 
-	DebugAssert(code==Plasm::BOOL_CODE_OR || code==Plasm::BOOL_CODE_AND || code==Plasm::BOOL_CODE_DIFF || code==Plasm::BOOL_CODE_XOR);
+	XgeDebugAssert(code==Plasm::BOOL_CODE_OR || code==Plasm::BOOL_CODE_AND || code==Plasm::BOOL_CODE_DIFF || code==Plasm::BOOL_CODE_XOR);
 	this->code=code;
 	//this->gout.reset(0);
 	this->pointdim=pointdim;
@@ -224,7 +224,7 @@ PlasmBoolOperation::PlasmBoolOperation(Plasm::BoolOpCode code,int pointdim,bool 
 	this->config.g_split_tolerance    = G_SPLIT_TOLERANCE;
 	this->config.g_contains_tolerance = G_CONTAINS_TOLERANCE;
 
-	DebugAssert(!this->config.bBoundary || (pointdim==2 || pointdim==3)); //todo other cases
+	XgeDebugAssert(!this->config.bBoundary || (pointdim==2 || pointdim==3)); //todo other cases
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -240,7 +240,7 @@ PlasmBoolOperation::~PlasmBoolOperation()
 	{
 		Log::printf("WARNING!!!!!!!!!!!!!!!!!!!!!\n");
 		Log::printf("Memory bug in PlasmBoolOperation.tot_alloc_faces>0");
-		DebugAssert(!tot_alloc_faces);
+		XgeDebugAssert(!tot_alloc_faces);
 	}
 
 	#ifdef _DEBUG
@@ -272,19 +272,19 @@ PlasmBoolOperation::~PlasmBoolOperation()
 void PlasmBoolOperation::add(SmartPointer<Hpc> hpc)
 {		
 	//should be full dimensional
-	DebugAssert(hpc->spacedim==hpc->pointdim);
+	XgeDebugAssert(hpc->spacedim==hpc->pointdim);
 
 	hpc=Plasm::shrink(hpc,true); //clone geometry, since all gs should be indepentent to apply matrices
-	DebugAssert(!hpc->vmat && !hpc->hmat);
+	XgeDebugAssert(!hpc->vmat && !hpc->hmat);
 
 	//move matrices inside g if full dimensional
 	for (Hpc::const_iterator it=hpc->childs.begin();it!=hpc->childs.end();it++)
 	{
-		SmartPointer<Hpc> child=*it;DebugAssert(child->pointdim==child->spacedim && child->g && child->g->getPointDim()==child->pointdim && child->vmat && child->hmat);
+		SmartPointer<Hpc> child=*it;XgeDebugAssert(child->pointdim==child->spacedim && child->g && child->g->getPointDim()==child->pointdim && child->vmat && child->hmat);
 		SmartPointer<Graph> g=child->g;
 
 		//apply matrices to g, and remove from hpc
-		DebugAssert(child->vmat->dim==child->spacedim && child->hmat->dim==child->spacedim);
+		XgeDebugAssert(child->vmat->dim==child->spacedim && child->hmat->dim==child->spacedim);
 		g->transform(child->vmat,child->hmat);
 		child->vmat.reset();
 		child->hmat.reset();
@@ -302,7 +302,7 @@ void PlasmBoolOperation::run()
 	END(TIME_FETCH);
 
 	//should be the only call
-	DebugAssert(!gout);
+	XgeDebugAssert(!gout);
 
 	// calculate overall bounding box
 	START(TIME_RESCALE);
@@ -316,7 +316,7 @@ void PlasmBoolOperation::run()
 
 		for (Hpc::const_iterator it=args[H]->childs.begin();it!=args[H]->childs.end();it++)
 		{
-			SmartPointer<Hpc> child=*it;DebugAssert(!child->getNumberOfChilds()  && !child->vmat && !child->hmat && child->g);
+			SmartPointer<Hpc> child=*it;XgeDebugAssert(!child->getNumberOfChilds()  && !child->vmat && !child->hmat && child->g);
 			SmartPointer<Graph> g=child->g;
 
 			//add the bouding box
@@ -343,13 +343,13 @@ void PlasmBoolOperation::run()
 
 	SmartPointer<Matf> vmat(new Matf(Matf::scaleV(S) * Matf::translateV(T)));
 	SmartPointer<Matf> hmat(new Matf(Matf::translateH(T) * Matf::scaleH(S)));
-	DebugAssert(((*vmat) * (*hmat)).almostIdentity(0.01f));
+	XgeDebugAssert(((*vmat) * (*hmat)).almostIdentity(0.01f));
 
 	for (int H=0;H<(int)args.size();H++)
 	{
 		for (Hpc::const_iterator it=args[H]->childs.begin();it!=args[H]->childs.end();it++)
 		{
-			SmartPointer<Hpc> child=*it;DebugAssert(!child->getNumberOfChilds()  && !child->vmat && !child->hmat && child->g);
+			SmartPointer<Hpc> child=*it;XgeDebugAssert(!child->getNumberOfChilds()  && !child->vmat && !child->hmat && child->g);
 			SmartPointer<Graph> g=child->g;
 			g->transform(vmat,hmat);
 		}
@@ -359,7 +359,7 @@ void PlasmBoolOperation::run()
 	overall_box=Boxf(pointdim,-1.01f,+1.01f); 
 
 	//cache bounding box
-	DebugAssert(!boxes_hpc && !boxes_ggraph);
+	XgeDebugAssert(!boxes_hpc && !boxes_ggraph);
 
 	boxes_hpc   =new std::vector<Boxf*>;
 	boxes_ggraph=new std::vector<Boxf*>;
@@ -370,9 +370,9 @@ void PlasmBoolOperation::run()
 
 		for (Hpc::const_iterator it=args[H]->childs.begin();it!=args[H]->childs.end();it++)
 		{
-			SmartPointer<Hpc> child=*it;DebugAssert(!child->getNumberOfChilds() && !child->vmat && !child->hmat && child->g);
+			SmartPointer<Hpc> child=*it;XgeDebugAssert(!child->getNumberOfChilds() && !child->vmat && !child->hmat && child->g);
 			SmartPointer<Graph> g=child->g;
-			DebugAssert(!child->vmat && !child->hmat);
+			XgeDebugAssert(!child->vmat && !child->hmat);
 			boxes_ggraph->push_back(new Boxf(g->getBoundingBox()));
 		}
 	}
@@ -401,7 +401,7 @@ void PlasmBoolOperation::run()
 		{
 			for (Hpc::const_iterator it=args[H]->childs.begin();it!=args[H]->childs.end();it++)
 			{
-				SmartPointer<Hpc> child=*it;DebugAssert(!child->getNumberOfChilds() && !child->vmat && !child->hmat && child->g);
+				SmartPointer<Hpc> child=*it;XgeDebugAssert(!child->getNumberOfChilds() && !child->vmat && !child->hmat && child->g);
 				SmartPointer<Graph> g=child->g;
 				for (GraphListIterator jt=g->each(0);!jt.end();jt++) 
 					values.insert(g->getGeometry(*jt)[1]);
@@ -423,7 +423,7 @@ void PlasmBoolOperation::run()
 			{
 				float a=gout->getGeometry(V0)[1];
 				float b=Where;
-				DebugAssert(a<b);
+				XgeDebugAssert(a<b);
 
 				Vecf point(1);
 				point.mem[0]=1.0f;
@@ -461,9 +461,9 @@ void PlasmBoolOperation::run()
 		{
 			for (Hpc::const_iterator it=args[H]->childs.begin();it!=args[H]->childs.end();it++)
 			{
-				SmartPointer<Hpc> child=*it;DebugAssert(!child->getNumberOfChilds()  && !child->vmat && !child->hmat && child->g);
+				SmartPointer<Hpc> child=*it;XgeDebugAssert(!child->getNumberOfChilds()  && !child->vmat && !child->hmat && child->g);
 				SmartPointer<Graph> g=child->g;
-				DebugAssert(!child->vmat && !child->hmat);
+				XgeDebugAssert(!child->vmat && !child->hmat);
 
 				//add doBoundary faces
 				for (GraphListIterator jt=g->each(g->getPointDim()-1);!jt.end();jt++)
@@ -478,11 +478,11 @@ void PlasmBoolOperation::run()
 				}
 			}
 		}
-		DebugAssert(*overall_faces_prev==0);
+		XgeDebugAssert(*overall_faces_prev==0);
 		END(TIME_COLLECT);
 
 		this->gout=Graph::cuboid(pointdim,overall_box);
-		DebugAssert(this->gout->getNCells(pointdim)==1);
+		XgeDebugAssert(this->gout->getNCells(pointdim)==1);
 		unsigned int C=*(this->gout->each(pointdim));
 
 		if (config.bUseOctree)
@@ -524,7 +524,7 @@ inline bool PlasmBoolOperation::contains(Graph* g,const Vecf& point)
 			for (GraphListIterator it=g->each(1);!it.end();it++)
 			{
 				unsigned int E=*it;
-				DebugAssert(g->getNDw(E)==2);
+				XgeDebugAssert(g->getNDw(E)==2);
 				float* v0=g->getGeometry(g->getFirstDwNode(E))+1;
 				float* v1=g->getGeometry(g->getLastDwNode (E))+1;
 				if (ray.intersectLine(v0,v1)>=0) ++nhit;
@@ -543,7 +543,7 @@ inline bool PlasmBoolOperation::contains(Graph* g,const Vecf& point)
 			for (it=g->each(2);!it.end();it++)
 			{
 				unsigned int F=*it;
-				DebugAssert(g->getNDw(F)==3); //TODO all other cases (when it's not triangulated)
+				XgeDebugAssert(g->getNDw(F)==3); //TODO all other cases (when it's not triangulated)
 
 				unsigned int prev0=g->getFirstDwNode(g->getLastDwNode(F)),p1;
 				unsigned int prev1=g->getLastDwNode (g->getLastDwNode(F)),p2;
@@ -584,7 +584,7 @@ unsigned short PlasmBoolOperation::classify(const Vecf& point)
 {		
 	START(TIME_CLASSIFY);
 
-	DebugAssert(point.dim==pointdim);
+	XgeDebugAssert(point.dim==pointdim);
 	int nfull=0,nempty=0;
 
 	int NG=0;
@@ -597,7 +597,7 @@ unsigned short PlasmBoolOperation::classify(const Vecf& point)
 			int IG=0;
 			for (Hpc::const_iterator it=args[H]->childs.begin();!bFull && it!=args[H]->childs.end();it++,IG++)
 			{
-				SmartPointer<Hpc> child=*it;DebugAssert(!child->getNumberOfChilds()  && !child->vmat && !child->hmat && child->g);
+				SmartPointer<Hpc> child=*it;XgeDebugAssert(!child->getNumberOfChilds()  && !child->vmat && !child->hmat && child->g);
 				SmartPointer<Graph> g=child->g;
 				bFull=(*boxes_ggraph)[NG+IG]->contains(point) && contains(g.get(),point);
 			}
@@ -636,22 +636,22 @@ unsigned short PlasmBoolOperation::classify(const Vecf& point)
 				break;
 		}
 	}
-	DebugAssert((nempty+nfull)==args.size());
+	XgeDebugAssert((nempty+nfull)==args.size());
 
 	END(TIME_CLASSIFY);
 
 	switch (code)
 	{
 		case Plasm::BOOL_CODE_OR://no one is full
-			DebugAssert(nempty==args.size());
+			XgeDebugAssert(nempty==args.size());
 			return CELL_OUT;
 
 		case Plasm::BOOL_CODE_AND://all full
-			DebugAssert(nfull==args.size());
+			XgeDebugAssert(nfull==args.size());
 			return CELL_IN;
 
 		case Plasm::BOOL_CODE_DIFF://the first is full and all other are empty
-			DebugAssert(nfull==1);
+			XgeDebugAssert(nfull==1);
 			return CELL_IN;
 
 		case Plasm::BOOL_CODE_XOR://zero full or one full
@@ -659,7 +659,7 @@ unsigned short PlasmBoolOperation::classify(const Vecf& point)
 	}
 
 	//should not reach here!
-	DebugAssert(0);
+	XgeDebugAssert(0);
 	return CELL_OUT;
 }
 
@@ -668,7 +668,7 @@ unsigned short PlasmBoolOperation::classify(const Vecf& point)
 //////////////////////////////////////////////////////////////////////////////
 void PlasmBoolOperation::doBoundary(unsigned int C,const Boxf& aabb,face_t* faces)
 {
-	DebugAssert(pointdim>=2);
+	XgeDebugAssert(pointdim>=2);
 
 	//cannot do anything, the cell does not exist
 	if (!C)
@@ -740,7 +740,7 @@ void PlasmBoolOperation::doBoundary(unsigned int C,const Boxf& aabb,face_t* face
 	}
 
 	//the splitting is ok
-	DebugAssert(retcode==Graph::SPLIT_OK);
+	XgeDebugAssert(retcode==Graph::SPLIT_OK);
 
 	END(TIME_BOUNDARY);
 
@@ -767,7 +767,7 @@ void PlasmBoolOperation::doBoundary(unsigned int C,const Boxf& aabb,face_t* face
 //////////////////////////////////////////////////////////////////////////////
 void PlasmBoolOperation::doOctree(unsigned int C,const Boxf& box,face_t* faces)
 {
-	DebugAssert(pointdim>=2);
+	XgeDebugAssert(pointdim>=2);
 
 	if (!faces)
 		return doBoundary(C,box,faces);
@@ -776,7 +776,7 @@ void PlasmBoolOperation::doOctree(unsigned int C,const Boxf& box,face_t* faces)
 
 	//cut on the max dimension
 	int Ref=box.maxsizeidx();
-	DebugAssert(Ref>=1 && Ref<=pointdim);
+	XgeDebugAssert(Ref>=1 && Ref<=pointdim);
 
 	float from   = box.p1[Ref];
 	float to     = box.p2[Ref];
@@ -804,7 +804,7 @@ void PlasmBoolOperation::doOctree(unsigned int C,const Boxf& box,face_t* faces)
 		Boxf b=*(face->box);
 		b.p1=b.p1.Max(box.p1);
 		b.p2=b.p2.Min(box.p2);
-		DebugAssert(b.isValid());
+		XgeDebugAssert(b.isValid());
 
 		//since I'm using doOctree I can use this fast (potential) intersection
 		if (box_minus.overlap(b) && !(box_minus.isBelow(h) || box_minus.isAbove(h)))
@@ -914,7 +914,7 @@ int Plasm::boolop_selftest()
 		Plasm::View(Out,false);
 	}
 
-	ReleaseAssert(!xge_total_hpc);
+	XgeReleaseAssert(!xge_total_hpc);
 
 
 	//test in 1-dim
@@ -940,7 +940,7 @@ int Plasm::boolop_selftest()
 		Plasm::View(Out,false);
 	}
 
-	ReleaseAssert(!xge_total_hpc);
+	XgeReleaseAssert(!xge_total_hpc);
 
 	
 	{
@@ -962,7 +962,7 @@ int Plasm::boolop_selftest()
 		Plasm::View(Out,false);	
 	}
 	
-	ReleaseAssert(!xge_total_hpc);
+	XgeReleaseAssert(!xge_total_hpc);
 
 	//test edifici (only in release mode! about 15 seconds)
 #if 0
@@ -979,7 +979,7 @@ int Plasm::boolop_selftest()
 		Plasm::viewer(Out,"Boolean operation");	
 	}
 
-	ReleaseAssert(!xge_total_hpc);
+	XgeReleaseAssert(!xge_total_hpc);
 #endif
 
 	return 0;

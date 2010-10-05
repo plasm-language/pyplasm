@@ -20,7 +20,7 @@ inline SinglePool::~SinglePool()
 		xge_total_memory-=this->size;
 		--npool;
 	}
-	ReleaseAssert(!npool);
+	XgeReleaseAssert(!npool);
 }
 
 
@@ -42,7 +42,7 @@ inline void* SinglePool::malloc()
 	else
 	{
 		ret=::malloc(this->size);
-		ReleaseAssert(ret!=0);
+		XgeReleaseAssert(ret!=0);
 		xge_total_memory+=this->size;
 	}
 
@@ -100,11 +100,11 @@ inline void* MemPool::malloc(int size)
 		//use general malloc
 		ret=::malloc(size);
 		xge_total_memory+=size;
-		ReleaseAssert(ret);
+		XgeReleaseAssert(ret);
 	}
 	
 	#if XGE_TRACK_MEMORY
-	ReleaseAssert(_memory_in_use.size()==0 || _memory_in_use.find((uint64)ret)==_memory_in_use.end());
+	XgeReleaseAssert(_memory_in_use.size()==0 || _memory_in_use.find((uint64)ret)==_memory_in_use.end());
 	_memory_in_use[(uint64)ret]=size;
 	#endif
 
@@ -120,7 +120,7 @@ inline void MemPool::free(int size,void* p)
 		return;
 
 	#if XGE_TRACK_MEMORY
-	ReleaseAssert(_memory_in_use.size()>0 && _memory_in_use.find((uint64)p)!=_memory_in_use.end() && _memory_in_use[(uint64)p]==size);
+	XgeReleaseAssert(_memory_in_use.size()>0 && _memory_in_use.find((uint64)p)!=_memory_in_use.end() && _memory_in_use[(uint64)p]==size);
 	_memory_in_use.erase((uint64)p);
 	#endif
 
@@ -151,7 +151,7 @@ inline void* MemPool::realloc(int old_size,void* p,int new_size)
 	//realloc from scratch
 	if (!old_size)
 	{
-		DebugAssert(p==0);
+		XgeDebugAssert(p==0);
 		void* ret= this->malloc(new_size);
 		return ret;
 	}
@@ -164,8 +164,8 @@ inline void* MemPool::realloc(int old_size,void* p,int new_size)
 	}
 
 	#if XGE_TRACK_MEMORY
-	ReleaseAssert(_memory_in_use.size()>0 && _memory_in_use.find((uint64)p)!=_memory_in_use.end());
-	ReleaseAssert(_memory_in_use[(uint64)p]==old_size);
+	XgeReleaseAssert(_memory_in_use.size()>0 && _memory_in_use.find((uint64)p)!=_memory_in_use.end());
+	XgeReleaseAssert(_memory_in_use[(uint64)p]==old_size);
 	#endif
 
 	//useless call
@@ -176,7 +176,7 @@ inline void* MemPool::realloc(int old_size,void* p,int new_size)
 	if (new_size>=MEMPOOL_TABLE_SIZE && old_size>=MEMPOOL_TABLE_SIZE)
 	{
 		void* ret=::realloc(p,new_size);
-		ReleaseAssert(ret);
+		XgeReleaseAssert(ret);
 		xge_total_memory+=(new_size-old_size);
 
 		#if XGE_TRACK_MEMORY

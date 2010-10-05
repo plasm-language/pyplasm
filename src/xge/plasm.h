@@ -259,7 +259,7 @@ public:
 	//! link a child hpc to a parent hpc, do also dimension fix
 	inline void add(SmartPointer<Hpc> child)
 	{
-		DebugAssert(!this->g); //final node!
+		XgeDebugAssert(!this->g); //final node!
 		this->spacedim=max2(this->spacedim,child->spacedim);
 		this->pointdim=max2(this->pointdim,child->pointdim);
 		this->childs.push_back(child);
@@ -285,7 +285,7 @@ public:
 
 		if (this->vmat && this->vmat->dim!=this->spacedim)
 		{
-			DebugAssert(this->vmat->dim<this->spacedim);
+			XgeDebugAssert(this->vmat->dim<this->spacedim);
 			*(this->vmat)=this->vmat->extract(this->spacedim);
 			*(this->hmat)=this->hmat->extract(this->spacedim);
 		}
@@ -325,7 +325,7 @@ protected:
 	//! stop benchmark (internal use)
 	static inline void STOP(int opcode,bool bInnerCall=false)
 	{
-		DebugAssert(opcode==current_ops.top());
+		XgeDebugAssert(opcode==current_ops.top());
 		int msec=(int)(Clock()-stats[opcode].t1);
 		stats[opcode].local_msec+=msec;
 		stats[opcode].global_msec+=msec;
@@ -354,7 +354,7 @@ public:
 	enum PlasmOpCode
 	{
 		PLASM_DESTROY,
-		PLASM_CUBE,PLASM_SIMPLEX,PLASM_MKPOL,
+		PLASM_CUBE,PLASM_SIMPLEX,PLASM_MKPOL,PLASM_MKPOLF,
 		PLASM_STRUCT,
 		PLASM_COPY,
 		PLASM_GETSPACEDIM,PLASM_GETPOINTDIM,
@@ -397,6 +397,9 @@ public:
 		@endpy
 	*/
 	static SmartPointer<Hpc> mkpol(int pointdim,const std::vector<float >& points,const std::vector<std::vector<int> >& hulls,float tolerance=PLASM_DEFAULT_TOLERANCE);
+
+	//mkpolf
+	//static SmartPointer<Hpc> mkpolf(int pointdim,const std::vector<float>& planes,const std::vector<std::vector<int> >& hulls,std::vector<float> interior_point,float tolerance=PLASM_DEFAULT_TOLERANCE);
 
 	//! ukpol (by vertices) return pointdim (npoints will be points.size()/returned_value)
 	static int ukpol(SmartPointer<Hpc> node,std::vector<float>& points,std::vector<std::vector<int> >& hulls);
@@ -514,7 +517,7 @@ public:
 	//! scale 
 	static inline SmartPointer<Hpc> scale(SmartPointer<Hpc> child,int spacedim,int ref,float factor)
 	{
-		DebugAssert(ref>=1 && ref<=spacedim);
+		XgeDebugAssert(ref>=1 && ref<=spacedim);
 		Vecf v(spacedim);
 		v.set(0,0.0);
 		for (int i=1;i<=spacedim;i++) 
@@ -534,7 +537,7 @@ public:
 	//! translate
 	static inline SmartPointer<Hpc> translate(SmartPointer<Hpc> child,int spacedim,int ref,float factor)
 	{
-		DebugAssert(ref>=1 && ref<=spacedim);
+		XgeDebugAssert(ref>=1 && ref<=spacedim);
 		Vecf v(spacedim);
 		v.set(0,0.0);
 		v.set(ref,factor);

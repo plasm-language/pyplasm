@@ -22,7 +22,7 @@ void Plasm::statistics(bool bReset)
 	static char* function_names[]=
 	{
 		"destroy",
-		"cube","simplex","mkpol",
+		"cube","simplex","mkpol","mkpolf",
 		"struct",
 		"copy",
 		"getspacedim","getpointdim",
@@ -173,7 +173,7 @@ int Plasm::getPointDim(SmartPointer<Hpc> node)
 SmartPointer<Hpc> Plasm::transform(SmartPointer<Hpc> child,SmartPointer<Matf> vmat,SmartPointer<Matf> hmat)
 {
 	START(PLASM_TRANSFORM);
-	DebugAssert(vmat && hmat && vmat->dim==hmat->dim);
+	XgeDebugAssert(vmat && hmat && vmat->dim==hmat->dim);
 	int spacedim=vmat->dim;
 	SmartPointer<Hpc> ret(new Hpc(spacedim,0,vmat,hmat));
 	ret->add(child);
@@ -203,7 +203,7 @@ SmartPointer<Hpc> Plasm::scale(SmartPointer<Hpc> child,Vecf vs)
 ///////////////////////////////////////////////////////////////////////////////////
 SmartPointer<Hpc> Plasm::translate(SmartPointer<Hpc> child,Vecf vt)
 {
-	DebugAssert(vt[0]==0.0f);
+	XgeDebugAssert(vt[0]==0.0f);
 	START(PLASM_TRANSLATE);
 	SmartPointer<Matf> Vmat(new Matf(Matf::translateV(vt)));
 	SmartPointer<Matf> Hmat(new Matf(Matf::translateH(vt)));
@@ -220,7 +220,7 @@ SmartPointer<Hpc> Plasm::rotate(SmartPointer<Hpc> child,int spacedim,int i,int j
 	START(PLASM_ROTATE);
 	SmartPointer<Matf> Vmat(new Matf(Matf::rotateV(spacedim,i,j,angle)));
 	SmartPointer<Matf> Hmat(new Matf(Matf::rotateH(spacedim,i,j,angle)));
-	DebugAssert(i>=1 && i<=spacedim && j>=1 && j<=spacedim);
+	XgeDebugAssert(i>=1 && i<=spacedim && j>=1 && j<=spacedim);
 	SmartPointer<Hpc> ret(new Hpc(spacedim,0,Vmat,Hmat));
 	ret->add(child);
 	STOP(PLASM_ROTATE);
@@ -254,7 +254,7 @@ Boxf Plasm::limits(SmartPointer<Hpc> node)
 	{
 		SmartPointer<Hpc>    child=(SmartPointer<Hpc>)*it;
 		SmartPointer<Graph> g=child->g;
-		DebugAssert(child->vmat->dim==spacedim);
+		XgeDebugAssert(child->vmat->dim==spacedim);
 
 		if (g)
 		{
@@ -287,14 +287,14 @@ SmartPointer<Hpc>  Plasm::mkpol(int pointdim,const std::vector<float>& points,co
 
 	//for each hull I need a subset of points
 	int npoints=(int)points.size()/pointdim;
-	DebugAssert(npoints*pointdim==(int)points.size());
+	XgeDebugAssert(npoints*pointdim==(int)points.size());
 	float* compact_points=(float*)MemPool::getSingleton()->malloc(sizeof(float)*(int)points.size());
 
 	for (int I=0;I<(int)hulls.size();I++)
 	{
 		int nv=(int)hulls[I].size(); //number of points inside the hull
 
-		DebugAssert(nv<=npoints); //no more than available points
+		XgeDebugAssert(nv<=npoints); //no more than available points
 
 		if (!nv) continue;
 
@@ -303,7 +303,7 @@ SmartPointer<Hpc>  Plasm::mkpol(int pointdim,const std::vector<float>& points,co
 		for (int J=0;J<nv;J++)
 		{
 			int idx=hulls[I][J];
-			DebugAssert(idx>=0 && idx<npoints); //safety check
+			XgeDebugAssert(idx>=0 && idx<npoints); //safety check
 			memcpy(p,&points[idx*pointdim],sizeof(float)*pointdim); 
 			p+=pointdim;
 	
@@ -323,6 +323,53 @@ SmartPointer<Hpc>  Plasm::mkpol(int pointdim,const std::vector<float>& points,co
 }
 
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//SmartPointer<Hpc>  Plasm::mkpolf(int pointdim,const std::vector<float>& planes,const std::vector<std::vector<int> >& hulls,float tolerance)
+//{
+//	START(PLASM_MKPOLF);
+//	SmartPointer<Hpc> ret(new Hpc());
+//
+//	//for each hull I need a subset of points
+//	int nplanes=(int)planes.size()/(pointdim+1);
+//	XgeDebugAssert(nplanes*(pointdim+1)==(int)planes.size());
+//	float* compact_planes=(float*)MemPool::getSingleton()->malloc(sizeof(float)*(int)planes.size());
+//
+//	for (int I=0;I<(int)hulls.size();I++)
+//	{
+//		int nh=(int)hulls[I].size(); //number of points inside the hull
+//
+//		XgeDebugAssert(nh<=nplanes); //no more than available planes
+//
+//		if (!nh) continue;
+//
+//		//compact points
+//		float* p=compact_planes;
+//		for (int J=0;J<nh;J++)
+//		{
+//			int idx=hulls[I][J];
+//			XgeDebugAssert(idx>=0 && idx<nplanes); //safety check
+//			memcpy(p,&planes[idx*(pointdim+1)],sizeof(float)*(pointdim+1)); 
+//			p+=(pointdim+1);
+//	
+//		}
+//
+//		SmartPointer<Matf> vmat(new Matf(pointdim));
+//		SmartPointer<Matf> hmat(new Matf(pointdim));
+//		SmartPointer<Graph> g(Graph::mkpolf(*vmat,*hmat,pointdim,nh,compact_planes,tolerance));
+//		SmartPointer<Hpc> new_child(new Hpc(g,vmat,hmat));
+//		ret->add(new_child);
+//	}
+//
+//	//free compact points
+//	MemPool::getSingleton()->free(sizeof(float)*(int)planes.size(),compact_planes);
+//
+//	STOP(PLASM_MKPOLF);
+//	return ret;
+//}
+
+
+
 
 /////////////////////////////////////////////////////////////
 //ukpol
@@ -339,13 +386,13 @@ int Plasm::ukpol(SmartPointer<Hpc> node,std::vector<float>& points,std::vector<s
 	for (Hpc::const_iterator it=Tmp->childs.begin();it!=Tmp->childs.end();it++)
 	{
 		SmartPointer<Hpc> child=*it; 
-		DebugAssert(child->childs.size()==0 && child->vmat && child->hmat && child->g);
+		XgeDebugAssert(child->childs.size()==0 && child->vmat && child->hmat && child->g);
 		SmartPointer<Graph> g=child->g;
 		SmartPointer<Matf> V=child->vmat;
 		SmartPointer<Matf> H=child->hmat;
 
 		//embed in the final dimension
-		DebugAssert(V->dim<=pointdim);
+		XgeDebugAssert(V->dim<=pointdim);
 
 		//I can change the matrices here
 		(*V) = V->extract(pointdim);
@@ -362,7 +409,7 @@ int Plasm::ukpol(SmartPointer<Hpc> node,std::vector<float>& points,std::vector<s
 			Vecf P(pointdim);//important the initialization to zero
 			memcpy(P.mem,g->getGeometry(*it),sizeof(float)*(g->getPointDim()+1));
 			P = (*V) * P; //transform using matrix
-			DebugAssert(P[0]==1.0f); //is a point, probably here I need to do the division by the homo coordinates
+			XgeDebugAssert(P[0]==1.0f); //is a point, probably here I need to do the division by the homo coordinates
 			for (int I=1;I<=pointdim;I++) points.push_back(P[I]); //ignore homo coorinate
 		}
 
@@ -407,7 +454,7 @@ int Plasm::ukpol(SmartPointer<Hpc> node,std::vector<float>& points,std::vector<s
 	}
 
 	int npoints=(int)points.size()/pointdim;
-	DebugAssert(ID==npoints && npoints*pointdim==(int)points.size());
+	XgeDebugAssert(ID==npoints && npoints*pointdim==(int)points.size());
 	STOP(PLASM_UKPOL);
 	return pointdim;
 }
@@ -460,7 +507,7 @@ int Plasm::ukpolf(SmartPointer<Hpc> node,std::vector<float>& planes,std::vector<
 		}
 	}
 	int nplanes=(int)planes.size()/(dim+1);
-	DebugAssert(ID==nplanes && nplanes*(dim+1)==(int)planes.size());
+	XgeDebugAssert(ID==nplanes && nplanes*(dim+1)==(int)planes.size());
 	STOP(PLASM_UKPOLF);
 	return dim;
 }
@@ -513,15 +560,15 @@ SmartPointer<Hpc> Plasm::join(std::vector<SmartPointer<Hpc> > pols,float toleran
 			{
 				Vecf P(spacedim);//important is set to 0
 				memcpy(P.mem,g->getGeometry(*it),sizeof(float)*(g->getPointDim()+1));
-				DebugAssert(P[0]==1.0f);
+				XgeDebugAssert(P[0]==1.0f);
 				P=(*c->vmat) * P; //embed the vertex
-				DebugAssert(P[0]==1.0f); //probably here I need to consider a change in the homo coordinates
+				XgeDebugAssert(P[0]==1.0f); //probably here I need to consider a change in the homo coordinates
 				memcpy(p,P.mem+1,sizeof(float)*spacedim); //do not copy homo coorinate
 				p+=spacedim;
 			}
 		}
 	}
-	DebugAssert(p==(points+npoints*spacedim));
+	XgeDebugAssert(p==(points+npoints*spacedim));
 
 	//build the mkpol with new points
 	SmartPointer<Matf> vmat(new Matf(spacedim));
@@ -620,7 +667,7 @@ SmartPointer<Hpc> Plasm::skeleton(SmartPointer<Hpc> Src,int level,float toleranc
 	for (Hpc::const_iterator it=Tmp->childs.begin();it!=Tmp->childs.end();it++)
 	{
 		SmartPointer<Hpc> c=(SmartPointer<Hpc>)*it;
-		DebugAssert(c->childs.size()==0 && c->g && c->vmat && c->hmat);
+		XgeDebugAssert(c->childs.size()==0 && c->g && c->vmat && c->hmat);
 		
 		SmartPointer<Graph> g=c->g;
 		SmartPointer<Matf>   V=c->vmat;;
@@ -640,7 +687,7 @@ SmartPointer<Hpc> Plasm::skeleton(SmartPointer<Hpc> Src,int level,float toleranc
 		//already in requeste dimension
 		if (level==g->getPointDim())
 		{
-			DebugAssert(g->getNCells(level)==ncells);
+			XgeDebugAssert(g->getNCells(level)==ncells);
 			SmartPointer<Hpc> subsub(new Hpc(g));
 			sub->add(subsub);
 		}
@@ -648,13 +695,13 @@ SmartPointer<Hpc> Plasm::skeleton(SmartPointer<Hpc> Src,int level,float toleranc
 		else
 		{
 			int pointdim=g->getPointDim();
-			DebugAssert (level<pointdim);
+			XgeDebugAssert (level<pointdim);
 
 			for (GraphListIterator IT=g->each(level);!IT.end();IT++)
 			{
 				unsigned int C=*IT;
 				int npoints=(int)g->findCells(0,C,navigator);
-				DebugAssert(npoints);
+				XgeDebugAssert(npoints);
 				int size=sizeof(float)*npoints*pointdim;
 				float* points=(float*)MemPool::getSingleton()->malloc(size); //exclude the homogeneous coordinate
 
@@ -769,7 +816,7 @@ void innerShrink(SmartPointer<Hpc> dst, SmartPointer<Hpc> src,SmartPointer<Matf>
 
 	if (src->vmat)
 	{
-		DebugAssert(src->vmat->dim<=vacc->dim);
+		XgeDebugAssert(src->vmat->dim<=vacc->dim);
 		v.reset( new Matf((*vacc) * src->vmat->extract(vacc->dim)));
 		h.reset( new Matf(src->hmat->extract(hacc->dim) * (*hacc)));
 	}
@@ -802,7 +849,7 @@ void innerShrink(SmartPointer<Hpc> dst, SmartPointer<Hpc> src,SmartPointer<Matf>
 	}
 	else
 	{
-		DebugAssert(!src->g);
+		XgeDebugAssert(!src->g);
 
 		for (Hpc::const_iterator it=src->childs.begin();it!=src->childs.end();it++)
 			innerShrink(dst,*it,v,h,p,bCloneGeometry);
@@ -843,7 +890,7 @@ SmartPointer<Hpc> SkinInner(SmartPointer<Hpc> src,const std::string& url,SmartPo
 	SmartPointer<Matf>  v=vacc;
 	if (src->vmat)
 	{
-		DebugAssert(src->vmat->dim<=vacc->dim);
+		XgeDebugAssert(src->vmat->dim<=vacc->dim);
 		v.reset(new Matf( (*vacc) * src->vmat->extract(vacc->dim)));
 	}
 	
@@ -851,7 +898,7 @@ SmartPointer<Hpc> SkinInner(SmartPointer<Hpc> src,const std::string& url,SmartPo
 	if (ret->g || ret->batches.size()>0)
 	{
 		//I will transform only triangles, i need a 4x4 matrix so I can embed the matrix (for example from 2d to 3d)
-		DebugAssert(v->dim<=3);//safety check
+		XgeDebugAssert(v->dim<=3);//safety check
 		(*v)=v->extract(3);
 
 		//automatic generation of compiled geometry since it has not already been compiled
@@ -1018,7 +1065,7 @@ int Plasm::SelfTest()
 		SmartPointer<Hpc> Struct=Plasm::Struct(__simplices);
 		Plasm::View(Struct,false);
 	}
-	ReleaseAssert(!xge_total_hpc);
+	XgeReleaseAssert(!xge_total_hpc);
 
 	//cube bulders (and check limits)
 	{
@@ -1032,11 +1079,11 @@ int Plasm::SelfTest()
 
 		SmartPointer<Hpc> cubes=Plasm::Struct(__cubes);
 		Boxf box=Plasm::limits(cubes);
-		ReleaseAssert(box.fuzzyEqual(Boxf(Vecf(1.0f,0.0f,0.0f,0.0f),Vecf(1.0f,4.0f,1.0f,1.0f))));
+		XgeReleaseAssert(box.fuzzyEqual(Boxf(Vecf(1.0f,0.0f,0.0f,0.0f),Vecf(1.0f,4.0f,1.0f,1.0f))));
 
 		Plasm::View(cubes,false);
 	}
-	ReleaseAssert(!xge_total_hpc);
+	XgeReleaseAssert(!xge_total_hpc);
 
 	//join
 	{
@@ -1050,7 +1097,7 @@ int Plasm::SelfTest()
 		SmartPointer<Hpc> join=Plasm::join(__cubes);
 		Plasm::View(join,false);
 	}
-	ReleaseAssert(!xge_total_hpc);
+	XgeReleaseAssert(!xge_total_hpc);
 
 
 	//mkpol
@@ -1060,32 +1107,32 @@ int Plasm::SelfTest()
 		int  _dim0_hull0[]={0};std::vector<int> dim0_hull=make_vector(sizeof(_dim0_hull0)/sizeof(int),_dim0_hull0);
 		std::vector<std::vector<int> > dim0_hulls;dim0_hulls.push_back(dim0_hull);
 		SmartPointer<Hpc> dim0_mkpol=Plasm::mkpol(3,dim0_points,dim0_hulls);
-		ReleaseAssert(Plasm::getSpaceDim(dim0_mkpol)==3);
-		ReleaseAssert(Plasm::getPointDim(dim0_mkpol)==0);
+		XgeReleaseAssert(Plasm::getSpaceDim(dim0_mkpol)==3);
+		XgeReleaseAssert(Plasm::getPointDim(dim0_mkpol)==0);
 
 		dx+=1;
 		float _dim1_points[]={dx+0,0,0,dx+1,0,0};std::vector<float> dim1_points=make_vector(sizeof(_dim1_points)/sizeof(float),_dim1_points);
 		int  _dim1_hull[]={0,1};std::vector<int> dim1_hull=make_vector(sizeof(_dim1_hull)/sizeof(int),_dim1_hull);
 		std::vector<std::vector<int> > dim1_hulls;dim1_hulls.push_back(dim1_hull);
 		SmartPointer<Hpc> dim1_mkpol=Plasm::mkpol(3,dim1_points,dim1_hulls);
-		ReleaseAssert(Plasm::getSpaceDim(dim1_mkpol)==3);
-		ReleaseAssert(Plasm::getPointDim(dim1_mkpol)==1);
+		XgeReleaseAssert(Plasm::getSpaceDim(dim1_mkpol)==3);
+		XgeReleaseAssert(Plasm::getPointDim(dim1_mkpol)==1);
 
 		dx+=1;
 		float _dim2_points[]={dx+0,0,0,dx+1,0,0,dx+1,1,0,dx+0,1,0};std::vector<float> dim2_points=make_vector(sizeof(_dim2_points)/sizeof(float),_dim2_points);
 		int  _dim2_hull[]={0,1,2,3};std::vector<int> dim2_hull=make_vector(sizeof(_dim2_hull)/sizeof(int),_dim2_hull);
 		std::vector<std::vector<int> > dim2_hulls;dim2_hulls.push_back(dim2_hull);
 		SmartPointer<Hpc> dim2_mkpol=Plasm::mkpol(3,dim2_points,dim2_hulls);
-		ReleaseAssert(Plasm::getSpaceDim(dim2_mkpol)==3);
-		ReleaseAssert(Plasm::getPointDim(dim2_mkpol)==2);
+		XgeReleaseAssert(Plasm::getSpaceDim(dim2_mkpol)==3);
+		XgeReleaseAssert(Plasm::getPointDim(dim2_mkpol)==2);
 
 		dx+=1;
 		float _dim3_points[]={dx+0,0,0,dx+1,0,0,dx+1,1,0,dx+0,1,0, dx+0,0,1,dx+1,0,1,dx+1,1,1,dx+0,1,1};std::vector<float> dim3_points=make_vector(sizeof(_dim3_points)/sizeof(float),_dim3_points);
 		int  _dim3_hull[]={0,1,2,3,4,5,6,7};std::vector<int> dim3_hull=make_vector(sizeof(_dim3_hull)/sizeof(int),_dim3_hull);
 		std::vector<std::vector<int> > dim3_hulls;dim3_hulls.push_back(dim3_hull);
 		SmartPointer<Hpc> dim3_mkpol=Plasm::mkpol(3,dim3_points,dim3_hulls);
-		ReleaseAssert(Plasm::getSpaceDim(dim3_mkpol)==3);
-		ReleaseAssert(Plasm::getPointDim(dim3_mkpol)==3);
+		XgeReleaseAssert(Plasm::getSpaceDim(dim3_mkpol)==3);
+		XgeReleaseAssert(Plasm::getPointDim(dim3_mkpol)==3);
 
 
 		std::vector<SmartPointer<Hpc> > __args;
@@ -1097,7 +1144,7 @@ int Plasm::SelfTest()
 		SmartPointer<Hpc> cubes=Plasm::Struct(__args);
 		Plasm::View(cubes,false);
 	}
-	ReleaseAssert(!xge_total_hpc);
+	XgeReleaseAssert(!xge_total_hpc);
 
 
 
@@ -1113,7 +1160,7 @@ int Plasm::SelfTest()
 		SmartPointer<Hpc> cubes=Plasm::Struct(__cubes);
 		Plasm::View(cubes,false);
 	}
-	ReleaseAssert(!xge_total_hpc);
+	XgeReleaseAssert(!xge_total_hpc);
 
 	//scale
 	{
@@ -1128,7 +1175,7 @@ int Plasm::SelfTest()
 		SmartPointer<Hpc> cubes=Plasm::Struct(__cubes);
 		Plasm::View(cubes,false);
 	}
-	ReleaseAssert(!xge_total_hpc);
+	XgeReleaseAssert(!xge_total_hpc);
 
 
 
@@ -1156,7 +1203,7 @@ int Plasm::SelfTest()
 
 		Plasm::View(s,false);
 	}
-	ReleaseAssert(!xge_total_hpc);
+	XgeReleaseAssert(!xge_total_hpc);
 
 
 
@@ -1203,7 +1250,7 @@ int Plasm::SelfTest()
 		SmartPointer<Hpc> cubes=Plasm::Struct(__args);
 		Plasm::View(cubes,false);
 	}
-	ReleaseAssert(!xge_total_hpc);
+	XgeReleaseAssert(!xge_total_hpc);
 
 
 		return 0;
@@ -1211,10 +1258,10 @@ int Plasm::SelfTest()
 	//embed
 	{
 		SmartPointer<Hpc> embed=Plasm::embed(Plasm::cube(1),3);
-		ReleaseAssert(Plasm::getSpaceDim(embed)==3 && Plasm::getPointDim(embed)==1);
+		XgeReleaseAssert(Plasm::getSpaceDim(embed)==3 && Plasm::getPointDim(embed)==1);
 		Plasm::View(embed,false);
 	}
-	ReleaseAssert(!xge_total_hpc);
+	XgeReleaseAssert(!xge_total_hpc);
 
 	//transform
 	{
@@ -1235,7 +1282,7 @@ int Plasm::SelfTest()
 
 		Plasm::View(transform,false);
 	}
-	ReleaseAssert(!xge_total_hpc);
+	XgeReleaseAssert(!xge_total_hpc);
 
 
 	//boolean operation 2d
@@ -1264,7 +1311,7 @@ int Plasm::SelfTest()
 
 		Plasm::View(boolop,false);
 	}
-	ReleaseAssert(!xge_total_hpc);
+	XgeReleaseAssert(!xge_total_hpc);
 
 
 	//power
@@ -1285,7 +1332,7 @@ int Plasm::SelfTest()
 		SmartPointer<Hpc> power=Plasm::power(s1,s2/*,1e-6f,10,0*/);
 		Plasm::View(power,false);
 	}
-	ReleaseAssert(!xge_total_hpc);
+	XgeReleaseAssert(!xge_total_hpc);
 
 
 	//boolean operation 3d
@@ -1314,7 +1361,7 @@ int Plasm::SelfTest()
 
 		Plasm::View(boolop,false);
 	}
-	ReleaseAssert(!xge_total_hpc);
+	XgeReleaseAssert(!xge_total_hpc);
 
 	//properties
 	{
@@ -1367,7 +1414,7 @@ int Plasm::SelfTest()
 		Plasm::View(Out,false);
 	}
 
-	ReleaseAssert(!xge_total_hpc);
+	XgeReleaseAssert(!xge_total_hpc);
 	return 0;
 }
 
@@ -1504,7 +1551,7 @@ std::vector<SmartPointer<Batch> > Plasm::getBatches(SmartPointer<Hpc> src,bool b
 
 			if (batch->primitive>=Batch::TRIANGLES)
 			{
-				ReleaseAssert(batch->normals);
+				XgeReleaseAssert(batch->normals);
 			}
 
 			batch->matrix = matrix;
