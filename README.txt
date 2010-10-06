@@ -15,7 +15,7 @@ Windows compilation
 (*) openg a cygwin shell (http://www.cygwin.com/ you need to have the Makefile tools installed) and type:
 
 	cd <the/directory/containing/this/README/file>
-	make distrib-win32
+	make install-win32
 
 (*) in distrib/win32/pyplasm there will be the self-contained package for Python 2.6
 
@@ -49,6 +49,13 @@ Linux compilation (tested on Ubuntu 2.6.32-24-generic)
 
 	sudo apt-get install python2.6
 	sudo apt-get install python2.6-dev
+
+
+(*) Make sure the python2.6 is the only version installed. For example you can do:
+
+	grep -ri "Python" / 2>/dev/null
+
+	and do a "rm -Rf <dirname>" where <dirname> are all directories pointing to Versions/2.x 
 
 (*) edit the Makefile.inc (read the comments)
 

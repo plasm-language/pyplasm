@@ -8,23 +8,30 @@ CXXFLAGS+=-I../ -I../xge -I$(PYTHON_INCLUDE_DIRECTORY)
 SRC_CPP=$(shell ls *.cpp)
 OBJS=$(SRC_CPP:.cpp=.o)
 
-
 ifeq ($(PLATFORM_NAME),PLATFORM_Linux)
 all: libxgepy.so
 	@echo "all done"
 
 libxgepy.so: $(OBJS) 
-	g++ -fPIC -shared -lpython2.6 -o $@ ${OBJS} ${LIBS} -L../xge -lxge 
+	g++ $(LDFLAGS) -fPIC -shared -lpython2.6 -o $@ ${OBJS} ${LIBS} -L../xge -lxge 
 endif
 
 
 ifeq ($(PLATFORM_NAME),PLATFORM_Darwin)
+
+#64 bit architecture not supported
+LDFLAGS=-arch i386
+
 all: libxgepy.dylib
 	@echo "all done"
 
 libxgepy.dylib: $(OBJS) 
-	g++ -fPIC -dynamiclib $(PYTHON_LIB_DIRECTORY) -lpython2.6 -o $@ ${OBJS} ${LIBS} -L../xge -lxge 
+	g++ $(LDFLAGS) -dynamiclib -framework Python -o $@ ${OBJS} ${LIBS} -L../xge -lxge 
 endif
+
+swig:
+	swig -outcurrentdir -o xgepy.cpp -I../ -c++ -python ../xge/xge.i
+
 
 depend:
 	makedepend -Y. *.cpp *.c *.h

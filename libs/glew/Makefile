@@ -1,14 +1,10 @@
+include ../../Makefile.inc
 
-CPPFLAGS=-fPIC -O2 -DGLEW_MX -I./
-
-CFLAGS+=-fPIC
-CXXFLAGS+=-fPIC
+CPPFLAGS+=-DGLEW_MX -I./
 
 SRC_C=$(shell ls *.c)
 
-#SRC_CPP=$(shell ls *.cpp)
-
-OBJS=$(SRC_CPP:.cpp=.o) $(SRC_C:.c=.o)
+OBJS=$(SRC_C:.c=.o)
 
 all: libglew.a
 	@echo "all done"

@@ -9,18 +9,19 @@ SRC_CPP=$(shell ls *.cpp)
 OBJS=$(SRC_CPP:.cpp=.o) juce_amalgamated.o
 
 
+# ////////////////////////////////////////////////
 # LINUX  configuration
 ifeq ($(PLATFORM_NAME),PLATFORM_Linux)
 CXXFLAGS+=-I "/usr/include" -I "/usr/include/freetype2"
 LIB_NAME=libxge.so
-LINK_OPT=-shared  -lz -lfreeimage -lGL -lGLU -lfreetype -lrt -lX11 -lGL -lGLU -lXinerama -lasound
+LDFLAGS+=-shared  -lz -lfreeimage -lGL -lGLU -lfreetype -lrt -lX11 -lGL -lGLU -lXinerama -lasound
 endif
 
-
+# ////////////////////////////////////////////////
 # DARWIN configuration
 ifeq ($(PLATFORM_NAME),PLATFORM_Darwin)
 LIB_NAME=libxge.dylib
-LINK_OPT=-dynamiclib -lz ../../libs/FreeImage/libFreeImage.a -framework Carbon -framework AGL -framework OpenGL -framework Cocoa -framework IOKit -framework CoreAudio -framework CoreMIDI -framework WebKit -framework DiscRecording -framework QuartzCore -framework QTKit -framework QuickTime
+LDFLAGS+=-w -dynamiclib -lz ../../libs/FreeImage/libFreeImage.a -framework Carbon -framework AGL -framework OpenGL -framework Cocoa -framework IOKit -framework CoreAudio -framework CoreMIDI -framework WebKit -framework DiscRecording -framework QuartzCore -framework QTKit -framework QuickTime
 endif
 
 
@@ -28,7 +29,7 @@ all: ${LIB_NAME}
 	@echo "Library done"
 
 ${LIB_NAME}: $(OBJS) 
-	g++ -fPIC -o $@ ${OBJS} ${LIBS} ../../libs/tinyxml/libtinyxml.a ../../libs/qhull/libqhull.a ../../libs/glew/libglew.a $(LINK_OPT) 
+	g++ $(LDFLAGS) -o $@ ${OBJS} ${LIBS} ../../libs/tinyxml/libtinyxml.a ../../libs/qhull/libqhull.a ../../libs/glew/libglew.a  
 
 
 ifeq ($(PLATFORM_NAME),PLATFORM_Linux)

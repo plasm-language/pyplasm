@@ -1,12 +1,8 @@
-
-CFLAGS+=-fPIC
-CXXFLAGS+=-fPIC
+include ../../Makefile.inc
 
 SRC_C=$(shell ls *.c)
 
-#SRC_CPP=$(shell ls *.cpp)
-
-OBJS=$(SRC_CPP:.cpp=.o) $(SRC_C:.c=.o)
+OBJS=$(SRC_C:.c=.o)
 
 all: libzlib.a
 	@echo "all done"

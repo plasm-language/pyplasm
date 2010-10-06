@@ -1,12 +1,8 @@
-
-CFLAGS+=-fPIC
-CXXFLAGS+=-fPIC
-
-#SRC_C=$(shell ls *.c)
+include ../../Makefile.inc
 
 SRC_CPP=$(shell ls *.cpp)
 
-OBJS=$(SRC_CPP:.cpp=.o) $(SRC_C:.c=.o)
+OBJS=$(SRC_CPP:.cpp=.o) 
 
 all:libtinyxml.a
 	@echo "all done"

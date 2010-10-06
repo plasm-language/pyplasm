@@ -10,7 +10,7 @@ all:
 	cd src/xgemain  && make all
 	cd src/xgepy    && make all
 
-distrib-win32:
+install-win32:
 	echo "Creating distrib/win32"
 	rm -Rf   distrib/win32
 	mkdir -p distrib/win32
@@ -21,6 +21,8 @@ distrib-win32:
 	cp Release/_xgepy.pyd         distrib/win32/pyplasm/xge/_xgepy.pyd
 	chmod -R a+rwx distrib/win32
 
+
+ifeq ($(PLATFORM_NAME),PLATFORM_Linux)
 distrib-linux:
 	echo "Creating distrib/linux"
 	rm -Rf  $(PYTHON_SITE_PACKAGES)/pyplasm
@@ -35,9 +37,12 @@ distrib-linux:
 	mkdir -p distrib/linux
 	cp -r $(PYTHON_SITE_PACKAGES)/pyplasm distrib/linux
 	chmod -R a+rwx distrib/linux
+endif
 
-distrib-macosx:
-	echo "Creating distrib/macosx"
+ifeq ($(PLATFORM_NAME),PLATFORM_Darwin)
+
+install:
+	@echo "Installing pyplasm"
 	rm -Rf   $(PYTHON_SITE_PACKAGES)/pyplasm 
 	cp -r src/pyplasm             $(PYTHON_SITE_PACKAGES)/pyplasm
 	cp PLaSM.html                 $(PYTHON_SITE_PACKAGES)/pyplasm/ 
@@ -51,6 +56,7 @@ distrib-macosx:
 	mkdir -p distrib/macosx
 	cp -r $(PYTHON_SITE_PACKAGES)/pyplasm distrib/macosx
 	chmod -R a+rwx distrib/macosx
+endif
 
 clean:  
 	rm -f *.ncb *.suo $(shell find . -iname "*.scorzell.user") 
