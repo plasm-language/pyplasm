@@ -10,21 +10,28 @@ all:
 	cd src/xgemain  && make all
 	cd src/xgepy    && make all
 
-install-win32:
-	echo "Creating distrib/win32"
+ifeq ($(PLATFORM_NAME),PLATFORM_CYGWIN_NT-5.1)
+install:
+	echo "Installing pyplasm on windows"
+	rm -Rf   $(PYTHON_SITE_PACKAGES)/pyplasm
+	mkdir -p distrib/win32
+	cp -R src/pyplasm             $(PYTHON_SITE_PACKAGES)/pyplasm
+	cp PLaSM.html                 $(PYTHON_SITE_PACKAGES)/pyplasm/ 
+	cp README.txt                 $(PYTHON_SITE_PACKAGES)/pyplasm/
+	cp Release/xge.dll            $(PYTHON_SITE_PACKAGES)/pyplasm/xge/xge.dll
+	cp Release/xgemain.exe        $(PYTHON_SITE_PACKAGES)/pyplasm/xge/xgemain.exe
+	cp Release/_xgepy.pyd         $(PYTHON_SITE_PACKAGES)/pyplasm/xge/_xgepy.pyd
+	chmod -R a+rwx                $(PYTHON_SITE_PACKAGES)/pyplasm
 	rm -Rf   distrib/win32
 	mkdir -p distrib/win32
-	cp -R src/pyplasm             distrib/win32/pyplasm
-	cp PLaSM.html                 distrib/win32/pyplasm/ 
-	cp README.txt                 distrib/win32/pyplasm/
-	cp Release/xge.dll            distrib/win32/pyplasm/xge/xge.dll
-	cp Release/_xgepy.pyd         distrib/win32/pyplasm/xge/_xgepy.pyd
+	cp -r $(PYTHON_SITE_PACKAGES)/pyplasm distrib/win32
 	chmod -R a+rwx distrib/win32
+endif
 
 
 ifeq ($(PLATFORM_NAME),PLATFORM_Linux)
-distrib-linux:
-	echo "Creating distrib/linux"
+install:
+	echo "Installing pyplasm on Linux"
 	rm -Rf  $(PYTHON_SITE_PACKAGES)/pyplasm
 	cp -r src/pyplasm             $(PYTHON_SITE_PACKAGES)/pyplasm
 	cp PLaSM.html                 $(PYTHON_SITE_PACKAGES)/pyplasm/ 
@@ -40,9 +47,8 @@ distrib-linux:
 endif
 
 ifeq ($(PLATFORM_NAME),PLATFORM_Darwin)
-
 install:
-	@echo "Installing pyplasm"
+	@echo "Installing pyplasm on MacOsx"
 	rm -Rf   $(PYTHON_SITE_PACKAGES)/pyplasm 
 	cp -r src/pyplasm             $(PYTHON_SITE_PACKAGES)/pyplasm
 	cp PLaSM.html                 $(PYTHON_SITE_PACKAGES)/pyplasm/ 

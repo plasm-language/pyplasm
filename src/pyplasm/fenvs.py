@@ -6,6 +6,7 @@ print "Evaluating fenvs.py.."
 #default values (see PlasmConfig)
 DEFAULT_TOLERANCE=1e-6
 DEFAULT_MAX_NUM_SPLIT=10
+DEFAULT_USE_OCTREE_PLANES=True
 
 import sys,types,math
 
@@ -30,7 +31,7 @@ class PlasmConfig:
 
 	def __init__(self):
 		self.stack=[]
-		self.push(DEFAULT_TOLERANCE,DEFAULT_MAX_NUM_SPLIT)
+		self.push(DEFAULT_TOLERANCE,DEFAULT_MAX_NUM_SPLIT,DEFAULT_USE_OCTREE_PLANES)
 
 	# return actual tolerance
 	def tolerance(self):
@@ -39,13 +40,17 @@ class PlasmConfig:
 	# return actual num try
 	def maxnumtry(self):
 		return self.stack[-1].maxnumtry
+		
+	def useOctreePlanes(self):
+		return self.stack[-1].useoctreeplanes
 
 	# push a config
-	def push(self,tolerance,maxnumtry=-1):
+	def push(self,tolerance,maxnumtry=-1,useoctreeplanes=True):
 		class T:pass
 		obj=T()
 		obj.tolerance=tolerance
 		obj.maxnumtry=maxnumtry if maxnumtry>=0 else self.maxnumtry()
+		obj.useoctreeplanes=useoctreeplanes
 		self.stack+=[obj]
 
 	# pop a config
@@ -1175,19 +1180,19 @@ if self_test:
 
 #also +, or SUM, can be used to indicates UNION
 def UNION (objs_list):
-        return Plasm.boolop(BOOL_CODE_OR, objs_list,plasm_config.tolerance(),plasm_config.maxnumtry())
+        return Plasm.boolop(BOOL_CODE_OR, objs_list,plasm_config.tolerance(),plasm_config.maxnumtry(),plasm_config.useOctreePlanes())
 
 #also ^ can be used to indicates INTERSECTION
 def INTERSECTION (objs_list):
-        return Plasm.boolop(BOOL_CODE_AND, objs_list,plasm_config.tolerance(),plasm_config.maxnumtry())
+        return Plasm.boolop(BOOL_CODE_AND, objs_list,plasm_config.tolerance(),plasm_config.maxnumtry(),plasm_config.useOctreePlanes())
 
 #also -, or DIFF, can be used to indicates DIFFERENCE
 def DIFFERENCE (objs_list):
-        return Plasm.boolop(BOOL_CODE_DIFF, objs_list,plasm_config.tolerance(),plasm_config.maxnumtry())
+        return Plasm.boolop(BOOL_CODE_DIFF, objs_list,plasm_config.tolerance(),plasm_config.maxnumtry(),plasm_config.useOctreePlanes())
         
 # xor
 def XOR (objs_list):
-        return Plasm.boolop(BOOL_CODE_XOR, objs_list,plasm_config.tolerance(),plasm_config.maxnumtry())
+        return Plasm.boolop(BOOL_CODE_XOR, objs_list,plasm_config.tolerance(),plasm_config.maxnumtry(),plasm_config.useOctreePlanes())
 
 if self_test: 
 	assert(Plasm.limits(UNION([Plasm.cube(2,0,1),Plasm.cube(2,0.5,1.5)])).fuzzyEqual(Boxf(Vecf(1,0,0),Vecf(1,1.5,1.5))))

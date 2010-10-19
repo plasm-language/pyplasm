@@ -135,7 +135,7 @@ protected:
 
 /////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////
-SmartPointer<Hpc> Plasm::boolop(Plasm::BoolOpCode operation,std::vector<SmartPointer<Hpc> > pols,float tolerance,int maxnumtry)
+SmartPointer<Hpc> Plasm::boolop(Plasm::BoolOpCode operation,std::vector<SmartPointer<Hpc> > pols,float tolerance,int maxnumtry,bool bUseOctreePlanes)
 {
 	START(PLASM_BOOLOP);
 
@@ -144,7 +144,7 @@ SmartPointer<Hpc> Plasm::boolop(Plasm::BoolOpCode operation,std::vector<SmartPoi
 	for (int i=0;i<(int)pols.size();i++) 
 		spacedim=max2(spacedim,getSpaceDim(pols[i]));
 	
-	PlasmBoolOperation bop((BoolOpCode)operation,spacedim,true,false,maxnumtry,tolerance,tolerance);
+	PlasmBoolOperation bop((BoolOpCode)operation,spacedim,bUseOctreePlanes,false,maxnumtry,tolerance,tolerance);
 
 	for (int i=0;i<(int)pols.size();i++) 
 	{

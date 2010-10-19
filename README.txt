@@ -50,15 +50,6 @@ Linux compilation (tested on Ubuntu 2.6.32-24-generic)
 	sudo apt-get install python2.6
 	sudo apt-get install python2.6-dev
 
-
-(*) Make sure the python2.6 is the only version installed. For example you can do:
-
-	grep -ri "Python" / 2>/dev/null
-
-	and do a "rm -Rf <dirname>" where <dirname> are all directories pointing to Versions/2.x 
-
-(*) edit the Makefile.inc (read the comments)
-
 (*) open a bash shell and type
 
 	cd <the/directory/containing/this/Readme/file>
@@ -100,12 +91,28 @@ MacOSX compilation
 	sudo port install python_select
 	sudo python_select python26
 
-(*) Install PyOpenGL 
-         http://pypi.python.org/packages/source/P/PyOpenGL/PyOpenGL-3.0.1b2.tar.gz#md5=c7a69ea10855c5e5ef964790396e9d68)
+(*) Install PyOpenGL from http://pypi.python.org/packages/source/P/PyOpenGL/PyOpenGL-3.0.1b2.tar.gz#md5=c7a69ea10855c5e5ef964790396e9d68)
  
 	tar -zxvf PyOpenGL-3.0.0.tar.gz
 	cd PyOpenGL-3.0.0
 	python setup.py install
+
+
+(*) Make sure the python2.6 is the only version installed!!!!! 
+
+     For example you can do:
+
+		grep -ri "Python" / 2>/dev/null
+
+     and do a:
+
+		"rm -Rf <dirname>" 
+
+     where <dirname> are all directories pointing to Versions/2.x 
+
+
+(*) edit the Makefile.inc (read the comments)
+
 
 (*) open a bash shell and type
 

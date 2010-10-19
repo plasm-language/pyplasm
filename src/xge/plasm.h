@@ -593,7 +593,11 @@ public:
 		@endpy
 	*/
 
-	static SmartPointer<Hpc> boolop(BoolOpCode operation,std::vector<SmartPointer<Hpc> > pols,float tolerance=PLASM_DEFAULT_TOLERANCE,int maxnumtry=PLASM_MAX_NUM_SPLIT);
+	static SmartPointer<Hpc> boolop(BoolOpCode operation,
+									std::vector<SmartPointer<Hpc> > pols,
+									float tolerance=PLASM_DEFAULT_TOLERANCE,
+									int maxnumtry=PLASM_MAX_NUM_SPLIT,
+									bool useOctreePlanes=true);
 
 	//! apply texture map
 	static SmartPointer<Hpc> Skin(SmartPointer<Hpc> src,std::string url,SmartPointer<Matf> project_uv);

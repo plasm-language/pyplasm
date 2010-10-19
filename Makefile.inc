@@ -13,6 +13,13 @@ CXXFLAGS=-w -fPIC ${OPTIMIZATION} -D${PLATFORM_NAME}
 # default link flags
 LDFLAGS=-fPIC
 
+
+# --- windows ---
+ifeq ($(PLATFORM_NAME),PLATFORM_CYGWIN_NT-5.1)
+PYTHON_SITE_PACKAGES=/cygdrive/c/Python26/Lib/site-packages
+endif
+
+
 # --- LINUX ---
 ifeq ($(PLATFORM_NAME),PLATFORM_Linux)
 PYTHON_INCLUDE_DIRECTORY=/usr/include/python2.6
