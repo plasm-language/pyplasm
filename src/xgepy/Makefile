@@ -20,7 +20,7 @@ endif
 ifeq ($(PLATFORM_NAME),PLATFORM_Darwin)
 
 #64 bit architecture not supported
-LDFLAGS=-arch i386
+LDFLAGS=-arch i386  -arch x86_64
 
 all: libxgepy.dylib
 	@echo "all done"
