@@ -119,7 +119,7 @@ MacOSX compilation
 	cd <the/directory/containing/this/Readme/file>
 	make clean
 	make
-	sudo make distrib-macosx 
+	sudo make install
 
 	NOTE: If JUCE is complaining about a missing library install them: sudo apt-get install <package_name>
 

@@ -85994,7 +85994,7 @@ SWIG_init(void) {
   
   
   SWIG_Python_SetConstant(d, "SHARED_PTR_DISOWN",SWIG_From_int(static_cast< int >(0)));
-  SWIG_Python_SetConstant(d, "HERE",SWIG_FromCharPtr("C:\\home\\scorzell\\software\\cpp\\pyplasm\\src\\xge\\xge.h:77"));
+  SWIG_Python_SetConstant(d, "HERE",SWIG_FromCharPtr("..//xge/xge.h:77"));
   SWIG_Python_SetConstant(d, "SPIN_LOCK_DEFAULT_MAX_DELTA_TIME",SWIG_From_int(static_cast< int >(10)));
   SWIG_Python_SetConstant(d, "MEMPOOL_TABLE_SIZE",SWIG_From_int(static_cast< int >(4096)));
   SWIG_Python_SetConstant(d, "GRAPH_MAX_GEOMETRIC_DIMENSION",SWIG_From_int(static_cast< int >(16)));
