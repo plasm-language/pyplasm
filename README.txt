@@ -1,3 +1,17 @@
+//////////////////////////////////////////////
+Git instruction
+//////////////////////////////////////////////
+
+
+# per creare una copia locale del respository (cambiare il nome utente!)
+git clone ssh://scorzelli@plm.dia.uniroma3.it/home/git-old/pyplasm
+
+git add ...
+git rem ...
+git commit -a
+
+# per fare il commit, dopo aver effettuato i cambiamenti
+git push
 
 
 //////////////////////////////////////////////
