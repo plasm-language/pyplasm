@@ -206,7 +206,7 @@ public:
 	static void                               saveObj(std::string filename,std::vector<SmartPointer<Batch> > batches);
 
 	//! open point cloud (note: the color will be stored in normals)
-	static std::vector<SmartPointer<Batch> > openPtx(std::string filename,bool bUseReflectance=false);
+	static std::vector<SmartPointer<Batch> >  openPtx(std::string filename,bool bUseReflectance=false);
 
 	//! open point cloud in PTS format
 	//static std::vector<SmartPointer<Batch> > openPts(std::string filename,bool bUseReflectance=false);

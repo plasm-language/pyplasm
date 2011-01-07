@@ -15,7 +15,7 @@ LDFLAGS=-fPIC
 
 
 # --- windows ---
-ifeq ($(PLATFORM_NAME),PLATFORM_CYGWIN_NT-5.1)
+ifeq ($(PLATFORM_NAME),PLATFORM_CYGWIN_NT-6.1-WOW64)
 PYTHON_SITE_PACKAGES=/cygdrive/c/Python26/Lib/site-packages
 endif
 

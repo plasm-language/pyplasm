@@ -6,6 +6,8 @@
 /////////////////////////////////////////////////////////////////////
 int main(int nargs,char** argv)
 {	
+
+	//Batch::openObj("sphere12x18.obj");
 	//	if (false)
 	//	{
 	//		std::vector<SmartPointer<Batch> > batches=Plasm::getBatches(Plasm::open(":models/pisa.hpc.gz"));
@@ -173,6 +175,7 @@ int main(int nargs,char** argv)
 
 	//self testing
 	Engine::PrintStatistics();
+
 	if (true)
 	{
 		Utils::SelfTest();

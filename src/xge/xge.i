@@ -542,3 +542,4 @@ SWIG_SHARED_PTR(EngineResource,EngineResource)
 %include <xge/bake.h>
 %include <xge/plasm.h>
 
+ 

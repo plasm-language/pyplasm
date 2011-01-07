@@ -10,7 +10,7 @@ all:
 	cd src/xgemain  && make all
 	cd src/xgepy    && make all
 
-ifeq ($(PLATFORM_NAME),PLATFORM_CYGWIN_NT-5.1)
+ifeq ($(PLATFORM_NAME),PLATFORM_CYGWIN_NT-6.1-WOW64)
 install:
 	echo "Installing pyplasm on windows"
 	rm -Rf   $(PYTHON_SITE_PACKAGES)/pyplasm

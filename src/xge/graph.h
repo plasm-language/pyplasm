@@ -870,6 +870,20 @@ public:
 	*/
 	SplitResult split(GraphNavigator& navigator,const unsigned int cell,const Planef& _h,float start_tolerance,const int max_try,unsigned int& Cb,unsigned int& Ca,unsigned int& Ce,unsigned int Id);
 
+	//split for python
+	std::vector<int> split(GraphNavigator& navigator,int cell,const Planef& h,float start_tolerance,const int max_try)
+	{
+		unsigned int Cb,Ca,Ce;
+		SplitResult retcode=split(navigator,cell,h,start_tolerance,max_try,Cb,Ca,Ce,0);
+
+		std::vector<int> ret;
+		if (retcode==SPLIT_FLAT || retcode==SPLIT_IMPOSSIBLE) {Cb=Ca=Ce=0;}
+		ret.push_back(Cb);
+		ret.push_back(Ce);
+		ret.push_back(Ca);
+		return ret;
+	}
+
 	//! display in opengl all the cells at a certain level, very slow only for debugging and internal use
 	//void render(int view_cell_level,bool bDisplayOffetLines,bool bShowNormals,bool bDisplayCellId);
 

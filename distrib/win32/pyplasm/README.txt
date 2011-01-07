@@ -1,7 +1,7 @@
 
 
 //////////////////////////////////////////////
-Windows compilation 
+Windows compilation  (Visual Studio 2010!)
 //////////////////////////////////////////////
 
 (*) Open the project ./pyplasm.sln
@@ -15,7 +15,7 @@ Windows compilation
 (*) openg a cygwin shell (http://www.cygwin.com/ you need to have the Makefile tools installed) and type:
 
 	cd <the/directory/containing/this/README/file>
-	make install-win32
+	make install
 
 (*) in distrib/win32/pyplasm there will be the self-contained package for Python 2.6
 
