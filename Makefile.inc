@@ -28,10 +28,8 @@ endif
 
 # ---- DARWIN ----
 ifeq ($(PLATFORM_NAME),PLATFORM_Darwin)
-PYTHON_INCLUDE_DIRECTORY=/Library/Frameworks/Python.framework/Versions/2.6/include/python2.6
-#the new macosx 10.6 need a different directory!
-#PYTHON_SITE_PACKAGES=/Library/Frameworks/Python.framework/Versions/2.6/lib/python2.6/site-packages
-PYTHON_SITE_PACKAGES=/Library/Python/2.6/site-packages
+PYTHON_INCLUDE_DIRECTORY=/Library/Frameworks/Python.framework/Versions/2.7/include/python2.7
+PYTHON_SITE_PACKAGES=/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages
 CFLAGS+=  -arch i386 -arch x86_64
 CXXFLAGS+=-arch i386 -arch x86_64
 LDFLAGS+=-arch i386 -arch x86_64

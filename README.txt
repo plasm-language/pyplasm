@@ -99,34 +99,23 @@ MacOSX compilation
 ////////////////////////////////////////////
 
 
-(*) Python 2.6 comes with your MacOsx 10.6
+(*) download and install Python 2.7.1 (or greater) http://www.python.org/download/releases/2.7.1/python-2.7.1-macosx10.6.dmg.asc
 
-(*) Install PyOpenGL from http://pypi.python.org/packages/source/P/PyOpenGL/PyOpenGL-3.0.1b2.tar.gz#md5=c7a69ea10855c5e5ef964790396e9d68)
+(*) make sure that from a shell python is version 2.7.1
+
+(*) Install PyOpenGL 
  
-	tar -zxvf PyOpenGL-3.0.0.tar.gz
-	cd PyOpenGL-3.0.0
+	tar -zxvf PyOpenGL-3.0.1.tar.gz
+	cd PyOpenGL-3.0.1
 	python setup.py install
-
-
-(*) (OPTIONAL) Make sure the python2.6 is the only version installed!!!!! 
-
-     For example you can do:
-
-		grep -ri "Python" / 2>/dev/null
-
-     and do a:
-
-		"rm -Rf <dirname>" 
-
-     where <dirname> are all directories pointing to Versions/2.x 
 
 
 (*) edit the Makefile.inc (read the comments)
 
-
 (*) open a bash shell and type
 
 	cd <the/directory/containing/this/Readme/file>
+	export PATH=$PATH:/Developer/usr/bin # optional
 	make clean
 	make
 	sudo make install

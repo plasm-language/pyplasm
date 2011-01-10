@@ -1,3 +1,17 @@
+//////////////////////////////////////////////
+Git instruction
+//////////////////////////////////////////////
+
+
+# per creare una copia locale del respository (cambiare il nome utente!)
+git clone ssh://scorzelli@plm.dia.uniroma3.it/home/git-old/pyplasm
+
+git add ...
+git rem ...
+git commit -a
+
+# per fare il commit, dopo aver effettuato i cambiamenti
+git push
 
 
 //////////////////////////////////////////////
@@ -84,39 +98,24 @@ Linux compilation (tested on Ubuntu 2.6.32-24-generic)
 MacOSX compilation 
 ////////////////////////////////////////////
 
-(*) install Python 2.6 (http://www.python.org/ftp/python/2.6.4/python-2.6.4_macosx10.3.dmg)
 
-(*) (OPTIONAL, not always required) Make sure the version 2.6 is the version you are currently using. 
+(*) download and install Python 2.7.1 (or greater) http://www.python.org/download/releases/2.7.1/python-2.7.1-macosx10.6.dmg.asc
 
-	sudo port install python_select
-	sudo python_select python26
+(*) make sure that from a shell python is version 2.7.1
 
-(*) Install PyOpenGL from http://pypi.python.org/packages/source/P/PyOpenGL/PyOpenGL-3.0.1b2.tar.gz#md5=c7a69ea10855c5e5ef964790396e9d68)
+(*) Install PyOpenGL 
  
-	tar -zxvf PyOpenGL-3.0.0.tar.gz
-	cd PyOpenGL-3.0.0
+	tar -zxvf PyOpenGL-3.0.1.tar.gz
+	cd PyOpenGL-3.0.1
 	python setup.py install
-
-
-(*) Make sure the python2.6 is the only version installed!!!!! 
-
-     For example you can do:
-
-		grep -ri "Python" / 2>/dev/null
-
-     and do a:
-
-		"rm -Rf <dirname>" 
-
-     where <dirname> are all directories pointing to Versions/2.x 
 
 
 (*) edit the Makefile.inc (read the comments)
 
-
 (*) open a bash shell and type
 
 	cd <the/directory/containing/this/Readme/file>
+	export PATH=$PATH:/Developer/usr/bin # optional
 	make clean
 	make
 	sudo make install
@@ -133,7 +132,7 @@ MacOSX compilation
 
 (*) to run some other tests, type:
 	
-	python /Library/Frameworks/Python.framework/Versions/2.6/lib/python2.6/site-packages/pyplasm/examples.py
+	python /Library/Python/2.6/site-packages/pyplasm/examples.py
 
 (*) (OPTIONAL, only for DEBUGGING) if you want to run the self test procedure xgemain
 
