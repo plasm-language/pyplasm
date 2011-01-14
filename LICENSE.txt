@@ -1,0 +1,1 @@
+This software is licensed under the terms of the GPL, due to the Juce library.
