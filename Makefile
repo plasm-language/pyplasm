@@ -81,6 +81,5 @@ clean:
 	rm -Rf src/swig.test/bin src/swig.test/obj
 	rm -Rf src/Trs.Sdk.Xge/bin src/Trs.Sdk.Xge/obj 
 	rm -f temp/*
-	rm -Rf distrib/*
 
 
