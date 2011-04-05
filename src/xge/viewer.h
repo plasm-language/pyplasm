@@ -37,6 +37,9 @@ public:
 	//octree
 	SmartPointer<Octree> octree;
 
+	//enable disable progressive rendering
+	bool bProgressiveRendering;
+
 	//default
 	Viewer();
 

@@ -7,6 +7,7 @@
 Viewer::Viewer()
 	:Thread(2)
 {
+	this->bProgressiveRendering=true;
 	this->octree.reset();
 	this->m_close=false;
 	this->DrawLines=false;
@@ -27,6 +28,7 @@ Viewer::Viewer()
 Viewer::Viewer(SmartPointer<Octree> octree)
 	:Thread(2)
 {	
+	this->bProgressiveRendering=true;
 	this->m_close=false;
 	this->DrawLines=false;
 	this->DrawAxis =true;
@@ -181,6 +183,13 @@ void Viewer::Keyboard(int key,int x,int y)
 			this->Redisplay();
 			break;
 		}
+
+		//disable progression
+		case 'r':
+			bProgressiveRendering=!bProgressiveRendering;
+			this->Redisplay();
+			break;
+
 		default:
 		{
 			if (this->frustum.defaultKeyboard(key,x,y))	
@@ -268,7 +277,7 @@ void Viewer::Render()
 						}
 
 						//draw in chunks of fps=30
-						if (t1.msec()>30) 
+						if (bProgressiveRendering && t1.msec()>30) 
 						{
 							t1.reset();
 							bQuitRenderingLoop=m_redisplay;
@@ -285,7 +294,7 @@ void Viewer::Render()
 			engine->Render(transparent[i]);
 
 			//draw in chunks of fps=30
-			if (t1.msec()>30) 
+			if (bProgressiveRendering && t1.msec()>30) 
 			{
 				t1.reset();
 				bQuitRenderingLoop=m_redisplay; 
@@ -293,6 +302,8 @@ void Viewer::Render()
 			}
 		}
 	}
+
+	//need the final flush screen
 	engine->FlushScreen();
 }
 

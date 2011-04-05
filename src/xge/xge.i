@@ -486,14 +486,14 @@
 
 %feature("director") Viewer;
 
-SWIG_SHARED_PTR(Matf,Matf)
-SWIG_SHARED_PTR(Vector,Vector)
-SWIG_SHARED_PTR(Texture,Texture)
-SWIG_SHARED_PTR(Graph,Graph)
-SWIG_SHARED_PTR(Hpc,Hpc)
-SWIG_SHARED_PTR(Batch,Batch)
-SWIG_SHARED_PTR(Octree,Octree)
-SWIG_SHARED_PTR(EngineResource,EngineResource)
+%shared_ptr(Matf)
+%shared_ptr(Vector)
+%shared_ptr(Texture)
+%shared_ptr(Graph)
+%shared_ptr(Hpc)
+%shared_ptr(Batch)
+%shared_ptr(Octree)
+%shared_ptr(EngineResource)
 
 %template(StdVectorVec3f)                             std::vector<Vec3f>;
 %template(StdVectorSmartPointerHpc)                   std::vector<std::tr1::shared_ptr<Hpc> >;

@@ -2,10 +2,27 @@
 
 
 
+
 /////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 int main(int nargs,char** argv)
 {	
+
+	//remove me
+	/*if (false)
+	{
+		int pointdim=3;
+		int npoints=12;
+		const float points[]=
+		{
+			0.5,0.5,0, 0.5,0.5,1,
+
+			0,0,0,  1,0,0,  2,1,0,  1,2,0,  0,1,0,
+			0,0,1,  1,0,1,  2,1,1,  1,2,1,  0,1,1
+		};
+		Graph::qhull(pointdim,npoints,points,1e-6f,true);
+		return 0;
+	}*/
 
 	//Batch::openObj("sphere12x18.obj");
 	//	if (false)

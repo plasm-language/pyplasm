@@ -829,6 +829,13 @@ public:
 	*/
 	static SmartPointer<Graph> mkpol(Matf& Vmat,Matf& Hmat,int pointdim,int npoints,const float* points,float tolerance);
 
+	//experimental, return faces
+	static std::vector< std::vector<int> > qhull(int pointdim,
+																const std::vector<float>& pointdb,
+																const std::vector<int  >& indices,
+																float tolerance,
+																bool bVerbose);
+
 	//! mkpol builds a new graph 
 	/*!
 		\param VmatT will be the "embedding" vertex transformation matrix if the result it's not fully dimensional i.e. spacedim!=pointdim

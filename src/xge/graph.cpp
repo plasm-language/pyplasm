@@ -3695,6 +3695,104 @@ SmartPointer<Graph> Graph::mkpol(Matf& VmatT,Matf& HmatT,int pointdim,int npoint
 }
 
 
+////////////////////////////////////////////////////////////////////////////////
+std::vector< std::vector<int> > Graph::qhull(int pointdim,
+	                                          const std::vector<float>& pointdb,
+															const std::vector<int  >& indices,
+															float tolerance,
+															bool bVerbose)
+{
+	bool BOK=true;
+	std::vector< std::vector<int> > ret;
+
+	#ifdef _WINDOWS
+	static FILE* __devnull=fopen("nul","w");
+	#else
+	static FILE* __devnull=fopen("/dev/null","w");
+	#endif
+
+	if (bVerbose) printf("Doing qhull...\n");
+
+	//compact points
+	std::vector<float> points;
+	int npoints=(int)indices.size();
+	points.resize(npoints*pointdim);
+	for (int i=0;i<npoints;i++)
+	{
+		int idx=indices[i]*pointdim;
+
+		if (!(idx>=0 && (idx+pointdim)<=(int)pointdb.size()))
+		{
+			printf("   PROBLEM: index %d is out of valid range",indices[i]);
+			ret.clear();
+			return ret;
+		}
+		memcpy(&points[i*pointdim],&pointdb[indices[i]*pointdim],pointdim*sizeof(float));
+	}
+
+	//OPTIONS: 
+	//   i==vertices incidence 
+	//   Pp=does not print warnings
+	//   n=print hyperplane normals with offsets
+	//   En max roundoff error, 
+	//   Qs search all points for initial simplex
+	//   QbB scale input to unit cube centered at the origin
+	char qhull_opts[256];
+	sprintf(qhull_opts,"qhull i Pp E%e Qs",tolerance);
+	int error_qhull=qh_new_qhull(pointdim,npoints,&points[0],(boolT)false,qhull_opts, NULL, __devnull);
+
+	#define POINTID(vertex) \
+		((qh_pointid(vertex->point)>=0)? (indices[qh_pointid(vertex->point)]) : (qh_pointid(vertex->point)))
+
+	//success
+	if (!error_qhull)	
+	{
+		//verbose print points
+		if (bVerbose)
+		{
+			vertexT *vertex;
+			FORALLvertices
+			{
+				int ID=POINTID(vertex);
+				Vecf coords(pointdim,1.0f,vertex->point);
+				bool VertexOk=(ID>=0 && ID<((int)pointdb.size()/pointdim)) && memcmp(&pointdb[0]+ID*pointdim,vertex->point,sizeof(float)*pointdim)==0;
+				printf("   Point %s id(%3d) coords(%s)\n",VertexOk?"OK":"ERROR",ID,coords.str().c_str());
+				BOK=BOK && VertexOk;
+			}
+		}
+	
+		//build faces
+		facetT* facet;
+		FORALLfacets 
+		{
+			std::vector<int> f;
+			bool FaceOk=true;
+			vertexT *vertex,**vertexp;
+			FOREACHvertex_(facet->vertices) 
+			{
+				int ID=POINTID(vertex);
+				f.push_back(ID);
+				FaceOk=FaceOk && (ID>=0 && ID<((int)pointdb.size()/pointdim));
+				BOK=BOK && FaceOk;
+			}
+			ret.push_back(f);
+
+			if (bVerbose) 
+			{
+				printf("   Face  %s vertices[",FaceOk?"OK":"ERROR");
+				for (int i=0;i<(int)f.size();i++) printf("%d ",f[i]);
+				printf("] plane(%s)\n",Vecf(pointdim,facet->offset,facet->normal).str().c_str());
+			}
+		}
+	}
+
+	qh_freeqhull(qh_ALL);
+	if (!BOK) ret.clear();
+	if (bVerbose) printf("...done qhull %s\n",BOK?"OK":"ERROR");
+	return ret;
+}
+
+
 #if 0
 
 ////////////////////////////////////////////////////////////////////////////////

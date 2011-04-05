@@ -1,3 +1,17 @@
+//////////////////////////////////////////////
+Git instruction
+//////////////////////////////////////////////
+
+
+# per creare una copia locale del respository (cambiare il nome utente!)
+git clone ssh://scorzelli@plm.dia.uniroma3.it/home/git-old/pyplasm
+
+git add ...
+git rem ...
+git commit -a
+
+# per fare il commit, dopo aver effettuato i cambiamenti
+git push
 
 
 //////////////////////////////////////////////
@@ -84,12 +98,8 @@ Linux compilation (tested on Ubuntu 2.6.32-24-generic)
 MacOSX compilation 
 ////////////////////////////////////////////
 
-(*) install Python 2.6 (http://www.python.org/ftp/python/2.6.4/python-2.6.4_macosx10.3.dmg)
 
-(*) (OPTIONAL, not always required) Make sure the version 2.6 is the version you are currently using. 
-
-	sudo port install python_select
-	sudo python_select python26
+(*) Python 2.6 comes with your MacOsx 10.6
 
 (*) Install PyOpenGL from http://pypi.python.org/packages/source/P/PyOpenGL/PyOpenGL-3.0.1b2.tar.gz#md5=c7a69ea10855c5e5ef964790396e9d68)
  
@@ -98,7 +108,7 @@ MacOSX compilation
 	python setup.py install
 
 
-(*) Make sure the python2.6 is the only version installed!!!!! 
+(*) (OPTIONAL) Make sure the python2.6 is the only version installed!!!!! 
 
      For example you can do:
 
@@ -119,7 +129,7 @@ MacOSX compilation
 	cd <the/directory/containing/this/Readme/file>
 	make clean
 	make
-	sudo make distrib-macosx 
+	sudo make install
 
 	NOTE: If JUCE is complaining about a missing library install them: sudo apt-get install <package_name>
 
@@ -133,7 +143,7 @@ MacOSX compilation
 
 (*) to run some other tests, type:
 	
-	python /Library/Frameworks/Python.framework/Versions/2.6/lib/python2.6/site-packages/pyplasm/examples.py
+	python /Library/Python/2.6/site-packages/pyplasm/examples.py
 
 (*) (OPTIONAL, only for DEBUGGING) if you want to run the self test procedure xgemain
 

@@ -2866,6 +2866,8 @@ class Graph(_object):
     def triangulate(self, *args): return _xgepy.Graph_triangulate(self, *args)
     def embed(self, *args): return _xgepy.Graph_embed(self, *args)
     def extrude(self, *args): return _xgepy.Graph_extrude(self, *args)
+    __swig_getmethods__["qhull"] = lambda x: _xgepy.Graph_qhull
+    if _newclass:qhull = staticmethod(_xgepy.Graph_qhull)
     __swig_getmethods__["mkpol"] = lambda x: _xgepy.Graph_mkpol
     if _newclass:mkpol = staticmethod(_xgepy.Graph_mkpol)
     __swig_getmethods__["power"] = lambda x: _xgepy.Graph_power
@@ -2888,6 +2890,10 @@ Graph_cuboid = _xgepy.Graph_cuboid
 def Graph_simplex(*args):
   return _xgepy.Graph_simplex(*args)
 Graph_simplex = _xgepy.Graph_simplex
+
+def Graph_qhull(*args):
+  return _xgepy.Graph_qhull(*args)
+Graph_qhull = _xgepy.Graph_qhull
 
 def Graph_mkpol(*args):
   return _xgepy.Graph_mkpol(*args)
@@ -3078,6 +3084,9 @@ class Viewer(_object):
     __swig_setmethods__["octree"] = _xgepy.Viewer_octree_set
     __swig_getmethods__["octree"] = _xgepy.Viewer_octree_get
     if _newclass:octree = _swig_property(_xgepy.Viewer_octree_get, _xgepy.Viewer_octree_set)
+    __swig_setmethods__["bProgressiveRendering"] = _xgepy.Viewer_bProgressiveRendering_set
+    __swig_getmethods__["bProgressiveRendering"] = _xgepy.Viewer_bProgressiveRendering_get
+    if _newclass:bProgressiveRendering = _swig_property(_xgepy.Viewer_bProgressiveRendering_get, _xgepy.Viewer_bProgressiveRendering_set)
     def __init__(self, *args): 
         if self.__class__ == Viewer:
             _self = None

@@ -71391,6 +71391,78 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_Graph_qhull(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  int arg1 ;
+  std::vector< float,std::allocator< float > > *arg2 = 0 ;
+  std::vector< int,std::allocator< int > > *arg3 = 0 ;
+  float arg4 ;
+  bool arg5 ;
+  int val1 ;
+  int ecode1 = 0 ;
+  int res2 = SWIG_OLDOBJ ;
+  int res3 = SWIG_OLDOBJ ;
+  float val4 ;
+  int ecode4 = 0 ;
+  bool val5 ;
+  int ecode5 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  PyObject * obj4 = 0 ;
+  std::vector< std::vector< int,std::allocator< int > >,std::allocator< std::vector< int,std::allocator< int > > > > result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOOO:Graph_qhull",&obj0,&obj1,&obj2,&obj3,&obj4)) SWIG_fail;
+  ecode1 = SWIG_AsVal_int(obj0, &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Graph_qhull" "', argument " "1"" of type '" "int""'");
+  } 
+  arg1 = static_cast< int >(val1);
+  {
+    std::vector<float,std::allocator< float > > *ptr = (std::vector<float,std::allocator< float > > *)0;
+    res2 = swig::asptr(obj1, &ptr);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Graph_qhull" "', argument " "2"" of type '" "std::vector< float,std::allocator< float > > const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Graph_qhull" "', argument " "2"" of type '" "std::vector< float,std::allocator< float > > const &""'"); 
+    }
+    arg2 = ptr;
+  }
+  {
+    std::vector<int,std::allocator< int > > *ptr = (std::vector<int,std::allocator< int > > *)0;
+    res3 = swig::asptr(obj2, &ptr);
+    if (!SWIG_IsOK(res3)) {
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Graph_qhull" "', argument " "3"" of type '" "std::vector< int,std::allocator< int > > const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Graph_qhull" "', argument " "3"" of type '" "std::vector< int,std::allocator< int > > const &""'"); 
+    }
+    arg3 = ptr;
+  }
+  ecode4 = SWIG_AsVal_float(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "Graph_qhull" "', argument " "4"" of type '" "float""'");
+  } 
+  arg4 = static_cast< float >(val4);
+  ecode5 = SWIG_AsVal_bool(obj4, &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "Graph_qhull" "', argument " "5"" of type '" "bool""'");
+  } 
+  arg5 = static_cast< bool >(val5);
+  result = Graph::qhull(arg1,(std::vector< float,std::allocator< float > > const &)*arg2,(std::vector< int,std::allocator< int > > const &)*arg3,arg4,arg5);
+  resultobj = swig::from(static_cast< std::vector<std::vector< int,std::allocator< int > >,std::allocator< std::vector< int,std::allocator< int > > > > >(result));
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  if (SWIG_IsNewObj(res3)) delete arg3;
+  return resultobj;
+fail:
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  if (SWIG_IsNewObj(res3)) delete arg3;
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_Graph_mkpol__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Matf *arg1 = 0 ;
@@ -75043,6 +75115,58 @@ SWIGINTERN PyObject *_wrap_Viewer_octree_get(PyObject *SWIGUNUSEDPARM(self), PyO
     std::tr1::shared_ptr<  Octree > *smartresult = *result ? new std::tr1::shared_ptr<  Octree >(*result) : 0;
     resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_std__tr1__shared_ptrT_Octree_t, SWIG_POINTER_OWN);
   }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Viewer_bProgressiveRendering_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Viewer *arg1 = (Viewer *) 0 ;
+  bool arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  bool val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:Viewer_bProgressiveRendering_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Viewer, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Viewer_bProgressiveRendering_set" "', argument " "1"" of type '" "Viewer *""'"); 
+  }
+  arg1 = reinterpret_cast< Viewer * >(argp1);
+  ecode2 = SWIG_AsVal_bool(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Viewer_bProgressiveRendering_set" "', argument " "2"" of type '" "bool""'");
+  } 
+  arg2 = static_cast< bool >(val2);
+  if (arg1) (arg1)->bProgressiveRendering = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Viewer_bProgressiveRendering_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Viewer *arg1 = (Viewer *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  bool result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Viewer_bProgressiveRendering_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Viewer, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Viewer_bProgressiveRendering_get" "', argument " "1"" of type '" "Viewer *""'"); 
+  }
+  arg1 = reinterpret_cast< Viewer * >(argp1);
+  result = (bool) ((arg1)->bProgressiveRendering);
+  resultobj = SWIG_From_bool(static_cast< bool >(result));
   return resultobj;
 fail:
   return NULL;
@@ -84701,6 +84825,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"Graph_triangulate", _wrap_Graph_triangulate, METH_VARARGS, NULL},
 	 { (char *)"Graph_embed", _wrap_Graph_embed, METH_VARARGS, NULL},
 	 { (char *)"Graph_extrude", _wrap_Graph_extrude, METH_VARARGS, NULL},
+	 { (char *)"Graph_qhull", _wrap_Graph_qhull, METH_VARARGS, NULL},
 	 { (char *)"Graph_mkpol", _wrap_Graph_mkpol, METH_VARARGS, NULL},
 	 { (char *)"Graph_power", _wrap_Graph_power, METH_VARARGS, NULL},
 	 { (char *)"Graph_split", _wrap_Graph_split, METH_VARARGS, NULL},
@@ -84790,6 +84915,8 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"Viewer_debug_frustum_get", _wrap_Viewer_debug_frustum_get, METH_VARARGS, NULL},
 	 { (char *)"Viewer_octree_set", _wrap_Viewer_octree_set, METH_VARARGS, NULL},
 	 { (char *)"Viewer_octree_get", _wrap_Viewer_octree_get, METH_VARARGS, NULL},
+	 { (char *)"Viewer_bProgressiveRendering_set", _wrap_Viewer_bProgressiveRendering_set, METH_VARARGS, NULL},
+	 { (char *)"Viewer_bProgressiveRendering_get", _wrap_Viewer_bProgressiveRendering_get, METH_VARARGS, NULL},
 	 { (char *)"new_Viewer", _wrap_new_Viewer, METH_VARARGS, NULL},
 	 { (char *)"delete_Viewer", _wrap_delete_Viewer, METH_VARARGS, NULL},
 	 { (char *)"Viewer_Render", _wrap_Viewer_Render, METH_VARARGS, NULL},
@@ -85994,7 +86121,7 @@ SWIG_init(void) {
   
   
   SWIG_Python_SetConstant(d, "SHARED_PTR_DISOWN",SWIG_From_int(static_cast< int >(0)));
-  SWIG_Python_SetConstant(d, "HERE",SWIG_FromCharPtr("..//xge/xge.h:77"));
+  SWIG_Python_SetConstant(d, "HERE",SWIG_FromCharPtr("C:\\home\\scorzell\\software\\cpp\\pyplasm\\src\\xge\\xge.h:77"));
   SWIG_Python_SetConstant(d, "SPIN_LOCK_DEFAULT_MAX_DELTA_TIME",SWIG_From_int(static_cast< int >(10)));
   SWIG_Python_SetConstant(d, "MEMPOOL_TABLE_SIZE",SWIG_From_int(static_cast< int >(4096)));
   SWIG_Python_SetConstant(d, "GRAPH_MAX_GEOMETRIC_DIMENSION",SWIG_From_int(static_cast< int >(16)));
