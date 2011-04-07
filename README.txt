@@ -2,9 +2,8 @@
 Git instruction
 //////////////////////////////////////////////
 
-
 # per creare una copia locale del respository (cambiare il nome utente!)
-git clone ssh://scorzelli@plm.dia.uniroma3.it/home/git-old/pyplasm
+git clone ssh://<your username>@plm.dia.uniroma3.it/home/git/pyplasm
 
 git add ...
 git rem ...
@@ -99,9 +98,11 @@ MacOSX compilation
 ////////////////////////////////////////////
 
 
-(*) download and install Python 2.7.1 (or greater) http://www.python.org/download/releases/2.7.1/python-2.7.1-macosx10.6.dmg.asc
+(*) please use Python 2.6 coming with your MacOsx… the python.org latest version (2.7) crashes
 
-(*) make sure that from a shell python is version 2.7.1
+(*) make sure that from a shell python is version 2.6
+
+	python --version
 
 (*) Install PyOpenGL 
  
@@ -119,8 +120,6 @@ MacOSX compilation
 	make clean
 	make
 	sudo make install
-
-	NOTE: If JUCE is complaining about a missing library install them: sudo apt-get install <package_name>
 
 (*) To test the PyPlasm distribution, type:
 
