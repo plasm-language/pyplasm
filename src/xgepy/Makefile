@@ -13,7 +13,7 @@ all: libxgepy.so
 	@echo "all done"
 
 libxgepy.so: $(OBJS) 
-	g++ $(LDFLAGS) -fPIC -shared -lpython2.6 -o $@ ${OBJS} ${LIBS} -L../xge -lxge 
+	g++ $(LDFLAGS) -fPIC -shared -lpython2.7 -o $@ ${OBJS} ${LIBS} -L../xge -lxge 
 endif
 
 
