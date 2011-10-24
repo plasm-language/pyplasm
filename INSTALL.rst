@@ -4,7 +4,7 @@ Linux compilation (Ubuntu/Debian .deb)
 Install FreeImage developer library::
 
     sudo apt-get install libfreeimage3
-    subo apt-get install libfreeimage-dev
+    sudo apt-get install libfreeimage-dev
 
 Install ALSA developer library::
 
