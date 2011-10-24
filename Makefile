@@ -37,6 +37,7 @@ install:
 	cp PLaSM.html                 $(PYTHON_SITE_PACKAGES)/pyplasm/ 
 	cp README.txt                 $(PYTHON_SITE_PACKAGES)/pyplasm/  
 	cp src/xge/libxge.so          $(PYTHON_SITE_PACKAGES)/pyplasm/xge/libxge.so
+	cp src/xge/libxge.so		/usr/lib/
 	cp src/xgemain/xgemain        $(PYTHON_SITE_PACKAGES)/pyplasm/xge/xgemain
 	cp src/xgepy/libxgepy.so      $(PYTHON_SITE_PACKAGES)/pyplasm/xge/_xgepy.so
 	chmod -R a+rwx                $(PYTHON_SITE_PACKAGES)/pyplasm

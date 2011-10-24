@@ -68,13 +68,12 @@ Linux compilation (tested on Ubuntu 2.6.32-24-generic)
 	cd <the/directory/containing/this/Readme/file>
 	make clean
 	make
-	sudo make distrib-linux 
+	sudo make install
 
 	NOTE: If JUCE is complaining about a missing library install them: sudo apt-get install <package_name>
 
 (*) To test the PyPlasm distribution, type:
 
-	export LD_LIBRARY_PATH=$(pwd)/src/xge
 	python
 	from pyplasm import *
 	c=CUBOID([1,1,1])
@@ -83,12 +82,10 @@ Linux compilation (tested on Ubuntu 2.6.32-24-generic)
 
 (*) to run some other tests, type:
 	
-	export LD_LIBRARY_PATH=$(pwd)/src/xge
 	python /usr/lib/python2.6/dist-packages/pyplasm/examples.py
 
 (*) (OPTIONAL, only for DEBUGGING) if you want to run the self test procedure xgemain
 
-	export LD_LIBRARY_PATH=$(pwd)/src/xge
 	./src/xgemain/xgemain
 
 
