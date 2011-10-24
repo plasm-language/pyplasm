@@ -6,6 +6,11 @@ Install FreeImage developer library::
     sudo apt-get install libfreeimage3
     sudo apt-get install libfreeimage-dev
 
+Install Freetype2 developer library::
+  
+    sudo apt-get install libfreetype6
+    sudo apt-get install libfreetype6-dev
+
 Install ALSA developer library::
 
     sudo apt-get install libasound2
@@ -53,6 +58,11 @@ Install FreeImage developer library::
     sudo yast --install libfreeimage3
     subo yast --install libfreeimage-devel
 
+Install Freetype2 developer library::
+
+    sudo yast --install libfreetype6
+    sudo yast --install freetype2-devel
+    
 Install ALSA developer library::
 
     sudo yast --install alsa
