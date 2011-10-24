@@ -12,11 +12,11 @@ Linux compilation (Ubuntu/Debian .deb)
 	sudo apt-get install libasound2
 	sudo apt-get install libasound2-dev
 
-(*) install Glew developer library
+(*) install Glew developer library (libglew1.6 for new 'oneiric' release)
 	
 	sudo apt-get install glew
-	sudo apt-get install libglew1.6 (libglew1.5 for older Ubuntu)
-	sudo apt-get install libglew1.6-dev (libglew1.5-dev for older Ubuntu)
+	sudo apt-get install libglew1.6 (libglew1.5 for older Ubuntu:11.04)
+	sudo apt-get install libglew1.6-dev (libglew1.5-dev for older Ubuntu:11.04)
 
 (*) install python2.7 (the version number is important)
 
