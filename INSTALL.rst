@@ -26,6 +26,14 @@ Install python2.7 (the version number is important)::
 
     sudo apt-get install python2.7 python2.7-dev
 
+If you get errors about Juce library (juce_amalgamated.cpp)::
+
+    sudo apt-get install libxinerama-dev
+    sudo apt-get install libxrender-dev
+    sudo apt-get install libxcomposite-dev
+    sudo apt-get install libxcursor-dev
+    sudo apt-get install freeglut3-dev
+
 Open a bash shell and type::
 
     cd <the/directory/containing/this/file>
