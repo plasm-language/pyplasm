@@ -61,7 +61,7 @@ To test the PyPlasm distribution, type::
 
 To run some other tests, type::
 	
-    python /usr/lib/python2.7/site-packages/pyplasm/examples.py
+    python /usr/lib/python2.7/dist-packages/pyplasm/examples.py
 
 (OPTIONAL, only for DEBUGGING) if you want to run the self test procedure xgemain::
 
@@ -101,7 +101,7 @@ Open a bash shell and type::
     cd <the/directory/containing/this/file>
     make clean
     make
-	sudo make install
+    sudo make install
 
 To test the PyPlasm distribution, type::
 
