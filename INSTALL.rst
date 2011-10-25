@@ -36,7 +36,7 @@ If you get errors about Juce library (juce_amalgamated.cpp)::
 
 Open a bash shell and type::
 
-    cd <the/directory/containing/this/file>
+    cd plasm
     make clean
     make
     sudo make install
