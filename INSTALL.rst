@@ -1,31 +1,30 @@
 Linux compilation (Ubuntu/Debian .deb)
 ======================================
 
+Get Plasm::
+
+    git clone git://github.com/femhub/plasm.git
+
 Install FreeImage developer library::
 
-    sudo apt-get install libfreeimage3
-    sudo apt-get install libfreeimage-dev
+    sudo apt-get install libfreeimage3 libfreeimage-dev
 
 Install Freetype2 developer library::
   
-    sudo apt-get install libfreetype6
-    sudo apt-get install libfreetype6-dev
+    sudo apt-get install libfreetype6 libfreetype6-dev
 
 Install ALSA developer library::
 
-    sudo apt-get install libasound2
-    sudo apt-get install libasound2-dev
+    sudo apt-get install libasound2 libasound2-dev
 
 Install Glew developer library (libglew1.6 for new 'oneiric' release)::
 	
-    sudo apt-get install glew
-    sudo apt-get install libglew1.6 (libglew1.5 for older Ubuntu:11.04)
-    sudo apt-get install libglew1.6-dev (libglew1.5-dev for older Ubuntu:11.04)
+    # For older Ubuntu install libglew1.5 instead of this.
+    sudo apt-get install glew libglew1.6 libglew1.6-dev
 
 Install python2.7 (the version number is important)::
 
-    sudo apt-get install python2.7
-    sudo apt-get install python2.7-dev
+    sudo apt-get install python2.7 python2.7-dev
 
 Open a bash shell and type::
 
