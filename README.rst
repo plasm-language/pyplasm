@@ -1,5 +1,10 @@
+PLASM (Programming LAnguage for Solid Modeling)
+===============================================
+
+Plasm is a 'design language' for geometric and solid parametric design, developed by the CAD Group at the Universities 'La Sapienza' and 'Roma Tre' in Italy.
+
 Linux compilation (Ubuntu/Debian .deb)
-======================================
+--------------------------------------
 
 Get Plasm::
 
@@ -63,7 +68,7 @@ To run some other tests, type::
     ./src/xgemain/xgemain
 
 Linux compilation (openSUSE .RPM - tested on openSUSE 11.4)
-===========================================================
+-----------------------------------------------------------
 
 Install FreeImage developer library::
 
