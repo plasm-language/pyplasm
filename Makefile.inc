@@ -22,8 +22,12 @@ endif
 
 # --- LINUX ---
 ifeq ($(PLATFORM_NAME),PLATFORM_Linux)
-PYTHON_INCLUDE_DIRECTORY=/usr/include/python2.7
-PYTHON_SITE_PACKAGES=/usr/lib/python2.7/dist-packages
+    PYTHON_INCLUDE_DIRECTORY=/usr/include/python2.7
+    ifeq (exists, $(shell [ -d /usr/lib/python2.7/dist-packages ] ) && echo exists)
+         PYTHON_SITE_PACKAGES=/usr/lib/python2.7/dist-packages
+    else 
+         PYTHON_SITE_PACKAGES=/usr/lib/python2.7/site-packages
+    endif
 endif
 
 # ---- DARWIN ----
