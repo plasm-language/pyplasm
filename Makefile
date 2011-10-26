@@ -17,7 +17,7 @@ install:
 	mkdir -p distrib/win32
 	cp -R src/pyplasm             $(PYTHON_SITE_PACKAGES)/pyplasm
 	cp PLaSM.html                 $(PYTHON_SITE_PACKAGES)/pyplasm/ 
-	cp README.txt                 $(PYTHON_SITE_PACKAGES)/pyplasm/
+	cp README.rst                 $(PYTHON_SITE_PACKAGES)/pyplasm/
 	cp Release/xge.dll            $(PYTHON_SITE_PACKAGES)/pyplasm/xge/xge.dll
 	cp Release/xgemain.exe        $(PYTHON_SITE_PACKAGES)/pyplasm/xge/xgemain.exe
 	cp Release/_xgepy.pyd         $(PYTHON_SITE_PACKAGES)/pyplasm/xge/_xgepy.pyd
@@ -35,7 +35,7 @@ install:
 	rm -Rf  $(PYTHON_SITE_PACKAGES)/pyplasm
 	cp -r src/pyplasm             $(PYTHON_SITE_PACKAGES)/pyplasm
 	cp PLaSM.html                 $(PYTHON_SITE_PACKAGES)/pyplasm/ 
-	cp README.txt                 $(PYTHON_SITE_PACKAGES)/pyplasm/  
+	cp README.rst                 $(PYTHON_SITE_PACKAGES)/pyplasm/  
 	cp src/xge/libxge.so          $(PYTHON_SITE_PACKAGES)/pyplasm/xge/libxge.so
 	cp src/xge/libxge.so		/usr/lib/
 	cp src/xgemain/xgemain        $(PYTHON_SITE_PACKAGES)/pyplasm/xge/xgemain
@@ -53,7 +53,7 @@ install:
 	rm -Rf   $(PYTHON_SITE_PACKAGES)/pyplasm 
 	cp -r src/pyplasm             $(PYTHON_SITE_PACKAGES)/pyplasm
 	cp PLaSM.html                 $(PYTHON_SITE_PACKAGES)/pyplasm/ 
-	cp README.txt                 $(PYTHON_SITE_PACKAGES)/pyplasm/  
+	cp README.rst                 $(PYTHON_SITE_PACKAGES)/pyplasm/  
 	cp src/xge/libxge.dylib       $(PYTHON_SITE_PACKAGES)/pyplasm/xge/libxge.dylib
 	cp src/xgemain/xgemain        $(PYTHON_SITE_PACKAGES)/pyplasm/xge/xgemain
 	cp src/xgepy/libxgepy.dylib   $(PYTHON_SITE_PACKAGES)/pyplasm/xge/_xgepy.so
