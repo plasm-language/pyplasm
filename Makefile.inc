@@ -22,17 +22,17 @@ endif
 
 # --- LINUX ---
 ifeq ($(PLATFORM_NAME),PLATFORM_Linux)
-PYTHON_INCLUDE_DIRECTORY=/usr/include/python2.6
-PYTHON_SITE_PACKAGES=/usr/lib/python2.6/dist-packages
+    PYTHON_INCLUDE_DIRECTORY=/usr/include/python2.7
+    PYTHON_SITE_PACKAGES=/usr/lib/python2.7/dist-packages
 endif
 
 # ---- DARWIN ----
 ifeq ($(PLATFORM_NAME),PLATFORM_Darwin)
-PYTHON_INCLUDE_DIRECTORY=/System/Library/Frameworks/Python.framework/Versions/2.6/include/python2.6
-PYTHON_SITE_PACKAGES=/Library/Python/2.6/site-packages
-CFLAGS+=  -arch i386 -arch x86_64
-CXXFLAGS+=-arch i386 -arch x86_64
-LDFLAGS+=-arch i386 -arch x86_64
+PYTHON_INCLUDE_DIRECTORY=/Library/Frameworks/Python.framework/Versions/2.7/include/python2.7
+PYTHON_SITE_PACKAGES=/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages
+CFLAGS+= -arch i386 -arch x86_64
+CXXFLAGS+= -arch i386 -arch x86_64
+LDFLAGS+= -arch i386 -arch x86_64
 endif
 
 

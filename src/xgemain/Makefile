@@ -9,6 +9,8 @@ ifeq ($(PLATFORM_NAME),PLATFORM_Darwin)
 LDFLAGS+=-framework OpenGL -framework GLUT
 endif
 
+LDFLAGS+=-lpthread -lGL -lGLU -lXinerama -lasound -lfreetype -lrt -lX11 -lfreeimage
+
 all: xgemain
 	@echo "All done"
 

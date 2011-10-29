@@ -14,6 +14,7 @@
 
 
 #ifdef __cplusplus
+using namespace std;
 /* SwigValueWrapper is described in swig.swg */
 template<typename T> class SwigValueWrapper {
   struct SwigMovePointer {
