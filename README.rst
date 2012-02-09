@@ -1,7 +1,10 @@
 PLASM (Programming LAnguage for Solid Modeling)
 ===============================================
 
-Plasm is a 'design language' for geometric and solid parametric design, developed by the CAD Group at the Universities 'La Sapienza' and 'Roma Tre' in Italy.
+Plasm is a 'design language' for geometric and solid parametric design, 
+developed by the CAD Group at the Universities 'La Sapienza' and 'Roma Tre' in Italy.
+
+Plasm is available both as a desktop application and in NCLab (http://nclab.com).
 
 Linux compilation (Ubuntu/Debian .deb)
 --------------------------------------
