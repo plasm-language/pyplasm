@@ -1,0 +1,223 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{C0907D99-230A-49A5-B1B4-EC72253210AF}</ProjectGuid>
+    <RootNamespace>xge</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)src\xge;$(SolutionDir)libs;$(SolutionDir)libs\glew;$(SolutionDir)libs\zlib;$(SolutionDir)libs\FreeImage;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;XGE_EXPORTS;GLEW_MX;GLEW_STATIC;FREEIMAGE_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>xge/xge.h</PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>$(SolutionDir)libs\FreeImage\FreeImaged.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>LIBCMT.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)src\xge;$(SolutionDir)libs;$(SolutionDir)libs\glew;$(SolutionDir)libs\zlib;$(SolutionDir)libs\FreeImage;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;XGE_EXPORTS;GLEW_MX;GLEW_STATIC;FREEIMAGE_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>xge/xge.h</PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>$(SolutionDir)libs\FreeImage\FreeImage.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>LIBCMTD.lib;LIBCMT.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="archive.h" />
+    <ClInclude Include="clock.h" />
+    <ClInclude Include="encoder.h" />
+    <ClInclude Include="filesystem.h" />
+    <ClInclude Include="keyboard.h" />
+    <ClInclude Include="log.h" />
+    <ClInclude Include="mempool.h" />
+    <ClInclude Include="mouseevent.h" />
+    <ClInclude Include="spinlock.h" />
+    <ClInclude Include="thread.h" />
+    <ClInclude Include="utils.h" />
+    <ClInclude Include="mempool.hxx" />
+    <ClInclude Include="spinlock.hxx" />
+    <ClInclude Include="ball.h" />
+    <ClInclude Include="box.h" />
+    <ClInclude Include="color4f.h" />
+    <ClInclude Include="frustum.h" />
+    <ClInclude Include="localsystem.h" />
+    <ClInclude Include="manipulator.h" />
+    <ClInclude Include="mat.h" />
+    <ClInclude Include="pick.h" />
+    <ClInclude Include="plane.h" />
+    <ClInclude Include="quaternion.h" />
+    <ClInclude Include="ray.h" />
+    <ClInclude Include="texture.h" />
+    <ClInclude Include="triangle.h" />
+    <ClInclude Include="vec.h" />
+    <ClInclude Include="vector.h" />
+    <ClInclude Include="plasm.h" />
+    <ClInclude Include="bake.h" />
+    <ClInclude Include="unwrapper.h" />
+    <ClInclude Include="batch.h" />
+    <ClInclude Include="octree.h" />
+    <ClInclude Include="engine.h" />
+    <ClInclude Include="viewer.h" />
+    <ClInclude Include="..\..\libs\juce\juce_amalgamated.h" />
+    <ClInclude Include="graph.h" />
+    <ClInclude Include="graph.hxx" />
+    <ClInclude Include="config.h" />
+    <ClInclude Include="xge.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="archive.cpp" />
+    <ClCompile Include="encoder.cpp" />
+    <ClCompile Include="filesystem.cpp" />
+    <ClCompile Include="keyboard.cpp" />
+    <ClCompile Include="log.cpp" />
+    <ClCompile Include="mempool.cpp" />
+    <ClCompile Include="thread.cpp" />
+    <ClCompile Include="utils.cpp" />
+    <ClCompile Include="ball.cpp" />
+    <ClCompile Include="box.cpp" />
+    <ClCompile Include="frustum.cpp" />
+    <ClCompile Include="manipulator.cpp" />
+    <ClCompile Include="mat.cpp" />
+    <ClCompile Include="plane.cpp" />
+    <ClCompile Include="quaternion.cpp" />
+    <ClCompile Include="ray.cpp" />
+    <ClCompile Include="texture.cpp" />
+    <ClCompile Include="vec.cpp" />
+    <ClCompile Include="vector.cpp" />
+    <ClCompile Include="plasm.boolop.cpp" />
+    <ClCompile Include="plasm.cpp" />
+    <ClCompile Include="plasm.xml.cpp" />
+    <ClCompile Include="bake.cpp" />
+    <ClCompile Include="unwrapper.cpp" />
+    <ClCompile Include="batch.cpp" />
+    <ClCompile Include="batch.obj.cpp" />
+    <ClCompile Include="batch.ply.cpp" />
+    <ClCompile Include="batch.ptx.cpp" />
+    <ClCompile Include="octree.cpp" />
+    <ClCompile Include="GL.engine.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="GL.engine.fbo.cpp" />
+    <ClCompile Include="GL.engine.shader.cpp" />
+    <ClCompile Include="GL.engine.tessellator.cpp" />
+    <ClCompile Include="viewer.cpp" />
+    <ClCompile Include="..\..\libs\juce\juce_amalgamated.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="graph.cpp" />
+    <ClCompile Include="graph.import.svg.cpp" />
+    <ClCompile Include="DllMain.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">xge/xge.h</PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">xge/xge.h</PrecompiledHeaderFile>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="GL.engine.shader.shadow.cpp.broker" />
+    <None Include="Makefile" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\libs\glew\glew.vcxproj">
+      <Project>{138c432f-8fa0-46b6-89b4-8a38ae7d8536}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\libs\qhull\qhull.vcxproj">
+      <Project>{57140cf9-fcfe-4a18-ba90-2bc6657e42b0}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\libs\tinyxml\tinyxml.vcxproj">
+      <Project>{801f3dce-25e9-4001-8f4d-a9a7a3330c3d}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\libs\zlib\zlib.vcxproj">
+      <Project>{c26aade3-17dd-4537-b794-dffcc132aed4}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
