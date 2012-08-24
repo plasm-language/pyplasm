@@ -139,11 +139,11 @@ public:
 	public:
 		int M,N;
 		std::vector<double> data;
-		inline Array2D::Array2D(): data(), M(0), N(0) {} 
-		inline Array2D::Array2D(const Array2D &A) : data(A.data), M(A.M), N(A.N) {}
-		inline Array2D::Array2D(int m, int n) : data(m*n), M(m), N(n) {for (int i=0;i<m*n;i++) data[i]=0;}
-		inline double* Array2D::operator[](int i)  { return &data[i*N]; }
-		inline const double* Array2D::operator[](int i) const { return &data[i*N]; }
+		inline Array2D(): data(), M(0), N(0) {} 
+		inline Array2D(const Array2D &A) : data(A.data), M(A.M), N(A.N) {}
+		inline Array2D(int m, int n) : data(m*n), M(m), N(n) {for (int i=0;i<m*n;i++) data[i]=0;}
+		inline double* operator[](int i)  { return &data[i*N]; }
+		inline const double* operator[](int i) const { return &data[i*N]; }
 	};
 
 protected:
