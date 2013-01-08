@@ -67,9 +67,14 @@ typedef unsigned long long int      uint64;
 #include <limits> 
 #include <algorithm>
 #include <cctype>
+#include <memory>
 
 //Some defines
+#if WIN32
+#define SmartPointer std::shared_ptr
+#else
 #define SmartPointer std::tr1::shared_ptr
+#endif
 
 // XgeDebugAssert and XgeReleaseAssert
 #define __stringify__(x) #x

@@ -23,7 +23,7 @@ cube=g.each(3).getNode()
 if False: g.Print()
 
 # esempio di splitting del cubo tramite iperpiano  
-# iperpiano   0.5 + 1*x + 0*y + 0*z >=0   che poi e' x>=0.5 (il primo elemento e' la componente omogenea)
+# iperpiano   -0.5 + 1*x + 0*y + 0*z >=0   che poi e' x>=0.5 (il primo elemento e' la componente omogenea)
 splitting_plane=Planef([-0.5,1,0,0])
 
 

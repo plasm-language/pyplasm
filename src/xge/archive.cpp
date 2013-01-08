@@ -133,7 +133,7 @@ void Archive::Close()
 	smart_pointers.clear();
 
 	//close the gzfile
-	if (this->gzfile) gzclose(this->gzfile);
+	if (this->gzfile) gzclose((gzFile)this->gzfile);
 	this->gzfile=0;
 
 	//close the regular file
@@ -162,7 +162,7 @@ void Archive::InnerWrite(void* buffer,int memsize)
 	{
 		for (int ndone=0,nwrite=0;ndone!=memsize;ndone+=nwrite)
 		{
-			nwrite=(int)(gzfile?gzwrite(gzfile,(char*)buffer+ndone,memsize-ndone):fwrite((char*)buffer+ndone,1,memsize-ndone,file));
+			nwrite=(int)(gzfile?gzwrite((gzFile)gzfile,(char*)buffer+ndone,memsize-ndone):fwrite((char*)buffer+ndone,1,memsize-ndone,file));
 			XgeReleaseAssert(nwrite);
 		}
 	}
@@ -185,7 +185,7 @@ void Archive::InnerRead(void* buffer,int memsize)
 	{
 		for (int ndone=0,nread=0;ndone!=memsize;ndone+=nread)
 		{
-			nread=(int)(gzfile?gzread(gzfile,(char*)buffer+ndone,memsize-ndone):fread((char*)buffer+ndone,1,memsize-ndone,file));
+			nread=(int)(gzfile?gzread((gzFile)gzfile,(char*)buffer+ndone,memsize-ndone):fread((char*)buffer+ndone,1,memsize-ndone,file));
 			XgeReleaseAssert(nread);
 		}
 	}

@@ -10,6 +10,39 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="adler32.c" />
+    <ClCompile Include="compress.c" />
+    <ClCompile Include="crc32.c" />
+    <ClCompile Include="deflate.c" />
+    <ClCompile Include="gzclose.c" />
+    <ClCompile Include="gzlib.c" />
+    <ClCompile Include="gzread.c" />
+    <ClCompile Include="gzwrite.c" />
+    <ClCompile Include="infback.c" />
+    <ClCompile Include="inffast.c" />
+    <ClCompile Include="inflate.c" />
+    <ClCompile Include="inftrees.c" />
+    <ClCompile Include="trees.c" />
+    <ClCompile Include="uncompr.c" />
+    <ClCompile Include="zutil.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="crc32.h" />
+    <ClInclude Include="deflate.h" />
+    <ClInclude Include="gzguts.h" />
+    <ClInclude Include="inffast.h" />
+    <ClInclude Include="inffixed.h" />
+    <ClInclude Include="inflate.h" />
+    <ClInclude Include="inftrees.h" />
+    <ClInclude Include="trees.h" />
+    <ClInclude Include="zconf.h" />
+    <ClInclude Include="zlib.h" />
+    <ClInclude Include="zutil.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="zconf.h.in" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C26AADE3-17DD-4537-B794-DFFCC132AED4}</ProjectGuid>
     <RootNamespace>zlib</RootNamespace>
@@ -20,10 +53,12 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -74,33 +109,6 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="adler32.c" />
-    <ClCompile Include="compress.c" />
-    <ClCompile Include="crc32.c" />
-    <ClCompile Include="deflate.c" />
-    <ClCompile Include="gzio.c" />
-    <ClCompile Include="infback.c" />
-    <ClCompile Include="inffast.c" />
-    <ClCompile Include="inflate.c" />
-    <ClCompile Include="inftrees.c" />
-    <ClCompile Include="trees.c" />
-    <ClCompile Include="uncompr.c" />
-    <ClCompile Include="zutil.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="crc32.h" />
-    <ClInclude Include="deflate.h" />
-    <ClInclude Include="inffast.h" />
-    <ClInclude Include="inffixed.h" />
-    <ClInclude Include="inflate.h" />
-    <ClInclude Include="inftrees.h" />
-    <ClInclude Include="trees.h" />
-    <ClInclude Include="zconf.h" />
-    <ClInclude Include="zconf.in.h" />
-    <ClInclude Include="zlib.h" />
-    <ClInclude Include="zutil.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
