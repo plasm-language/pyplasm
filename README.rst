@@ -29,7 +29,7 @@ Install ALSA developer library::
 Install Glew developer library (libglew1.6 for new 'oneiric' release)::
 	
     # For older Ubuntu install libglew1.5 instead of this.
-    sudo apt-get install libglew1.6 libglew1.6-dev
+    sudo apt-get install libglew1.8 libglew-dev 
 
 Install python2.7 (the version number is important)::
 

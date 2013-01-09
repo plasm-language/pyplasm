@@ -3,10 +3,9 @@
 
 #include <xge/xge.h>
 
-
-
 #ifndef WIN32
 #include <pthread.h>
+#include <unistd.h>
 #endif
 
 /*
