@@ -11,6 +11,10 @@
 class XgeApplication : public juce::JUCEApplication
 {
 public:
+#if PYPLASM_APPLE
+  JUCE_AUTORELEASEPOOL
+#endif
+  
   XgeApplication                                  ()                                 {}
   ~XgeApplication                                 ()                                 {}
   void                 shutdown                   ()                                 {}
@@ -23,6 +27,13 @@ public:
 
 static SmartPointer<XgeApplication> app;
 
+#if PYPLASM_APPLE
+namespace juce
+{
+  void initialiseNSApplication();
+};
+#endif
+
 
 //////////////////////////////////////////////////////////////////
 void XgeModule::init()
@@ -31,6 +42,10 @@ void XgeModule::init()
   {
 	  Log::printf("XgeModule::init\n");
 	  FreeImage_Initialise();
+    
+#if PYPLASM_APPLE
+    juce::initialiseNSApplication();
+#endif
 
     juce::initialiseJuce_GUI();
     juce::JUCEApplication::createInstance = (juce::JUCEApplication::CreateInstanceFunction)-1;//need not to be 0 
@@ -47,7 +62,9 @@ void XgeModule::shutdown()
   {
     Log::printf("XgeModule::shutdown\n");
     GLCanvas::setShared(SmartPointer<GLCanvas>());
+    app->shutdown();
     app.reset();
+    juce::shutdownJuce_GUI();
     FreeImage_DeInitialise();
   }
 }

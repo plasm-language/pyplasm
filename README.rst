@@ -6,7 +6,13 @@ developed by the CAD Group at the Universities 'La Sapienza' and 'Roma Tre' in I
 
 Get Plasm::
 
-    git clone git://github.com/plasm-language/pyplasm.git
+	git clone git://github.com/plasm-language/pyplasm.git
+	cd pyplasm
+
+To get the "develop" (unstable) version do also:
+
+	git checkout -b develop origin/develop
+	git remote show origin
 
 --------------------------------------
 Linux compilation

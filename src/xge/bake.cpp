@@ -403,7 +403,7 @@ bool Bake::PostProcess()
 	        
 			int nmean=0;
 			R=0.0f,G=0.0f,B=0.0f;
-			const int delta[4][2]={-1,0,+1,0,0,-1,0,+1};
+			const int delta[4][2]={{-1,0},{+1,0},{0,-1},{0,+1}};
 			for (int d=0;d<4;d++)
 			{
 				int X=x+delta[d][0],Y=y+delta[d][1];

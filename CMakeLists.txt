@@ -4,6 +4,11 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
 PROJECT(PyPlasm)
 
+IF(NOT WIN32) 
+  SET(CMAKE_BUILD_TYPE "Release")
+ENDIF()
+
+
 # some basic tests 
 INCLUDE(CMakeBackwardCompatibilityCXX)
 INCLUDE(CheckCSourceCompiles)
@@ -29,6 +34,8 @@ ELSEIF (APPLE)
 
   SET(PYPLASM_APPLE 1)
   ADD_DEFINITIONS(-DPYPLASM_APPLE=1)
+  
+  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wformat-nonliteral -Wformat-security -Wno-write-strings -Wno-reorder -Wno-unused-variable")
   MESSAGE("-- Setting PYPLASM_APPLE")
   
 ELSE()

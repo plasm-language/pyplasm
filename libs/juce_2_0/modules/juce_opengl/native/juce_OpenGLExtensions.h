@@ -34,6 +34,11 @@
  #define JUCE_EXT(func) func
 #endif
 
+#if JUCE_MAC
+#define glMapBufferEXT   glMapBuffer
+#define glUnmapBufferEXT glUnmapBuffer
+#endif
+
 /** @internal This macro contains a list of GL extension functions that need to be dynamically loaded on Windows/Linux.
     @see OpenGLExtensionFunctions
 */

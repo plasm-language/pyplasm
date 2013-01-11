@@ -508,11 +508,11 @@ inline void Graph::remNode(unsigned int N,bool recursive)
 		db.free(NodeData(N));
 
 	//remove arch up
-	for (unsigned int A;A=getFirstUpArch(N);) 
+	for (unsigned int A;(A=getFirstUpArch(N));) 
 		remArch(A);
 	
 	//remove arch down
-	for (unsigned int A;A=getFirstDwArch(N);) 
+	for (unsigned int A;(A=getFirstDwArch(N));) 
 	{
 		unsigned int Down=getN0(A);
 		remArch(A);

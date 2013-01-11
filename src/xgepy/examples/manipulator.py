@@ -31,20 +31,20 @@ class PyViewer(GLCanvas):
 			self.Redisplay()
 			return
 	
-		Viewer.Keyboard(self,key,x,y);
+		GLCanvas.Keyboard(self,key,x,y);
 		
 	def onMouseDown(self,button,x,y):
-		ray=self.frustum.unproject(args.x,args.y)
+		ray=self.frustum.unproject(x,y)
 		self.manipulator.onMouseDown(button,x,y,ray)
 		self.redisplay()
 		
 	def onMouseMove(self,button,x,y):
-		ray=self.frustum.unproject(args.x,args.y)
+		ray=self.frustum.unproject(x,y)
 		self.manipulator.onMouseMove(button,x,y,ray)
 		self.redisplay()
 		
 	def onMouseUp(self,button,x,y):
-		ray=self.frustum.unproject(args.x,args.y)
+		ray=self.frustum.unproject(x,y)
 		self.manipulator.onMouseUp(button,x,y,ray)
 		self.redisplay()				
 
@@ -58,7 +58,7 @@ class PyViewer(GLCanvas):
 		batch.matrix= self.T * batch.matrix
 		self.renderBatch(batch)
 		self.manipulator.render(self)
-		self.engine.swapBuffers()
+		self.swapBuffers()
 
 
 viewer=PyViewer()

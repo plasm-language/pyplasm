@@ -145,7 +145,7 @@ public:
         };
       
         //visus
-        printf("JUCE:: Visus is adding NSOpenGLPFABackingStore,(NSOpenGLPixelFormatAttribute) 1");
+        printf("JUCE:: Visus is adding NSOpenGLPFABackingStore,(NSOpenGLPixelFormatAttribute) 1\n");
 
         NSOpenGLPixelFormat* format = [[NSOpenGLPixelFormat alloc] initWithAttributes: attribs];
 
@@ -161,7 +161,7 @@ public:
         #if 0
         setSwapInterval (1);
         #else
-        printf("JUCE:: Visus using setSwapInterval(0)");
+        printf("JUCE:: Visus using setSwapInterval(0)\n");
         setSwapInterval(0); //this can cause poor performace? seems I don't have any alternative...
         #endif 
         

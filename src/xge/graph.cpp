@@ -1068,7 +1068,7 @@ void Graph::embed(int new_pointdim)
 	for (GraphListIterator it=each(pointdim);!it.end();it++)
 	{
 		unsigned int A;
-		while (A=getFirstUpArch(*it)) remArch(A);
+		while ((A=getFirstUpArch(*it))) remArch(A);
 	}
 
 	//resize the geometry
@@ -1761,8 +1761,8 @@ ERROR_IN_CLASSIFICATION:
 			unsigned int mapface=newcells[i];
 
 			unsigned int A;
-			for (A;A=getFirstUpArch(mapface);) remArch(A);
-			for (A;A=getFirstDwArch(mapface);) remArch(A);
+			for (;(A=getFirstUpArch(mapface));) remArch(A);
+			for (;(A=getFirstDwArch(mapface));) remArch(A);
 			remNode(mapface);
 		}
 
@@ -1902,7 +1902,7 @@ DO_SYMBOLIC_SPLIT:
 			/* link to sub faces with the same sign. */
 			bool linked=false;
 			unsigned int Arch;
-			while(Arch=getFirstDwArch(face))
+			while((Arch=getFirstDwArch(face)))
 			{
 				unsigned int archinfo=ArchData(Arch);
 				unsigned int facedown=getN0(Arch);

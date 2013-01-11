@@ -3106,13 +3106,13 @@ Write to a file the word that represents a PLY data type.
 	} RuleName;
 	
 	RuleName rule_name_list[] = {
-		AVERAGE_RULE, "avg",
-			RANDOM_RULE, "rnd",
-			MINIMUM_RULE, "max",
-			MAXIMUM_RULE, "min",
-			MAJORITY_RULE, "major",
-			SAME_RULE, "same",
-			-1, "end_marker",
+		  {AVERAGE_RULE, "avg"},
+			{RANDOM_RULE, "rnd"},
+			{MINIMUM_RULE, "max"},
+			{MAXIMUM_RULE, "min"},
+			{MAJORITY_RULE, "major"},
+			{SAME_RULE, "same"},
+			{-1, "end_marker"},
 	};
 	
 	
@@ -3635,7 +3635,7 @@ std::vector<SmartPointer<Batch> > Batch::openPly(std::string filename,bool bReve
 	std::vector<int> triangles;
 
 	int nfaces,nstrips;
-	if (props = get_element_description_ply( ply, (char*)"face", &nfaces, &nprops))
+	if ((props = get_element_description_ply( ply, (char*)"face", &nfaces, &nprops)))
 	{	
 		struct PlyFace
 		{
@@ -3670,7 +3670,7 @@ std::vector<SmartPointer<Batch> > Batch::openPly(std::string filename,bool bReve
 			if (face.verts) free(face.verts);
 		}
 	}
-	else if (props = get_element_description_ply( ply, (char*)"tristrips", &nstrips, &nprops))
+	else if ((props = get_element_description_ply( ply, (char*)"tristrips", &nstrips, &nprops)))
 	{
 		struct PlyTriangleStrip
 		{

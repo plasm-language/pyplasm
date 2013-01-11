@@ -37,7 +37,7 @@ TARGET_LINK_LIBRARIES(xge tinyxml FreeImage libz qhull Juce)
 if (PYPLASM_LINUX)
   TARGET_LINK_LIBRARIES(xge tinyxml dl pthread rt GL GLU)
 ELSEIF(PYPLASM_APPLE)
-  TARGET_LINK_LIBRARIES(xge tinyxml "-framework Foundation")
+  TARGET_LINK_LIBRARIES(xge tinyxml "-framework Foundation -framework OpenGL -framework AGL -framework CoreAudio -framework CoreMIDI -framework IOKit -framework QuartzCore -framework AudioToolbox -framework AppKit")
 ENDIF()
 
 
