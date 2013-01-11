@@ -1,0 +1,30 @@
+
+
+
+%.pyd : %.py 
+	${PYTHON_EXECUTABLE}  $< 
+
+all: install
+	echo "[all] done"
+  
+install: remove-site-package create-site-package install-fenv-files install-examples install-generated-py-file install-generated-pyd-file
+	echo "[install] done"
+
+remove-site-package:
+	rm -Rf "${PYTHON_SITE_PACKAGES_DIR}/pyplasm"  
+
+create-site-package: 
+	mkdir -p "${PYTHON_SITE_PACKAGES_DIR}/pyplasm"
+  
+install-fenv-files:
+	cp ${CMAKE_CURRENT_SOURCE_DIR}/*.py "${PYTHON_SITE_PACKAGES_DIR}/pyplasm"
+  
+install-examples:
+	cp -r "${CMAKE_CURRENT_SOURCE_DIR}/examples" "${PYTHON_SITE_PACKAGES_DIR}/pyplasm"
+  
+install-generated-py-file:
+	cp "${SWIG_GENERATED_PY_FILE}" "${PYTHON_SITE_PACKAGES_DIR}/pyplasm" 
+
+install-generated-pyd-file:
+	cp "${SWIG_GENERATED_PYD_FILE}" "${PYTHON_PYD_DIR}"	
+

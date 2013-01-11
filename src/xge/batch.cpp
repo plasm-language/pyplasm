@@ -68,7 +68,7 @@ SmartPointer<Batch> Batch::Merge(SmartPointer<Batch> _A,SmartPointer<Batch> _B)
 	//vertices
 	if (A->vertices)
 	{
-		Vector VA(*(A->vertices));
+		Array VA(*(A->vertices));
 		{
 			Mat4f T=A->matrix;
 			float* p=VA.mem();
@@ -79,7 +79,7 @@ SmartPointer<Batch> Batch::Merge(SmartPointer<Batch> _A,SmartPointer<Batch> _B)
 			}
 		}
 
-		Vector VB(*(B->vertices));
+		Array VB(*(B->vertices));
 		{
 			Mat4f T=B->matrix;
 			float* p=VB.mem();
@@ -90,14 +90,14 @@ SmartPointer<Batch> Batch::Merge(SmartPointer<Batch> _A,SmartPointer<Batch> _B)
 			}
 		}
 
-		ret->vertices.reset(new Vector(VA));
+		ret->vertices.reset(new Array(VA));
 		ret->vertices->append(VB);
 	}
 
 	//normals
 	if (A->normals)
 	{
-		Vector NA(*(A->normals));
+		Array NA(*(A->normals));
 		{
 			Mat4f T=A->matrix.invert();
 			float* p=NA.mem();
@@ -109,7 +109,7 @@ SmartPointer<Batch> Batch::Merge(SmartPointer<Batch> _A,SmartPointer<Batch> _B)
 			}
 		}
 
-		Vector NB(*(B->normals));
+		Array NB(*(B->normals));
 		{
 			Mat4f T=B->matrix.invert();
 			float* p=NB.mem();
@@ -121,14 +121,14 @@ SmartPointer<Batch> Batch::Merge(SmartPointer<Batch> _A,SmartPointer<Batch> _B)
 			}
 		}
 
-		ret->normals.reset(new Vector(NA));
+		ret->normals.reset(new Array(NA));
 		ret->normals->append(NB);
 	}
 
 	//colors
 	if (A->colors)
 	{
-		ret->colors.reset(new Vector(*(A->colors)));
+		ret->colors.reset(new Array(*(A->colors)));
 		ret->colors->append(*(B->colors));
 	}
 
@@ -136,7 +136,7 @@ SmartPointer<Batch> Batch::Merge(SmartPointer<Batch> _A,SmartPointer<Batch> _B)
 	if (ATex0)
 	{
 		ret->texture0=A->texture0;
-		ret->texture0coords.reset(new Vector(*(A->texture0coords)));
+		ret->texture0coords.reset(new Array(*(A->texture0coords)));
 		ret->texture0coords->append(*(B->texture0coords));
 	}
 	
@@ -144,7 +144,7 @@ SmartPointer<Batch> Batch::Merge(SmartPointer<Batch> _A,SmartPointer<Batch> _B)
 	if (ATex1)
 	{
 		ret->texture1=A->texture1;
-		ret->texture1coords.reset(new Vector(*(A->texture1coords)));
+		ret->texture1coords.reset(new Array(*(A->texture1coords)));
 		ret->texture1coords->append(*(B->texture1coords));
 	}
 
@@ -271,15 +271,15 @@ void Batch::Read(Archive& ar)
 	ar.Push("emission");emission.Read(ar);ar.Pop("emission");
 	this->shininess=ar.ReadFloat("shininess");
 	ar.Push("matrix"  );matrix.Read(ar);ar.Pop("matrix");
-	ar.Push("vertices");vertices=ar.ReadSmartPointer<Vector>();ar.Pop("vertices");
-	ar.Push("normals" );normals=ar.ReadSmartPointer<Vector>();ar.Pop("normals");
-	ar.Push("colors" ) ;colors=ar.ReadSmartPointer<Vector>();ar.Pop("colors");
+	ar.Push("vertices");vertices=ar.ReadSmartPointer<Array>();ar.Pop("vertices");
+	ar.Push("normals" );normals=ar.ReadSmartPointer<Array>();ar.Pop("normals");
+	ar.Push("colors" ) ;colors=ar.ReadSmartPointer<Array>();ar.Pop("colors");
 	this->texture0.reset();std::string skin_filename=ar.ReadString("texture0");
 	if (skin_filename.length()) this->texture0 =Texture::open(skin_filename);
-	ar.Push("texture0coords");texture0coords=ar.ReadSmartPointer<Vector>();ar.Pop("texture0coords");
+	ar.Push("texture0coords");texture0coords=ar.ReadSmartPointer<Array>();ar.Pop("texture0coords");
 	this->texture1.reset();std::string light_filename=ar.ReadString("texture1");
 	if (light_filename.length()) this->texture1 =Texture::open(light_filename);
-	ar.Push("texture1coords");texture1coords=ar.ReadSmartPointer<Vector>();ar.Pop("texture1coords");
+	ar.Push("texture1coords");texture1coords=ar.ReadSmartPointer<Array>();ar.Pop("texture1coords");
 
 	//I force a recalculation of bounding box
 	this->invalidateBox();
@@ -300,7 +300,7 @@ SmartPointer<Batch> Batch::Quad(int x1,int y1,int x2,int y2,int z)
 		x1,y2,z
 	};
 
-	batch->vertices.reset(new Vector(12,_vertices));
+	batch->vertices.reset(new Array(12,_vertices));
 
 	float _texture0coords[] =
 	{
@@ -310,7 +310,7 @@ SmartPointer<Batch> Batch::Quad(int x1,int y1,int x2,int y2,int z)
 		0,1
 	};
 	
-	batch->texture0coords.reset(new Vector(8,_texture0coords));
+	batch->texture0coords.reset(new Array(8,_texture0coords));
 
 	return batch;
 }
@@ -319,11 +319,11 @@ SmartPointer<Batch> Batch::Quad(int x1,int y1,int x2,int y2,int z)
 ///////////////////////////////////////////////////////////////
 SmartPointer<Batch> Batch::Cube(const Box3f& box)
 {
-	SmartPointer<Vector> vertices;
-	vertices.reset(new Vector(6*4*3));float* V=vertices->mem();
+	SmartPointer<Array> vertices;
+	vertices.reset(new Array(6*4*3));float* V=vertices->mem();
 	
-	SmartPointer<Vector> normals;
-	normals.reset (new Vector(6*4*3));float* N=normals->mem();
+	SmartPointer<Array> normals;
+	normals.reset (new Array(6*4*3));float* N=normals->mem();
 
 	static float n[6][3]   = {{-1.0, 0.0, 0.0},{0.0, 1.0, 0.0},{1.0, 0.0, 0.0},{0.0, -1.0, 0.0},{0.0, 0.0, 1.0},{0.0, 0.0, -1.0}};
 	static int faces[6][4] = {{0, 1, 2, 3},{3, 2, 6, 7},{7, 6, 5, 4},{4, 5, 1, 0},{5, 6, 2, 1},{7, 4, 0, 3}};
@@ -375,9 +375,9 @@ std::vector<SmartPointer<Batch> > Batch::Sky(const Box3f& box,std::string sky_na
 		batch->primitive=Batch::QUADS;
 		batch->ambient  =Color4f(1,1,1,1);
 		batch->diffuse  =Color4f(0,0,0,1);
-		batch->vertices.reset(new Vector(4*3,v));
+		batch->vertices.reset(new Array(4*3,v));
 		batch->texture0=Texture::open(Utils::Format(sky_name.c_str(),"up"));
-		batch->texture0coords.reset(new Vector(4*2,t));
+		batch->texture0coords.reset(new Array(4*2,t));
 		batches.push_back(batch);
 	}
 
@@ -388,9 +388,9 @@ std::vector<SmartPointer<Batch> > Batch::Sky(const Box3f& box,std::string sky_na
 		batch->primitive=Batch::QUADS;
 		batch->ambient  =Color4f(1,1,1,1);
 		batch->diffuse  =Color4f(0,0,0,1);
-		batch->vertices.reset(new Vector(4*3,v));
+		batch->vertices.reset(new Array(4*3,v));
 		batch->texture0=Texture::open(Utils::Format(sky_name.c_str(),"back"));
-		batch->texture0coords.reset(new Vector(4*2,t));
+		batch->texture0coords.reset(new Array(4*2,t));
 		batches.push_back(batch);
 	}
 
@@ -401,9 +401,9 @@ std::vector<SmartPointer<Batch> > Batch::Sky(const Box3f& box,std::string sky_na
 		batch->primitive=Batch::QUADS;
 		batch->ambient  =Color4f(1,1,1,1);
 		batch->diffuse  =Color4f(0,0,0,1);
-		batch->vertices.reset(new Vector(4*3,v));
+		batch->vertices.reset(new Array(4*3,v));
 		batch->texture0=Texture::open(Utils::Format(sky_name.c_str(),"right"));
-		batch->texture0coords.reset(new Vector(4*2,t));
+		batch->texture0coords.reset(new Array(4*2,t));
 		batches.push_back(batch);
 	}
 
@@ -414,9 +414,9 @@ std::vector<SmartPointer<Batch> > Batch::Sky(const Box3f& box,std::string sky_na
 		batch->primitive=Batch::QUADS;
 		batch->ambient  =Color4f(1,1,1,1);
 		batch->diffuse  =Color4f(0,0,0,1);
-		batch->vertices.reset(new Vector(4*3,v));
+		batch->vertices.reset(new Array(4*3,v));
 		batch->texture0=Texture::open(Utils::Format(sky_name.c_str(),"left"));
-		batch->texture0coords.reset(new Vector(4*2,t));
+		batch->texture0coords.reset(new Array(4*2,t));
 		batches.push_back(batch);
 	}
 
@@ -427,26 +427,11 @@ std::vector<SmartPointer<Batch> > Batch::Sky(const Box3f& box,std::string sky_na
 		batch->primitive=Batch::QUADS;
 		batch->ambient  =Color4f(1,1,1,1);
 		batch->diffuse  =Color4f(0,0,0,1);
-		batch->vertices.reset(new Vector(4*3,v));
+		batch->vertices.reset(new Array(4*3,v));
 		batch->texture0=Texture::open(Utils::Format(sky_name.c_str(),"front"));
-		batch->texture0coords.reset(new Vector(4*2,t));
+		batch->texture0coords.reset(new Array(4*2,t));
 		batches.push_back(batch);
 	}
-
-	/*
-	{
-		float v[]={p2.x,p1.y,p1.z,p2.x,p2.y,p1.z,p1.x,p2.y,p1.z,p1.x,p1.y,p1.z};
-		float t[]={Zer,Zer,One,Zer,One,One,Zer,One};
-		SmartPointer<Batch> batch(new Batch);
-		batch->primitive=Batch::QUADS;
-		batch->ambient  =Color4f(1,1,1,1);
-		batch->diffuse  =Color4f(0,0,0,1);
-		batch->vertices.reset(new Vector(4*3,v));
-		batch->texture0=Texture::open(Utils::Format(sky_name.c_str(),"down"));
-		Engine::transferToGraphicCard(batch->texture0,false);
-		batch->texture0coords.reset(new Vector(4*2,t));
-		batches.push_back(batch);
-	}*/
 
 	return batches;
 };
@@ -477,8 +462,8 @@ SmartPointer<Batch> Batch::Circle(float angle_delta)
         angle+=angle_delta;
 	}
 
-	batch->vertices.reset(new Vector(v));
-	batch->normals.reset (new Vector(n));
+	batch->vertices.reset(new Array(v));
+	batch->normals.reset (new Array(n));
 	return batch;
 };
 
@@ -504,11 +489,11 @@ SmartPointer<Batch> Batch::getTriangles(const std::vector<int>& triangle_indices
 		i3[i*3+2]=triangle_indices[i]*3+2;
 	}
 
-	if (this->vertices   ) ret->vertices   .reset(new Vector(i3,this->vertices   ->mem()));
-	if (this->normals    ) ret->normals    .reset(new Vector(i3,this->normals    ->mem()));
-	if (this->colors     ) ret->colors     .reset(new Vector(i3,this->colors     ->mem()));
-	if (this->texture0coords ) ret->texture0coords .reset(new Vector(i2,this->texture0coords ->mem())); //2 because each texcoord has 2 components
-	if (this->texture1coords) ret->texture1coords.reset(new Vector(i2,this->texture1coords->mem()));
+	if (this->vertices   ) ret->vertices   .reset(new Array(i3,this->vertices   ->mem()));
+	if (this->normals    ) ret->normals    .reset(new Array(i3,this->normals    ->mem()));
+	if (this->colors     ) ret->colors     .reset(new Array(i3,this->colors     ->mem()));
+	if (this->texture0coords ) ret->texture0coords .reset(new Array(i2,this->texture0coords ->mem())); //2 because each texcoord has 2 components
+	if (this->texture1coords) ret->texture1coords.reset(new Array(i2,this->texture1coords->mem()));
 
 	return ret;
 }
@@ -669,7 +654,7 @@ SmartPointer<Batch> Batch::getNormals()
 	SmartPointer<Batch> batch(new Batch);
 	batch->primitive=Batch::LINES;
 	batch->setColor(Color4f::White());
-	batch->vertices.reset(new Vector(6*vertices->size()));
+	batch->vertices.reset(new Array(6*vertices->size()));
 
 	float* p=batch->vertices->mem();
 	for (int i=0;i<vertices->size();i+=3,v+=3,n+=3)

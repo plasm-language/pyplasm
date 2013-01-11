@@ -253,7 +253,7 @@ class TriangleSort
 public:
   
 	//constructor
-	inline TriangleSort(SmartPointer<Vector > texture1coords)
+	inline TriangleSort(SmartPointer<Array > texture1coords)
 		{this->buffer=texture1coords->mem();}
 
 	//comparison
@@ -307,7 +307,7 @@ std::vector< SmartPointer<Batch> > Unwrapper::Unwrap(Mat4f _T1,SmartPointer<Batc
 
 	//overwrite texture1 coordinates
 	int ntriangles=batch->vertices->size()/9;
-	batch->texture1coords.reset(new Vector(ntriangles*6));
+	batch->texture1coords.reset(new Array(ntriangles*6));
 	batch->texture1.reset();
 
 	float* vertices   = batch -> vertices    -> mem();

@@ -13,7 +13,7 @@
 *	usare il metodo isValid().
 */
 //===========================================================================
-class XGE_API Ball3f
+class Ball3f
 {
 public:
 
@@ -283,10 +283,6 @@ public:
 		return Utils::Format("Ball3f(%e,%s)",radius,center.repr().c_str());
 	}
 
-
-	///self testing
-	static int SelfTest();
-
 };
 
 
@@ -319,7 +315,7 @@ Esempio python:
 
 */
 //===========================================================================
-class XGE_API Ballf
+class Ballf
 {
 	
 public:
@@ -582,9 +578,6 @@ public:
 	{
 		return Utils::Format("Ballf(%e,%s)",radius,center.repr().c_str());
 	}
-
-	//self testing
-	static int SelfTest();
 
 }; //end class
  

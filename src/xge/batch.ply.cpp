@@ -1,7 +1,7 @@
 #include <xge/xge.h>
 
 
-#ifdef WIN32
+#if PYPLASM_WINDOWS
 #pragma warning(disable:4101 4244 4996 4267)
 double drand48() {return (double)rand()/(double)RAND_MAX;} 
 #endif
@@ -3727,11 +3727,11 @@ std::vector<SmartPointer<Batch> > Batch::openPly(std::string filename,bool bReve
 		indices.push_back(idx*3+2);
 	}
 
-	batch->vertices.reset(new Vector(indices,&vertices[0]));
+	batch->vertices.reset(new Array(indices,&vertices[0]));
 
 	if (bHasNormals) 
 	{
-		batch->normals.reset(new Vector(indices,&normals[0]));
+		batch->normals.reset(new Array(indices,&normals[0]));
 	}
 	else
 	{
@@ -3753,7 +3753,7 @@ std::vector<SmartPointer<Batch> > Batch::openPly(std::string filename,bool bReve
 			normals.push_back(n.x);normals.push_back(n.y);normals.push_back(n.z);
 		}
 
-		batch->normals.reset(new Vector(normals));
+		batch->normals.reset(new Array(normals));
 	}
 
 	close_ply( ply );

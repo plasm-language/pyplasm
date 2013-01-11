@@ -3,7 +3,7 @@
 #include <xge/mempool.h>
 
 
-extern "C" XGE_API unsigned long xge_total_memory=0;
+extern "C" unsigned long xge_total_memory=0;
 
 
 /////////////////////////////////////////// 
@@ -28,34 +28,3 @@ MemPool::~MemPool()
 }
 
 
-
-/////////////////////////////////////////// 
-int MemPool::SelfTest()
-{
-	Log::printf("Testing MemPool...\n");
-
-	void* allocated[2][MEMPOOL_TABLE_SIZE];
-
-	for (int size=1;size<MEMPOOL_TABLE_SIZE;size++)
-	{
-		allocated[0][size]=getSingleton()->malloc(size);
-		allocated[1][size]=getSingleton()->malloc(size);
-	}
-
-	for (int size=1;size<MEMPOOL_TABLE_SIZE;size++)
-	{
-		getSingleton()->free(size,allocated[1][size]);
-		getSingleton()->free(size,allocated[0][size]);
-	}
-
-	for (int size=1;size<MEMPOOL_TABLE_SIZE;size++)
-	{
-		void* temp1=getSingleton()->malloc(size);
-		void* temp2=getSingleton()->malloc(size);
-
-		XgeReleaseAssert(temp1==allocated[0][size]);
-		XgeReleaseAssert(temp2==allocated[1][size]);
-	}
-
-	return 0;
-}

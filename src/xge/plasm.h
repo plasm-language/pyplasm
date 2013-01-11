@@ -9,7 +9,7 @@
 #include <xge/octree.h>
 
 //! counter of all allocated hpcs (for debugging purpouse)
-extern "C" XGE_API unsigned long xge_total_hpc;
+extern "C" unsigned long xge_total_hpc;
 
 
 //! typedef for Plasm properties inside Hpc
@@ -28,7 +28,7 @@ typedef std::map<std::string,std::string> PropertySet;
 //===================================================
 //! hpc plasm node, a plasm "object" is a tree of interconnected hpc nodes
 //===================================================
-class XGE_API Hpc 
+class Hpc 
 {
 public:
 	void Write(Archive& ar)
@@ -293,13 +293,20 @@ public:
 };
 
 
-
+//! boolean operation codes
+enum 
+{
+	BOOL_CODE_OR  ,
+	BOOL_CODE_AND,
+	BOOL_CODE_DIFF,
+	BOOL_CODE_XOR
+};
 
 
 //===========================================================
 //! Plasm class
 //===========================================================
-class XGE_API Plasm
+class Plasm
 {
 protected:
 
@@ -376,7 +383,7 @@ public:
 	//! cube builder
 	/*!	
 		@py 
-		Plasm.View(Plasm.cube(3,0,1))
+		Plasm.view(Plasm.cube(3,0,1))
 		@endpy
 	*/
 	static SmartPointer<Hpc> cube(int dim,float From=0.0f,float To=1.0f);
@@ -384,7 +391,7 @@ public:
 	//! simplex builder
 	/*! 
 		@py 
-		Plasm.View(Plasm.simplex(3))
+		Plasm.view(Plasm.simplex(3))
 		@endpy
 	*/
 	static SmartPointer<Hpc> simplex(int dim);
@@ -392,8 +399,8 @@ public:
 	//! mkpol
 	/*! 
 		@py 
-		Plasm.View(Plasm.mkpol(2,[0,0, 1,0 ,1,1, 0,1],[[0,1,2],[2,0,3]]))
-		Plasm.View(Plasm.mkpol(3,[0,0,0,1,0,0,1,1,0,0,1,0, 0,0,1,1,0,1,1,1,1,0,1,1],[[0,1,2,3,4,5,6,7]]))
+		Plasm.view(Plasm.mkpol(2,[0,0, 1,0 ,1,1, 0,1],[[0,1,2],[2,0,3]]))
+		Plasm.view(Plasm.mkpol(3,[0,0,0,1,0,0,1,1,0,0,1,0, 0,0,1,1,0,1,1,1,1,0,1,1],[[0,1,2,3,4,5,6,7]]))
 		@endpy
 	*/
 	static SmartPointer<Hpc> mkpol(int pointdim,const std::vector<float >& points,const std::vector<std::vector<int> >& hulls,float tolerance=PLASM_DEFAULT_TOLERANCE);
@@ -475,7 +482,7 @@ public:
 	/*! 
 		@py 
 		args=[Plasm.cube(0),Plasm.translate(Plasm.cube(1),3,1,1),Plasm.translate(Plasm.cube(2),3,1,2),Plasm.translate(Plasm.cube(3),3,1,3)]
-		Plasm.View(Plasm.Struct(args))
+		Plasm.view(Plasm.Struct(args))
 		@endpy
 	*/
 	static SmartPointer<Hpc> Struct(std::vector<SmartPointer<Hpc> > pols);
@@ -483,7 +490,7 @@ public:
 	//! copy pol complex
 	/*! 
 		@py 
-		Plasm.View(Plasm.copy(Plasm.cube(3)))
+		Plasm.view(Plasm.copy(Plasm.cube(3)))
 		@endpy
 	*/
 	static SmartPointer<Hpc> copy(SmartPointer<Hpc> src);
@@ -492,7 +499,7 @@ public:
 	/*! 
 		@py 
 		args=[Plasm.cube(0),Plasm.translate(Plasm.cube(1),3,1,1),Plasm.translate(Plasm.cube(2),3,1,2),Plasm.translate(Plasm.cube(3),3,1,3)]
-		Plasm.View(Plasm.join(args))
+		Plasm.view(Plasm.join(args))
 		@endpy
 	*/
 	static SmartPointer<Hpc> join(std::vector<SmartPointer<Hpc> >  pols,float tolerance=PLASM_DEFAULT_TOLERANCE);
@@ -501,7 +508,7 @@ public:
 	/*! 
 		@py 
 		vmat=Matf([1,0,0,0, 0,1,0,1, 0,0,1,1, 0,0,0,1])
-		Plasm.View(Plasm.transform(Plasm.cube(3),vmat,vmat.invert()))
+		Plasm.view(Plasm.transform(Plasm.cube(3),vmat,vmat.invert()))
 		@endpy
 	*/
 	static SmartPointer<Hpc> transform(SmartPointer<Hpc> child,SmartPointer<Matf> vmat,SmartPointer<Matf> hmat);
@@ -509,7 +516,7 @@ public:
 	//! scale a pol complex
 	/*! 
 		@py 
-		Plasm.View(Plasm.scale(Plasm.cube(3),Vecf(0.0, 1.0,2.0,3.0)))
+		Plasm.view(Plasm.scale(Plasm.cube(3),Vecf(0.0, 1.0,2.0,3.0)))
 		@endpy
 	*/
 	static SmartPointer<Hpc> scale(SmartPointer<Hpc> child,Vecf vs);
@@ -529,7 +536,7 @@ public:
 	//! translate
 	/*! 
 		@py 
-		Plasm.View(Plasm.translate(Plasm.cube(3),Vecf(0.0, 1.0,2.0,3.0)))
+		Plasm.view(Plasm.translate(Plasm.cube(3),Vecf(0.0, 1.0,2.0,3.0)))
 		@endpy
 	*/
 	static SmartPointer<Hpc> translate(SmartPointer<Hpc> child,Vecf vt);
@@ -547,7 +554,7 @@ public:
 	//! rotate
 	/*! 
 		@py
-		Plasm.View(Plasm.Struct([Plasm.cube(3),Plasm.rotate(Plasm.cube(3),3,1,2,pi)]))
+		Plasm.view(Plasm.Struct([Plasm.cube(3),Plasm.rotate(Plasm.cube(3),3,1,2,pi)]))
 		@endpy
 	*/
 	static SmartPointer<Hpc> rotate(SmartPointer<Hpc> child,int spacedim,int i,int j,float angle);
@@ -555,7 +562,7 @@ public:
 	//! embed
 	/*! 
 		@py 
-		Plasm.View(Plasm.embed(Plasm.cube(2),3))
+		Plasm.view(Plasm.embed(Plasm.cube(2),3))
 		@endpy
 	*/
 	static SmartPointer<Hpc> embed(SmartPointer<Hpc> child,int spacedim);
@@ -563,7 +570,7 @@ public:
 	//!power
 	/*! 
 		@py 
-		Plasm.View(Plasm.power(Plasm.cube(1),Plasm.cube(2)))
+		Plasm.view(Plasm.power(Plasm.cube(1),Plasm.cube(2)))
 		@endpy
 	*/
 	static SmartPointer<Hpc> power(SmartPointer<Hpc> arg1 ,SmartPointer<Hpc> arg2);
@@ -571,29 +578,19 @@ public:
 	//!skeleton
 	/*! 
 		@py 
-		Plasm.View(Plasm.skeleton(Plasm.cube(3),1))
+		Plasm.view(Plasm.skeleton(Plasm.cube(3),1))
 		@endpy
 	*/
 	static SmartPointer<Hpc> skeleton(SmartPointer<Hpc> node,int level,float tolerance=PLASM_DEFAULT_TOLERANCE);
 
-	
-	//! boolean operation codes
-	enum BoolOpCode 
-	{
-		BOOL_CODE_OR  ,
-		BOOL_CODE_AND,
-		BOOL_CODE_DIFF,
-		BOOL_CODE_XOR
-	};
-
 	//! bool op
 	/*! 
 		@py 
-		Plasm.View(Plasm.boolop(Plasm.BOOL_CODE_AND,[Plasm.cube(2,-0.5,0.5),Plasm.rotate(Plasm.cube(2,-0.5,0.5),2,1,2,pi/4)]))
+		Plasm.view(Plasm.boolop(Plasm.BOOL_CODE_AND,[Plasm.cube(2,-0.5,0.5),Plasm.rotate(Plasm.cube(2,-0.5,0.5),2,1,2,pi/4)]))
 		@endpy
 	*/
 
-	static SmartPointer<Hpc> boolop(BoolOpCode operation,
+	static SmartPointer<Hpc> boolop(int operation,
 									std::vector<SmartPointer<Hpc> > pols,
 									float tolerance=PLASM_DEFAULT_TOLERANCE,
 									int maxnumtry=PLASM_MAX_NUM_SPLIT,
@@ -603,19 +600,13 @@ public:
 	static SmartPointer<Hpc> Skin(SmartPointer<Hpc> src,std::string url,SmartPointer<Matf> project_uv);
 
 	//! return all triangles transformed in World applying 3d matrices, if possible (internal use)
-	static SmartPointer<Vector> getTriangles(SmartPointer<Hpc> src);
+	static SmartPointer<Array> getTriangles(SmartPointer<Hpc> src);
 
 	//! insert batches in a mesh
 	static std::vector<SmartPointer<Batch> > getBatches(SmartPointer<Hpc> src,bool bOptimize=true);
 
 	//! view an hpc
-	static void View(SmartPointer<Hpc> src,bool bBackground=true);
-
-	//! self test
-	static int SelfTest();
-
-	//! self test of boolean operations
-	static int boolop_selftest();
+	static void view(SmartPointer<Hpc> src);
 
 	//! internal use only
 	static void convertOldXml(char* input_filename,char* output_filename,char* prefix_texture_filename);

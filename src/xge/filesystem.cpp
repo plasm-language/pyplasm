@@ -16,9 +16,6 @@ static std::string normalize_path(std::string filename)
 	std::string ret=filename;
 	for (int i=0;i<(int)ret.length();i++)
 	{
-		//#ifdef _WINDOWS
-		//ret[i]=tolower(ret[i]);
-		//#endif
 		if (ret[i]=='\\') ret[i]='/';
 	}
 	return ret;

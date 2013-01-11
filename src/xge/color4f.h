@@ -7,7 +7,7 @@
 //=================================================================
 //! Classe per la memorizzazione dei colori 
 //=================================================================
-class  XGE_API Color4f
+class Color4f
 {
 public:
 	void Write(Archive& ar)

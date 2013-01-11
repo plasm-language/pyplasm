@@ -6,7 +6,7 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////
 static bool ExecuteShellCmd(std::string cmd,bool bWait) 
 { 
-#ifdef _WINDOWS
+#if PYPLASM_WINDOWS
     PROCESS_INFORMATION piProcessInfo; 
     memset(&piProcessInfo, 0, sizeof(piProcessInfo)); 
 
@@ -335,7 +335,7 @@ bool Bake::Export()
 
 
 ////////////////////////////////////////////////////////////////////
-bool Bake::Run()
+bool Bake::run()
 {
 	std::string cmd;
 	bool bOk;
@@ -434,31 +434,4 @@ bool Bake::PostProcess()
 
 	return true;
 
-}
-
-/////////////////////////////////////////////////////////
-int Bake::SelfTest()
-{
-	Log::printf("Testing Bake::..\n");
-
-	Bake bake;
-	bake.DebugMode=false;
-	bake.PointOcclusion=false;
-	std::vector< SmartPointer<Batch> > batches=bake.Unwrap
-	(
-		Plasm::getBatches(Plasm::open(":models/temple.hpc.xml")) ,
-		5.0f,
-		":models/temple.%02d.tif",
-		1024
-	);
-	Batch::Save(":models/temple.ao.mesh.gz",batches);
-	bake.Add(batches);
-	bake.Export();
-	bake.Run();
-	bake.PostProcess();
-	SmartPointer<Octree> octree(new Octree(batches));
-	Viewer viewer(octree);
-	viewer.Run();
-	viewer.Wait();
-	return 0;
 }

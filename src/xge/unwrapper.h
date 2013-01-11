@@ -9,7 +9,7 @@
 
 
 
-class XGE_API Unwrapper
+class Unwrapper
 {
 protected:
 	

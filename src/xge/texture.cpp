@@ -2,26 +2,13 @@
 #include <xge/xge.h>
 #include <xge/texture.h>
 #include <xge/mempool.h>
-#include <xge/viewer.h>
+#include <xge/glcanvas.h>
 
-
+#define FREEIMAGE_LIB
 #include <FreeImage.h>
 
 //all loaded textures
 static std::map<std::string,SmartPointer<Texture> > textures_in_cache;
-
-
-
-
-//------------------------------------------------------------------------
-//------------------------------------------------------------------------
-static bool InitializeFreeImage()
-{
-	Log::printf("Initializing FreeImage library\n");
-	FreeImage_Initialise();
-	return true;
-}
-static bool Free_Image_Init=InitializeFreeImage();
 
 
 
@@ -497,144 +484,3 @@ void Texture::flipVertical()
 	}
 }
 
-
-
-/////////////////////////////////////////////////////////////////
-class TextureViewer:public Viewer
-{
-	SmartPointer<Texture> texture0;
-	SmartPointer<Texture> texture1;
-
-public:
-
-	//constructor
-	TextureViewer(SmartPointer<Texture> texture0,SmartPointer<Texture> texture1)
-	{
-		this->texture0=texture0;
-		this->texture1=texture1;
-	}
-
-	//display
-	virtual void Render()
-	{
-		int W=this->frustum.width;
-		int H=this->frustum.height;
-		SmartPointer<Batch> batch(new Batch);
-		batch->primitive=Batch::QUADS;
-		batch->setColor(Color4f(1,1,1));
-		float _vertices[]       = {0,0,0,  W,0,0,  W,H,0, 0,H,0};batch->vertices.reset(new Vector(12,_vertices));
-		batch->texture0=texture0;
-		batch->texture1=texture1;
-		float _texture0coords[] ={0,0, 1,0, 1,1, 0,1};batch->texture0coords.reset(new Vector(8,_texture0coords));
-		float _texture1coords[] ={0,0, 1,0, 1,1, 0,1};batch->texture1coords.reset(new Vector(8,_texture1coords));
-
-		engine->ClearScreen();
-		engine->SetViewport(0,0,W,H);
-		engine->SetProjectionMatrix(Mat4f::ortho(0,W,0,H,-1,+1));
-		engine->SetModelviewMatrix(Mat4f());
-		engine->Render(batch);
-		engine->FlushScreen();
-	}
-};
-
-int Texture::SelfTest()
-{
-	Log::printf("Testing Texture...\n");
-	
-	SmartPointer<Texture> gioconda=Texture::open(":images/gioconda.tga",false,false);
-
-	//try to see if the shared context is working
-	if (true)
-	{
-		SmartPointer<Texture> back    =Texture::open(":images/gioconda.tga",false,false);
-		SmartPointer<Texture> texture1=Texture::open(":images/gioconda.texture1.tga",false,false);
-		TextureViewer v1(back,texture1);v1.Run();v1.Wait();
-		TextureViewer v2(back,texture1);v2.Run();v2.Wait();
-	}
-
-	//TGA open/save
-	if (true)
-	{
-		bool ret=gioconda->save(":temp/gioconda.copy.tga");
-		XgeReleaseAssert(gioconda->filename==":temp/gioconda.copy.tga");
-
-		XgeReleaseAssert(ret);
-		SmartPointer<Texture> back=Texture::open(":temp/gioconda.copy.tga",false,false);
-		SmartPointer<Texture> texture1=Texture::open(":images/gioconda.texture1.tga",false,false);
-		XgeReleaseAssert(back && texture1);
-		TextureViewer v(back,texture1);v.Run();v.Wait();
-	}
-
-	//test PNG load/save
-	if (true)
-	{
-		bool ret=gioconda->save(":temp/gioconda.copy.png");
-		XgeReleaseAssert(gioconda->filename==":temp/gioconda.copy.png");
-
-		XgeReleaseAssert(ret);
-		SmartPointer<Texture> back=Texture::open(":temp/gioconda.copy.png",false,false);
-		SmartPointer<Texture> texture1=Texture::open(":images/gioconda.texture1.png",false,false);
-		XgeReleaseAssert(back && texture1);
-		TextureViewer v(back,texture1);v.Run();v.Wait();
-	}
-
-	//test jpeg load/save
-	if (true)
-	{
-		bool ret=gioconda->save(":temp/gioconda.copy.jpg");
-		XgeReleaseAssert(gioconda->filename==":temp/gioconda.copy.jpg");
-
-		XgeReleaseAssert(ret);
-		SmartPointer<Texture> back=Texture::open(":temp/gioconda.copy.jpg",false,false);
-		SmartPointer<Texture> texture1=Texture::open(":images/gioconda.texture1.jpg",false,false);
-		XgeReleaseAssert(back && texture1);
-		TextureViewer v(back,texture1);v.Run();v.Wait();
-	}
-	
-	//test PPM load/save  (broken in macosx)
-	#ifndef PLATFORM_Darwin
-	if (true)
-	{
-		bool ret=gioconda->save(":temp/gioconda.copy.ppm");
-		XgeReleaseAssert(gioconda->filename==":temp/gioconda.copy.ppm");
-
-		XgeReleaseAssert(ret);
-		SmartPointer<Texture> back=Texture::open(":temp/gioconda.copy.ppm",false,false);
-		SmartPointer<Texture> texture1=Texture::open(":images/gioconda.texture1.ppm",false,false);
-		XgeReleaseAssert(back && texture1);
-		TextureViewer v(back,texture1);v.Run();v.Wait();
-	}
-	#endif
-
-	//test TIFF load/save (broken in macosx)
-	#ifndef PLATFORM_Darwin
-	if (true)
-	{
-		bool ret=gioconda->save(":temp/gioconda.copy.tif");
-		XgeReleaseAssert(gioconda->filename==":temp/gioconda.copy.tif");
-		XgeReleaseAssert(ret);
-		SmartPointer<Texture> back=Texture::open(":temp/gioconda.copy.tif",false,false);
-		SmartPointer<Texture> texture1=Texture::open(":images/gioconda.texture1.tif",false,false);
-		XgeReleaseAssert(back && texture1);
-		TextureViewer v(back,texture1);v.Run();v.Wait();
-	}
-	#endif
-
-
-	//test BMP load/save
-	if (true)
-	{
-		bool ret=gioconda->save(":temp/gioconda.copy.bmp");
-		XgeReleaseAssert(gioconda->filename==":temp/gioconda.copy.bmp");
-
-		XgeReleaseAssert(ret);
-		SmartPointer<Texture> back=Texture::open(":temp/gioconda.copy.bmp",false,false);
-		SmartPointer<Texture> texture1=Texture::open(":images/gioconda.texture1.bmp",false,false);
-		XgeReleaseAssert(back && texture1);
-		TextureViewer v(back,texture1);v.Run();v.Wait();
-	}
-
-	Texture::flushCache();
-
-	return 0;
-}

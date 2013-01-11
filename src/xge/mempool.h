@@ -4,13 +4,13 @@
 #include <xge/xge.h>
 
 //total memory allocated by pools
-extern "C" XGE_API unsigned long xge_total_memory;
+extern "C" unsigned long xge_total_memory;
 
 
 //=====================================
 //! internal class for very fast alloc/dealloc for a fixed size
 //=====================================
-class XGE_API SinglePool
+class SinglePool
 {
 public:
 
@@ -43,7 +43,7 @@ protected:
 	Internally it handles memory and it is thread safe (thanks to SinglePool SpinLock)
 */
 //=====================================
-class XGE_API MemPool
+class MemPool
 {
 public:
 
@@ -61,9 +61,6 @@ public:
 
 	//! equivalent to C realloc (but you must know the previous size)
 	void* realloc(int old_size,void* p,int new_size);
-
-	//SelfTest
-	static int SelfTest();
 
 protected:
 

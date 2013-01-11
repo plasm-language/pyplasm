@@ -276,11 +276,11 @@ std::vector<SmartPointer<Batch> >  Batch::openObj(std::string filename)
 	if (!vertices.size() || !vertices_indices.size())
 		return std::vector<SmartPointer<Batch> >();
 
-	batch->vertices.reset(new Vector(vertices_indices,vertices));
+	batch->vertices.reset(new Array(vertices_indices,vertices));
 
 	if (normals_indices .size() && normals.size())  
 	{
-		batch->normals.reset(new Vector(normals_indices,normals));
+		batch->normals.reset(new Array(normals_indices,normals));
 	}
 	else
 	{
@@ -300,12 +300,12 @@ std::vector<SmartPointer<Batch> >  Batch::openObj(std::string filename)
 			normals.push_back(n.x);normals.push_back(n.y);normals.push_back(n.z);
 			normals.push_back(n.x);normals.push_back(n.y);normals.push_back(n.z);
 		}
-		batch->normals.reset(new Vector(normals));
+		batch->normals.reset(new Array(normals));
 	}
 
 
 	if (texcoords_indices.size() && texcoords.size())  
-		batch->texture0coords.reset(new Vector(texcoords_indices,texcoords));
+		batch->texture0coords.reset(new Array(texcoords_indices,texcoords));
 
 	std::vector<SmartPointer<Batch> > ret;
 	ret.push_back(batch);

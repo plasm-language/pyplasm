@@ -3,7 +3,7 @@
 
 #include <xge/xge.h>
 
-class XGE_API Log
+class Log
 {
 public:
 
@@ -14,7 +14,7 @@ public:
 	static void printf(const char * format, ...);
 
 private:
-	#ifdef _WINDOWS
+	#if PYPLASM_WINDOWS
 	static HANDLE __redirect;
 	#endif
 };

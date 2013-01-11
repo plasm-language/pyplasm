@@ -4,23 +4,30 @@
 #include <xge/xge.h>
 
 
-//predeclaration
-class EngineResource;
-
-
-
 //================================================
 //! class which stores texture maps
 //================================================
-class XGE_API Texture 
+class Texture 
 {
 public:
 
 	//! filename
 	std::string filename;
 
+#if !SWIG
+  //Gpu
+  class Gpu
+  {
+  public:
+    unsigned int id;
+     Gpu(unsigned int id_) : id(id_) {}
+    ~Gpu();
+  };
+
 	//!  id texture map, if 0 no texture map has been created
-	SmartPointer<EngineResource> gpu;
+	SmartPointer<Gpu> gpu;
+
+#endif
 
 	//! bit per pixel (8=LUMINANCE,24=RGB,32=RGBA)
 	int bpp;
@@ -202,9 +209,6 @@ public:
 	{
 		return repr();
 	}
-
-	//! internal self test
-	static int SelfTest();
 	
 }; //end class
 

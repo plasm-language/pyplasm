@@ -12,7 +12,7 @@ class Quaternion;
 //================================================
 //! quaternion to work in 3D
 //================================================
-class XGE_API Quaternion
+class Quaternion
 {
 	//! cutoff for sine near zero
 	static const float ms_fEpsilon;
@@ -708,9 +708,6 @@ public:
 	{
 		return Utils::Format("Quaternion(%e,%e,%e,%e)",w,x,y,z);
 	}
-
-	//! self test
-	static int SelfTest();
 
 }; //end class
 

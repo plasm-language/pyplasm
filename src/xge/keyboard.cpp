@@ -5,7 +5,7 @@
 ////////////////////////////////////////////////////////////////////
 bool Keyboard::isShiftPressed()
 {
-	#ifdef _WINDOWS
+	#if PYPLASM_WINDOWS
 	return (GetKeyState(VK_SHIFT  ) & 0x8000)?true:false;
 	#else
 	//TODO!
@@ -16,7 +16,7 @@ bool Keyboard::isShiftPressed()
 ////////////////////////////////////////////////////////////////////
 bool Keyboard::isAltPressed()
 {
-	#ifdef _WINDOWS
+	#if PYPLASM_WINDOWS
 	return (GetKeyState(VK_MENU   ) & 0x8000)?true:false;
 	#else
 	//TODO!
@@ -28,7 +28,7 @@ bool Keyboard::isAltPressed()
 ////////////////////////////////////////////////////////////////////
 bool Keyboard::isControlPressed()
 {
-	#ifdef _WINDOWS
+	#if PYPLASM_WINDOWS
 	return (GetKeyState(VK_CONTROL) & 0x8000)?true:false;
 	#else
 	//TODO!

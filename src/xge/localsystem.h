@@ -4,7 +4,7 @@
 #include <xge/xge.h>
 #include <xge/vec.h>
 
-class XGE_API LocalSystem
+class LocalSystem
 {
 public:
 	Vec3f pos;
