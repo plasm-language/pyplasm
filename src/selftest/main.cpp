@@ -3173,7 +3173,7 @@ int main(int nargs,char** argv)
 {	
   XgeModule::init();
   {
-#if 0
+
 	  UtilsSelfTest();
 	  MemPoolSelfTest();
 	  EncoderSelfTest();
@@ -3195,7 +3195,7 @@ int main(int nargs,char** argv)
 	  QuaternionSelfTest();
 	  ArraySelfTest();
 	  GraphSelfTest();
-#endif
+
 
     GLCanvasSelfTest();
     ManipulatorSelfTest();

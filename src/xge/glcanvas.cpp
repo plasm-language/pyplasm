@@ -12,8 +12,8 @@
 #include <OpenGL/GL.h>
 #include <OpenGL/GLU.h>
 #else
-#include <gl/GL.h>
-#include <gl/GLU.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
 #endif
 
 //missing OpenGL definitions

@@ -35,7 +35,7 @@ ADD_DEPENDENCIES(xge Juce)
 TARGET_LINK_LIBRARIES(xge tinyxml FreeImage libz qhull Juce)
 
 if (PYPLASM_LINUX)
-  TARGET_LINK_LIBRARIES(xge tinyxml dl pthread rt )
+  TARGET_LINK_LIBRARIES(xge tinyxml dl pthread rt GL GLU)
 ELSEIF(PYPLASM_APPLE)
   TARGET_LINK_LIBRARIES(xge tinyxml "-framework Foundation")
 ENDIF()
