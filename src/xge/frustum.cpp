@@ -94,7 +94,8 @@ void Frustum::refresh()
 
 	//extract planes
 	//http://www.cs.otago.ac.nz/postgrads/alexis/planeExtraction.pdf
-	const float* mat=this->mat_dir.transpose().mat;
+        Mat4f mat_t=this->mat_dir.transpose();
+	const float* mat=mat_t.mat;
 	this->planes[PLANE_LEFT  ]=(Plane4f(-(mat[ 3] + mat[ 0]),-(mat[ 7] + mat[ 4]),-(mat[11] + mat[ 8]),-(mat[15] + mat[12])));
 	this->planes[PLANE_RIGHT ]=(Plane4f(-(mat[ 3] - mat[ 0]),-(mat[ 7] - mat[ 4]),-(mat[11] - mat[ 8]),-(mat[15] - mat[12])));
 	this->planes[PLANE_TOP   ]=(Plane4f(-(mat[ 3] - mat[ 1]),-(mat[ 7] - mat[ 5]),-(mat[11] - mat[ 9]),-(mat[15] - mat[13])));
