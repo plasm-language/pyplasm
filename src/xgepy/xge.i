@@ -542,6 +542,14 @@
 %include <xge/bake.h>
 %include <xge/plasm.h>
 
+%{
+  void XgePyShutdown()
+  {
+    XgeModule::shutdown();
+  }
+%}
+
  %init %{
    XgeModule::init();
+   atexit(XgePyShutdown);
 %}
