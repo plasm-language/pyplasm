@@ -31,7 +31,7 @@ class PyViewer(GLCanvas):
 			self.Redisplay()
 			return
 	
-		GLCanvas.Keyboard(self,key,x,y);
+		GLCanvas.onKeyboard(self,key,x,y);
 		
 	def onMouseDown(self,button,x,y):
 		ray=self.frustum.unproject(x,y)
