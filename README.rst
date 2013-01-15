@@ -4,6 +4,7 @@ PLASM (Programming LAnguage for Solid Modeling)
 Plasm is a 'design language' for geometric and solid parametric design, 
 developed by the CAD Group at the Universities 'La Sapienza' and 'Roma Tre' in Italy.
 
+
 Get Plasm::
 
 	git clone git://github.com/plasm-language/pyplasm.git
@@ -18,82 +19,67 @@ To get the "develop" (unstable) version do also:
 Linux compilation
 --------------------------------------
 
-You will need the following packages on your system 
-(sudo apt-get install $PACKAGE_NAME, OR sudo zypper install $PACKAGE_NAME depending on your linux version)
+Install prerequisites::
 
-    swig
-    libfreetype6 
-    libfreetype6-dev
-    libasound2 
-    libasound2-dev 
-    alsa 
-    alsa-devel
-    python2.7 
-    python2.7-dev
-    python-setuptools
-    libxinerama-dev
-    libxrender-dev
-    libxcomposite-dev
-    libxcursor-dev
+PREREQUISITES=\
+  libfreetype6  libfreetype6-dev libasound2  libasound2-dev alsa alsa-devel \
+  python2.7 python2.7-dev python-setuptools \
+  libxinerama-dev libxrender-dev libxcomposite-dev libxcursor-dev
+    
+sudo apt-get install $PREREQUISITES # OpenSuse: "sudo zypper install $PREREQUISITES"
 
-And the following python packages (sudo easy_install $PACKAGE_NAME)
+Install some extra python packages:
 
-    numpy scipy PyOpenGL
+    sudo easy_install numpy  
+    sudo easy_install scipy
+    sudo easy_install PyOpenGL
 
-Compile pyplasm::
+Generate makefiles::
 
-    cd plasm
-    mkdir build
-    cd build
-    cmake-gui # where source code is: pyplasm, where to build: pyplasm/build
-    make
-    cd ..
-    sudo make -f build/src/xgepy/Makefile.install 
+  cd /home/$USERNAME/pyplasm
+  mkdir build
+  cd build
+  cmake ../ 
 
+Compile the pyplasm library::
 
-TODO! The viewer is broken, probably a problem with the viewfrustum
-
+  cd /home/$USERNAME/pyplasm/build
+  make ALL INSTALL
+  
 -----------------------------------------------------------
 Macosx compilation 
 -----------------------------------------------------------
+
+Install cmake from http://www.cmake.org/cmake/resources/software.html
 
 Install PyOpenGL::
 
     sudo easy_install pyopengl
 
-Compile pyplasm::
+Generate XCode project files running cmake::
 
-    cd plasm
-    mkdir build
-    cd build
-    cmake-gui # where source code is: pyplasm, where to build: pyplasm/build
-    make
-    cd ..
-    sudo make -f build/src/xgepy/Makefile.install 
+  cd /home/$USERNAME/pyplasm
+  mkdir build
+  cd build
+  cmake -GXcode ../ 
+
+Open the build/PyPlasm.xcode solution, build "ALL" and "INSTALL" targets
 
 
 -----------------------------------------------------------
 Windows compilation 
 -----------------------------------------------------------
 
-Install swig binaries
+Install cmake rom http://www.cmake.org/cmake/resources/software.html
 
-Install cmake binaries
+Run cmake-gui:
 
-Run cmake # where source code is: pyplasm, where to build: pyplasm/build
+  "Where is the source code"    <browse to the pyplasm directory>
+  "Where to build the binaries  <browse to the pyplasm directory>/build
 
 Press configure/generate
 
-Open build/pyplasm.sln in Visual Studio and compile all projects in Release Mode !
-
-(*) Open the project ./pyplasm.sln
-
-(*) From the "Build menu" select "Batch Build"
-
-(*) open a cygwin shell and type::
-
-    cd pyplasm
-    make -f build/src/xgepy/Makefile.install
+Open build/pyplasm.sln in Visual Studio and build "ALL" and "INSTALL" targets
 
 -----------------------------------------------------------
 Test pyplasm is working

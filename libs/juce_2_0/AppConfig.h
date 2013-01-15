@@ -12,8 +12,8 @@
 #define  JUCE_USE_CDREADER               0
 #define  JUCE_WEB_BROWSER                0
 
-#define  JUCE_INCLUDE_PNGLIB_CODE        0
-#define  JUCE_INCLUDE_JPEGLIB_CODE       0
+#define  JUCE_INCLUDE_PNGLIB_CODE        1
+#define  JUCE_INCLUDE_JPEGLIB_CODE       1
 #define  JUCE_CHECK_MEMORY_LEAKS         0
 #define  JUCE_DIRECTSOUND                0 
 #define  JUCE_OPENGL                     1

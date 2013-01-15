@@ -34,7 +34,7 @@ class MyRotatingObject(Batch):
 		self.matrix=Mat4f() #identity matrix
 		self.vertices=Array([0,0,0, 1,0,0, 1,1,0,  0,0,0, 1,1,0,0,1,0]) # two triangles (bottom face of a cube)
 		self.normals =Array([0,0,1, 0,0,1, 0,0,1,  0,0,1, 0,0,1,0,0,1]) # the normal
-		self.texture0=Texture.open("resources/images/gioconda.jpg")
+		self.texture0=Texture.open("resources/img/gioconda.jpg")
 		self.texture0coords=Array([0,0, 1,0, 1,1,  0,0,1,1,0,1])
 
 

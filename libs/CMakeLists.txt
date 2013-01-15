@@ -23,10 +23,6 @@ set_target_properties(qhull PROPERTIES FOLDER libs/)
 ADD_SUBDIRECTORY(tinyxml)
 set_target_properties(tinyxml PROPERTIES FOLDER libs/)
 
-# FreeImage
-ADD_SUBDIRECTORY(FreeImage3153)
-set_target_properties(FreeImage PROPERTIES FOLDER libs/)
-
 # JUCE
 ADD_SUBDIRECTORY(juce_2_0)
 set_target_properties(Juce PROPERTIES FOLDER libs/)

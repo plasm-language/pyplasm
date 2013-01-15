@@ -1,9 +1,6 @@
 #include <xge/xge.h>
 #include <xge/glcanvas.h>
 
-#define FREEIMAGE_LIB
-#include <FreeImage.h>
-
 #define DONT_SET_USING_JUCE_NAMESPACE 1
 #include <juce_2_0/juce.h>
 
@@ -41,7 +38,6 @@ void XgeModule::init()
   if (!app)
   {
 	  Log::printf("XgeModule::init\n");
-	  FreeImage_Initialise();
     
 #if PYPLASM_APPLE
     juce::initialiseNSApplication();
@@ -65,6 +61,5 @@ void XgeModule::shutdown()
     app->shutdown();
     app.reset();
     juce::shutdownJuce_GUI();
-    FreeImage_DeInitialise();
   }
 }

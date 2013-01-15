@@ -74,7 +74,7 @@ void Bake::Add(Mat4f T,SmartPointer<Batch> batch)
 	XgeReleaseAssert(batch->texture1->width==batch->texture1->height);
 
 	//necessary condition for the ribbake to work
-	XgeReleaseAssert(batch->texture1->filename.find(".tif")!=std::string::npos);
+	XgeReleaseAssert(batch->texture1->filename.find(".png")!=std::string::npos);
 
 	//keep track of all texture1 textures inserted
 	if (texture1_map.find(batch->texture1.get())==texture1_map.end())
@@ -214,7 +214,7 @@ bool Bake::Export()
 
 		XgeReleaseAssert(rib_file);
 		fprintf(rib_file,"version 3.03\n");
-		fprintf(rib_file,Utils::Format("Option \"searchpath\" \"shader\" [\"shaders:%s:&:$RIBDIR\"]\n",FileSystem::FullPath(":shaders/rib").c_str()).c_str()); 
+		fprintf(rib_file,Utils::Format("Option \"searchpath\" \"shader\" [\"resources/shaders:%s:&:$RIBDIR\"]\n",FileSystem::FullPath(":resources/shaders/rib").c_str()).c_str()); 
 
 		int texturedim=texture1_map.begin()->first->width;
 		fprintf(rib_file,Utils::Format("Format %d %d 1\n",texturedim,texturedim).c_str());

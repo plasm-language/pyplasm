@@ -4,9 +4,9 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
 PROJECT(PyPlasm)
 
-IF(NOT WIN32) 
-  SET(CMAKE_BUILD_TYPE "Release")
-ENDIF()
+
+SET(CMAKE_BUILD_TYPE "Release")
+
 
 
 # some basic tests 
@@ -63,17 +63,9 @@ ELSE()
     
 ENDIF()
 
-####################################################
-# FreeImage version
-####################################################
-
-SET(FREEIMAGE_VERSION       3153)
-
-
-
-
 ADD_SUBDIRECTORY(libs)
 ADD_SUBDIRECTORY(src)
+
 
 
 

@@ -7,10 +7,10 @@ int ArchiveSelfTest()
 	Log::printf("Testing Archive...\n");
 
 	std::vector<std::string> filenames;
-	filenames.push_back(":temp/temp.xml");
-	filenames.push_back(":temp/temp.xml.gz");
-	filenames.push_back(":temp/temp.bin");
-	filenames.push_back(":temp/temp.bin.gz");
+	filenames.push_back(":temp.xml");
+	filenames.push_back(":temp.xml.gz");
+	filenames.push_back(":temp.bin");
+	filenames.push_back(":temp.bin.gz");
 
 	for (int i=0;i<(int)filenames.size();i++)
 	{
@@ -273,12 +273,12 @@ int BakeSelfTest()
 	bake.PointOcclusion=false;
 	std::vector< SmartPointer<Batch> > batches=bake.Unwrap
 	(
-		Plasm::getBatches(Plasm::open(":models/temple.hpc.xml")) ,
+		Plasm::getBatches(Plasm::open(":resources/models/temple.hpc.xml")) ,
 		5.0f,
-		":models/temple.%02d.tif",
+		":resources/models/temple.%02d.png",
 		1024
 	);
-	Batch::Save(":models/temple.ao.mesh.gz",batches);
+	Batch::Save(":resources/models/temple.ao.mesh.gz",batches);
 	bake.Add(batches);
 	bake.Export();
 	bake.run();
@@ -1554,24 +1554,6 @@ int PlasmBoolopSelftest()
 	}
 	
 	XgeReleaseAssert(!xge_total_hpc);
-
-	//test edifici (only in release mode! about 15 seconds)
-#if 0
-	{
-		Graph* g=Graph::open_svg("examples/svg/edificicleaned.svg",true);
-
-		//Log::printf("%d %d %d\n",g->getNCells(0),g->getNCells(1),g->getNCells(2));
-		//Matf vmat(2),hmat(2);
-		//g->toUnitBox(vmat,hmat);
-		//g->glcanvas(1,&g,2);
-
-		SmartPointer<Hpc> pols[]={Plasm::make(g)};
-		SmartPointer<Hpc> Out=(SmartPointer<Hpc>)Plasm::boolop(BOOL_CODE_OR,1,pols);
-		Plasm::glcanvas(Out,"Boolean operation");	
-	}
-
-	XgeReleaseAssert(!xge_total_hpc);
-#endif
 
 	return 0;
 }
@@ -2866,26 +2848,25 @@ int TextureSelfTest()
 {
 	Log::printf("Testing Texture...\n");
 	
-	SmartPointer<Texture> gioconda=Texture::open(":images/gioconda.tga",false,false);
+	SmartPointer<Texture> gioconda=Texture::open(":resources/img/gioconda.tga",false,false);
 
-	//try to see if the shared context is working
+	//two textures
 	if (true)
 	{
-		SmartPointer<Texture> back    =Texture::open(":images/gioconda.tga",false,false);
-		SmartPointer<Texture> texture1=Texture::open(":images/gioconda.texture1.tga",false,false);
-		TextureViewer v1(back,texture1);v1.runLoop();
-		TextureViewer v2(back,texture1);v2.runLoop();
+		SmartPointer<Texture> back    =Texture::open(":resources/img/gioconda.tga",false,false);
+		SmartPointer<Texture> texture1=Texture::open(":resources/img/gioconda.texture1.tga",false,false);
+    TextureViewer v1(back,texture1);v1.runLoop();
 	}
 
 	//TGA open/save
 	if (true)
 	{
-		bool ret=gioconda->save(":temp/gioconda.copy.tga");
-		XgeReleaseAssert(gioconda->filename==":temp/gioconda.copy.tga");
+		bool ret=gioconda->save(":temp_gioconda.copy.tga");
+		XgeReleaseAssert(gioconda->filename==":temp_gioconda.copy.tga");
 
 		XgeReleaseAssert(ret);
-		SmartPointer<Texture> back=Texture::open(":temp/gioconda.copy.tga",false,false);
-		SmartPointer<Texture> texture1=Texture::open(":images/gioconda.texture1.tga",false,false);
+		SmartPointer<Texture> back=Texture::open(":temp_gioconda.copy.tga",false,false);
+		SmartPointer<Texture> texture1=Texture::open(":resources/img/gioconda.texture1.tga",false,false);
 		XgeReleaseAssert(back && texture1);
 		TextureViewer v(back,texture1);v.runLoop();
 	}
@@ -2893,12 +2874,12 @@ int TextureSelfTest()
 	//test PNG load/save
 	if (true)
 	{
-		bool ret=gioconda->save(":temp/gioconda.copy.png");
-		XgeReleaseAssert(gioconda->filename==":temp/gioconda.copy.png");
+		bool ret=gioconda->save(":temp_gioconda.copy.png");
+		XgeReleaseAssert(gioconda->filename==":temp_gioconda.copy.png");
 
 		XgeReleaseAssert(ret);
-		SmartPointer<Texture> back=Texture::open(":temp/gioconda.copy.png",false,false);
-		SmartPointer<Texture> texture1=Texture::open(":images/gioconda.texture1.png",false,false);
+		SmartPointer<Texture> back=Texture::open(":temp_gioconda.copy.png",false,false);
+		SmartPointer<Texture> texture1=Texture::open(":resources/img/gioconda.texture1.png",false,false);
 		XgeReleaseAssert(back && texture1);
 		TextureViewer v(back,texture1);v.runLoop();
 	}
@@ -2906,55 +2887,12 @@ int TextureSelfTest()
 	//test jpeg load/save
 	if (true)
 	{
-		bool ret=gioconda->save(":temp/gioconda.copy.jpg");
-		XgeReleaseAssert(gioconda->filename==":temp/gioconda.copy.jpg");
+		bool ret=gioconda->save(":temp_gioconda.copy.jpg");
+		XgeReleaseAssert(gioconda->filename==":temp_gioconda.copy.jpg");
 
 		XgeReleaseAssert(ret);
-		SmartPointer<Texture> back=Texture::open(":temp/gioconda.copy.jpg",false,false);
-		SmartPointer<Texture> texture1=Texture::open(":images/gioconda.texture1.jpg",false,false);
-		XgeReleaseAssert(back && texture1);
-		TextureViewer v(back,texture1);v.runLoop();
-	}
-	
-	//test PPM load/save  (broken in macosx)
-	#ifndef PYPLASM_APPLE
-	if (true)
-	{
-		bool ret=gioconda->save(":temp/gioconda.copy.ppm");
-		XgeReleaseAssert(gioconda->filename==":temp/gioconda.copy.ppm");
-
-		XgeReleaseAssert(ret);
-		SmartPointer<Texture> back=Texture::open(":temp/gioconda.copy.ppm",false,false);
-		SmartPointer<Texture> texture1=Texture::open(":images/gioconda.texture1.ppm",false,false);
-		XgeReleaseAssert(back && texture1);
-		TextureViewer v(back,texture1);v.runLoop();
-	}
-	#endif
-
-	//test TIFF load/save (broken in macosx)
-	#ifndef PYPLASM_APPLE
-	if (true)
-	{
-		bool ret=gioconda->save(":temp/gioconda.copy.tif");
-		XgeReleaseAssert(gioconda->filename==":temp/gioconda.copy.tif");
-		XgeReleaseAssert(ret);
-		SmartPointer<Texture> back=Texture::open(":temp/gioconda.copy.tif",false,false);
-		SmartPointer<Texture> texture1=Texture::open(":images/gioconda.texture1.tif",false,false);
-		XgeReleaseAssert(back && texture1);
-		TextureViewer v(back,texture1);v.runLoop();
-	}
-	#endif
-
-
-	//test BMP load/save
-	if (true)
-	{
-		bool ret=gioconda->save(":temp/gioconda.copy.bmp");
-		XgeReleaseAssert(gioconda->filename==":temp/gioconda.copy.bmp");
-
-		XgeReleaseAssert(ret);
-		SmartPointer<Texture> back=Texture::open(":temp/gioconda.copy.bmp",false,false);
-		SmartPointer<Texture> texture1=Texture::open(":images/gioconda.texture1.bmp",false,false);
+		SmartPointer<Texture> back=Texture::open(":temp_gioconda.copy.jpg",false,false);
+		SmartPointer<Texture> texture1=Texture::open(":resources/img/gioconda.texture1.jpg",false,false);
 		XgeReleaseAssert(back && texture1);
 		TextureViewer v(back,texture1);v.runLoop();
 	}
