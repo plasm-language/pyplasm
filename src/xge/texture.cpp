@@ -18,13 +18,13 @@ static SmartPointer<Texture> readTga(std::string filename)
 {    
 	unsigned char	hdr[18];		
 
-	printf("Opening file %s\n",filename);
+	printf("Opening file %s\n",filename.c_str());
 	FILE *file = fopen(filename.c_str(), "rb");					
 
 	if(	file==NULL || fread(hdr,1,sizeof(hdr),file)!=sizeof(hdr))		
 	{
 		if (file) fclose(file);	
-		printf("error opening  TGA file %s\n",filename);
+		printf("error opening  TGA file %s\n",filename.c_str());
 		return  SmartPointer<Texture>();		
 	}
 
@@ -35,7 +35,7 @@ static SmartPointer<Texture> readTga(std::string filename)
  	if(	width	<=0 ||	height	<=0 || !(bpp==8 || bpp==24 || bpp==32))
 	{
 		fclose(file);	
-		printf("error reading  TGA file %s, width/height null, or wrong bpp\n",filename);
+		printf("error reading  TGA file %s, width/height null, or wrong bpp\n",filename.c_str());
 		return  SmartPointer<Texture>();		
 	}
 
@@ -43,7 +43,7 @@ static SmartPointer<Texture> readTga(std::string filename)
   int tot=(width)*(height)*((bpp)/8);
   if (fread(ret->buffer,1,tot,file)!=tot)
 	{
-		printf("error reading texture file %s, cannot read pixels\n",filename);
+		printf("error reading texture file %s, cannot read pixels\n",filename.c_str());
 		return  SmartPointer<Texture>();		
 	}
 
@@ -95,7 +95,7 @@ static bool writeTga(std::string filename,Texture* tex)
 
    if (fwrite(tex->buffer,1,tot,file)!=tot)
    {
-     printf("error writing texture file %s, cannot write pixels\n",filename);
+     printf("error writing texture file %s, cannot write pixels\n",filename.c_str());
      ret=false;
    }
 
