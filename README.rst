@@ -55,15 +55,14 @@ Install PyOpenGL::
 
 	sudo easy_install pyopengl
 
-Generate XCode project files running cmake::
+Generate XCode project , build and install::
 
 	cd /home/$USERNAME/pyplasm
 	mkdir build
 	cd build
 	cmake -GXcode ../ 
-
-Open the build/PyPlasm.xcode solution, build "ALL" and "INSTALL" 
-
+	xcodebuild      -project PyPlasm.xcodeproj -target ALL_BUILD  -configuration Release
+	sudo xcodebuild -project PyPlasm.xcodeproj -target install    -configuration Release
 
 -----------------------------------------------------------
 Windows compilation 
