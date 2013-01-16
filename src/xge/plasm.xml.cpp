@@ -231,7 +231,7 @@ void Plasm::convertOldXml(char* infilename,char* outfilename,char* prefix)
 		int size  =atoi(getAttribute(xchild,"size")->Value());
 
 		SmartPointer<Array> arr(new Array(size));
-		Array::parse(size,arr->mem(),xchild->FirstChild()->Value(),(char*)"%e");
+		Array::parse(size,(float*)arr->c_ptr(),xchild->FirstChild()->Value(),(char*)"%e");
 		arrays[id]=arr;
 	}
 

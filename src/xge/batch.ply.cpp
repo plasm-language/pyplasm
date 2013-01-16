@@ -3739,7 +3739,7 @@ std::vector<SmartPointer<Batch> > Batch::openPly(std::string filename,bool bReve
 		normals.clear();
 
 		int nt=batch->vertices->size()/9;
-		float* t=batch->vertices->mem();
+		float* t=(float*)batch->vertices->c_ptr();
 		for (int i=0;i<nt;i++,t+=9)
 		{
 			Vec3f p0(t[0],t[1],t[2]);

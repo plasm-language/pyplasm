@@ -264,7 +264,7 @@ Boxf Plasm::limits(SmartPointer<Hpc> node)
 		{
 			for (std::vector<SmartPointer<Batch> >::iterator ct=child->batches.begin();ct!=child->batches.end();ct++)
 			{
-				float* p=(*ct)->vertices->mem();
+				float* p=(float*)(*ct)->vertices->c_ptr();
 
 				for (int I=0;I<(int)(*ct)->vertices->size();I+=3)
 					box.add((*child->vmat)*Vecf(1.0f,p[I+0],p[I+1],p[I+2]));
@@ -924,8 +924,8 @@ SmartPointer<Hpc> SkinInner(SmartPointer<Hpc> src,const std::string& url,SmartPo
 			int nv=(*ct)->vertices->size()/3;
 			(*ct)->texture0coords.reset(new Array(nv*2));
 
-			float* pv=(*ct)->vertices  ->mem();
-			float* pt=(*ct)->texture0coords->mem();
+			float* pv=(float*)(*ct)->vertices  ->c_ptr();
+			float* pt=(float*)(*ct)->texture0coords->c_ptr();
 
 			for (int I=0;I<nv;I++,pv+=3,pt+=2)
 			{
@@ -994,7 +994,7 @@ SmartPointer<Array> Plasm::getTriangles(SmartPointer<Hpc> src)
 
 	//step 2, fill triangles
 	SmartPointer<Array > ret(new Array(ntriangles*9));
-	float* p=ret->mem();
+	float* p=(float*)ret->c_ptr();
 
 	for (Hpc::const_iterator it=node->childs.begin();it!=node->childs.end();it++)
 	{
@@ -1010,7 +1010,7 @@ SmartPointer<Array> Plasm::getTriangles(SmartPointer<Hpc> src)
 			if ((*ct)->primitive!=Batch::TRIANGLES) 
 				continue;
 
-			float* pv=(*ct)->vertices->mem();
+			float* pv=(float*)(*ct)->vertices->c_ptr();
 			int nt=(*ct)->vertices->size()/9;
 
 			for (int T=0;T<nt;T++,pv+=9)

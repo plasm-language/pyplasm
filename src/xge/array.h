@@ -395,10 +395,10 @@ public:
 
 		@cpp
 		Array v(1);
-		assert(v.mem()==&v[0]);
+		assert(v.c_ptr()==&v[0]);
 		@endcpp
 	*/
-	inline float* mem()
+	inline void* c_ptr()
 		{return this->pointer;}
 
 

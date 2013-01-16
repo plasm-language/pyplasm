@@ -186,7 +186,7 @@ void Frustum::render(GLCanvas* glcanvas)
 		POINT_NEAR_TOP_LEFT      ,POINT_FAR_TOP_LEFT
 	};
 
-	float* v=batch->vertices->mem();
+	float* v=(float*)batch->vertices->c_ptr();
 	for (int i=0;i<24;i++)
 	{
 		*v++=points[indices[i]].x;

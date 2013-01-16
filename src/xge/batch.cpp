@@ -71,7 +71,7 @@ SmartPointer<Batch> Batch::Merge(SmartPointer<Batch> _A,SmartPointer<Batch> _B)
 		Array VA(*(A->vertices));
 		{
 			Mat4f T=A->matrix;
-			float* p=VA.mem();
+			float* p=(float*)VA.c_ptr();
 			for (int i=0;i<VA.size();i+=3,p+=3)
 			{
 				Vec3f V=T * Vec3f(p[0],p[1],p[2]);
@@ -82,7 +82,7 @@ SmartPointer<Batch> Batch::Merge(SmartPointer<Batch> _A,SmartPointer<Batch> _B)
 		Array VB(*(B->vertices));
 		{
 			Mat4f T=B->matrix;
-			float* p=VB.mem();
+			float* p=(float*)VB.c_ptr();
 			for (int i=0;i<VB.size();i+=3,p+=3)
 			{
 				Vec3f V=T * Vec3f(p[0],p[1],p[2]);
@@ -100,7 +100,7 @@ SmartPointer<Batch> Batch::Merge(SmartPointer<Batch> _A,SmartPointer<Batch> _B)
 		Array NA(*(A->normals));
 		{
 			Mat4f T=A->matrix.invert();
-			float* p=NA.mem();
+			float* p=(float*)NA.c_ptr();
 			for (int i=0;i<NA.size();i+=3,p+=3)
 			{
 				Vec4f _N=Vec4f(p[0],p[1],p[2],0.0) *  T;
@@ -112,7 +112,7 @@ SmartPointer<Batch> Batch::Merge(SmartPointer<Batch> _A,SmartPointer<Batch> _B)
 		Array NB(*(B->normals));
 		{
 			Mat4f T=B->matrix.invert();
-			float* p=NB.mem();
+			float* p=(float*)NB.c_ptr();
 			for (int i=0;i<NB.size();i+=3,p+=3)
 			{
 				Vec4f _N=Vec4f(p[0],p[1],p[2],0.0) *  T;
@@ -320,10 +320,10 @@ SmartPointer<Batch> Batch::Quad(int x1,int y1,int x2,int y2,int z)
 SmartPointer<Batch> Batch::Cube(const Box3f& box)
 {
 	SmartPointer<Array> vertices;
-	vertices.reset(new Array(6*4*3));float* V=vertices->mem();
+	vertices.reset(new Array(6*4*3));float* V=(float*)vertices->c_ptr();
 	
 	SmartPointer<Array> normals;
-	normals.reset (new Array(6*4*3));float* N=normals->mem();
+	normals.reset (new Array(6*4*3));float* N=(float*)normals->c_ptr();
 
 	static float n[6][3]   = {{-1.0, 0.0, 0.0},{0.0, 1.0, 0.0},{1.0, 0.0, 0.0},{0.0, -1.0, 0.0},{0.0, 0.0, 1.0},{0.0, 0.0, -1.0}};
 	static int faces[6][4] = {{0, 1, 2, 3},{3, 2, 6, 7},{7, 6, 5, 4},{4, 5, 1, 0},{5, 6, 2, 1},{7, 4, 0, 3}};
@@ -489,11 +489,11 @@ SmartPointer<Batch> Batch::getTriangles(const std::vector<int>& triangle_indices
 		i3[i*3+2]=triangle_indices[i]*3+2;
 	}
 
-	if (this->vertices   ) ret->vertices   .reset(new Array(i3,this->vertices   ->mem()));
-	if (this->normals    ) ret->normals    .reset(new Array(i3,this->normals    ->mem()));
-	if (this->colors     ) ret->colors     .reset(new Array(i3,this->colors     ->mem()));
-	if (this->texture0coords ) ret->texture0coords .reset(new Array(i2,this->texture0coords ->mem())); //2 because each texcoord has 2 components
-	if (this->texture1coords) ret->texture1coords.reset(new Array(i2,this->texture1coords->mem()));
+	if (this->vertices       ) ret->vertices       .reset(new Array(i3,(float*)this->vertices       ->c_ptr()));
+	if (this->normals        ) ret->normals        .reset(new Array(i3,(float*)this->normals        ->c_ptr()));
+	if (this->colors         ) ret->colors         .reset(new Array(i3,(float*)this->colors         ->c_ptr()));
+	if (this->texture0coords ) ret->texture0coords .reset(new Array(i2,(float*)this->texture0coords ->c_ptr())); //2 because each texcoord has 2 components
+	if (this->texture1coords ) ret->texture1coords .reset(new Array(i2,(float*)this->texture1coords ->c_ptr()));
 
 	return ret;
 }
@@ -507,7 +507,7 @@ Box3f Batch::getBox()
 	//calculate the box for the first time
 	if (!this->box.isValid() && this->vertices)
 	{
-		float* p=this->vertices->mem();
+		float* p=(float*)this->vertices->c_ptr();
 		for (int I=0;I<(int)this->vertices->size();I+=3,p+=3)
 		{
 			Vec3f V(p);
@@ -554,7 +554,7 @@ Pick Batch::getPick(const Ray3f& ray,Mat4f global_matrix)
 		return pick;
 
 	int tot=this->vertices->size();
-	const float* pv=this->vertices->mem();
+	const float* pv=(float*)this->vertices->c_ptr();
 
 	//TRIANGLES
 	if (this->primitive==Batch::TRIANGLES)
@@ -638,8 +638,8 @@ Pick Batch::getPick(const Ray3f& ray,Mat4f global_matrix)
 ///////////////////////////////////////////////////////////////
 SmartPointer<Batch> Batch::getNormals()
 {
-	float* v=this->vertices->mem();
-	float* n=this->normals ->mem();
+	float* v=(float*)this->vertices->c_ptr();
+	float* n=(float*)this->normals ->c_ptr();
 
 	Mat4f D=this->matrix;
 
@@ -656,7 +656,7 @@ SmartPointer<Batch> Batch::getNormals()
 	batch->setColor(Color4f::White());
 	batch->vertices.reset(new Array(6*vertices->size()));
 
-	float* p=batch->vertices->mem();
+	float* p=(float*)batch->vertices->c_ptr();
 	for (int i=0;i<vertices->size();i+=3,v+=3,n+=3)
 	{
 		Vec3f p1=    (D   * Vec3f(v[0],v[1],v[2]));

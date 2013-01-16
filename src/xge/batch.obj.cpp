@@ -69,9 +69,9 @@ void Batch::saveObj(std::string filename,std::vector<SmartPointer<Batch> > batch
 		XgeReleaseAssert(batch->normals);
 		//XgeReleaseAssert(batch->texture1coords);
 
-		float* vertex     = batch->vertices->mem();
-		float* normal     = batch->normals ->mem();
-		//float* lightcoord = batch->texture1coords->mem();
+		float* vertex     = (float*)batch->vertices->c_ptr();
+		float* normal     = (float*)batch->normals ->c_ptr();
+		//float* lightcoord = (float*)batch->texture1coords->c_ptr();
 
 		for (int i=0;i<nt;i++,vertex+=9,normal+=9)
 		{
@@ -288,7 +288,7 @@ std::vector<SmartPointer<Batch> >  Batch::openObj(std::string filename)
 		normals.clear();
 
 		int nt=batch->vertices->size()/9;
-		float* t=batch->vertices->mem();
+		float* t=(float*)batch->vertices->c_ptr();
 		for (int i=0;i<nt;i++,t+=9)
 		{
 			Vec3f p0(t[0],t[1],t[2]);

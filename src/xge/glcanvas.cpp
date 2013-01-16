@@ -412,7 +412,7 @@ public:
 
     //can happen that meanwhile another thread has built the gpu
     int   size=array->memsize();
-    void* data=array->mem();
+    void* data=(float*)array->c_ptr();
 
     GLuint bufferid;	
     context->extensions.glGenBuffers(1,&bufferid);XgeReleaseAssert(bufferid);
@@ -1007,7 +1007,7 @@ void GLCanvas::renderBatch(SmartPointer<Batch> _batch)
     }
     else
     {
-      glVertexPointer(3, GL_FLOAT, 0, batch.vertices->mem());
+      glVertexPointer(3, GL_FLOAT, 0, batch.vertices->c_ptr());
     }
     glEnableClientState(GL_VERTEX_ARRAY);
   }
@@ -1026,7 +1026,7 @@ void GLCanvas::renderBatch(SmartPointer<Batch> _batch)
     }
     else
     {
-      glNormalPointer (GL_FLOAT, 0, batch.normals->mem());
+      glNormalPointer (GL_FLOAT, 0, batch.normals->c_ptr());
     }
 
     glEnableClientState(GL_NORMAL_ARRAY);
@@ -1045,7 +1045,7 @@ void GLCanvas::renderBatch(SmartPointer<Batch> _batch)
       context->extensions.glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
     else
-      glColorPointer(3,GL_FLOAT, 0, batch.colors->mem());
+      glColorPointer(3,GL_FLOAT, 0, batch.colors->c_ptr());
 
     glEnableClientState(GL_COLOR_ARRAY);
     glEnable(GL_COLOR_MATERIAL);
@@ -1076,7 +1076,7 @@ void GLCanvas::renderBatch(SmartPointer<Batch> _batch)
       context->extensions.glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
     else
-      glTexCoordPointer (2, GL_FLOAT, 0,  batch.texture0coords->mem());
+      glTexCoordPointer (2, GL_FLOAT, 0,  batch.texture0coords->c_ptr());
 
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
   }
@@ -1107,7 +1107,7 @@ void GLCanvas::renderBatch(SmartPointer<Batch> _batch)
       context->extensions.glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
     else
-      glTexCoordPointer (2, GL_FLOAT, 0,  batch.texture1coords->mem());
+      glTexCoordPointer (2, GL_FLOAT, 0,  batch.texture1coords->c_ptr());
 
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 

@@ -127,7 +127,7 @@ SmartPointer<Batch> Graph::getBatch()
 	{
 		batch->primitive=Batch::POINTS;
 		batch->vertices .reset(new Array(g->getNCells(0)*3));
-		float* pv=batch->vertices->mem();
+		float* pv=(float*)batch->vertices->c_ptr();
 
 		for (GraphListIterator it=g->each(0);!it.end();it++)
 		{
@@ -144,7 +144,7 @@ SmartPointer<Batch> Graph::getBatch()
 	{
 		batch->primitive=Batch::LINES;
 		batch->vertices.reset(new Array(g->getNCells(1)*6));
-		float* pv=batch->vertices->mem();
+		float* pv=(float*)batch->vertices->c_ptr();
 
 		for (GraphListIterator it=g->each(1);!it.end();it++)
 		{
@@ -189,8 +189,8 @@ SmartPointer<Batch> Graph::getBatch()
 		ntriangles*=2;
 	#endif
 
-	batch->vertices .reset(new Array(ntriangles*9));float* pv=batch->vertices->mem();
-	batch->normals  .reset(new Array(ntriangles*9));float* pn=batch->normals ->mem();
+	batch->vertices .reset(new Array(ntriangles*9));float* pv=(float*)batch->vertices->c_ptr();
+	batch->normals  .reset(new Array(ntriangles*9));float* pn=(float*)batch->normals ->c_ptr();
 
 	for (GraphListIterator it=g->each(2);!it.end();it++)
 	{
@@ -240,7 +240,7 @@ SmartPointer<Batch> Graph::getBatch()
 	}
 
 	//safety check
-	XgeDebugAssert(pv==batch->vertices->mem()+ntriangles*9);
+	XgeDebugAssert(pv==batch->vertices->c_ptr()+ntriangles*9);
 	XgeDebugAssert(pn==batch->normals->mem ()+ntriangles*9);
 
 	return SmartPointer<Batch>(new Batch(*this->batch));
@@ -844,7 +844,7 @@ void Graph::render(int view_cell_level,bool bDisplayOffetLines,bool bShowNormals
 			batch->pointsize=5;
 			batch->setColor(Color4f(0.8f,0.5f,0.5f));
 			batch->vertices.reset(new Array(g->getNCells(0)*3));
-			float* v=batch->vertices->mem();
+			float* v=(float*)batch->vertices->c_ptr();
 
 			for (GraphListIterator  it=g->each(0);!it.end();it++)
 			{
@@ -867,7 +867,7 @@ void Graph::render(int view_cell_level,bool bDisplayOffetLines,bool bShowNormals
 			batch->linewidth=3;
 			batch->setColor(Color4f(0.5f,0.8f,0.5f));
 			batch->vertices.reset(new Array(g->getNCells(1)*6));
-			float* v=batch->vertices->mem();
+			float* v=(float*)batch->vertices->c_ptr();
 
 			for (GraphListIterator it=g->each(1);!it.end();it++)
 			{
@@ -890,7 +890,7 @@ void Graph::render(int view_cell_level,bool bDisplayOffetLines,bool bShowNormals
 			if (bShowNormals)
 			{
 				batch->setColor(Color4f(1,1,0));
-				v=batch->vertices->mem();
+				v=(float*)batch->vertices->c_ptr();
 
 				for (GraphListIterator it=g->each(1);!it.end();it++)
 				{

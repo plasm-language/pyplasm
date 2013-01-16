@@ -128,7 +128,7 @@ bool Bake::Export()
 				Mat4f inv   =matrix.invert();
 				int nv=batch->vertices->size()/3;
 				int nt=nv/3;
-				float* vertex     = batch->vertices->mem();
+				float* vertex     = (float*)batch->vertices->c_ptr();
 				for (int i=0;i<nt;i++,vertex+=9)
 				{
 					Vec3f v0(vertex[0],vertex[1],vertex[2]);v0=matrix * v0; 
@@ -165,9 +165,9 @@ bool Bake::Export()
 				Mat4f matrix=batch->matrix ;
 				Mat4f inv=matrix.invert();
 				int nv=batch->vertices->size()/3;int nt=nv/3;
-				float* vertex     = batch->vertices->mem();
-				float* normal     = batch->normals ->mem();
-				float* lightcoord = batch->texture1coords->mem();
+				float* vertex     = (float*)batch->vertices->c_ptr();
+				float* normal     = (float*)batch->normals ->c_ptr();
+				float* lightcoord = (float*)batch->texture1coords->c_ptr();
 
 				for (int i=0;i<nt;i++,vertex+=9,normal+=9)
 				{

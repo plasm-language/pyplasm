@@ -29,8 +29,8 @@ std::vector<SmartPointer<Batch> > Batch::openPtx(std::string filename,bool bUseR
 	batch->vertices .reset(new Array(npoints*3));
 	batch->colors  .reset(new Array(npoints*3));
 
-	float* V=batch->vertices->mem();
-	float* C=batch->colors  ->mem();
+	float* V=(float*)batch->vertices->c_ptr();
+	float* C=(float*)batch->colors  ->c_ptr();
 
 	for (int i=0;i<npoints;i++)		
 	{
