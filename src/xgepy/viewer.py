@@ -1,21 +1,22 @@
 import signal
 import math
-from pyplasm import *
-from OpenGL.GL import *
-from PyQt4 import QtCore,QtGui
-from PyQt4.QtOpenGL import *
 import ctypes
 
+from pyplasm        import *
+from OpenGL.GL      import *
+from PyQt4.QtCore   import *
+from PyQt4.QtGui    import *
+from PyQt4.QtOpenGL import *
 
 
 # ///////////////////////////////////////////////////////////////////////////////
-class GLCanvas(QGLWidget):
+class QtViewer(QGLWidget):
   
   # ////////////////////////////////////////////
   # constructor
   # ////////////////////////////////////////////
   def __init__(self, parent = None):
-    super(GLCanvas, self).__init__(parent)
+    super(QtViewer, self).__init__(parent)
     self.draw_lines=False
     self.draw_axis=True
     self.mouse_x=0
@@ -90,7 +91,7 @@ class GLCanvas(QGLWidget):
     zFar =1000.0
     
     if (not self.octree is None):
-      maxdim = octree.world_box.maxsize()
+      maxdim = self.octree.world_box.maxsize()
       zNear  = maxdim / 50.0 
       zFar   = maxdim * 10
   
@@ -143,7 +144,7 @@ class GLCanvas(QGLWidget):
     y=event.y()
     button=event.buttons() 
   
-    if (button==QtCore.Qt.NoButton):
+    if (button==Qt.NoButton):
       self.mouse_x = x
       self.mouse_y = y    
       return
@@ -152,13 +153,13 @@ class GLCanvas(QGLWidget):
       dx=0.5*math.pi*(x-self.mouse_x)/float(self.frustum.width )
       dy=0.5*math.pi*(y-self.mouse_y)/float(self.frustum.height)
   
-      if (button==QtCore.Qt.LeftButton):
+      if (button==Qt.LeftButton):
   	    dir=self.frustum.dir.rotate(self.frustum.vup,-dx)
   	    rot_axis=dir.cross(self.frustum.vup).normalize()
   	    dir=dir.rotate(rot_axis,-dy).normalize()
   	    self.frustum.dir=dir
   	    
-      elif (button==QtCore.Qt.MiddleButton):
+      elif (button==Qt.MiddleButton):
   	    self.frustum.pos=self.frustum.pos + self.frustum.vup*-dy*self.frustum.walk_speed*10 + self.frustum.right*dx*self.frustum.walk_speed*10
   
       self.redisplay()
@@ -177,7 +178,7 @@ class GLCanvas(QGLWidget):
       W=self.frustum.width
       H=self.frustum.height
   
-      if (button==QtCore.Qt.LeftButton):
+      if (button==Qt.LeftButton):
   	    Min = (W if W<=H else H)*0.5
   	    offset=Vec3f(W/2.0, H/2.0, 0)
   	    a=(Vec3f(float(self.mouse_x), float(H-self.mouse_y), 0)-offset)*(1/Min)
@@ -191,10 +192,10 @@ class GLCanvas(QGLWidget):
   	    TRACKBALLSCALE=1.0
   	    rotation = Quaternion(axis, angle * TRACKBALLSCALE) * rotation
   
-      elif (button==QtCore.Qt.MiddleButton):
+      elif (button==Qt.MiddleButton):
   	    translate -= Vec3f(0,0,deltay) * self.frustum.walk_speed
   
-      elif (button==QtCore.Qt.RightButton):
+      elif (button==Qt.RightButton):
   	    translate += Vec3f(deltax, deltay, 0) * self.frustum.walk_speed
   
       vmat=Mat4f.translate(translate) * \
@@ -235,29 +236,29 @@ class GLCanvas(QGLWidget):
     key=event.key()
     x,y=self.width()/2,self.height()/2
     
-    if (key==QtCore.Qt.Key_Escape):
-        self.close()
-        return 
-  
-    if (key==QtCore.Qt.Key_Plus or key==QtCore.Qt.Key_Equal):
+    if (key==Qt.Key_Escape):
+      self.close()
+      return 
+
+    if (key==Qt.Key_Plus or key==Qt.Key_Equal):
       self.frustum.walk_speed*=0.95
       return 
   
-    if (key==QtCore.Qt.Key_Minus or key==QtCore.Qt.Key_Underscore):
+    if (key==Qt.Key_Minus or key==Qt.Key_Underscore):
       self.frustum.walk_speed*=(1.0/0.95)
       return 
   
-    if (key==QtCore.Qt.Key_X):
+    if (key==Qt.Key_X):
       self.draw_axis=not self.draw_axis
       self.redisplay()
       return 
   
-    if (key==QtCore.Qt.Key_L):
+    if (key==Qt.Key_L):
       self.draw_lines=not self.draw_lines
       self.redisplay()
       return 
   
-    if (key==QtCore.Qt.Key_F):
+    if (key==Qt.Key_F):
         if (self.debug_frustum is None):
           self.debug_frustum=Frustum(self.frustum)
         else:
@@ -266,44 +267,49 @@ class GLCanvas(QGLWidget):
         self.redisplay()
         return 
         
-    if (key==QtCore.Qt.Key_Space):
+    if (key==Qt.Key_Space):
         self.trackball_mode=not self.trackball_mode
         if (not self.trackball_mode): self.frustum.fixVup()
         self.redisplay()
         return 
   
-    if (key==QtCore.Qt.Key_W):
+    if (key==Qt.Key_W):
         ray=self.frustum.unproject(x,y)
         self.frustum.pos+=ray.dir*self.frustum.walk_speed
         self.redisplay()
         return 
   
-    if (key==QtCore.Qt.Key_S):
+    if (key==Qt.Key_S):
         ray=self.frustum.unproject(x,y)
         self.frustum.pos-=ray.dir*self.frustum.walk_speed
         self.redisplay()
         return 
         
-    if (key==QtCore.Qt.Key_A  or key==QtCore.Qt.Key_Left):
+    if (key==Qt.Key_A  or key==Qt.Key_Left):
       self.frustum.pos-=self.frustum.right*self.frustum.walk_speed
       self.redisplay()
       return 
   
-    if (key==QtCore.Qt.Key_D or key==QtCore.Qt.Key_Right):
+    if (key==Qt.Key_D or key==Qt.Key_Right):
       self.frustum.pos+=self.frustum.right*self.frustum.walk_speed
       self.redisplay()
       return         
   
-    if (key==QtCore.Qt.Key_Up):
+    if (key==Qt.Key_Up):
       self.frustum.pos+=self.frustum.vup*self.frustum.walk_speed
       self.redisplay()
       return 
   
-    if (key==QtCore.Qt.Key_Down):
+    if (key==Qt.Key_Down):
       self.frustum.pos-=self.frustum.vup*self.frustum.walk_speed
       self.redisplay()
       return 
 
+  # ////////////////////////////////////////////
+  # C_PTR
+  # ////////////////////////////////////////////
+  def C_PTR(self,array):
+    return ctypes.cast (array.c_ptr().__long__ (), ctypes.POINTER(ctypes.c_float))
  
 
   # ////////////////////////////////////////////
@@ -321,24 +327,22 @@ class GLCanvas(QGLWidget):
         glEnable(GL_BLEND)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
        
-    def C_PTR(array):
-      return ctypes.cast (batch.vertices.c_ptr().__long__ (), ctypes.POINTER(ctypes.c_float))
-  
-    if (batch.vertices):
 
-      glVertexPointer(3, GL_FLOAT, 0,C_PTR(batch.vertices))
+    if (not batch.vertices  is None):
+      glVertexPointer(3, GL_FLOAT, 0,self.C_PTR(batch.vertices))
       glEnableClientState(GL_VERTEX_ARRAY)
   
-    if (batch.normals):
-      glNormalPointer(GL_FLOAT, 0, C_PTR(batch.normals))
+    if (not  batch.normals  is None):
+      glNormalPointer(GL_FLOAT, 0, self.C_PTR(batch.normals))
       glEnableClientState(GL_NORMAL_ARRAY)
   
-    if (batch.colors):
-      glColorPointer(3,GL_FLOAT, 0, C_PTR(batch.colors))
+    if (not  batch.colors  is None):
+      glColorPointer(3,GL_FLOAT, 0, self.C_PTR(batch.colors))
       glEnableClientState(GL_COLOR_ARRAY)
       glEnable(GL_COLOR_MATERIAL)
   
     if (batch.texture0 and batch.texture0coords):
+      
       glColor4f(1,1,1,1)
   
       if (batch.texture0.gpu is None):
@@ -348,11 +352,12 @@ class GLCanvas(QGLWidget):
       glClientActiveTexture (GL_TEXTURE0)
       glBindTexture         (GL_TEXTURE_2D, batch.texture0.gpu.id)
       glEnable(GL_TEXTURE_2D)
-      glTexCoordPointer (2, GL_FLOAT, 0,  C_PTR(batch.texture0coords))
+      glTexCoordPointer (2, GL_FLOAT, 0,  self.C_PTR(batch.texture0coords))
       glEnableClientState(GL_TEXTURE_COORD_ARRAY)
   
   
     if (batch.texture1 and batch.texture1coords):
+      
       glDisable(GL_LIGHTING)
       glColor3f(1,1,1)
   
@@ -363,7 +368,7 @@ class GLCanvas(QGLWidget):
       glClientActiveTexture (GL_TEXTURE1)
       glBindTexture         (GL_TEXTURE_2D, batch.texture1.gpu.id)
       glEnable              (GL_TEXTURE_2D)
-      glTexCoordPointer     (2, GL_FLOAT, 0,  C_PTR(batch.texture1coords))
+      glTexCoordPointer     (2, GL_FLOAT, 0,  self.C_PTR(batch.texture1coords))
       glEnableClientState   (GL_TEXTURE_COORD_ARRAY)
       glActiveTexture       (GL_TEXTURE0)
       glClientActiveTexture (GL_TEXTURE0)
@@ -407,25 +412,27 @@ class GLCanvas(QGLWidget):
     if (batch.vertices):
       glDisableClientState(GL_VERTEX_ARRAY)
       
-    if (self.draw_lines and v[i].primitive>=Batch.TRIANGLES):
+    if (self.draw_lines and batch.primitive>=Batch.TRIANGLES):
       glDepthMask(False) 
-      setLineWidth(2)
-      setPolygonMode(Batch.LINES)
-      ambient=v[i].ambient
-      diffuse=v[i].diffuse
-      v[i].setColor(Color4f(0,0,0,0.05))
-      renderBatch(v[i])
-      v[i].ambient=ambient
-      v[i].diffuse=diffuse
+      glLineWidth(2)
+      glPolygonMode(GL_FRONT_AND_BACK,GL_LINE)
+      save_ambient=batch.ambient
+      save_diffuse=batch.diffuse
+      batch.setColor(Color4f(0,0,0,0.05))
+      self.draw_lines=False
+      self.renderBatch(batch)
+      self.draw_lines=True
+      batch.ambient=save_ambient
+      batch.diffuse=save_diffuse
       glDepthMask(True)
-      setPolygonMode(Batch.POLYGON)
-      setLineWidth(2)      
+      glPolygonMode(GL_FRONT_AND_BACK,GL_FILL)
+      glLineWidth(1)      
   
   # ////////////////////////////////////////////
   # renderOctree
   # ////////////////////////////////////////////
   def renderOctree(self,octree):
-    transparent=[]
+    transparents=[]
     #frustum=self.debug_frustum if self.debug_frustum else self.frustum
     frustum=self.frustum
 
@@ -433,21 +440,20 @@ class GLCanvas(QGLWidget):
     it_frustum=self.octree.find(frustum)
     
     while (not it_frustum.end()):
-      print "Here"
       node=it_frustum.getNode()
-      v=node.batches
-      
-      for i in range(v.size()):
-        if (frustum.intersect(v[i].getBox())):
-          if (v[i].diffuse.a<1):
-            transparent.push_back(v[i])
+      batches=node.batches
+
+      for batch in batches:
+        if (frustum.intersect(batch.getBox())):
+          if (batch.diffuse.a<1):
+            transparents.append(batch)
           else:
-            self.renderBatch(v[i])
+            self.renderBatch(batch)
 
       it_frustum.moveNext()
 
-    for t in reversed(transparent):
-      renderBatch(t)    
+    for batch in reversed(transparents):
+      self.renderBatch(batch)    
       
 
   # ////////////////////////////////////////////
@@ -497,14 +503,18 @@ class GLCanvas(QGLWidget):
     if (not self.octree is None):
       self.renderOctree(self.octree)
 
-  
-
-if __name__ == '__main__':
-  signal.signal(signal.SIGINT, signal.SIG_DFL)
-  app = QtGui.QApplication(["PyPlasm GLCanvas"])
-  viewer = GLCanvas()
-  cube=Plasm.cube(3)
-  octree=Octree(Plasm.getBatches(cube))
+# QtVIEW
+def QtVIEW(obj):
+  app = QApplication(["QtViewer"])
+  viewer = QtViewer()
+  viewer.setWindowTitle('QtViewer')
+  octree=Octree(Plasm.getBatches(obj))
   viewer.setOctree(octree)
   viewer.show()
-  app.exec_()
+  return app.exec_()
+
+def main():
+  QtVIEW(Plasm.cube(3))  
+
+if __name__ == '__main__':
+    main()

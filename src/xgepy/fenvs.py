@@ -11,6 +11,7 @@ DEFAULT_USE_OCTREE_PLANES=True
 import sys,types,math
 
 from pyplasm import *
+from viewer import  *
 
 	
 #===================================================== 
@@ -894,6 +895,8 @@ if __name__ == "__main__":
 
 def VIEW (obj,Background=True):
 	Plasm.view(obj) 
+	#QtVIEW(obj)
+	
 	return obj
 
 
@@ -1644,7 +1647,8 @@ def SPHERE (radius):
 if __name__ == "__main__":
 	assert Plasm.limits(SPHERE(1)([8,8])).fuzzyEqual(Boxf(Vecf(1,-1,-1,-1),Vecf(1,+1,+1,+1)))
 	plasm_config.push(1e-4)
-	VIEW(SPHERE(1)([16,16]))
+	sphere=SPHERE(1)([16,16])
+	VIEW(sphere)
 	plasm_config.pop()
 
 
