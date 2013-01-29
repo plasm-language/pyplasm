@@ -382,8 +382,8 @@ class Viewer(QGLWidget):
       glLightfv(GL_LIGHT0, GL_SPECULAR, [1, 1, 1, 1])
   
 
-    if len(self.objs)==0:
-      self.drawBox()
+    #if len(self.objs)==0:
+    #  self.drawBox()
       
     # draw the objs
     if True:
@@ -391,7 +391,7 @@ class Viewer(QGLWidget):
         obj.render()
         
      # draw lines
-    if False:
+    if True:
       glDisable(GL_LIGHTING)
       glDepthMask(False) 
       glLineWidth(2)

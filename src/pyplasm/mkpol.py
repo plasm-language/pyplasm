@@ -33,6 +33,7 @@ class MkPol:
     
   # dim
   def dim(self):
+    if len(self.points)==0: return 0
     return len(self.points[0])
     
   # box
@@ -68,7 +69,6 @@ class MkPol:
         points    = [self.points[I] for I in hull]
         simplices = [range(len(points))]
         
-      
       # special case for 1D
       elif (dim==1):
         box       = Box(1).addPoints([self.points[I] for I in hull])
@@ -103,7 +103,7 @@ class MkPol:
           p1=POINTS[simplex[1]]
           p2=POINTS[simplex[2]]
           n=Batch3D.computeNormal(p0,p1,p2)
-          if n[2]<0: # equivalent to QVector3D.dotProduct(n,QVector3D(0,0,1))<0 
+          if n[2]<0:
             simplex=[simplex[2],simplex[1],simplex[0]]
         fixed_orientation.append(simplex)
       SIMPLICES=fixed_orientation
@@ -151,9 +151,18 @@ class MkPol:
         p1=SF.points[hull[1]]; p1=list(p1) + [0.0]*(3-len(p1)) 
         lines.vertices.append(p0);
         lines.vertices.append(p1)
+        
+      elif (hull_dim==3):
+        p0=SF.points[hull[0]]; p0=list(p0) + [0.0]*(3-len(p0)) 
+        p1=SF.points[hull[1]]; p1=list(p1) + [0.0]*(3-len(p1))
+        p2=SF.points[hull[2]]; p2=list(p2) + [0.0]*(3-len(p2))
+        n=Batch3D.computeNormal(p0,p1,p2)
+        triangles.vertices.append(p0); triangles.normals.append(n)
+        triangles.vertices.append(p1); triangles.normals.append(n)
+        triangles.vertices.append(p2); triangles.normals.append(n)    
 
-      elif (hull_dim==3 or hull_dim==4):
-        for T in ([[0,1,2]] if hull_dim==3 else Batch3D.TET_ORIENTED_TRIANGLES):
+      elif (hull_dim==4):
+        for T in Batch3D.TET_ORIENTED_TRIANGLES:
           p0=SF.points[hull[T[0]]]; p0=list(p0) + [0.0]*(3-len(p0)) 
           p1=SF.points[hull[T[1]]]; p1=list(p1) + [0.0]*(3-len(p1))
           p2=SF.points[hull[T[2]]]; p2=list(p2) + [0.0]*(3-len(p2))

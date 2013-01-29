@@ -1284,41 +1284,288 @@ def STRUCT(seq,nrec=0):
   return Hpc.Struct(pols)   
 
 
-# BOOLEAN OP
-if(False):
-  
-  #UNION
-  def UNION(objs_list):
-    """
-    >>> (UNION([Hpc.cube(2,0,1),Hpc.cube(2,0.5,1.5)])).box().fuzzyEqual(Box([0.0,0.0],[1.5,1.5])))
-    True
-    """    
-    return Plasm.boolop(BOOL_CODE_OR, objs_list)
-  
-  #INTERSECTION
-  def INTERSECTION(objs_list):
-    """
-    >>> (INTERSECTION([Hpc.cube(2,0,1),Hpc.cube(2,0.5,1.5)])).box().fuzzyEqual(Box([0.5,0.5],[1.0,1.0])))
-    True
-    """
-    return Plasm.boolop(BOOL_CODE_AND)
-  
-  #DIFFERENCE
-  def DIFFERENCE(objs_list):
-    """
-    >>> (DIFFERENCE([Hpc.cube(2,0,1),Hpc.cube(2,0.5,1.5)])).box().fuzzyEqual(Box([0.0,0.0],[1.0,1.0])))
-    True
-    """    
-    return Plasm.boolop(BOOL_CODE_DIFF)
-  
-  # xor
-  def XOR(objs_list):
-    """
-    >>> (XOR([Hpc.cube(2,0,1),Hpc.cube(2,0.5,1.5)])).box().fuzzyEqual(Box([0.0,0.0],[1.5,1.5])))
-    True
-    """    
-    return Plasm.boolop(BOOL_CODE_XOR)
 
+# ///////////////////////////////////////////////////////////
+class Bsp:
+
+  # Face
+  class Face:
+    
+    # constructor
+    def __init__(self,vertices,plane=None):
+      
+      # automatic calculation of plane
+      if not plane: 
+        dim=len(vertices[0])
+        if dim==2:
+          assert(len(vertices)==2)
+          x1,y1=vertices[0][0],vertices[0][1]
+          x2,y2=vertices[1][0],vertices[1][1]
+          normal=[(y2-y1),-(x2-x1)]
+        elif dim==3:
+          normal = Batch3D.computeNormal(vertices[0],vertices[1],vertices[2])
+        else:
+          raise Exception("todo")
+          
+        w=sum([normal[i]*vertices[0][i] for i in range(dim)])
+        plane=normal + [-w]       
+        
+      self.vertices = vertices
+      self.plane    = plane 
+      
+    @staticmethod
+    def splitEdge(plane,vi,vj):
+      dim=len(vi)
+      valuev1=math.fabs(plane[-1]+sum([plane[I]*vi[I] for I in range(dim)]))
+      valuev2=math.fabs(plane[-1]+sum([plane[I]*vj[I] for I in range(dim)]))
+      alpha =1.0/(valuev1+valuev2);
+      beta  =valuev1*alpha;
+      alpha =alpha*valuev2;
+      return [alpha*vi[I]+beta*vj[I] for I in range(dim)]
+      
+    # split
+    def split(self,plane,EPSILON=1e-5) :
+      
+      dim=len(plane)-1
+      COPLANAR,ABOVE,BELOW,SPANNING = 0,1,2,3
+      ptype,types = COPLANAR,[]
+      for v in self.vertices:
+        assert(len(v)==dim)
+        t = plane[-1] + sum([plane[i]*v[i] for i in range(dim)]) 
+        if   (t<-EPSILON): type=BELOW
+        elif (t>+EPSILON): type=ABOVE
+        else:              type=COPLANAR
+        ptype |= type
+        types.append(type)
+        
+      if (ptype==BELOW ): 
+        return [self,None,None,None]
+        
+      if (ptype==ABOVE): 
+        return [None,None,None,self]
+           
+      if (ptype==COPLANAR): 
+        
+        if sum(plane[i]*self.plane[i] for i in range(dim+1))>0:
+          return [None,None,self,None] 
+        else:
+          return [None,self,None,None]
+                
+      assert(ptype==SPANNING)
+      b,f= [],[]
+      if dim==2: 
+        assert(len(self.vertices)==2)
+        ti,tj = types        [0], types        [1]
+        vi,vj = self.vertices[0], self.vertices[1]
+        if (ti!= BELOW): f.append(vi)
+        if (ti!= ABOVE): b.append(vi)
+        if (tj!= BELOW): f.append(vj)
+        if (tj!= ABOVE): b.append(vj)  
+                  
+        if ((ti | tj) == SPANNING) :
+          v=Bsp.Face.splitEdge(plane,vi,vj);b.append(v);f.append(v)      
+        
+      elif dim==3:
+        for i in range(len(self.vertices)):
+          j = (i + 1) % len(self.vertices)
+          ti,tj = types        [i], types        [j]
+          vi,vj = self.vertices[i], self.vertices[j]
+          if (ti!= BELOW): f.append(vi)
+          if (ti!= ABOVE): b.append(vi)        
+          if ((ti | tj) == SPANNING) :
+            v=Bsp.Face.splitEdge(plane,vi,vj);b.append(v);f.append(v)
+      else:
+        raise Exception("not supported")
+         
+      assert(len(b)>=dim and len(f)>=dim)
+      return [Bsp.Face(b,self.plane),None,None,Bsp.Face(f,self.plane)]
+  
+  # constructor
+  def  __init__(self):
+    self.plane    = None
+    self.faces    = []
+    self.below    = None
+    self.above    = None
+
+  # getFaces
+  def getFaces(self):
+    return self.faces \
+      + (self.below.getFaces() if self.below else []) \
+      + (self.above.getFaces() if self.above else [])     
+  
+  # insertFaces
+  def insertFaces(self,faces) :
+    
+    if (not faces or len(faces)==0): 
+      return self
+      
+    if (not self.plane): 
+      assert(not self.below and not self.above)
+      self.plane = faces[0].plane
+      
+    below,above=[],[]
+    for p in faces:
+      b,cb,ca,a=p.split(self.plane)
+      if b : below.append(b)
+      if cb: self.faces.append(cb)
+      if ca: self.faces.append(ca)
+      if a : above.append(a)
+    
+    if (len(above)):
+      if (not self.above): self.above = Bsp()
+      self.above.insertFaces(above)
+    
+    if (len(below)):
+      if (not self.below): self.below = Bsp()
+      self.below.insertFaces(below)    
+      
+
+  # clipFaces
+  def clipFaces(self,faces) :
+    if (not self.plane): return faces
+    below,above=[],[]
+    for p in faces:
+      b,cb,ca,a=p.split(self.plane)
+      if b : below.append(b )
+      if cb: below.append(cb)
+      if ca: above.append(ca)
+      if a : above.append(a )
+    below = self.below.clipFaces(below) if self.below else [] 
+    above = self.above.clipFaces(above) if self.above else above
+    return above + below
+
+  # clipTo
+  def clipTo(self,other) :
+    self.faces=other.clipFaces(self.faces)
+    if (self.below): self.below.clipTo(other)
+    if (self.above): self.above.clipTo(other)
+
+  # invert
+  @staticmethod
+  def Complement(bsp):
+    if not bsp: return None
+    ret=Bsp()
+    if bsp.plane:
+      ret.plane=[-1*it for it in bsp.plane]
+    for p in bsp.faces:
+      new_p=Bsp.Face(list(reversed(p.vertices)),[-1*c for c in p.plane])
+      ret.faces.append(new_p)
+    ret.below=Bsp.Complement(bsp.above) 
+    ret.above=Bsp.Complement(bsp.below)
+    return ret   
+
+  # Union
+  @staticmethod
+  def Union(a,b):
+    a.clipTo(b)
+    b.clipTo(a)
+    b=Bsp.Complement(b);b.clipTo(a);b=Bsp.Complement(b) # overlapping faces only one time....think about Union(Cube,Cube)
+    a.insertFaces(b.getFaces())
+    return a
+
+  # Intersection (A & B) = ~(~A | ~B)
+  @staticmethod
+  def Intersection(a,b):
+    return Bsp.Complement(Bsp.Union(Bsp.Complement(a),Bsp.Complement(b)))
+  
+  # Difference (A - B) = ~(~A | B)
+  @staticmethod
+  def Difference(a,b):
+    return Bsp.Complement(Bsp.Union(Bsp.Complement(a),b))
+
+  # Xor (A xor B) = (A & ~B) | (~A & B)
+  @staticmethod
+  def Xor(a,b):
+    return Bsp.Union(Bsp.Intersection(a,Bsp.Complement(b)),Bsp.Intersection(Bsp.Complement(a),b))
+  
+  # fromHpc
+  @staticmethod
+  def fromHpc(hpc):
+    ret=Bsp()
+    faces=[]
+    for T,properties,obj in hpc.toBoundaryForm().toList():
+      faces+=[Bsp.Face([T.transformPoint(obj.points[I]) for I in hull]) for hull in obj.hulls]
+    ret.insertFaces(faces)
+    return ret
+
+  # toHpc
+  def toHpc(self):
+    batches,faces=[],self.getFaces()
+    dim=len(self.plane)-1 if self.plane else 0
+    if dim==0: return Hpc()
+    assert(dim==1 or dim==2 or dim==3)
+    points,hulls=[],[]
+    for face in faces:
+  
+      if dim==1:
+        assert(len(face.vertices)==1)
+        N=len(points)
+        points+=face.vertices
+        hulls+=[range(N,N+len(face.vertices))]
+      
+      elif dim==2:
+        assert(len(face.vertices)==2)
+        N=len(points)
+        points+=face.vertices
+        hulls+=[range(N,N+len(face.vertices))]
+        
+      elif dim==3:
+        assert(len(face.vertices)>=3)
+        for I in range(2,len(face.vertices)):
+          N=len(points)
+          points+=[face.vertices[0],face.vertices[I-1],face.vertices[I]]
+          hulls+=[range(N,N+3)]
+      else:
+        raise Exception("not supported")
+  
+    return Hpc.mkpol(points,hulls)     
+  
+# /////////////////////////////////////////////////////////////////////////
+def UNION(objs):
+  """
+  >>> UNION([Hpc.cube(2,0,1),Hpc.cube(2,0.5,1.5)]).box().fuzzyEqual(Box([0.0,0.0],[1.5,1.5]))
+  True
+  """
+  objs=[Bsp.fromHpc(obj) for obj in objs]  
+  res=objs[0]
+  for I in range(1,len(objs)):
+    res=Bsp.Union(res,objs[I])
+  return res.toHpc()
+ 
+
+def INTERSECTION(objs):
+  """
+  >>> INTERSECTION([Hpc.cube(2,0,1),Hpc.cube(2,0.5,1.5)]).box().fuzzyEqual(Box([0.5,0.5],[1.0,1.0]))
+  True
+  """
+  objs=[Bsp.fromHpc(obj) for obj in objs]  
+  res=objs[0]
+  for I in range(1,len(objs)):
+    res=Bsp.Intersection(res,objs[I])
+  return res.toHpc()
+
+def DIFFERENCE(objs):
+  """
+  >>> DIFFERENCE([Hpc.cube(2,0,1),Hpc.cube(2,0.5,1.5)]).box().fuzzyEqual(Box([0.0,0.0],[1.0,1.0]))
+  True
+  """   
+  objs=[Bsp.fromHpc(obj) for obj in objs]  
+  res=objs[0]
+  for I in range(1,len(objs)):
+    res=Bsp.Difference(res,objs[I])
+  return res.toHpc()
+
+def XOR(objs):
+  """
+  >>> XOR([Hpc.cube(2,0,1),Hpc.cube(2,0.5,1.5)]).box().fuzzyEqual(Box([0.0,0.0],[1.5,1.5]))
+  True
+  """  
+  objs=[Bsp.fromHpc(obj) for obj in objs]  
+  res=objs[0]
+  for I in range(1,len(objs)):
+    res=Bsp.Xor(res,objs[I])
+  return res.toHpc()
+  
 
 # JOIN
 def JOIN(pol_list):

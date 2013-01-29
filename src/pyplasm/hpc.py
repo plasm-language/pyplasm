@@ -193,6 +193,57 @@ class Hpc:
     ret=Hpc(Matrix(),childs)  
     return ret
     
+  
+   # toBoundaryForm
+  def toBoundaryForm(self):
+    
+    POINTDB={}
+    faces=[]
+    for T,properties,obj in self.toList():
+      obj=obj.toSimplicialForm()
+      
+      points,hulls=[T.transformPoint(p) for p in obj.points],obj.hulls
+      dim=len(points[0])
+    
+      mapped={}
+      for P in range(len(points)):
+        point = tuple(points[P])
+        if not point in POINTDB: POINTDB[point]=len(POINTDB)
+        mapped[P]=POINTDB[point]
+        
+      for hull in hulls:
+        bfaces=[]
+        if len(hull)<(dim+1): 
+          bfaces=[range(len(hull))] # is already a boundary face.. probably from a previous bool op
+          
+        elif len(hull)==(dim+1):
+          if   dim==0: bfaces=[[0]]
+          elif dim==1: bfaces=[[0],[1]]
+          elif dim==2: bfaces=[[0,1],[1,2],[2,0]]
+          elif dim==3: bfaces=Batch3D.TET_ORIENTED_TRIANGLES
+          else: raise Exception("not supported")
+        else:
+          raise Exception("internal error")
+          
+        for face in bfaces:
+          faces.append([mapped[hull[it]] for it in face])        
+    
+    num_occurrence={}
+    for face in faces:
+      key=tuple(sorted(face))
+      if not key in num_occurrence: num_occurrence[key]=0
+      num_occurrence[key]+=1
+    faces=[face for face in faces if num_occurrence[tuple(sorted(face))]==1]
+    
+    points=[None]*len(POINTDB)
+    for point,num in POINTDB.iteritems(): 
+      points[num]=point  
+    
+
+    ret=Hpc.mkpol(points,faces)
+    return ret
+    
+    
     
 # ///////////////////////////////////////////////////////////
 # ///////////////////////////////////////////////////////////

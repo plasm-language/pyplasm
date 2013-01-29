@@ -5,7 +5,7 @@ import sys,time
 start=time.clock()
 
 # if you want to see intermediate results
-debug_tower =False
+debug_tower =True
 
 
 ScaleFactor = 3.16655256
@@ -23,6 +23,13 @@ WallHeight = 9.35 * ScaleFactor
 FirstRingPerimeter = 5.15 * ScaleFactor * PI
 FirstRingColumnArcWidth = FirstRingPerimeter/12.0
 
+if (False):
+  cube0=Hpc.cube(3).translate([0.0,0.0,0.0])
+  cube1=Hpc.cube(3).translate([0.5,0.5,0.5])
+  cube2=Hpc.cube(3).translate([1.0,1.0,1.0])
+  one=UNION([cube0,cube1]);one.view()
+  two=UNION([one  ,cube2]);two.view()
+  sys.exit(0)
 
 # =======================================
 # basament1
@@ -37,7 +44,8 @@ def BuildBasament1(N=24):
 Basament1=BuildBasament1()
 
 if debug_tower:
-	VIEW(Basament1)
+  print "Basament1..."
+  VIEW(Basament1)
 
 
 # =======================================
@@ -57,7 +65,8 @@ def BuildBasament2(N=24):
 Basament2 = BuildBasament2()
 
 if debug_tower:
-	VIEW(Basament2)
+  print "Basament2..."
+  VIEW(Basament2)
 
 # =======================================
 # Basament
