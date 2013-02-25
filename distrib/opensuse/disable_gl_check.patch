@@ -1,0 +1,16 @@
+http://stackoverflow.com/questions/1982429/opengl-version-trouble-glew-h
+ glewIsSupported is meant to check and see if specific features are supported. You want something more like...
+
+ if (GLEW_VERSION_2_0) ...
+
+--- pyplasm-master/src/xge/GL.engine.cpp.orig	2013-01-09 03:29:00.000000000 +0100
++++ pyplasm-master/src/xge/GL.engine.cpp	2013-02-24 22:33:25.976751612 +0100
+@@ -72,7 +72,7 @@ void Engine::initializeGL()
+ 		_glew_init_needed=false;
+ 		int retcode=glewInit();
+ 		XgeReleaseAssert(retcode==GLEW_OK);
+-		XgeReleaseAssert(glewIsSupported("GL_VERSION_2_0"));
++		// XgeReleaseAssert(glewIsSupported("GL_VERSION_2_0"));
+ 	}
+ 	
+ 	glEnable(GL_LIGHTING);
