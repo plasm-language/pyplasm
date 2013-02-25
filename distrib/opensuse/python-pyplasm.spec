@@ -61,7 +61,6 @@ Plasm is a 'design language' for geometric and solid parametric design,
 developed by the CAD Group at the Universities 'La Sapienza' and 'Roma Tre' in
 Italy.
 
-
 %prep
 %setup -q -n pyplasm.sources -n pyplasm-master
 # destdir.patch
