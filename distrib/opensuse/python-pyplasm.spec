@@ -61,11 +61,6 @@ Plasm is a 'design language' for geometric and solid parametric design,
 developed by the CAD Group at the Universities 'La Sapienza' and 'Roma Tre' in
 Italy.
 
-https://groups.google.com/forum/?fromgroups=#!msg/femhub/lvbOtUUKCqI/Dd7PFioFvBAJ
-"""The author of PyPlasm/xge (Prof. Giorgio Scorzelli) replied me saying
-that PyPlasm currently cannot run in Linux. It runs only in Mac or
-Windows. And he says it will not be trivial to make it run in Linux.
-"""
 
 %prep
 %setup -q -n pyplasm.sources -n pyplasm-master
