@@ -11,7 +11,6 @@ DEFAULT_USE_OCTREE_PLANES=True
 import sys,types,math
 
 from pyplasm import *
-from viewer import  *
 
 	
 #===================================================== 
