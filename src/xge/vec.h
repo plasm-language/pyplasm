@@ -11,7 +11,7 @@ class Matf;
 //========================================================================
 //! 2D integer vector
 //========================================================================
-class XGE_API Vec2i
+class Vec2i
 {
 public:
 	int x,y;
@@ -46,7 +46,7 @@ public:
 //========================================================================
 //! 2D float vector
 //========================================================================
-class XGE_API Vec2f
+class Vec2f
 {
 	
 
@@ -248,7 +248,7 @@ public:
 //========================================================================
 //! 3D float vector
 //========================================================================
-class XGE_API Vec3f
+class Vec3f
 {
 public:
 	void Write(Archive& ar)
@@ -757,10 +757,6 @@ public:
 		return Utils::Format("[%f,%f,%f]",x,y,z);
 	}
 
-
-	//SelfTest
-	static int SelfTest();
-
 }; //end Vec3f
 
 
@@ -768,7 +764,7 @@ public:
 //========================================================================
 //! 4D float vector
 //========================================================================
-class XGE_API Vec4f
+class Vec4f
 {
 
 public:
@@ -1174,10 +1170,6 @@ public:
 	}
 
 
-	//self test
-	static int SelfTest();
-
-
 }; //end class Vec4f
 
 
@@ -1190,7 +1182,7 @@ public:
 */
 //========================================================================
 
-class XGE_API Vecf
+class Vecf
 {
 	
 public:
@@ -1810,9 +1802,6 @@ public:
 		ret+="]";
 		return ret;
 	}
-
-	//! internal self test
-	static int SelfTest();
 
 }; //end class Vecf
 

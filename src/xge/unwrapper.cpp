@@ -253,8 +253,8 @@ class TriangleSort
 public:
   
 	//constructor
-	inline TriangleSort(SmartPointer<Vector > texture1coords)
-		{this->buffer=texture1coords->mem();}
+	inline TriangleSort(SmartPointer<Array > texture1coords)
+		{this->buffer=(float*)texture1coords->c_ptr();}
 
 	//comparison
 	inline bool operator()(int A, int B) const
@@ -280,7 +280,7 @@ public:
 Unwrapper::Unwrapper()
 {
 	this->texturedim=1024;
-	this->texture_template=":texture1.%02d.tif";
+	this->texture_template=":texture1.%02d.png";
 	this->factor=1;
 	this->ntriangles_done=0;
 }
@@ -307,11 +307,11 @@ std::vector< SmartPointer<Batch> > Unwrapper::Unwrap(Mat4f _T1,SmartPointer<Batc
 
 	//overwrite texture1 coordinates
 	int ntriangles=batch->vertices->size()/9;
-	batch->texture1coords.reset(new Vector(ntriangles*6));
+	batch->texture1coords.reset(new Array(ntriangles*6));
 	batch->texture1.reset();
 
-	float* vertices   = batch -> vertices    -> mem();
-	float* lightcoord = batch -> texture1coords -> mem();
+	float* vertices   = (float*)batch -> vertices    -> c_ptr();
+	float* lightcoord = (float*)batch -> texture1coords -> c_ptr();
 
 
 
@@ -357,7 +357,7 @@ std::vector< SmartPointer<Batch> > Unwrapper::Unwrap(Mat4f _T1,SmartPointer<Batc
 	std::vector<int>  cur_indices;
 	std::vector<int>  prv_indices;
 
-	lightcoord = batch -> texture1coords -> mem();
+	lightcoord = (float*)batch -> texture1coords -> c_ptr();
 
 
 	for (int Torder=0;Torder<ntriangles;Torder++)
@@ -463,7 +463,7 @@ std::vector< SmartPointer<Batch> > Unwrapper::Unwrap(Mat4f _T1,SmartPointer<Batc
 	{
 		XgeDebugAssert((*ct)->primitive==Batch::TRIANGLES);
 
-		float* t= (*ct)->texture1coords->mem();
+		float* t= (float*)(*ct)->texture1coords->c_ptr();
 
 		for (int i=0;i<(int)(*ct)->texture1coords->size();i++)
 		{

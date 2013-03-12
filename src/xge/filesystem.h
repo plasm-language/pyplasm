@@ -4,7 +4,7 @@
 #include <xge/xge.h>
 
 
-class XGE_API FileSystem
+class FileSystem
 {
 public:
 

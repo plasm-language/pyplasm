@@ -6,7 +6,7 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////
 static bool ExecuteShellCmd(std::string cmd,bool bWait) 
 { 
-#ifdef _WINDOWS
+#if PYPLASM_WINDOWS
     PROCESS_INFORMATION piProcessInfo; 
     memset(&piProcessInfo, 0, sizeof(piProcessInfo)); 
 
@@ -74,7 +74,7 @@ void Bake::Add(Mat4f T,SmartPointer<Batch> batch)
 	XgeReleaseAssert(batch->texture1->width==batch->texture1->height);
 
 	//necessary condition for the ribbake to work
-	XgeReleaseAssert(batch->texture1->filename.find(".tif")!=std::string::npos);
+	XgeReleaseAssert(batch->texture1->filename.find(".png")!=std::string::npos);
 
 	//keep track of all texture1 textures inserted
 	if (texture1_map.find(batch->texture1.get())==texture1_map.end())
@@ -128,7 +128,7 @@ bool Bake::Export()
 				Mat4f inv   =matrix.invert();
 				int nv=batch->vertices->size()/3;
 				int nt=nv/3;
-				float* vertex     = batch->vertices->mem();
+				float* vertex     = (float*)batch->vertices->c_ptr();
 				for (int i=0;i<nt;i++,vertex+=9)
 				{
 					Vec3f v0(vertex[0],vertex[1],vertex[2]);v0=matrix * v0; 
@@ -165,9 +165,9 @@ bool Bake::Export()
 				Mat4f matrix=batch->matrix ;
 				Mat4f inv=matrix.invert();
 				int nv=batch->vertices->size()/3;int nt=nv/3;
-				float* vertex     = batch->vertices->mem();
-				float* normal     = batch->normals ->mem();
-				float* lightcoord = batch->texture1coords->mem();
+				float* vertex     = (float*)batch->vertices->c_ptr();
+				float* normal     = (float*)batch->normals ->c_ptr();
+				float* lightcoord = (float*)batch->texture1coords->c_ptr();
 
 				for (int i=0;i<nt;i++,vertex+=9,normal+=9)
 				{
@@ -214,7 +214,7 @@ bool Bake::Export()
 
 		XgeReleaseAssert(rib_file);
 		fprintf(rib_file,"version 3.03\n");
-		fprintf(rib_file,Utils::Format("Option \"searchpath\" \"shader\" [\"shaders:%s:&:$RIBDIR\"]\n",FileSystem::FullPath(":shaders/rib").c_str()).c_str()); 
+		fprintf(rib_file,Utils::Format("Option \"searchpath\" \"shader\" [\"resources/shaders:%s:&:$RIBDIR\"]\n",FileSystem::FullPath(":resources/shaders/rib").c_str()).c_str()); 
 
 		int texturedim=texture1_map.begin()->first->width;
 		fprintf(rib_file,Utils::Format("Format %d %d 1\n",texturedim,texturedim).c_str());
@@ -335,7 +335,7 @@ bool Bake::Export()
 
 
 ////////////////////////////////////////////////////////////////////
-bool Bake::Run()
+bool Bake::run()
 {
 	std::string cmd;
 	bool bOk;
@@ -403,7 +403,7 @@ bool Bake::PostProcess()
 	        
 			int nmean=0;
 			R=0.0f,G=0.0f,B=0.0f;
-			const int delta[4][2]={-1,0,+1,0,0,-1,0,+1};
+			const int delta[4][2]={{-1,0},{+1,0},{0,-1},{0,+1}};
 			for (int d=0;d<4;d++)
 			{
 				int X=x+delta[d][0],Y=y+delta[d][1];
@@ -434,31 +434,4 @@ bool Bake::PostProcess()
 
 	return true;
 
-}
-
-/////////////////////////////////////////////////////////
-int Bake::SelfTest()
-{
-	Log::printf("Testing Bake::..\n");
-
-	Bake bake;
-	bake.DebugMode=false;
-	bake.PointOcclusion=false;
-	std::vector< SmartPointer<Batch> > batches=bake.Unwrap
-	(
-		Plasm::getBatches(Plasm::open(":models/temple.hpc.xml")) ,
-		5.0f,
-		":models/temple.%02d.tif",
-		1024
-	);
-	Batch::Save(":models/temple.ao.mesh.gz",batches);
-	bake.Add(batches);
-	bake.Export();
-	bake.Run();
-	bake.PostProcess();
-	SmartPointer<Octree> octree(new Octree(batches));
-	Viewer viewer(octree);
-	viewer.Run();
-	viewer.Wait();
-	return 0;
 }

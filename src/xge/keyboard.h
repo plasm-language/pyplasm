@@ -4,7 +4,7 @@
 #include <xge/xge.h>
 
 
-class XGE_API Keyboard
+class Keyboard
 {
 public:
 

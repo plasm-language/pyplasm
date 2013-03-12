@@ -1,7 +1,7 @@
 #include <xge/xge.h>
 
 
-#ifdef WIN32
+#if PYPLASM_WINDOWS
 #pragma warning(disable:4101 4244 4996 4267)
 double drand48() {return (double)rand()/(double)RAND_MAX;} 
 #endif
@@ -3106,13 +3106,13 @@ Write to a file the word that represents a PLY data type.
 	} RuleName;
 	
 	RuleName rule_name_list[] = {
-		AVERAGE_RULE, "avg",
-			RANDOM_RULE, "rnd",
-			MINIMUM_RULE, "max",
-			MAXIMUM_RULE, "min",
-			MAJORITY_RULE, "major",
-			SAME_RULE, "same",
-			-1, "end_marker",
+		  {AVERAGE_RULE, "avg"},
+			{RANDOM_RULE, "rnd"},
+			{MINIMUM_RULE, "max"},
+			{MAXIMUM_RULE, "min"},
+			{MAJORITY_RULE, "major"},
+			{SAME_RULE, "same"},
+			{-1, "end_marker"},
 	};
 	
 	
@@ -3635,7 +3635,7 @@ std::vector<SmartPointer<Batch> > Batch::openPly(std::string filename,bool bReve
 	std::vector<int> triangles;
 
 	int nfaces,nstrips;
-	if (props = get_element_description_ply( ply, (char*)"face", &nfaces, &nprops))
+	if ((props = get_element_description_ply( ply, (char*)"face", &nfaces, &nprops)))
 	{	
 		struct PlyFace
 		{
@@ -3670,7 +3670,7 @@ std::vector<SmartPointer<Batch> > Batch::openPly(std::string filename,bool bReve
 			if (face.verts) free(face.verts);
 		}
 	}
-	else if (props = get_element_description_ply( ply, (char*)"tristrips", &nstrips, &nprops))
+	else if ((props = get_element_description_ply( ply, (char*)"tristrips", &nstrips, &nprops)))
 	{
 		struct PlyTriangleStrip
 		{
@@ -3727,11 +3727,11 @@ std::vector<SmartPointer<Batch> > Batch::openPly(std::string filename,bool bReve
 		indices.push_back(idx*3+2);
 	}
 
-	batch->vertices.reset(new Vector(indices,&vertices[0]));
+	batch->vertices.reset(new Array(indices,&vertices[0]));
 
 	if (bHasNormals) 
 	{
-		batch->normals.reset(new Vector(indices,&normals[0]));
+		batch->normals.reset(new Array(indices,&normals[0]));
 	}
 	else
 	{
@@ -3739,7 +3739,7 @@ std::vector<SmartPointer<Batch> > Batch::openPly(std::string filename,bool bReve
 		normals.clear();
 
 		int nt=batch->vertices->size()/9;
-		float* t=batch->vertices->mem();
+		float* t=(float*)batch->vertices->c_ptr();
 		for (int i=0;i<nt;i++,t+=9)
 		{
 			Vec3f p0(t[0],t[1],t[2]);
@@ -3753,7 +3753,7 @@ std::vector<SmartPointer<Batch> > Batch::openPly(std::string filename,bool bReve
 			normals.push_back(n.x);normals.push_back(n.y);normals.push_back(n.z);
 		}
 
-		batch->normals.reset(new Vector(normals));
+		batch->normals.reset(new Array(normals));
 	}
 
 	close_ply( ply );

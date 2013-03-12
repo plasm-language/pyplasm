@@ -5,7 +5,7 @@
 
 #include <xge/archive.h>
 #include <xge/mat.h>
-#include <xge/vector.h>
+#include <xge/array.h>
 #include <xge/texture.h>
 #include <xge/box.h>
 #include <xge/ray.h>
@@ -32,15 +32,15 @@ class MyRotatingObject(Batch):
 		Batch.__init__(self)
 		self.primitive=Batch.TRIANGLES #triangles
 		self.matrix=Mat4f() #identity matrix
-		self.vertices=Vector([0,0,0, 1,0,0, 1,1,0,  0,0,0, 1,1,0,0,1,0]) # two triangles (bottom face of a cube)
-		self.normals =Vector([0,0,1, 0,0,1, 0,0,1,  0,0,1, 0,0,1,0,0,1]) # the normal
-		self.texture0=Texture.open("resources/images/gioconda.jpg")
-		self.texture0coords=Vector([0,0, 1,0, 1,1,  0,0,1,1,0,1])
+		self.vertices=Array([0,0,0, 1,0,0, 1,1,0,  0,0,0, 1,1,0,0,1,0]) # two triangles (bottom face of a cube)
+		self.normals =Array([0,0,1, 0,0,1, 0,0,1,  0,0,1, 0,0,1,0,0,1]) # the normal
+		self.texture0=Texture.open("resources/img/gioconda.jpg")
+		self.texture0coords=Array([0,0, 1,0, 1,1,  0,0,1,1,0,1])
 
 
 */
 //===================================================================
-class  XGE_API Batch 
+class Batch 
 {
 public:
 
@@ -80,25 +80,25 @@ public:
 		allora questa variabile conterra' tutti i vertici in streaming (==non esiste 
 		indicizzazione e quindi riutilizzo dei vertici)
 	*/
-	SmartPointer<Vector> vertices;
+	SmartPointer<Array> vertices;
 
 	//! buffer delle normali
-	SmartPointer<Vector> normals;
+	SmartPointer<Array> normals;
 
 	//! buffer dei colori
-	SmartPointer<Vector> colors;
+	SmartPointer<Array> colors;
 
 	//! texture0 (cioe' texture map principale)
 	SmartPointer<Texture> texture0;
 
 	//! texture1 coords
-	SmartPointer<Vector> texture0coords;
+	SmartPointer<Array> texture0coords;
 
 	//! texture1
 	SmartPointer<Texture> texture1;
 
 	//! texture1 coordinates
-	SmartPointer<Vector> texture1coords;
+	SmartPointer<Array> texture1coords;
 
 	//! default constructor
 	/*!

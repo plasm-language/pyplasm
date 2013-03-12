@@ -37,7 +37,7 @@
 #endif
 
 
-class XGE_API Utils
+class Utils
 {
 public:
 
@@ -283,9 +283,6 @@ public:
 
 		return ret;
 	}
-
-	//! self test
-	static int SelfTest();
 
 }; //class utils
 

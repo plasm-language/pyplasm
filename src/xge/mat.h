@@ -10,7 +10,7 @@
 //======================================================================
 //! matrix 4x4 for working in 3d (homogeneous component in last col,row)
 //======================================================================
-class XGE_API Mat4f 
+class Mat4f 
 {
 public:
 	void Write(Archive& ar)
@@ -803,10 +803,6 @@ public:
 			mat[12],mat[13],mat[14],mat[15]);
 	}
 
-
-	//self test
-	static int SelfTest();
-
 }; //end Mat4f class
 
 
@@ -817,7 +813,7 @@ public:
 	the homogeneous term is in first row/col
 */
 //=========================================================
-class XGE_API Matf
+class Matf
 {
 public:
 	void Write(Archive& ar)
@@ -1623,10 +1619,6 @@ public:
 		ret+="])";
 		return ret;
 	}
-
-
-	//self test
-	static int SelfTest();
 
 }; //end class
 

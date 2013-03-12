@@ -9,7 +9,7 @@
 //==========================================
 //! a ray class 3D
 //==========================================
-class XGE_API Ray3f
+class Ray3f
 {
 	
 
@@ -191,9 +191,6 @@ public:
 		return Utils::Format("Ray3f(%s,%s)",origin.repr().c_str(),dir.repr().c_str());
 	}
 
-	//! self test code
-	static int SelfTest();
-
 
 }; //end class ray3
 
@@ -202,7 +199,7 @@ public:
 //=====================================================================
 //! a ray in n-D
 //=====================================================================
-class XGE_API Rayf
+class Rayf
 {
 	
 
@@ -348,9 +345,6 @@ public:
 	{
 		return Utils::Format("Rayf(%s,%s)",origin.repr().c_str(),dir.repr().c_str());
 	}
-
-	//! self test code
-	static int SelfTest();
 
 
 }; //end class 

@@ -2,27 +2,110 @@
 #include <xge/xge.h>
 #include <xge/texture.h>
 #include <xge/mempool.h>
-#include <xge/viewer.h>
+#include <xge/glcanvas.h>
 
-
-#include <FreeImage.h>
+#define DONT_SET_USING_JUCE_NAMESPACE 1
+#include <juce_2_0/juce.h>
 
 //all loaded textures
 static std::map<std::string,SmartPointer<Texture> > textures_in_cache;
 
 
+///////////////////////////////////////////////
+//readTga
+///////////////////////////////////////////////
+static SmartPointer<Texture> readTga(std::string filename)			
+{    
+	unsigned char	hdr[18];		
 
+	printf("Opening file %s\n",filename.c_str());
+	FILE *file = fopen(filename.c_str(), "rb");					
 
-//------------------------------------------------------------------------
-//------------------------------------------------------------------------
-static bool InitializeFreeImage()
-{
-	Log::printf("Initializing FreeImage library\n");
-	FreeImage_Initialise();
-	return true;
+	if(	file==NULL || fread(hdr,1,sizeof(hdr),file)!=sizeof(hdr))		
+	{
+		if (file) fclose(file);	
+		printf("error opening  TGA file %s\n",filename.c_str());
+		return  SmartPointer<Texture>();		
+	}
+
+	int width  = hdr[12]+hdr[13]*256 ;				
+	int height = hdr[14]+hdr[15]*256 ;		
+	int bpp	   = hdr[16];
+    
+ 	if(	width	<=0 ||	height	<=0 || !(bpp==8 || bpp==24 || bpp==32))
+	{
+		fclose(file);	
+		printf("error reading  TGA file %s, width/height null, or wrong bpp\n",filename.c_str());
+		return  SmartPointer<Texture>();		
+	}
+
+  SmartPointer<Texture> ret(new Texture(width,height,bpp));
+  int tot=(width)*(height)*((bpp)/8);
+  if (fread(ret->buffer,1,tot,file)!=tot)
+	{
+		printf("error reading texture file %s, cannot read pixels\n",filename.c_str());
+		return  SmartPointer<Texture>();		
+	}
+
+  //swap red and blue
+  if (bpp==24 || bpp==32)
+    {for (int I=0;I<tot;I+=(bpp/8)) std::swap(ret->buffer[I],ret->buffer[I+2]);}
+
+ 
+	return ret;
 }
-static bool Free_Image_Init=InitializeFreeImage();
 
+
+///////////////////////////////////////////////
+//readTga
+///////////////////////////////////////////////
+static bool writeTga(std::string filename,Texture* tex)
+{
+   unsigned char uselessChar=0;
+   short int     uselessInt =0;  
+
+   // Open file for output.
+   FILE *file = fopen(filename.c_str(), "wb");
+   if(!file) 
+    {fclose(file); return false;}
+
+   unsigned char imageType=2; 
+   unsigned char bpp      =tex->bpp;
+   short int     width    =tex->width;
+   short int     height   =tex->height;
+   fwrite(&uselessChar, sizeof(unsigned char), 1, file);
+   fwrite(&uselessChar, sizeof(unsigned char), 1, file);
+   fwrite(&imageType  , sizeof(unsigned char), 1, file);
+   fwrite(&uselessInt , sizeof(short int    ), 1, file);
+   fwrite(&uselessInt , sizeof(short int    ), 1, file);
+   fwrite(&uselessChar, sizeof(unsigned char), 1, file);
+   fwrite(&uselessInt , sizeof(short int    ), 1, file);
+   fwrite(&uselessInt , sizeof(short int    ), 1, file);
+   fwrite(&width      , sizeof(short int    ), 1, file);
+   fwrite(&height     , sizeof(short int    ), 1, file);
+   fwrite(&bpp        , sizeof(unsigned char), 1, file);
+   fwrite(&uselessChar, sizeof(unsigned char), 1, file);
+
+   bool ret=true;
+   int tot=tex->width*tex->height*(tex->bpp/8);
+
+  //swap red and blue
+   if (bpp==24 || bpp==32)
+    {for (int I=0;I<tot;I+=(bpp/8)) std::swap(tex->buffer[I],tex->buffer[I+2]); }
+
+   if (fwrite(tex->buffer,1,tot,file)!=tot)
+   {
+     printf("error writing texture file %s, cannot write pixels\n",filename.c_str());
+     ret=false;
+   }
+
+  //swap red and blue
+   if (bpp==24 || bpp==32)
+    {for (int I=0;I<tot;I+=(bpp/8)) std::swap(tex->buffer[I],tex->buffer[I+2]); }
+
+   fclose(file);
+   return ret;
+}
 
 
 //------------------------------------------------------------------------
@@ -259,127 +342,86 @@ SmartPointer<Texture> Texture::open(std::string filename,bool bUseCacheIfPossibl
 	filename=FileSystem::FullPath(filename);
 
 	//opening from disk
-	//Log::printf("Opening texture file %s from disk (not using cached textures)\n",filename.c_str());
+  juce::File jfile(filename.c_str());
+  juce::String jext=jfile.getFileExtension().toLowerCase();
 
-	FREE_IMAGE_FORMAT fif = FreeImage_GetFileType(filename.c_str(), 0);
+  SmartPointer<Texture> ret;
+  if (jext==".tga")
+  {
+    ret=readTga(filename);
 
-	if(fif == FIF_UNKNOWN) 
-		fif = FreeImage_GetFIFFromFilename(filename.c_str());
+    if (!ret)
+      return ret; //failed
+  }
+  else
+  {
+    juce::Image jimg=juce::ImageFileFormat::loadFrom(jfile);
 
-	if(fif == FIF_UNKNOWN)
-	{
-		Log::printf("Texture::open cannot open texture file %s (reason: fif == FIF_UNKNOWN)\n",filename.c_str());
-		return SmartPointer<Texture>();
-	}
+    if (!jimg.isValid())
+	  {
+		  Log::printf("Texture::open cannot open texture file %s \n",filename.c_str());
+		  return SmartPointer<Texture>();
+	  }
 
-	FIBITMAP* bitmap=FreeImage_Load(fif, filename.c_str());
+	  int width  = jimg.getWidth();
+	  int height = jimg.getHeight();
+	  int bpp    = jimg.getFormat()==juce::Image::ARGB? 32 : (jimg.getFormat()==juce::Image::RGB? 24 : (jimg.getFormat()==juce::Image::SingleChannel? 8:0));
 
-	if(!bitmap)
-	{
-		Log::printf("Texture::open failed to open texture file %s (reason: !bitmap)\n",filename.c_str());
-		return SmartPointer<Texture>();
-	}
+	  if((width == 0) || (height == 0) || !(bpp==24 || bpp==32 || bpp==8))
+	  {
+		  Log::printf("Texture::open failed to load the texture file %s (reason  unsupported type bpp=%d width=%d height=%d\n",filename.c_str(),bpp,width,height);
+		  return SmartPointer<Texture>();
+	  }
 
-	BITMAPINFO* info=FreeImage_GetInfo(bitmap);
+	  ret=SmartPointer<Texture>(new Texture(width,height,bpp,0));
+    unsigned char* dst=ret->buffer;
 
-	BYTE* bits = FreeImage_GetBits(bitmap);
-	int width  = FreeImage_GetWidth(bitmap);
-	int height = FreeImage_GetHeight(bitmap);
-	int bpp    = FreeImage_GetBPP(bitmap);
-	int pitch=FreeImage_GetPitch(bitmap);
-	FREE_IMAGE_TYPE format = FreeImage_GetImageType(bitmap);
+	  //Alpha
+	  if (bpp==8)
+	  {
+		  for (int Y=0;Y<height;Y++) {
+		  for (int X=0;X<width ;X++) {
+        juce::Colour colour=jimg.getPixelAt(X,height-Y-1); //mirror y
+			  *dst++=colour.getAlpha();
+		  }}
+	  }
+	  //RGB
+	  else if (bpp==24)
+	  {	
+		  for (int Y=0;Y<height;Y++) {
+		  for (int X=0;X<width ;X++) {
+        juce::Colour colour=jimg.getPixelAt(X,height-Y-1); //mirror y
+			  *dst++=colour.getRed  ();
+			  *dst++=colour.getGreen();
+			  *dst++=colour.getBlue ();
+		  }}
+	  }
+	  //RGBA
+	  else if (bpp==32)
+	  {
+		  for (int Y=0;Y<height;Y++) {
+		  for (int X=0;X<width ;X++) {
+        juce::Colour colour=jimg.getPixelAt(X,height-Y-1); //mirror y
+			  *dst++=colour.getRed  ();
+			  *dst++=colour.getGreen();
+			  *dst++=colour.getBlue ();
+        *dst++=colour.getAlpha();
+		  }}
+	  }
+  }
 
-	if((bits == 0) || (width == 0) || (height == 0) || !(bpp==24 || bpp==32 || bpp==8) || format!=FIT_BITMAP)
-	{
-		FreeImage_Unload(bitmap);
-		Log::printf("Texture::open failed to load the texture file %s (reason  unsupported type bpp=%d width=%d height=%d format=%d\n",filename.c_str(),bpp,width,height,(int)format);
-		return SmartPointer<Texture>();
-	}
-
-	//only lighting or gray level
-	SmartPointer<Texture> ret;
-
-	//AA
-	if (bpp==8)
-	{
-		ret.reset(new Texture(width,height,8,0));
-		unsigned char* dst=ret->buffer;
-
-		for (int Y=0;Y<height;Y++)
-		{
-			unsigned char* src=bits;
-
-			for (int X=0;X<width;X++)
-			{
-				dst[0]=src[0];
-				dst++;
-				src++;
-			}
-			bits+=pitch;
-		}
-	}
-	//BBGGRR
-	else if (bpp==24)
-	{	
-		ret.reset(new Texture(width,height,24,0));
-		unsigned char* dst=ret->buffer;
-
-		for (int Y=0;Y<height;Y++)
-		{
-			unsigned char* src=bits;
-
-			for (int X=0;X<width;X++)
-			{
-				dst[0]=src[FI_RGBA_RED  ];
-				dst[1]=src[FI_RGBA_GREEN];
-				dst[2]=src[FI_RGBA_BLUE ];
-
-				dst+=3;
-				src+=3;
-			}
-			bits+=pitch;
-		}
-	}
-	//BBGGRRaa
-	else if (bpp==32)
-	{
-		ret.reset(new Texture(width,height,32,0));
-		unsigned char* dst=ret->buffer;
-
-		for (int Y=0;Y<height;Y++)
-		{
-			unsigned char* src=bits;
-
-			for (int X=0;X<width;X++)
-			{
-				dst[0]=src[FI_RGBA_RED  ];
-				dst[1]=src[FI_RGBA_GREEN];
-				dst[2]=src[FI_RGBA_BLUE ];
-
-				dst[3]=src[FI_RGBA_ALPHA];
-				dst+=4;
-				src+=4;
-			}
-			bits+=pitch;
-		}
-	}
-
-	FreeImage_Unload(bitmap);
 	Log::printf("image file %s loaded from disk width(%d) height(%d) bpp(%d)\n",filename.c_str(),ret->width,ret->height,ret->bpp);
 
 	//set back to short path
 	filename=FileSystem::ShortPath(filename);
 
 	if (bCacheInMemory)
-	{
 		textures_in_cache[Utils::ToLower(filename)]=ret;
-	}
 
 	ret->filename=filename;
 	return ret;
 
 }
-
 
 
 // ----------------------------------------------------------------------------
@@ -393,7 +435,6 @@ bool Texture::save()
 // ----------------------------------------------------------------------------
 bool Texture::save(std::string filename)
 {
-	//empty name
 	if (!filename.length())
 	{
 		Log::printf("Texture::save failed to save the texture file %s (reason:  filename empty)\n");
@@ -401,81 +442,85 @@ bool Texture::save(std::string filename)
 	}
 
 	filename=FileSystem::FullPath(filename);
-	
-	FREE_IMAGE_FORMAT fif = FreeImage_GetFIFFromFilename(filename.c_str());
+  
+  juce::File jfile(filename.c_str()); 
+  juce::String jext=jfile.getFileExtension().toLowerCase();
 
-	if(fif == FIF_UNKNOWN ) 
-	{
-		Log::printf("Texture::save failed to save the texture file %s (reason: fif == FIF_UNKNOWN)\n",filename.c_str());
-		return false;
-	}
+  if (jext==".tga")
+  {
+    if (!writeTga(filename,this))
+      return false;
+  }
+  else
+  {
+    juce::ScopedPointer<juce::ImageFileFormat> jiff;
 
-	FIBITMAP* bitmap=FreeImage_Allocate(this->width, this->height, this->bpp);
+    if      (jext==".jpg" || jext==".jpeg") jiff=new juce::JPEGImageFormat();
+    else if (jext==".png"                 ) jiff=new juce::PNGImageFormat();
+    else if (jext==".git"                 ) jiff=new juce::GIFImageFormat();
 
-	unsigned char* src=this->buffer;
-	unsigned char* dst=FreeImage_GetBits(bitmap);
-	int tot=this->width*this->height;
 
-	XgeReleaseAssert(FreeImage_GetPitch(bitmap)==this->width*(this->bpp/8));
+    juce::Image jimg(bpp==8? (juce::Image::SingleChannel) : (bpp==24? juce::Image::RGB : juce::Image::ARGB),width,height,false);
+    if (!jimg.isValid())
+	  {
+		  Log::printf("Texture::save failed to save the texture file %s \n",filename.c_str());
+		  return false;
+	  }
 
-	//AA
-	if (this->bpp==8)
-	{
-		// Build a greyscale palette
-		RGBQUAD *pal = FreeImage_GetPalette(bitmap);
-		for (int i = 0; i < 256; i++) 
-		{
-			pal[i].rgbRed = i;
-			pal[i].rgbGreen = i;
-			pal[i].rgbBlue = i;
-		}
+     if (!jiff)
+     {
+       Log::printf("Texture::save failed to save the texture file %s (reason: unsupported extension)\n",filename.c_str());
+       return false;
+     }
 
-		memcpy(dst,src,tot);
-	}
-	//BBGGRRff
-	else if (this->bpp==24)
-	{
-		
-		for (int i=0;i<tot;i++,dst+=3,src+=3) 
-		{
-			dst[FI_RGBA_RED  ]=src[0]; 
-			dst[FI_RGBA_GREEN]=src[1]; 
-			dst[FI_RGBA_BLUE ]=src[2];  
-		}
-	}
-	//BBGGRRaa
-	else if (this->bpp==32)
-	{
-		for (int i=0;i<tot;i++,src+=4,dst+=4) 
-		{
-			dst[FI_RGBA_RED  ]=src[0];
-			dst[FI_RGBA_GREEN]=src[1];
-			dst[FI_RGBA_BLUE ]=src[2];
-			dst[FI_RGBA_ALPHA]=src[3];
-		}
-	}
-	else
-	{
-		XgeReleaseAssert(false);
-	}
+	  unsigned char* src=this->buffer;
 
-	bool bSaved=FreeImage_Save(fif, bitmap, filename.c_str())>0;
-	
-	if (!bSaved)
-	{
-		FreeImage_Unload(bitmap);
-		Log::printf("Texture::save failed to save the texture file %s (reason: !bSaved)\n",filename.c_str());
-		return false;
-	}
+    //Alpha
+	  if (bpp==8)
+	  {
+		  for (unsigned int Y=0;Y<height;Y++) {
+		  for (unsigned int X=0;X<width ;X++) {
+        juce::Colour colour(src[0],src[0],src[0],src[0]);
+        jimg.setPixelAt(X,height-Y-1,colour); //mirror y
+			  src+=1;
+		  }}
+	  }
+	  //RGB
+	  else if (bpp==24)
+	  {	
+		  for (unsigned int Y=0;Y<height;Y++) {
+		  for (unsigned int X=0;X<width ;X++) {
+        juce::Colour colour(src[0],src[1],src[2]);
+        jimg.setPixelAt(X,height-Y-1,colour); //mirror y
+        src+=3;
+		  }}
+	  }
+	  //RGBA
+	  else if (bpp==32)
+	  {
+		  for (unsigned int Y=0;Y<height;Y++) {
+		  for (unsigned int X=0;X<width ;X++) {
+        juce::Colour colour(src[0],src[1],src[2],src[3]);
+        jimg.setPixelAt(X,height-Y-1,colour); //mirror y
+        src+=4;
+		  }}
+	  }
 
-	FreeImage_Unload(bitmap);
+    if (jfile.existsAsFile()) 
+      jfile.deleteFile();
+
+    juce::FileOutputStream jstream(jfile);
+    if (jstream.failedToOpen() || !jiff->writeImageToStream(jimg,jstream))
+    {
+		  Log::printf("Texture::save failed to save the texture file %s (reason: failedToOpen or writeImageToStream failed)\n",filename.c_str());
+		  return false;
+    }
+  }
 
 	filename=FileSystem::ShortPath(filename);
 	this->filename=filename;	
 	return true;
 }
-
-
 
 
 /////////////////////////////////////////////////
@@ -497,144 +542,3 @@ void Texture::flipVertical()
 	}
 }
 
-
-
-/////////////////////////////////////////////////////////////////
-class TextureViewer:public Viewer
-{
-	SmartPointer<Texture> texture0;
-	SmartPointer<Texture> texture1;
-
-public:
-
-	//constructor
-	TextureViewer(SmartPointer<Texture> texture0,SmartPointer<Texture> texture1)
-	{
-		this->texture0=texture0;
-		this->texture1=texture1;
-	}
-
-	//display
-	virtual void Render()
-	{
-		int W=this->frustum.width;
-		int H=this->frustum.height;
-		SmartPointer<Batch> batch(new Batch);
-		batch->primitive=Batch::QUADS;
-		batch->setColor(Color4f(1,1,1));
-		float _vertices[]       = {0,0,0,  W,0,0,  W,H,0, 0,H,0};batch->vertices.reset(new Vector(12,_vertices));
-		batch->texture0=texture0;
-		batch->texture1=texture1;
-		float _texture0coords[] ={0,0, 1,0, 1,1, 0,1};batch->texture0coords.reset(new Vector(8,_texture0coords));
-		float _texture1coords[] ={0,0, 1,0, 1,1, 0,1};batch->texture1coords.reset(new Vector(8,_texture1coords));
-
-		engine->ClearScreen();
-		engine->SetViewport(0,0,W,H);
-		engine->SetProjectionMatrix(Mat4f::ortho(0,W,0,H,-1,+1));
-		engine->SetModelviewMatrix(Mat4f());
-		engine->Render(batch);
-		engine->FlushScreen();
-	}
-};
-
-int Texture::SelfTest()
-{
-	Log::printf("Testing Texture...\n");
-	
-	SmartPointer<Texture> gioconda=Texture::open(":images/gioconda.tga",false,false);
-
-	//try to see if the shared context is working
-	if (true)
-	{
-		SmartPointer<Texture> back    =Texture::open(":images/gioconda.tga",false,false);
-		SmartPointer<Texture> texture1=Texture::open(":images/gioconda.texture1.tga",false,false);
-		TextureViewer v1(back,texture1);v1.Run();v1.Wait();
-		TextureViewer v2(back,texture1);v2.Run();v2.Wait();
-	}
-
-	//TGA open/save
-	if (true)
-	{
-		bool ret=gioconda->save(":temp/gioconda.copy.tga");
-		XgeReleaseAssert(gioconda->filename==":temp/gioconda.copy.tga");
-
-		XgeReleaseAssert(ret);
-		SmartPointer<Texture> back=Texture::open(":temp/gioconda.copy.tga",false,false);
-		SmartPointer<Texture> texture1=Texture::open(":images/gioconda.texture1.tga",false,false);
-		XgeReleaseAssert(back && texture1);
-		TextureViewer v(back,texture1);v.Run();v.Wait();
-	}
-
-	//test PNG load/save
-	if (true)
-	{
-		bool ret=gioconda->save(":temp/gioconda.copy.png");
-		XgeReleaseAssert(gioconda->filename==":temp/gioconda.copy.png");
-
-		XgeReleaseAssert(ret);
-		SmartPointer<Texture> back=Texture::open(":temp/gioconda.copy.png",false,false);
-		SmartPointer<Texture> texture1=Texture::open(":images/gioconda.texture1.png",false,false);
-		XgeReleaseAssert(back && texture1);
-		TextureViewer v(back,texture1);v.Run();v.Wait();
-	}
-
-	//test jpeg load/save
-	if (true)
-	{
-		bool ret=gioconda->save(":temp/gioconda.copy.jpg");
-		XgeReleaseAssert(gioconda->filename==":temp/gioconda.copy.jpg");
-
-		XgeReleaseAssert(ret);
-		SmartPointer<Texture> back=Texture::open(":temp/gioconda.copy.jpg",false,false);
-		SmartPointer<Texture> texture1=Texture::open(":images/gioconda.texture1.jpg",false,false);
-		XgeReleaseAssert(back && texture1);
-		TextureViewer v(back,texture1);v.Run();v.Wait();
-	}
-	
-	//test PPM load/save  (broken in macosx)
-	#ifndef PLATFORM_Darwin
-	if (true)
-	{
-		bool ret=gioconda->save(":temp/gioconda.copy.ppm");
-		XgeReleaseAssert(gioconda->filename==":temp/gioconda.copy.ppm");
-
-		XgeReleaseAssert(ret);
-		SmartPointer<Texture> back=Texture::open(":temp/gioconda.copy.ppm",false,false);
-		SmartPointer<Texture> texture1=Texture::open(":images/gioconda.texture1.ppm",false,false);
-		XgeReleaseAssert(back && texture1);
-		TextureViewer v(back,texture1);v.Run();v.Wait();
-	}
-	#endif
-
-	//test TIFF load/save (broken in macosx)
-	#ifndef PLATFORM_Darwin
-	if (true)
-	{
-		bool ret=gioconda->save(":temp/gioconda.copy.tif");
-		XgeReleaseAssert(gioconda->filename==":temp/gioconda.copy.tif");
-		XgeReleaseAssert(ret);
-		SmartPointer<Texture> back=Texture::open(":temp/gioconda.copy.tif",false,false);
-		SmartPointer<Texture> texture1=Texture::open(":images/gioconda.texture1.tif",false,false);
-		XgeReleaseAssert(back && texture1);
-		TextureViewer v(back,texture1);v.Run();v.Wait();
-	}
-	#endif
-
-
-	//test BMP load/save
-	if (true)
-	{
-		bool ret=gioconda->save(":temp/gioconda.copy.bmp");
-		XgeReleaseAssert(gioconda->filename==":temp/gioconda.copy.bmp");
-
-		XgeReleaseAssert(ret);
-		SmartPointer<Texture> back=Texture::open(":temp/gioconda.copy.bmp",false,false);
-		SmartPointer<Texture> texture1=Texture::open(":images/gioconda.texture1.bmp",false,false);
-		XgeReleaseAssert(back && texture1);
-		TextureViewer v(back,texture1);v.Run();v.Wait();
-	}
-
-	Texture::flushCache();
-
-	return 0;
-}

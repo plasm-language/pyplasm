@@ -43,7 +43,7 @@ Example in C++:
 //====================================================================================================================================
 
 
-class XGE_API GraphKMem
+class GraphKMem
 {
 public:
 	void Write(Archive& ar)
@@ -126,8 +126,6 @@ public:
 	//! internal use print statistics
 	void PrintStatistics();
 
-	//! self test
-	static int SelfTest();
 
 protected:
 
@@ -152,7 +150,7 @@ protected:
 //=======================================================
 //! Arch connecting graph nodes 
 //=======================================================
-class XGE_API GraphArch
+class GraphArch
 {	
 public:
 
@@ -182,7 +180,7 @@ public:
 //=====================================================
 //!definition for a graph node
 //=====================================================
-class XGE_API GraphNode
+class GraphNode
 {
 public:
 
@@ -224,7 +222,7 @@ public:
 //=================================================
 //! class for navigating up and down nodes
 //=================================================
-class XGE_API GraphIterator
+class GraphIterator
 {
 	friend class Graph;
 
@@ -289,7 +287,7 @@ public:
 //==============================================================
 //! class to visit all cells at a certain level
 //==============================================================
-class XGE_API GraphListIterator
+class GraphListIterator
 {
 	friend class Graph;
 
@@ -341,7 +339,7 @@ public:
 //========================================================
 //! a class which permits finding node in a Graph
 //========================================================
-class XGE_API GraphNavigator
+class GraphNavigator
 {
 	friend class Graph;
 
@@ -377,7 +375,7 @@ public:
 //=====================================================
 //! class which stores the full lattice (or hasse diagram) used by plasm
 //=====================================================
-class XGE_API Graph
+class Graph
 {	
 public:
 
@@ -417,8 +415,6 @@ protected:
 	friend class GraphIterator;
 	friend class GraphNavigator;
 	friend class GraphListIterator;
-
-
 
 	//! point dimension
 	int pointdim; 
@@ -909,12 +905,7 @@ public:
 		\param tolerance: when the centroid is too near the boundary hyperplanes i cannot orient correctly the face and so I'm confused by in/out classification
 	*/
 	bool contains(unsigned int C,const Vecf& point,float tolerance);
-
-	//! import svg file (beta version)
-	static SmartPointer<Graph> open_svg(std::string filename,bool bFull);
 	
-	//! self test
-	static int SelfTest();
 
 	//! get Batch for fast rendering (the Batch will contain only vertex and normals, the only information a Graph have)
 	/*!
