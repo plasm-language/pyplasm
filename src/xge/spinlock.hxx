@@ -11,17 +11,17 @@ inline SpinLock::SpinLock(int max_delta_time)
 ////////////////////////////////////////////////
 inline void SpinLock::Lock()
 {
-	#ifdef _WINDOWS
+	#if PYPLASM_WINDOWS
 	{
 		while(InterlockedExchange(&value,1)==1) 
 			Thread::Sleep(Utils::IntRand(1,max_delta_time));
 	}
-	#elif defined(PLATFORM_Darwin)
+	#elif PYPLASM_APPLE
 	{
 		while (!OSSpinLockTry(&value))
 			Thread::Sleep(Utils::IntRand(1,max_delta_time));
 	}
-	#elif defined(PLATFORM_Linux)
+	#elif PYPLASM_LINUX
 	{
 		while(__sync_lock_test_and_set(&value,1)==1) 
 			Thread::Sleep(Utils::IntRand(1,max_delta_time));
@@ -36,15 +36,15 @@ inline void SpinLock::Lock()
 ////////////////////////////////////////////////
 inline void SpinLock::Unlock()
 {
-	#ifdef _WINDOWS
+	#if PYPLASM_WINDOWS
 	{
 		InterlockedExchange(&value,0);
 	}
-	#elif defined(PLATFORM_Darwin)
+	#elif PYPLASM_APPLE
 	{
 		OSSpinLockUnlock(&value);
 	}
-	#elif defined(PLATFORM_Linux)
+	#elif PYPLASM_LINUX
 	{
 		__sync_lock_test_and_set(&value,0);
 	}

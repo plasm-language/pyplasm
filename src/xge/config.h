@@ -11,7 +11,6 @@
 //for memory pool (all malloc with less than 4096 bytes are cached)
 #define MEMPOOL_TABLE_SIZE  4096
 
-
 ///////////////////////////////////////////////////////////////
 //Graph config
 ///////////////////////////////////////////////////////////////
@@ -32,7 +31,7 @@
 #define PLASM_MAX_NUM_SPLIT 10
 
 ///////////////////////////////////////////////////////////////
-//viewer/frustum defaults
+//glcanvas/frustum defaults
 ///////////////////////////////////////////////////////////////
 #define DEFAULT_FOV 60
 
@@ -48,40 +47,6 @@
 ///////////////////////////////////////////////////////////////
 #define OCTREE_LOOSE_K_DEFAULT 2.0f
 #define OCTREE_MAX_DEPTH_DEFAULT 5
-
-
-
-///////////////////////////////////////////////////////////////
-//engine configuration
-///////////////////////////////////////////////////////////////
-
-
-#define ENGINE_AUTOMATIC_VBO_CREATION 1
-#define ENGINE_ENABLE_TESSELLATOR     1
-#define ENGINE_ENABLE_FBO             0
-#define ENGINE_ENABLE_SHADERS         0
-#define ENGINE_ENABLE_SHADOW_SHADER   0
-
-
-///////////////////////////////////////////////////////////////
-//shadow map config
-///////////////////////////////////////////////////////////////
-
-#if ENGINE_ENABLE_SHADOW_SHADER
-
-#define SHADOWMAP_MAXIMIZE_Z_USE 1 //tune up frustum to optimize the light frustum
-#define SHADOWMAP_TEXTURE_OFFSET 2 //leave texture0coords and texture1 for mesh, start from 2
-#define SHADOWMAP_MAX_SPLITS 4 //max number of split
-#define SHADOWMAP_SPLIT_WEIGHT 0.75f //split weight
-#define SHADOWMAP_NUM_SPLITS 3 //number of splits
-#define SHADOWMAP_DEPTH_SIZE 2048 //depth size
-
-#endif //ENGINE_ENABLE_SHADOW_SHADER
-
-
-///////////////////////////////////////////////////////////////
-//all the gui is handled by JUCE
-#define USE_JUCE 1 
 
 
 #endif //_CONFIG_H__

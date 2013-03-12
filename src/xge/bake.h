@@ -6,7 +6,7 @@
 
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
-class XGE_API Bake
+class Bake
 {
 protected:
 
@@ -41,14 +41,11 @@ public:
 	//to the export (return false on error)
 	bool Export();
 
-	//Run the rib
-	bool Run();
+	//run the rib
+	bool run();
 
 	//final post processing
 	bool PostProcess();
-
-	//self test
-	static int SelfTest();
 
 };
 

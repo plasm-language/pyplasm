@@ -10,7 +10,7 @@
 //main class to archive objects
 /////////////////////////////////////////////////
 
-class XGE_API Archive
+class Archive
 {
 public:
 
@@ -97,9 +97,6 @@ public:
 
 		return ptr;
 	}
-
-	//! SelfTest
-	static int SelfTest();
 
 protected:
 

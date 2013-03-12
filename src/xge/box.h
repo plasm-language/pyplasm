@@ -5,7 +5,7 @@
 #include <xge/vec.h>
 #include <xge/plane.h>
 
-class XGE_API Box2i
+class Box2i
 {
 public:
 
@@ -53,7 +53,7 @@ public:
 //===========================================================================
 //! Un box in 3-dim
 //===========================================================================
-class XGE_API Box3f
+class Box3f
 {
 public:
 
@@ -546,9 +546,6 @@ public:
 		return Utils::Format("[[%f,%f,%f],[%f,%f,%f]]",p1.x,p1.y,p1.z,p2.x,p2.y,p2.z);
 	}
 
-	//self testing
-	static int SelfTest();
-
 };
 
 
@@ -561,7 +558,7 @@ public:
 	che sono (1.0,x,y,z). Cosi' come i vettori conterranno 4 floats che sono (0.0,x,y,z).
 */
 //===========================================================================
-class XGE_API Boxf
+class Boxf
 {
 
 public:
@@ -1095,10 +1092,6 @@ public:
 		ret+="]]";
 		return ret;
 	}
-
-
-	///self testing
-	static int SelfTest();
 
 };
 

@@ -19,7 +19,7 @@
 
 
 
-class XGE_API OctreeNode
+class OctreeNode
 {
 public:
 
@@ -140,7 +140,7 @@ inline OctreeNode* OctreeNode::getNode(uint64 id)
 //! find objects in scene by frustum intersection
 //==========================================
 
-class XGE_API FrustumIterator
+class FrustumIterator
 {
 	
 private:
@@ -200,7 +200,7 @@ private:
 
 
 	//! the current frustum
-	Frustum* frustum;
+	SmartPointer<Frustum> frustum;
 
 	//! the main ray of the frustum
 	Ray3f ray;
@@ -218,7 +218,7 @@ public:
 		{;}
 
 	//! constructor  from root and frustum 
-	explicit FrustumIterator(OctreeNode* root,Frustum* frustum,bool bFrontToBack=true)
+	explicit FrustumIterator(OctreeNode* root,SmartPointer<Frustum> frustum,bool bFrontToBack=true)
 	{
 		this->bFrontToBack=bFrontToBack;
 		this->frustum=frustum;
@@ -270,12 +270,12 @@ public:
 //! find objects in scene by ray intersection
 //==========================================
 
-class XGE_API RayIterator
+class RayIterator
 {
 	
 private:
 
-	class XGE_API PqItem
+	class PqItem
 	{
 	public:
 	
@@ -405,7 +405,7 @@ public:
 
 */
 //==========================================================================================
-class XGE_API Octree 
+class Octree 
 {
 public:
 
@@ -477,7 +477,7 @@ public:
 	OctreeNode* getNode(const Box3f& obj_box,OctreeNode* node=0);
 
 	//! find objects intersecting frustum LOOSELY ordered by ray-distance (i.e. distance of object-bounding-box nearest point and the main ray of the frustum (see Frustum::getRay())
-	FrustumIterator find(Frustum* frustum,bool bFrontToBack=true) {return FrustumIterator(this->root,frustum,bFrontToBack);}
+	FrustumIterator find(SmartPointer<Frustum> frustum,bool bFrontToBack=true) {return FrustumIterator(this->root,frustum,bFrontToBack);}
 
 	//! find objects  intersecting ray STRICTLY ordered by distance from ray.position
 	RayIterator find(const Ray3f& ray,float min_distance=0,float max_distance=+1e18f) {return RayIterator(this->root,ray,min_distance,max_distance);}

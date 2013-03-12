@@ -5,7 +5,7 @@
 
 #include "gzguts.h"
 
-/** added by FreeImage */
+
 #ifdef _MSC_VER
 #include <io.h>	/* read, close */
 /**

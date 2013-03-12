@@ -2,7 +2,7 @@
 
 #include <xge/xge.h>
 
-#ifdef PLATFORM_Darwin
+#ifdef PYPLASM_APPLE
 #include <libkern/OSAtomic.h>
 #endif
 
@@ -13,7 +13,7 @@
 Class for very fast lock with active sleep
 */
 
-class XGE_API SpinLock
+class SpinLock
 {
 public:
 
@@ -30,13 +30,13 @@ private:
 
 	long id;
 
-	#if defined(_WINDOWS)
+	#if PYPLASM_WINDOWS
 		long value;
 		
-	#elif defined(PLATFORM_Darwin)
+	#elif PYPLASM_APPLE
 		OSSpinLock value;
 		
-	#elif defined(PLATFORM_Linux)
+	#elif PYPLASM_LINUX
 		long value;
 	#endif
 

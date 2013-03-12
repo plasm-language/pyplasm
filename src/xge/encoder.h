@@ -23,7 +23,7 @@ Esempio tipico di uso:
 */
 //=====================================================================
 
-class XGE_API Encoder
+class Encoder
 {
 public:
 
@@ -62,9 +62,6 @@ public:
 	//! get internal encoded text as STL string
 	std::string str();
 
-	//SelfTest
-	static int SelfTest();
-
 protected:
 
 	//buffer
@@ -82,7 +79,7 @@ protected:
 
 //=====================================================================
 //=====================================================================
-class XGE_API Decoder
+class Decoder
 {
 public:
 
@@ -121,9 +118,6 @@ public:
 		MemPool::getSingleton()->free(len+1,temp);
 		return ret;
 	}
-
-	//! SelfTest
-	static int SelfTest();
 
 private:
 

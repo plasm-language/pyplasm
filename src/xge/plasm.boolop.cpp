@@ -13,7 +13,7 @@ public:
 	//constructor
 	PlasmBoolOperation
 	(
-		Plasm::BoolOpCode     code, //see BOOL_CODE_XXXX
+		int                   code, //see BOOL_CODE_XXXX
 		int                   pointdim, //space for the output
 		bool                  USE_OCTREE, //use octree
 		bool                  BOUNDARY_REP, //consider arguments in full dimension or not
@@ -100,7 +100,7 @@ protected:
 	std::vector<SmartPointer<Hpc> > args;
 
 	//code, see BOOL_CODE_XXXX
-	Plasm::BoolOpCode code;
+	int code;
 
 	//final solution
 	SmartPointer<Graph> gout;
@@ -135,7 +135,7 @@ protected:
 
 /////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////
-SmartPointer<Hpc> Plasm::boolop(Plasm::BoolOpCode operation,std::vector<SmartPointer<Hpc> > pols,float tolerance,int maxnumtry,bool bUseOctreePlanes)
+SmartPointer<Hpc> Plasm::boolop(int operation,std::vector<SmartPointer<Hpc> > pols,float tolerance,int maxnumtry,bool bUseOctreePlanes)
 {
 	START(PLASM_BOOLOP);
 
@@ -144,7 +144,7 @@ SmartPointer<Hpc> Plasm::boolop(Plasm::BoolOpCode operation,std::vector<SmartPoi
 	for (int i=0;i<(int)pols.size();i++) 
 		spacedim=max2(spacedim,getSpaceDim(pols[i]));
 	
-	PlasmBoolOperation bop((BoolOpCode)operation,spacedim,bUseOctreePlanes,false,maxnumtry,tolerance,tolerance);
+	PlasmBoolOperation bop(operation,spacedim,bUseOctreePlanes,false,maxnumtry,tolerance,tolerance);
 
 	for (int i=0;i<(int)pols.size();i++) 
 	{
@@ -202,7 +202,7 @@ inline PlasmBoolOperation::face_t* PlasmBoolOperation::face_set_copy(face_t* src
 
 //////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
-PlasmBoolOperation::PlasmBoolOperation(Plasm::BoolOpCode code,int pointdim,bool USE_OCTREE,bool BOUNDARY_REP,int G_SPLIT_MAXNUMTRY,float G_SPLIT_TOLERANCE,float G_CONTAINS_TOLERANCE)
+PlasmBoolOperation::PlasmBoolOperation(int code,int pointdim,bool USE_OCTREE,bool BOUNDARY_REP,int G_SPLIT_MAXNUMTRY,float G_SPLIT_TOLERANCE,float G_CONTAINS_TOLERANCE)
 {
 	for (int I=0;I<TIME_END;I++) timings[I].diff=0;
 
@@ -211,7 +211,7 @@ PlasmBoolOperation::PlasmBoolOperation(Plasm::BoolOpCode code,int pointdim,bool 
 	
 	START(TIME_FETCH);
 
-	XgeDebugAssert(code==Plasm::BOOL_CODE_OR || code==Plasm::BOOL_CODE_AND || code==Plasm::BOOL_CODE_DIFF || code==Plasm::BOOL_CODE_XOR);
+	XgeDebugAssert(code==BOOL_CODE_OR || code==BOOL_CODE_AND || code==BOOL_CODE_DIFF || code==BOOL_CODE_XOR);
 	this->code=code;
 	//this->gout.reset(0);
 	this->pointdim=pointdim;
@@ -608,7 +608,7 @@ unsigned short PlasmBoolOperation::classify(const Vecf& point)
 
 		switch (code)
 		{
-			case Plasm::BOOL_CODE_OR://OR, any hpc can be full
+			case BOOL_CODE_OR://OR, any hpc can be full
 				if (nfull) 
 				{
 					END(TIME_CLASSIFY);
@@ -616,7 +616,7 @@ unsigned short PlasmBoolOperation::classify(const Vecf& point)
 				}
 				break;
 
-			case Plasm::BOOL_CODE_AND://AND, all hpc should be full
+			case BOOL_CODE_AND://AND, all hpc should be full
 				if (nempty) 
 				{
 					END(TIME_CLASSIFY);
@@ -624,7 +624,7 @@ unsigned short PlasmBoolOperation::classify(const Vecf& point)
 				}
 				break;
 
-			case Plasm::BOOL_CODE_DIFF://DIFF, the first should be full, the other should not be full
+			case BOOL_CODE_DIFF://DIFF, the first should be full, the other should not be full
 				if ((!H && !bFull) || (H && bFull)) 
 				{
 					END(TIME_CLASSIFY);
@@ -632,7 +632,7 @@ unsigned short PlasmBoolOperation::classify(const Vecf& point)
 				}
 				break;
 
-			case Plasm::BOOL_CODE_XOR://XOR, bisogna contare i dispari
+			case BOOL_CODE_XOR://XOR, bisogna contare i dispari
 				break;
 		}
 	}
@@ -642,19 +642,19 @@ unsigned short PlasmBoolOperation::classify(const Vecf& point)
 
 	switch (code)
 	{
-		case Plasm::BOOL_CODE_OR://no one is full
+		case BOOL_CODE_OR://no one is full
 			XgeDebugAssert(nempty==args.size());
 			return CELL_OUT;
 
-		case Plasm::BOOL_CODE_AND://all full
+		case BOOL_CODE_AND://all full
 			XgeDebugAssert(nfull==args.size());
 			return CELL_IN;
 
-		case Plasm::BOOL_CODE_DIFF://the first is full and all other are empty
+		case BOOL_CODE_DIFF://the first is full and all other are empty
 			XgeDebugAssert(nfull==1);
 			return CELL_IN;
 
-		case Plasm::BOOL_CODE_XOR://zero full or one full
+		case BOOL_CODE_XOR://zero full or one full
 			return (nfull & 1) ?CELL_IN:CELL_OUT;
 	}
 
@@ -844,145 +844,5 @@ void PlasmBoolOperation::doOctree(unsigned int C,const Boxf& box,face_t* faces)
 	doOctree(Ca,box_plus ,faces_above );
 }
 
-
-
-
-///////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////
-#if 0
-Graph* open_svg(const char* filename,bool bFull);
-Graph* open_ply(const char* filename);
-void main()
-{
-	if (true)
-	{
-		Graph* g=open_svg("examples/svg/edificicleaned.svg",true);
-		SmartPointer<Hpc> hpc=(SmartPointer<Hpc>)plasm->make(g);
-		//Matf vmat(2),hmat(2);
-		//g->toUnitBox(vmat,hmat);
-
-		const bool bUseOctree=true;
-		PlasmBoolOperation bop(BOOL_CODE_OR,2,bUseOctree);
-		bop.add(hpc);
-		bop.run();
-
-		plasm->view((SmartPointer<Hpc>)plasm->make(bop.getGraph()->clone()));
-	}
-
-	//boundary 3dim
-	if (true)
-	{
-		SmartPointer<Hpc> c1=(SmartPointer<Hpc>)plasm->make(open_ply("C:/home/demos/data/fields/dinosaur.ply"));
-
-		PlasmBoolOperation OR(BOOL_CODE_OR,3,true,true);
-		OR.add(c1);
-		OR.run();
-		Graph::Node* pol=plasm->make(OR.getGraph()->clone());
-		plasm->view(pol,"PLY",true);
-	}
-	return;
-}
-
-#endif
-
-
-
-//////////////////////////////////////////////////////////////////////
-int Plasm::boolop_selftest()
-{
-	Log::printf("Testing PlasmBoolOperation...\n");
-	{
-		SmartPointer<Hpc> c1=Plasm::cube(0);
-		SmartPointer<Hpc> c2=Plasm::cube(0);
-
-		std::vector<SmartPointer<Hpc> > pols;
-		pols.push_back(c1);
-		pols.push_back(c2);
-
-		std::vector<SmartPointer<Hpc> >args;
-
- 		args.push_back(Plasm::translate(Plasm::boolop(BOOL_CODE_OR  ,pols),2,2,0.0f));
-		args.push_back(Plasm::translate(Plasm::cube(1,-0.5,+0.5),2,2,0.5));
-		args.push_back(Plasm::translate(Plasm::boolop(BOOL_CODE_AND ,pols),2,2,1.0f));
-		args.push_back(Plasm::translate(Plasm::cube(1,-0.5,+0.5),2,2,1.5));
-		args.push_back(Plasm::translate(Plasm::boolop(BOOL_CODE_DIFF,pols),2,2,2.0f));
-		args.push_back(Plasm::translate(Plasm::cube(1,-0.5,+0.5),2,2,2.5));
-		args.push_back(Plasm::translate(Plasm::boolop(BOOL_CODE_XOR ,pols),2,2,3.0f));
-		args.push_back(Plasm::translate(Plasm::cube(1,-0.5,+0.5),2,2,3.5));
-
-		SmartPointer<Hpc> Out=Plasm::Struct(args);
-		Plasm::View(Out,false);
-	}
-
-	XgeReleaseAssert(!xge_total_hpc);
-
-
-	//test in 1-dim
-
-	{
-		SmartPointer<Hpc> c1=Plasm::cube(1,0,3);
-		SmartPointer<Hpc> c2=Plasm::cube(1,1,4);
-		SmartPointer<Hpc> c3=Plasm::cube(1,2,5);
-
-		std::vector<SmartPointer<Hpc> > pols;
-		pols.push_back(c1);
-		pols.push_back(c2);
-		pols.push_back(c3);
-
-		std::vector<SmartPointer<Hpc> >args;
-
-		args.push_back(Plasm::translate(Plasm::boolop(BOOL_CODE_OR   ,pols),2,2,0.0f));
-		args.push_back(Plasm::translate(Plasm::boolop(BOOL_CODE_AND  ,pols),2,2,1.0f));
-		args.push_back(Plasm::translate(Plasm::boolop(BOOL_CODE_DIFF ,pols),2,2,2.0f));
-		args.push_back(Plasm::translate(Plasm::boolop(BOOL_CODE_XOR  ,pols),2,2,3.0f));
-
-		SmartPointer<Hpc> Out=Plasm::Struct(args);
-		Plasm::View(Out,false);
-	}
-
-	XgeReleaseAssert(!xge_total_hpc);
-
-	
-	{
-		SmartPointer<Hpc> base_cube=Plasm::translate(Plasm::translate(Plasm::translate(Plasm::cube(3),3,1,-0.5),3,2,-0.5),3,3,-0.5);
-
-		std::vector<SmartPointer<Hpc> > pols;
-
-		const int npols=4;
-		for (int i=0;i<npols;i++)
-			pols.push_back(Plasm::rotate(base_cube,3,1,2,i*(float)M_PI/(npols*2)));
-
-		std::vector<SmartPointer<Hpc> > args;
-		args.push_back(Plasm::translate(Plasm::boolop(BOOL_CODE_OR  ,pols),3,1,0.0f));
-		args.push_back(Plasm::translate(Plasm::boolop(BOOL_CODE_AND ,pols),3,1,1.5f));
-		args.push_back(Plasm::translate(Plasm::boolop(BOOL_CODE_DIFF,pols),3,1,3.0f));
-		args.push_back(Plasm::translate(Plasm::boolop(BOOL_CODE_XOR ,pols),3,1,4.5f));
-
-		SmartPointer<Hpc> Out=Plasm::Struct(args);
-		Plasm::View(Out,false);	
-	}
-	
-	XgeReleaseAssert(!xge_total_hpc);
-
-	//test edifici (only in release mode! about 15 seconds)
-#if 0
-	{
-		Graph* g=Graph::open_svg("examples/svg/edificicleaned.svg",true);
-
-		//Log::printf("%d %d %d\n",g->getNCells(0),g->getNCells(1),g->getNCells(2));
-		//Matf vmat(2),hmat(2);
-		//g->toUnitBox(vmat,hmat);
-		//g->viewer(1,&g,2);
-
-		SmartPointer<Hpc> pols[]={Plasm::make(g)};
-		SmartPointer<Hpc> Out=(SmartPointer<Hpc>)Plasm::boolop(BOOL_CODE_OR,1,pols);
-		Plasm::viewer(Out,"Boolean operation");	
-	}
-
-	XgeReleaseAssert(!xge_total_hpc);
-#endif
-
-	return 0;
-}
 
 

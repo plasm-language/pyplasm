@@ -4,7 +4,7 @@
 #include <xge/xge.h>
 #include <xge/vec.h>
 
-class XGE_API Triangle2i
+class Triangle2i
 {
 public:
 

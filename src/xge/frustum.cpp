@@ -10,10 +10,10 @@
 Frustum::Frustum()
 {
 	//default values to be set from outside
-	this->x=0;
-	this->y=0;
-	this->width  =800;
-	this->height =800;
+	this->x      =0;
+	this->y      =0;
+	this->width  =1;
+	this->height =1;
 
 	//default camera position
 	this->pos=Vec3f(+1,+1, +1);
@@ -71,11 +71,8 @@ void Frustum::guessProjectionMatrix(Box3f box,float fov)
 void Frustum::refresh()
 {
 	//if the form has been hidden
-	if (!width || !height)
-	{
-		this->width=800;
-		this->height=800;
-	}
+	this->width =max2(this->width ,1);
+	this->height=max2(this->height,1);
 
 	//calculate RIGHT
 	this->right=dir.cross(vup).normalize();
@@ -97,7 +94,8 @@ void Frustum::refresh()
 
 	//extract planes
 	//http://www.cs.otago.ac.nz/postgrads/alexis/planeExtraction.pdf
-	const float* mat=this->mat_dir.transpose().mat;
+        Mat4f mat_t=this->mat_dir.transpose();
+	const float* mat=mat_t.mat;
 	this->planes[PLANE_LEFT  ]=(Plane4f(-(mat[ 3] + mat[ 0]),-(mat[ 7] + mat[ 4]),-(mat[11] + mat[ 8]),-(mat[15] + mat[12])));
 	this->planes[PLANE_RIGHT ]=(Plane4f(-(mat[ 3] - mat[ 0]),-(mat[ 7] - mat[ 4]),-(mat[11] - mat[ 8]),-(mat[15] - mat[12])));
 	this->planes[PLANE_TOP   ]=(Plane4f(-(mat[ 3] - mat[ 1]),-(mat[ 7] - mat[ 5]),-(mat[11] - mat[ 9]),-(mat[15] - mat[13])));
@@ -112,7 +110,7 @@ void Frustum::guessBestPosition(const Box3f& box)
 {   
 	XgeDebugAssert(box.isValid());
 
-    float maxdim = box.maxsize();
+  float maxdim = box.maxsize();
    
 	this->pos=box.center()+1.5f*box.size();
 	this->dir=(box.center()-pos).normalize();
@@ -162,13 +160,13 @@ void Frustum::fixVup()
 }
 
 ////////////////////////////////////////////////////////////
-void Frustum::Render(Engine* engine)
+void Frustum::render(GLCanvas* glcanvas)
 {
 	SmartPointer<Batch> batch(new Batch);
 	batch->primitive=Batch::LINES;
 	
 	batch->setColor(Color4f::Black());
-	batch->vertices.reset(new Vector(24*3));
+	batch->vertices.reset(new Array(24*3));
 	
 	static int indices[24]=
 	{
@@ -188,7 +186,7 @@ void Frustum::Render(Engine* engine)
 		POINT_NEAR_TOP_LEFT      ,POINT_FAR_TOP_LEFT
 	};
 
-	float* v=batch->vertices->mem();
+	float* v=(float*)batch->vertices->c_ptr();
 	for (int i=0;i<24;i++)
 	{
 		*v++=points[indices[i]].x;
@@ -196,139 +194,10 @@ void Frustum::Render(Engine* engine)
 		*v++=points[indices[i]].z;
 	}
 
-	engine->SetLineWidth(4);
-	engine->Render(batch);
-	engine->SetLineWidth(1);
+	glcanvas->setLineWidth(4);
+	glcanvas->renderBatch(batch);
+	glcanvas->setLineWidth(1);
 }
-
-////////////////////////////////////////////////////////////
-bool Frustum::defaultKeyboard(int key,int x,int y)
-{
-	switch (key)
-	{
-		case 'a':
-		case 'A':
-		case Keyboard::Key_Left :
-			this->pos-=this->right*this->walk_speed;
-			return true;
-
-		case 'd':
-		case 'D':
-		case Keyboard::Key_Right:
-			this->pos+=this->right*this->walk_speed;
-			return true;
-
-		case 'w':
-		case 'W':
-			{
-				Ray3f ray=this->unproject(x,y);
-				this->pos+=ray.dir*this->walk_speed;
-				//this->pos+=this->dir*this->walk_speed;
-				return true;
-			}
-
-		case 's':
-		case 'S':
-			{
-				Ray3f ray=this->unproject(x,y);
-				this->pos-=ray.dir*this->walk_speed;
-				//this->pos-=this->dir*this->walk_speed;
-				return true;
-			}
-
-		case Keyboard::Key_Up   :
-			this->pos+=this->vup*this->walk_speed;
-			return true;
-
-		case Keyboard::Key_Down :
-			this->pos-=this->vup*this->walk_speed;
-			return true;
-
-		case '+':
-			this->walk_speed*=0.8f;
-			Log::printf("Walk speed %f\n",this->walk_speed);
-			return true;
-
-		case '-':
-			this->walk_speed/=0.8f;
-			Log::printf("Walk speed %f\n",this->walk_speed);
-			return true;
-
-	}
-
-	return false;
-
-}
-
-////////////////////////////////////////////////////////////
-bool Frustum::defaultMouseWalkingMode(int button,int mouse_beginx,int mouse_beginy,int x,int y)
-{
-	float dx=0.5*M_PI*(x-mouse_beginx)/(float)width;
-	float dy=0.5*M_PI*(y-mouse_beginy)/(float)height;
-
-	if (button & MouseEvent::LeftButton)
-	{
-		Vec3f dir=this->dir.rotate(this->vup,-dx);
-		Vec3f rot_axis=dir.cross(this->vup).normalize();
-		dir=dir.rotate(rot_axis,-dy).normalize();
-		this->dir=dir;
-	}
-	else if (button & MouseEvent::MidButton)
-	{
-		this->pos=this->pos + this->vup*-dy*walk_speed*10 + this->right*dx*walk_speed*10;
-	}
-
-	return true;
-}
-
-
-////////////////////////////////////////////////////////////
-bool Frustum::defaultMouseTrackballMode(int button,int mouse_beginx,int mouse_beginy,int x,int y,Vec3f center)
-{
-	Mat4f vmat=Mat4f::lookat(pos.x,pos.y,pos.z,pos.x+dir.x,pos.y+dir.y,pos.z+dir.z,vup.x,vup.y,vup.z) * Mat4f::translate(+1*center);
-	Quaternion rotation=Quaternion(vmat);
-	Vec3f translate=Vec3f(vmat[3],vmat[7],vmat[11])-center;
-
-	float deltax = (float)(x - mouse_beginx);   
-	float deltay = (float)(mouse_beginy - y);
-	int W=this->width;
-	int H=this->height;
-
-	if (button & MouseEvent::LeftButton)
-	{
-		float Min = (float)(W < H ? W : H)*0.5f;
-		Vec3f offset(W/2.f, H/2.f, 0);
-		Vec3f a=(Vec3f((float)(mouse_beginx), (float)(H-mouse_beginy), 0)-offset)/Min;
-		Vec3f b=(Vec3f((float)(           x), (float)(H-           y), 0)-offset)/Min;
-		a.set(2, pow(2.0f, -0.5f * a.module()));
-		b.set(2, pow(2.0f, -0.5f * b.module()));
-		a = a.normalize();
-		b = b.normalize();
-		Vec3f axis = a.cross(b).normalize();
-		float angle = acos(a*b);
-		const float TRACKBALLSCALE=1.0f;
-		rotation = Quaternion(axis, angle * TRACKBALLSCALE) * rotation;
-	}
-	else if (button & MouseEvent::MidButton)
-	{
-		translate -= Vec3f(0,0,deltay) * walk_speed;
-
-	}
-	else if (button & MouseEvent::RightButton) 
-	{
-		translate += Vec3f(deltax, deltay, 0) * walk_speed;
-	}
-
-	vmat=Mat4f::translate(translate) * Mat4f::translate(+1*center)* Mat4f::rotate(rotation.getAxis(),rotation.getAngle())* Mat4f::translate(-1*center);
-	vmat=vmat.invert();	
-	this->pos=Vec3f(  vmat[3], vmat[7], vmat[11]);
-	this->dir=Vec3f( -vmat[2],-vmat[6],-vmat[10]);
-	this->vup=Vec3f(  vmat[1], vmat[5], vmat[ 9]);
-	return true;
-}
-
-
-
 
 
 ////////////////////////////////////////////////////////////////////////

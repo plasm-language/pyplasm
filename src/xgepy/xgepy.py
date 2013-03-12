@@ -527,54 +527,34 @@ class StdVectorSmartPointerTexture(_object):
 StdVectorSmartPointerTexture_swigregister = _xgepy.StdVectorSmartPointerTexture_swigregister
 StdVectorSmartPointerTexture_swigregister(StdVectorSmartPointerTexture)
 
-class StdVectorSmartPointerEngineResource(_object):
+HERE = _xgepy.HERE
+class XgeModule(_object):
     __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, StdVectorSmartPointerEngineResource, name, value)
+    __setattr__ = lambda self, name, value: _swig_setattr(self, XgeModule, name, value)
     __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, StdVectorSmartPointerEngineResource, name)
+    __getattr__ = lambda self, name: _swig_getattr(self, XgeModule, name)
     __repr__ = _swig_repr
-    def iterator(self): return _xgepy.StdVectorSmartPointerEngineResource_iterator(self)
-    def __iter__(self): return self.iterator()
-    def __nonzero__(self): return _xgepy.StdVectorSmartPointerEngineResource___nonzero__(self)
-    def __bool__(self): return _xgepy.StdVectorSmartPointerEngineResource___bool__(self)
-    def __len__(self): return _xgepy.StdVectorSmartPointerEngineResource___len__(self)
-    def pop(self): return _xgepy.StdVectorSmartPointerEngineResource_pop(self)
-    def __getslice__(self, *args): return _xgepy.StdVectorSmartPointerEngineResource___getslice__(self, *args)
-    def __setslice__(self, *args): return _xgepy.StdVectorSmartPointerEngineResource___setslice__(self, *args)
-    def __delslice__(self, *args): return _xgepy.StdVectorSmartPointerEngineResource___delslice__(self, *args)
-    def __delitem__(self, *args): return _xgepy.StdVectorSmartPointerEngineResource___delitem__(self, *args)
-    def __getitem__(self, *args): return _xgepy.StdVectorSmartPointerEngineResource___getitem__(self, *args)
-    def __setitem__(self, *args): return _xgepy.StdVectorSmartPointerEngineResource___setitem__(self, *args)
-    def append(self, *args): return _xgepy.StdVectorSmartPointerEngineResource_append(self, *args)
-    def empty(self): return _xgepy.StdVectorSmartPointerEngineResource_empty(self)
-    def size(self): return _xgepy.StdVectorSmartPointerEngineResource_size(self)
-    def clear(self): return _xgepy.StdVectorSmartPointerEngineResource_clear(self)
-    def swap(self, *args): return _xgepy.StdVectorSmartPointerEngineResource_swap(self, *args)
-    def get_allocator(self): return _xgepy.StdVectorSmartPointerEngineResource_get_allocator(self)
-    def begin(self): return _xgepy.StdVectorSmartPointerEngineResource_begin(self)
-    def end(self): return _xgepy.StdVectorSmartPointerEngineResource_end(self)
-    def rbegin(self): return _xgepy.StdVectorSmartPointerEngineResource_rbegin(self)
-    def rend(self): return _xgepy.StdVectorSmartPointerEngineResource_rend(self)
-    def pop_back(self): return _xgepy.StdVectorSmartPointerEngineResource_pop_back(self)
-    def erase(self, *args): return _xgepy.StdVectorSmartPointerEngineResource_erase(self, *args)
-    def __init__(self, *args): 
-        this = _xgepy.new_StdVectorSmartPointerEngineResource(*args)
+    __swig_getmethods__["init"] = lambda x: _xgepy.XgeModule_init
+    if _newclass:init = staticmethod(_xgepy.XgeModule_init)
+    __swig_getmethods__["shutdown"] = lambda x: _xgepy.XgeModule_shutdown
+    if _newclass:shutdown = staticmethod(_xgepy.XgeModule_shutdown)
+    def __init__(self): 
+        this = _xgepy.new_XgeModule()
         try: self.this.append(this)
         except: self.this = this
-    def push_back(self, *args): return _xgepy.StdVectorSmartPointerEngineResource_push_back(self, *args)
-    def front(self): return _xgepy.StdVectorSmartPointerEngineResource_front(self)
-    def back(self): return _xgepy.StdVectorSmartPointerEngineResource_back(self)
-    def assign(self, *args): return _xgepy.StdVectorSmartPointerEngineResource_assign(self, *args)
-    def resize(self, *args): return _xgepy.StdVectorSmartPointerEngineResource_resize(self, *args)
-    def insert(self, *args): return _xgepy.StdVectorSmartPointerEngineResource_insert(self, *args)
-    def reserve(self, *args): return _xgepy.StdVectorSmartPointerEngineResource_reserve(self, *args)
-    def capacity(self): return _xgepy.StdVectorSmartPointerEngineResource_capacity(self)
-    __swig_destroy__ = _xgepy.delete_StdVectorSmartPointerEngineResource
+    __swig_destroy__ = _xgepy.delete_XgeModule
     __del__ = lambda self : None;
-StdVectorSmartPointerEngineResource_swigregister = _xgepy.StdVectorSmartPointerEngineResource_swigregister
-StdVectorSmartPointerEngineResource_swigregister(StdVectorSmartPointerEngineResource)
+XgeModule_swigregister = _xgepy.XgeModule_swigregister
+XgeModule_swigregister(XgeModule)
 
-HERE = _xgepy.HERE
+def XgeModule_init():
+  return _xgepy.XgeModule_init()
+XgeModule_init = _xgepy.XgeModule_init
+
+def XgeModule_shutdown():
+  return _xgepy.XgeModule_shutdown()
+XgeModule_shutdown = _xgepy.XgeModule_shutdown
+
 SPIN_LOCK_DEFAULT_MAX_DELTA_TIME = _xgepy.SPIN_LOCK_DEFAULT_MAX_DELTA_TIME
 MEMPOOL_TABLE_SIZE = _xgepy.MEMPOOL_TABLE_SIZE
 GRAPH_MAX_GEOMETRIC_DIMENSION = _xgepy.GRAPH_MAX_GEOMETRIC_DIMENSION
@@ -585,12 +565,6 @@ DEFAULT_FPS = _xgepy.DEFAULT_FPS
 XGE_TRACK_MEMORY = _xgepy.XGE_TRACK_MEMORY
 OCTREE_LOOSE_K_DEFAULT = _xgepy.OCTREE_LOOSE_K_DEFAULT
 OCTREE_MAX_DEPTH_DEFAULT = _xgepy.OCTREE_MAX_DEPTH_DEFAULT
-ENGINE_AUTOMATIC_VBO_CREATION = _xgepy.ENGINE_AUTOMATIC_VBO_CREATION
-ENGINE_ENABLE_TESSELLATOR = _xgepy.ENGINE_ENABLE_TESSELLATOR
-ENGINE_ENABLE_FBO = _xgepy.ENGINE_ENABLE_FBO
-ENGINE_ENABLE_SHADERS = _xgepy.ENGINE_ENABLE_SHADERS
-ENGINE_ENABLE_SHADOW_SHADER = _xgepy.ENGINE_ENABLE_SHADOW_SHADER
-USE_JUCE = _xgepy.USE_JUCE
 class Utils(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, Utils, name, value)
@@ -643,8 +617,6 @@ class Utils(_object):
     if _newclass:LTrim = staticmethod(_xgepy.Utils_LTrim)
     __swig_getmethods__["Trim"] = lambda x: _xgepy.Utils_Trim
     if _newclass:Trim = staticmethod(_xgepy.Utils_Trim)
-    __swig_getmethods__["SelfTest"] = lambda x: _xgepy.Utils_SelfTest
-    if _newclass:SelfTest = staticmethod(_xgepy.Utils_SelfTest)
     def __init__(self): 
         this = _xgepy.new_Utils()
         try: self.this.append(this)
@@ -745,10 +717,6 @@ Utils_LTrim = _xgepy.Utils_LTrim
 def Utils_Trim(*args):
   return _xgepy.Utils_Trim(*args)
 Utils_Trim = _xgepy.Utils_Trim
-
-def Utils_SelfTest():
-  return _xgepy.Utils_SelfTest()
-Utils_SelfTest = _xgepy.Utils_SelfTest
 
 class Log(_object):
     __swig_setmethods__ = {}
@@ -888,15 +856,9 @@ class Archive(_object):
     def WriteRaw(self, *args): return _xgepy.Archive_WriteRaw(self, *args)
     def ReadRaw(self, *args): return _xgepy.Archive_ReadRaw(self, *args)
     def ExistsNode(self, *args): return _xgepy.Archive_ExistsNode(self, *args)
-    __swig_getmethods__["SelfTest"] = lambda x: _xgepy.Archive_SelfTest
-    if _newclass:SelfTest = staticmethod(_xgepy.Archive_SelfTest)
 Archive_swigregister = _xgepy.Archive_swigregister
 Archive_swigregister(Archive)
 cvar = _xgepy.cvar
-
-def Archive_SelfTest():
-  return _xgepy.Archive_SelfTest()
-Archive_SelfTest = _xgepy.Archive_SelfTest
 
 class Encoder(_object):
     __swig_setmethods__ = {}
@@ -924,14 +886,8 @@ class Encoder(_object):
     def WriteString(self, *args): return _xgepy.Encoder_WriteString(self, *args)
     def c_str(self): return _xgepy.Encoder_c_str(self)
     def __str__(self): return _xgepy.Encoder___str__(self)
-    __swig_getmethods__["SelfTest"] = lambda x: _xgepy.Encoder_SelfTest
-    if _newclass:SelfTest = staticmethod(_xgepy.Encoder_SelfTest)
 Encoder_swigregister = _xgepy.Encoder_swigregister
 Encoder_swigregister(Encoder)
-
-def Encoder_SelfTest():
-  return _xgepy.Encoder_SelfTest()
-Encoder_SelfTest = _xgepy.Encoder_SelfTest
 
 class Decoder(_object):
     __swig_setmethods__ = {}
@@ -957,14 +913,8 @@ class Decoder(_object):
     def ReadFloat(self): return _xgepy.Decoder_ReadFloat(self)
     def ReadDouble(self): return _xgepy.Decoder_ReadDouble(self)
     def ReadString(self): return _xgepy.Decoder_ReadString(self)
-    __swig_getmethods__["SelfTest"] = lambda x: _xgepy.Decoder_SelfTest
-    if _newclass:SelfTest = staticmethod(_xgepy.Decoder_SelfTest)
 Decoder_swigregister = _xgepy.Decoder_swigregister
 Decoder_swigregister(Decoder)
-
-def Decoder_SelfTest():
-  return _xgepy.Decoder_SelfTest()
-Decoder_SelfTest = _xgepy.Decoder_SelfTest
 
 class FileSystem(_object):
     __swig_setmethods__ = {}
@@ -1019,45 +969,6 @@ FileSystem_FileSize = _xgepy.FileSystem_FileSize
 def FileSystem_FileExists(*args):
   return _xgepy.FileSystem_FileExists(*args)
 FileSystem_FileExists = _xgepy.FileSystem_FileExists
-
-class MouseEvent(_object):
-    __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, MouseEvent, name, value)
-    __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, MouseEvent, name)
-    __repr__ = _swig_repr
-    MousePressed = _xgepy.MouseEvent_MousePressed
-    MouseMoved = _xgepy.MouseEvent_MouseMoved
-    MouseReleased = _xgepy.MouseEvent_MouseReleased
-    MouseWheel = _xgepy.MouseEvent_MouseWheel
-    MouseDoubleClick = _xgepy.MouseEvent_MouseDoubleClick
-    __swig_setmethods__["type"] = _xgepy.MouseEvent_type_set
-    __swig_getmethods__["type"] = _xgepy.MouseEvent_type_get
-    if _newclass:type = _swig_property(_xgepy.MouseEvent_type_get, _xgepy.MouseEvent_type_set)
-    NoButton = _xgepy.MouseEvent_NoButton
-    LeftButton = _xgepy.MouseEvent_LeftButton
-    RightButton = _xgepy.MouseEvent_RightButton
-    MidButton = _xgepy.MouseEvent_MidButton
-    __swig_setmethods__["button"] = _xgepy.MouseEvent_button_set
-    __swig_getmethods__["button"] = _xgepy.MouseEvent_button_get
-    if _newclass:button = _swig_property(_xgepy.MouseEvent_button_get, _xgepy.MouseEvent_button_set)
-    __swig_setmethods__["x"] = _xgepy.MouseEvent_x_set
-    __swig_getmethods__["x"] = _xgepy.MouseEvent_x_get
-    if _newclass:x = _swig_property(_xgepy.MouseEvent_x_get, _xgepy.MouseEvent_x_set)
-    __swig_setmethods__["y"] = _xgepy.MouseEvent_y_set
-    __swig_getmethods__["y"] = _xgepy.MouseEvent_y_get
-    if _newclass:y = _swig_property(_xgepy.MouseEvent_y_get, _xgepy.MouseEvent_y_set)
-    __swig_setmethods__["delta"] = _xgepy.MouseEvent_delta_set
-    __swig_getmethods__["delta"] = _xgepy.MouseEvent_delta_get
-    if _newclass:delta = _swig_property(_xgepy.MouseEvent_delta_get, _xgepy.MouseEvent_delta_set)
-    def __init__(self, *args): 
-        this = _xgepy.new_MouseEvent(*args)
-        try: self.this.append(this)
-        except: self.this = this
-    __swig_destroy__ = _xgepy.delete_MouseEvent
-    __del__ = lambda self : None;
-MouseEvent_swigregister = _xgepy.MouseEvent_swigregister
-MouseEvent_swigregister(MouseEvent)
 
 class Vec2i(_object):
     __swig_setmethods__ = {}
@@ -1167,16 +1078,10 @@ class Vec3f(_object):
     def rotate(self, *args): return _xgepy.Vec3f_rotate(self, *args)
     def __repr__(self): return _xgepy.Vec3f___repr__(self)
     def __str__(self): return _xgepy.Vec3f___str__(self)
-    __swig_getmethods__["SelfTest"] = lambda x: _xgepy.Vec3f_SelfTest
-    if _newclass:SelfTest = staticmethod(_xgepy.Vec3f_SelfTest)
     __swig_destroy__ = _xgepy.delete_Vec3f
     __del__ = lambda self : None;
 Vec3f_swigregister = _xgepy.Vec3f_swigregister
 Vec3f_swigregister(Vec3f)
-
-def Vec3f_SelfTest():
-  return _xgepy.Vec3f_SelfTest()
-Vec3f_SelfTest = _xgepy.Vec3f_SelfTest
 
 class Vec4f(_object):
     __swig_setmethods__ = {}
@@ -1222,16 +1127,10 @@ class Vec4f(_object):
     def fuzzyEqual(self, *args): return _xgepy.Vec4f_fuzzyEqual(self, *args)
     def __repr__(self): return _xgepy.Vec4f___repr__(self)
     def __str__(self): return _xgepy.Vec4f___str__(self)
-    __swig_getmethods__["SelfTest"] = lambda x: _xgepy.Vec4f_SelfTest
-    if _newclass:SelfTest = staticmethod(_xgepy.Vec4f_SelfTest)
     __swig_destroy__ = _xgepy.delete_Vec4f
     __del__ = lambda self : None;
 Vec4f_swigregister = _xgepy.Vec4f_swigregister
 Vec4f_swigregister(Vec4f)
-
-def Vec4f_SelfTest():
-  return _xgepy.Vec4f_SelfTest()
-Vec4f_SelfTest = _xgepy.Vec4f_SelfTest
 
 class Vecf(_object):
     __swig_setmethods__ = {}
@@ -1274,14 +1173,8 @@ class Vecf(_object):
     def __mul__(self, *args): return _xgepy.Vecf___mul__(self, *args)
     def __repr__(self): return _xgepy.Vecf___repr__(self)
     def __str__(self): return _xgepy.Vecf___str__(self)
-    __swig_getmethods__["SelfTest"] = lambda x: _xgepy.Vecf_SelfTest
-    if _newclass:SelfTest = staticmethod(_xgepy.Vecf_SelfTest)
 Vecf_swigregister = _xgepy.Vecf_swigregister
 Vecf_swigregister(Vecf)
-
-def Vecf_SelfTest():
-  return _xgepy.Vecf_SelfTest()
-Vecf_SelfTest = _xgepy.Vecf_SelfTest
 
 class Triangle2i(_object):
     __swig_setmethods__ = {}
@@ -1343,8 +1236,6 @@ class Plane4f(Vec4f):
     def forceAbove(self, *args): return _xgepy.Plane4f_forceAbove(self, *args)
     def __repr__(self): return _xgepy.Plane4f___repr__(self)
     def __str__(self): return _xgepy.Plane4f___str__(self)
-    __swig_getmethods__["SelfTest"] = lambda x: _xgepy.Plane4f_SelfTest
-    if _newclass:SelfTest = staticmethod(_xgepy.Plane4f_SelfTest)
     __swig_destroy__ = _xgepy.delete_Plane4f
     __del__ = lambda self : None;
 Plane4f_swigregister = _xgepy.Plane4f_swigregister
@@ -1353,10 +1244,6 @@ Plane4f_swigregister(Plane4f)
 def Plane4f_bestFittingPlane(*args):
   return _xgepy.Plane4f_bestFittingPlane(*args)
 Plane4f_bestFittingPlane = _xgepy.Plane4f_bestFittingPlane
-
-def Plane4f_SelfTest():
-  return _xgepy.Plane4f_SelfTest()
-Plane4f_SelfTest = _xgepy.Plane4f_SelfTest
 
 class Planef(Vecf):
     __swig_setmethods__ = {}
@@ -1385,8 +1272,6 @@ class Planef(Vecf):
     def getMainDirection(self): return _xgepy.Planef_getMainDirection(self)
     def __repr__(self): return _xgepy.Planef___repr__(self)
     def __str__(self): return _xgepy.Planef___str__(self)
-    __swig_getmethods__["SelfTest"] = lambda x: _xgepy.Planef_SelfTest
-    if _newclass:SelfTest = staticmethod(_xgepy.Planef_SelfTest)
     __swig_destroy__ = _xgepy.delete_Planef
     __del__ = lambda self : None;
 Planef_swigregister = _xgepy.Planef_swigregister
@@ -1399,10 +1284,6 @@ Planef_bestFittingPlane = _xgepy.Planef_bestFittingPlane
 def Planef_getRandomPlane(*args):
   return _xgepy.Planef_getRandomPlane(*args)
 Planef_getRandomPlane = _xgepy.Planef_getRandomPlane
-
-def Planef_SelfTest():
-  return _xgepy.Planef_SelfTest()
-Planef_SelfTest = _xgepy.Planef_SelfTest
 
 class Mat4f(_object):
     __swig_setmethods__ = {}
@@ -1480,8 +1361,6 @@ class Mat4f(_object):
     if _newclass:getProjectionMatrix = staticmethod(_xgepy.Mat4f_getProjectionMatrix)
     def __str__(self): return _xgepy.Mat4f___str__(self)
     def __repr__(self): return _xgepy.Mat4f___repr__(self)
-    __swig_getmethods__["SelfTest"] = lambda x: _xgepy.Mat4f_SelfTest
-    if _newclass:SelfTest = staticmethod(_xgepy.Mat4f_SelfTest)
     __swig_destroy__ = _xgepy.delete_Mat4f
     __del__ = lambda self : None;
 Mat4f_swigregister = _xgepy.Mat4f_swigregister
@@ -1534,10 +1413,6 @@ Mat4f_lookat = _xgepy.Mat4f_lookat
 def Mat4f_getProjectionMatrix(*args):
   return _xgepy.Mat4f_getProjectionMatrix(*args)
 Mat4f_getProjectionMatrix = _xgepy.Mat4f_getProjectionMatrix
-
-def Mat4f_SelfTest():
-  return _xgepy.Mat4f_SelfTest()
-Mat4f_SelfTest = _xgepy.Mat4f_SelfTest
 
 class Matf(_object):
     __swig_setmethods__ = {}
@@ -1598,8 +1473,6 @@ class Matf(_object):
     if _newclass:getProjectionMatrix = staticmethod(_xgepy.Matf_getProjectionMatrix)
     def __str__(self): return _xgepy.Matf___str__(self)
     def __repr__(self): return _xgepy.Matf___repr__(self)
-    __swig_getmethods__["SelfTest"] = lambda x: _xgepy.Matf_SelfTest
-    if _newclass:SelfTest = staticmethod(_xgepy.Matf_SelfTest)
 Matf_swigregister = _xgepy.Matf_swigregister
 Matf_swigregister(Matf)
 
@@ -1635,10 +1508,6 @@ def Matf_getProjectionMatrix(*args):
   return _xgepy.Matf_getProjectionMatrix(*args)
 Matf_getProjectionMatrix = _xgepy.Matf_getProjectionMatrix
 
-def Matf_SelfTest():
-  return _xgepy.Matf_SelfTest()
-Matf_SelfTest = _xgepy.Matf_SelfTest
-
 class Ball3f(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, Ball3f, name, value)
@@ -1664,8 +1533,6 @@ class Ball3f(_object):
     def volume(self): return _xgepy.Ball3f_volume(self)
     def __str__(self): return _xgepy.Ball3f___str__(self)
     def __repr__(self): return _xgepy.Ball3f___repr__(self)
-    __swig_getmethods__["SelfTest"] = lambda x: _xgepy.Ball3f_SelfTest
-    if _newclass:SelfTest = staticmethod(_xgepy.Ball3f_SelfTest)
     __swig_destroy__ = _xgepy.delete_Ball3f
     __del__ = lambda self : None;
 Ball3f_swigregister = _xgepy.Ball3f_swigregister
@@ -1674,10 +1541,6 @@ Ball3f_swigregister(Ball3f)
 def Ball3f_bestFittingBall(*args):
   return _xgepy.Ball3f_bestFittingBall(*args)
 Ball3f_bestFittingBall = _xgepy.Ball3f_bestFittingBall
-
-def Ball3f_SelfTest():
-  return _xgepy.Ball3f_SelfTest()
-Ball3f_SelfTest = _xgepy.Ball3f_SelfTest
 
 class Ballf(_object):
     __swig_setmethods__ = {}
@@ -1703,8 +1566,6 @@ class Ballf(_object):
     def fuzzyEqual(self, *args): return _xgepy.Ballf_fuzzyEqual(self, *args)
     def __str__(self): return _xgepy.Ballf___str__(self)
     def __repr__(self): return _xgepy.Ballf___repr__(self)
-    __swig_getmethods__["SelfTest"] = lambda x: _xgepy.Ballf_SelfTest
-    if _newclass:SelfTest = staticmethod(_xgepy.Ballf_SelfTest)
     __swig_destroy__ = _xgepy.delete_Ballf
     __del__ = lambda self : None;
 Ballf_swigregister = _xgepy.Ballf_swigregister
@@ -1713,10 +1574,6 @@ Ballf_swigregister(Ballf)
 def Ballf_bestFittingBall(*args):
   return _xgepy.Ballf_bestFittingBall(*args)
 Ballf_bestFittingBall = _xgepy.Ballf_bestFittingBall
-
-def Ballf_SelfTest():
-  return _xgepy.Ballf_SelfTest()
-Ballf_SelfTest = _xgepy.Ballf_SelfTest
 
 class Box2i(_object):
     __swig_setmethods__ = {}
@@ -1791,8 +1648,6 @@ class Box3f(_object):
     def volume(self): return _xgepy.Box3f_volume(self)
     def __repr__(self): return _xgepy.Box3f___repr__(self)
     def __str__(self): return _xgepy.Box3f___str__(self)
-    __swig_getmethods__["SelfTest"] = lambda x: _xgepy.Box3f_SelfTest
-    if _newclass:SelfTest = staticmethod(_xgepy.Box3f_SelfTest)
     __swig_destroy__ = _xgepy.delete_Box3f
     __del__ = lambda self : None;
 Box3f_swigregister = _xgepy.Box3f_swigregister
@@ -1801,10 +1656,6 @@ Box3f_swigregister(Box3f)
 def Box3f_buildFromCenter(*args):
   return _xgepy.Box3f_buildFromCenter(*args)
 Box3f_buildFromCenter = _xgepy.Box3f_buildFromCenter
-
-def Box3f_SelfTest():
-  return _xgepy.Box3f_SelfTest()
-Box3f_SelfTest = _xgepy.Box3f_SelfTest
 
 class Boxf(_object):
     __swig_setmethods__ = {}
@@ -1842,16 +1693,10 @@ class Boxf(_object):
     def isBelow(self, *args): return _xgepy.Boxf_isBelow(self, *args)
     def __repr__(self): return _xgepy.Boxf___repr__(self)
     def __str__(self): return _xgepy.Boxf___str__(self)
-    __swig_getmethods__["SelfTest"] = lambda x: _xgepy.Boxf_SelfTest
-    if _newclass:SelfTest = staticmethod(_xgepy.Boxf_SelfTest)
     __swig_destroy__ = _xgepy.delete_Boxf
     __del__ = lambda self : None;
 Boxf_swigregister = _xgepy.Boxf_swigregister
 Boxf_swigregister(Boxf)
-
-def Boxf_SelfTest():
-  return _xgepy.Boxf_SelfTest()
-Boxf_SelfTest = _xgepy.Boxf_SelfTest
 
 class Ray3f(_object):
     __swig_setmethods__ = {}
@@ -1879,16 +1724,10 @@ class Ray3f(_object):
     def intersectBox(self, *args): return _xgepy.Ray3f_intersectBox(self, *args)
     def __str__(self): return _xgepy.Ray3f___str__(self)
     def __repr__(self): return _xgepy.Ray3f___repr__(self)
-    __swig_getmethods__["SelfTest"] = lambda x: _xgepy.Ray3f_SelfTest
-    if _newclass:SelfTest = staticmethod(_xgepy.Ray3f_SelfTest)
     __swig_destroy__ = _xgepy.delete_Ray3f
     __del__ = lambda self : None;
 Ray3f_swigregister = _xgepy.Ray3f_swigregister
 Ray3f_swigregister(Ray3f)
-
-def Ray3f_SelfTest():
-  return _xgepy.Ray3f_SelfTest()
-Ray3f_SelfTest = _xgepy.Ray3f_SelfTest
 
 class Rayf(_object):
     __swig_setmethods__ = {}
@@ -1913,16 +1752,10 @@ class Rayf(_object):
     def __ne__(self, *args): return _xgepy.Rayf___ne__(self, *args)
     def __str__(self): return _xgepy.Rayf___str__(self)
     def __repr__(self): return _xgepy.Rayf___repr__(self)
-    __swig_getmethods__["SelfTest"] = lambda x: _xgepy.Rayf_SelfTest
-    if _newclass:SelfTest = staticmethod(_xgepy.Rayf_SelfTest)
     __swig_destroy__ = _xgepy.delete_Rayf
     __del__ = lambda self : None;
 Rayf_swigregister = _xgepy.Rayf_swigregister
 Rayf_swigregister(Rayf)
-
-def Rayf_SelfTest():
-  return _xgepy.Rayf_SelfTest()
-Rayf_SelfTest = _xgepy.Rayf_SelfTest
 
 class Quaternion(_object):
     __swig_setmethods__ = {}
@@ -1977,8 +1810,6 @@ class Quaternion(_object):
     __swig_getmethods__["trackball"] = lambda x: _xgepy.Quaternion_trackball
     if _newclass:trackball = staticmethod(_xgepy.Quaternion_trackball)
     def __repr__(self): return _xgepy.Quaternion___repr__(self)
-    __swig_getmethods__["SelfTest"] = lambda x: _xgepy.Quaternion_SelfTest
-    if _newclass:SelfTest = staticmethod(_xgepy.Quaternion_SelfTest)
     __swig_destroy__ = _xgepy.delete_Quaternion
     __del__ = lambda self : None;
 Quaternion_swigregister = _xgepy.Quaternion_swigregister
@@ -2006,10 +1837,6 @@ def Quaternion_trackball(*args):
   return _xgepy.Quaternion_trackball(*args)
 Quaternion_trackball = _xgepy.Quaternion_trackball
 
-def Quaternion_SelfTest():
-  return _xgepy.Quaternion_SelfTest()
-Quaternion_SelfTest = _xgepy.Quaternion_SelfTest
-
 class LocalSystem(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, LocalSystem, name, value)
@@ -2034,53 +1861,44 @@ class LocalSystem(_object):
 LocalSystem_swigregister = _xgepy.LocalSystem_swigregister
 LocalSystem_swigregister(LocalSystem)
 
-class Vector(_object):
+class Array(_object):
     __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, Vector, name, value)
+    __setattr__ = lambda self, name, value: _swig_setattr(self, Array, name, value)
     __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, Vector, name)
-    def Write(self, *args): return _xgepy.Vector_Write(self, *args)
-    def Read(self, *args): return _xgepy.Vector_Read(self, *args)
-    __swig_setmethods__["gpu"] = _xgepy.Vector_gpu_set
-    __swig_getmethods__["gpu"] = _xgepy.Vector_gpu_get
-    if _newclass:gpu = _swig_property(_xgepy.Vector_gpu_get, _xgepy.Vector_gpu_set)
+    __getattr__ = lambda self, name: _swig_getattr(self, Array, name)
+    def Write(self, *args): return _xgepy.Array_Write(self, *args)
+    def Read(self, *args): return _xgepy.Array_Read(self, *args)
     def __init__(self, *args): 
-        this = _xgepy.new_Vector(*args)
+        this = _xgepy.new_Array(*args)
         try: self.this.append(this)
         except: self.this = this
-    __swig_destroy__ = _xgepy.delete_Vector
+    __swig_destroy__ = _xgepy.delete_Array
     __del__ = lambda self : None;
-    def assign(self, *args): return _xgepy.Vector_assign(self, *args)
-    def size(self): return _xgepy.Vector_size(self)
-    def memsize(self): return _xgepy.Vector_memsize(self)
-    def mem(self): return _xgepy.Vector_mem(self)
-    def resize(self, *args): return _xgepy.Vector_resize(self, *args)
-    def append(self, *args): return _xgepy.Vector_append(self, *args)
-    def zero(self): return _xgepy.Vector_zero(self)
-    def __eq__(self, *args): return _xgepy.Vector___eq__(self, *args)
-    def __ne__(self, *args): return _xgepy.Vector___ne__(self, *args)
-    def get(self, *args): return _xgepy.Vector_get(self, *args)
-    def set(self, *args): return _xgepy.Vector_set(self, *args)
-    def __getitem_ref__(self, *args): return _xgepy.Vector___getitem_ref__(self, *args)
-    def __getitem__(self, *args): return _xgepy.Vector___getitem__(self, *args)
-    def extract(self, *args): return _xgepy.Vector_extract(self, *args)
-    __swig_getmethods__["parse"] = lambda x: _xgepy.Vector_parse
-    if _newclass:parse = staticmethod(_xgepy.Vector_parse)
-    def c_vector(self): return _xgepy.Vector_c_vector(self)
-    def __repr__(self): return _xgepy.Vector___repr__(self)
-    def __str__(self): return _xgepy.Vector___str__(self)
-    __swig_getmethods__["SelfTest"] = lambda x: _xgepy.Vector_SelfTest
-    if _newclass:SelfTest = staticmethod(_xgepy.Vector_SelfTest)
-Vector_swigregister = _xgepy.Vector_swigregister
-Vector_swigregister(Vector)
+    def assign(self, *args): return _xgepy.Array_assign(self, *args)
+    def size(self): return _xgepy.Array_size(self)
+    def memsize(self): return _xgepy.Array_memsize(self)
+    def mem(self): return _xgepy.Array_mem(self)
+    def resize(self, *args): return _xgepy.Array_resize(self, *args)
+    def append(self, *args): return _xgepy.Array_append(self, *args)
+    def zero(self): return _xgepy.Array_zero(self)
+    def __eq__(self, *args): return _xgepy.Array___eq__(self, *args)
+    def __ne__(self, *args): return _xgepy.Array___ne__(self, *args)
+    def get(self, *args): return _xgepy.Array_get(self, *args)
+    def set(self, *args): return _xgepy.Array_set(self, *args)
+    def __getitem_ref__(self, *args): return _xgepy.Array___getitem_ref__(self, *args)
+    def __getitem__(self, *args): return _xgepy.Array___getitem__(self, *args)
+    def extract(self, *args): return _xgepy.Array_extract(self, *args)
+    __swig_getmethods__["parse"] = lambda x: _xgepy.Array_parse
+    if _newclass:parse = staticmethod(_xgepy.Array_parse)
+    def c_vector(self): return _xgepy.Array_c_vector(self)
+    def __repr__(self): return _xgepy.Array___repr__(self)
+    def __str__(self): return _xgepy.Array___str__(self)
+Array_swigregister = _xgepy.Array_swigregister
+Array_swigregister(Array)
 
-def Vector_parse(*args):
-  return _xgepy.Vector_parse(*args)
-Vector_parse = _xgepy.Vector_parse
-
-def Vector_SelfTest():
-  return _xgepy.Vector_SelfTest()
-Vector_SelfTest = _xgepy.Vector_SelfTest
+def Array_parse(*args):
+  return _xgepy.Array_parse(*args)
+Array_parse = _xgepy.Array_parse
 
 class Color4f(_object):
     __swig_setmethods__ = {}
@@ -2246,14 +2064,11 @@ class Frustum(_object):
     def intersect(self, *args): return _xgepy.Frustum_intersect(self, *args)
     def contains(self, *args): return _xgepy.Frustum_contains(self, *args)
     def getModelviewMatrix(self): return _xgepy.Frustum_getModelviewMatrix(self)
-    def Render(self, *args): return _xgepy.Frustum_Render(self, *args)
+    def render(self, *args): return _xgepy.Frustum_render(self, *args)
     def project(self, *args): return _xgepy.Frustum_project(self, *args)
     def unproject(self, *args): return _xgepy.Frustum_unproject(self, *args)
     def guessBestPosition(self, *args): return _xgepy.Frustum_guessBestPosition(self, *args)
     def guessProjectionMatrix(self, *args): return _xgepy.Frustum_guessProjectionMatrix(self, *args)
-    def defaultMouseWalkingMode(self, *args): return _xgepy.Frustum_defaultMouseWalkingMode(self, *args)
-    def defaultMouseTrackballMode(self, *args): return _xgepy.Frustum_defaultMouseTrackballMode(self, *args)
-    def defaultKeyboard(self, *args): return _xgepy.Frustum_defaultKeyboard(self, *args)
     def fixVup(self): return _xgepy.Frustum_fixVup(self)
     def getScreenDistance(self, *args): return _xgepy.Frustum_getScreenDistance(self, *args)
     def nearOnScreen(self, *args): return _xgepy.Frustum_nearOnScreen(self, *args)
@@ -2272,9 +2087,6 @@ class Texture(_object):
     __swig_setmethods__["filename"] = _xgepy.Texture_filename_set
     __swig_getmethods__["filename"] = _xgepy.Texture_filename_get
     if _newclass:filename = _swig_property(_xgepy.Texture_filename_get, _xgepy.Texture_filename_set)
-    __swig_setmethods__["gpu"] = _xgepy.Texture_gpu_set
-    __swig_getmethods__["gpu"] = _xgepy.Texture_gpu_get
-    if _newclass:gpu = _swig_property(_xgepy.Texture_gpu_get, _xgepy.Texture_gpu_set)
     __swig_setmethods__["bpp"] = _xgepy.Texture_bpp_set
     __swig_getmethods__["bpp"] = _xgepy.Texture_bpp_get
     if _newclass:bpp = _swig_property(_xgepy.Texture_bpp_get, _xgepy.Texture_bpp_set)
@@ -2310,8 +2122,6 @@ class Texture(_object):
     def flipVertical(self): return _xgepy.Texture_flipVertical(self)
     def __repr__(self): return _xgepy.Texture___repr__(self)
     def __str__(self): return _xgepy.Texture___str__(self)
-    __swig_getmethods__["SelfTest"] = lambda x: _xgepy.Texture_SelfTest
-    if _newclass:SelfTest = staticmethod(_xgepy.Texture_SelfTest)
 Texture_swigregister = _xgepy.Texture_swigregister
 Texture_swigregister(Texture)
 
@@ -2326,10 +2136,6 @@ Texture_flushCache = _xgepy.Texture_flushCache
 def Texture_getCache():
   return _xgepy.Texture_getCache()
 Texture_getCache = _xgepy.Texture_getCache
-
-def Texture_SelfTest():
-  return _xgepy.Texture_SelfTest()
-Texture_SelfTest = _xgepy.Texture_SelfTest
 
 class Manipulator(_object):
     __swig_setmethods__ = {}
@@ -2360,12 +2166,12 @@ class Manipulator(_object):
     def isRunning(self): return _xgepy.Manipulator_isRunning(self)
     __swig_getmethods__["canManipulate"] = lambda x: _xgepy.Manipulator_canManipulate
     if _newclass:canManipulate = staticmethod(_xgepy.Manipulator_canManipulate)
-    def Mouse(self, *args): return _xgepy.Manipulator_Mouse(self, *args)
-    def Render(self, *args): return _xgepy.Manipulator_Render(self, *args)
+    def onMouseDown(self, *args): return _xgepy.Manipulator_onMouseDown(self, *args)
+    def onMouseMove(self, *args): return _xgepy.Manipulator_onMouseMove(self, *args)
+    def onMouseUp(self, *args): return _xgepy.Manipulator_onMouseUp(self, *args)
+    def render(self, *args): return _xgepy.Manipulator_render(self, *args)
     def setOperation(self, *args): return _xgepy.Manipulator_setOperation(self, *args)
     def getOperation(self): return _xgepy.Manipulator_getOperation(self)
-    __swig_getmethods__["SelfTest"] = lambda x: _xgepy.Manipulator_SelfTest
-    if _newclass:SelfTest = staticmethod(_xgepy.Manipulator_SelfTest)
     __swig_destroy__ = _xgepy.delete_Manipulator
     __del__ = lambda self : None;
 Manipulator_swigregister = _xgepy.Manipulator_swigregister
@@ -2374,10 +2180,6 @@ Manipulator_swigregister(Manipulator)
 def Manipulator_canManipulate(*args):
   return _xgepy.Manipulator_canManipulate(*args)
 Manipulator_canManipulate = _xgepy.Manipulator_canManipulate
-
-def Manipulator_SelfTest():
-  return _xgepy.Manipulator_SelfTest()
-Manipulator_SelfTest = _xgepy.Manipulator_SelfTest
 
 class Batch(_object):
     __swig_setmethods__ = {}
@@ -2602,14 +2404,8 @@ class GraphKMem(_object):
     def memsize(self): return _xgepy.GraphKMem_memsize(self)
     def resize(self, *args): return _xgepy.GraphKMem_resize(self, *args)
     def PrintStatistics(self): return _xgepy.GraphKMem_PrintStatistics(self)
-    __swig_getmethods__["SelfTest"] = lambda x: _xgepy.GraphKMem_SelfTest
-    if _newclass:SelfTest = staticmethod(_xgepy.GraphKMem_SelfTest)
 GraphKMem_swigregister = _xgepy.GraphKMem_swigregister
 GraphKMem_swigregister(GraphKMem)
-
-def GraphKMem_SelfTest():
-  return _xgepy.GraphKMem_SelfTest()
-GraphKMem_SelfTest = _xgepy.GraphKMem_SelfTest
 
 class GraphArch(_object):
     __swig_setmethods__ = {}
@@ -2876,10 +2672,6 @@ class Graph(_object):
     def split(self, *args): return _xgepy.Graph_split(self, *args)
     def check(self, *args): return _xgepy.Graph_check(self, *args)
     def contains(self, *args): return _xgepy.Graph_contains(self, *args)
-    __swig_getmethods__["open_svg"] = lambda x: _xgepy.Graph_open_svg
-    if _newclass:open_svg = staticmethod(_xgepy.Graph_open_svg)
-    __swig_getmethods__["SelfTest"] = lambda x: _xgepy.Graph_SelfTest
-    if _newclass:SelfTest = staticmethod(_xgepy.Graph_SelfTest)
     def getBatch(self): return _xgepy.Graph_getBatch(self)
 Graph_swigregister = _xgepy.Graph_swigregister
 Graph_swigregister(Graph)
@@ -2903,225 +2695,6 @@ Graph_mkpol = _xgepy.Graph_mkpol
 def Graph_power(*args):
   return _xgepy.Graph_power(*args)
 Graph_power = _xgepy.Graph_power
-
-def Graph_open_svg(*args):
-  return _xgepy.Graph_open_svg(*args)
-Graph_open_svg = _xgepy.Graph_open_svg
-
-def Graph_SelfTest():
-  return _xgepy.Graph_SelfTest()
-Graph_SelfTest = _xgepy.Graph_SelfTest
-
-class Engine(_object):
-    __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, Engine, name, value)
-    __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, Engine, name)
-    __repr__ = _swig_repr
-    CULL_DISABLE = _xgepy.Engine_CULL_DISABLE
-    CULL_CCW = _xgepy.Engine_CULL_CCW
-    CULL_CW = _xgepy.Engine_CULL_CW
-    __swig_destroy__ = _xgepy.delete_Engine
-    __del__ = lambda self : None;
-    def Destroy(self): return _xgepy.Engine_Destroy(self)
-    def GetDC(self): return _xgepy.Engine_GetDC(self)
-    def Bind(self): return _xgepy.Engine_Bind(self)
-    def Unbind(self): return _xgepy.Engine_Unbind(self)
-    __swig_getmethods__["PrintStatistics"] = lambda x: _xgepy.Engine_PrintStatistics
-    if _newclass:PrintStatistics = staticmethod(_xgepy.Engine_PrintStatistics)
-    __swig_getmethods__["Shutdown"] = lambda x: _xgepy.Engine_Shutdown
-    if _newclass:Shutdown = staticmethod(_xgepy.Engine_Shutdown)
-    def ClearScreen(self, ClearColor=True, ClearDepth=True): return _xgepy.Engine_ClearScreen(self, ClearColor, ClearDepth)
-    def SetViewport(self, *args): return _xgepy.Engine_SetViewport(self, *args)
-    def SetProjectionMatrix(self, *args): return _xgepy.Engine_SetProjectionMatrix(self, *args)
-    def SetModelviewMatrix(self, *args): return _xgepy.Engine_SetModelviewMatrix(self, *args)
-    def SetDefaultLight(self, *args): return _xgepy.Engine_SetDefaultLight(self, *args)
-    def FlushScreen(self): return _xgepy.Engine_FlushScreen(self)
-    def PushModelviewMatrix(self, *args): return _xgepy.Engine_PushModelviewMatrix(self, *args)
-    def PopModelviewMatrix(self): return _xgepy.Engine_PopModelviewMatrix(self)
-    def PushProjectionMatrix(self, *args): return _xgepy.Engine_PushProjectionMatrix(self, *args)
-    def PopProjectionMatrix(self): return _xgepy.Engine_PopProjectionMatrix(self)
-    def SetDepthTest(self, *args): return _xgepy.Engine_SetDepthTest(self, *args)
-    def SetDepthWrite(self, *args): return _xgepy.Engine_SetDepthWrite(self, *args)
-    def SetCulling(self, *args): return _xgepy.Engine_SetCulling(self, *args)
-    def SetPolygonMode(self, *args): return _xgepy.Engine_SetPolygonMode(self, *args)
-    def SetPointSize(self, *args): return _xgepy.Engine_SetPointSize(self, *args)
-    def SetLineWidth(self, *args): return _xgepy.Engine_SetLineWidth(self, *args)
-    def SetPolygonOffset(self, *args): return _xgepy.Engine_SetPolygonOffset(self, *args)
-    def Render(self, *args): return _xgepy.Engine_Render(self, *args)
-    __swig_getmethods__["getCurrentContext"] = lambda x: _xgepy.Engine_getCurrentContext
-    if _newclass:getCurrentContext = staticmethod(_xgepy.Engine_getCurrentContext)
-    def __init__(self): 
-        this = _xgepy.new_Engine()
-        try: self.this.append(this)
-        except: self.this = this
-    __swig_setmethods__["DC"] = _xgepy.Engine_DC_set
-    __swig_getmethods__["DC"] = _xgepy.Engine_DC_get
-    if _newclass:DC = _swig_property(_xgepy.Engine_DC_get, _xgepy.Engine_DC_set)
-    __swig_setmethods__["RC"] = _xgepy.Engine_RC_set
-    __swig_getmethods__["RC"] = _xgepy.Engine_RC_get
-    if _newclass:RC = _swig_property(_xgepy.Engine_RC_get, _xgepy.Engine_RC_set)
-    __swig_setmethods__["WC"] = _xgepy.Engine_WC_set
-    __swig_getmethods__["WC"] = _xgepy.Engine_WC_get
-    if _newclass:WC = _swig_property(_xgepy.Engine_WC_get, _xgepy.Engine_WC_set)
-    __swig_setmethods__["wcs"] = _xgepy.Engine_wcs_set
-    __swig_getmethods__["wcs"] = _xgepy.Engine_wcs_get
-    if _newclass:wcs = _swig_property(_xgepy.Engine_wcs_get, _xgepy.Engine_wcs_set)
-Engine_swigregister = _xgepy.Engine_swigregister
-Engine_swigregister(Engine)
-
-def Engine_PrintStatistics():
-  return _xgepy.Engine_PrintStatistics()
-Engine_PrintStatistics = _xgepy.Engine_PrintStatistics
-
-def Engine_Shutdown():
-  return _xgepy.Engine_Shutdown()
-Engine_Shutdown = _xgepy.Engine_Shutdown
-
-def Engine_getCurrentContext():
-  return _xgepy.Engine_getCurrentContext()
-Engine_getCurrentContext = _xgepy.Engine_getCurrentContext
-
-class EngineResource(_object):
-    __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, EngineResource, name, value)
-    __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, EngineResource, name)
-    __repr__ = _swig_repr
-    RESOURCE_UNKNOWN = _xgepy.EngineResource_RESOURCE_UNKNOWN
-    RESOURCE_ARRAY_BUFFER = _xgepy.EngineResource_RESOURCE_ARRAY_BUFFER
-    RESOURCE_RENDER_BUFFER = _xgepy.EngineResource_RESOURCE_RENDER_BUFFER
-    RESOURCE_FRAME_BUFFER = _xgepy.EngineResource_RESOURCE_FRAME_BUFFER
-    RESOURCE_SHADER = _xgepy.EngineResource_RESOURCE_SHADER
-    RESOURCE_PROGRAM = _xgepy.EngineResource_RESOURCE_PROGRAM
-    RESOURCE_TEXTURE = _xgepy.EngineResource_RESOURCE_TEXTURE
-    RESOURCE_END = _xgepy.EngineResource_RESOURCE_END
-    __swig_setmethods__["type"] = _xgepy.EngineResource_type_set
-    __swig_getmethods__["type"] = _xgepy.EngineResource_type_get
-    if _newclass:type = _swig_property(_xgepy.EngineResource_type_get, _xgepy.EngineResource_type_set)
-    __swig_setmethods__["id"] = _xgepy.EngineResource_id_set
-    __swig_getmethods__["id"] = _xgepy.EngineResource_id_get
-    if _newclass:id = _swig_property(_xgepy.EngineResource_id_get, _xgepy.EngineResource_id_set)
-    __swig_setmethods__["size"] = _xgepy.EngineResource_size_set
-    __swig_getmethods__["size"] = _xgepy.EngineResource_size_get
-    if _newclass:size = _swig_property(_xgepy.EngineResource_size_get, _xgepy.EngineResource_size_set)
-    def __init__(self, *args): 
-        this = _xgepy.new_EngineResource(*args)
-        try: self.this.append(this)
-        except: self.this = this
-    __swig_destroy__ = _xgepy.delete_EngineResource
-    __del__ = lambda self : None;
-EngineResource_swigregister = _xgepy.EngineResource_swigregister
-EngineResource_swigregister(EngineResource)
-
-class EngineTessellator(_object):
-    __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, EngineTessellator, name, value)
-    __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, EngineTessellator, name)
-    __repr__ = _swig_repr
-    TESS_WINDING_ODD = _xgepy.EngineTessellator_TESS_WINDING_ODD
-    TESS_WINDING_NONZERO = _xgepy.EngineTessellator_TESS_WINDING_NONZERO
-    TESS_WINDING_POSITIVE = _xgepy.EngineTessellator_TESS_WINDING_POSITIVE
-    TESS_WINDING_NEGATIVE = _xgepy.EngineTessellator_TESS_WINDING_NEGATIVE
-    TESS_WINDING_ABS_GEQ_TWO = _xgepy.EngineTessellator_TESS_WINDING_ABS_GEQ_TWO
-    __swig_setmethods__["current"] = _xgepy.EngineTessellator_current_set
-    __swig_getmethods__["current"] = _xgepy.EngineTessellator_current_get
-    if _newclass:current = _swig_property(_xgepy.EngineTessellator_current_get, _xgepy.EngineTessellator_current_set)
-    __swig_setmethods__["polygons"] = _xgepy.EngineTessellator_polygons_set
-    __swig_getmethods__["polygons"] = _xgepy.EngineTessellator_polygons_get
-    if _newclass:polygons = _swig_property(_xgepy.EngineTessellator_polygons_get, _xgepy.EngineTessellator_polygons_set)
-    def AddPolygon(self): return _xgepy.EngineTessellator_AddPolygon(self)
-    def AddContour(self, *args): return _xgepy.EngineTessellator_AddContour(self, *args)
-    def Run(self, *args): return _xgepy.EngineTessellator_Run(self, *args)
-    def GetTriangles(self): return _xgepy.EngineTessellator_GetTriangles(self)
-    def GetMatrix(self): return _xgepy.EngineTessellator_GetMatrix(self)
-    def GetGraph(self): return _xgepy.EngineTessellator_GetGraph(self)
-    def __init__(self): 
-        this = _xgepy.new_EngineTessellator()
-        try: self.this.append(this)
-        except: self.this = this
-    __swig_destroy__ = _xgepy.delete_EngineTessellator
-    __del__ = lambda self : None;
-EngineTessellator_swigregister = _xgepy.EngineTessellator_swigregister
-EngineTessellator_swigregister(EngineTessellator)
-
-class Viewer(_object):
-    __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, Viewer, name, value)
-    __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, Viewer, name)
-    __repr__ = _swig_repr
-    __swig_setmethods__["engine"] = _xgepy.Viewer_engine_set
-    __swig_getmethods__["engine"] = _xgepy.Viewer_engine_get
-    if _newclass:engine = _swig_property(_xgepy.Viewer_engine_get, _xgepy.Viewer_engine_set)
-    __swig_setmethods__["window"] = _xgepy.Viewer_window_set
-    __swig_getmethods__["window"] = _xgepy.Viewer_window_get
-    if _newclass:window = _swig_property(_xgepy.Viewer_window_get, _xgepy.Viewer_window_set)
-    __swig_setmethods__["trackball_mode"] = _xgepy.Viewer_trackball_mode_set
-    __swig_getmethods__["trackball_mode"] = _xgepy.Viewer_trackball_mode_get
-    if _newclass:trackball_mode = _swig_property(_xgepy.Viewer_trackball_mode_get, _xgepy.Viewer_trackball_mode_set)
-    __swig_setmethods__["trackball_center"] = _xgepy.Viewer_trackball_center_set
-    __swig_getmethods__["trackball_center"] = _xgepy.Viewer_trackball_center_get
-    if _newclass:trackball_center = _swig_property(_xgepy.Viewer_trackball_center_get, _xgepy.Viewer_trackball_center_set)
-    __swig_setmethods__["mouse_beginx"] = _xgepy.Viewer_mouse_beginx_set
-    __swig_getmethods__["mouse_beginx"] = _xgepy.Viewer_mouse_beginx_get
-    if _newclass:mouse_beginx = _swig_property(_xgepy.Viewer_mouse_beginx_get, _xgepy.Viewer_mouse_beginx_set)
-    __swig_setmethods__["mouse_beginy"] = _xgepy.Viewer_mouse_beginy_set
-    __swig_getmethods__["mouse_beginy"] = _xgepy.Viewer_mouse_beginy_get
-    if _newclass:mouse_beginy = _swig_property(_xgepy.Viewer_mouse_beginy_get, _xgepy.Viewer_mouse_beginy_set)
-    __swig_setmethods__["DrawLines"] = _xgepy.Viewer_DrawLines_set
-    __swig_getmethods__["DrawLines"] = _xgepy.Viewer_DrawLines_get
-    if _newclass:DrawLines = _swig_property(_xgepy.Viewer_DrawLines_get, _xgepy.Viewer_DrawLines_set)
-    __swig_setmethods__["DrawAxis"] = _xgepy.Viewer_DrawAxis_set
-    __swig_getmethods__["DrawAxis"] = _xgepy.Viewer_DrawAxis_get
-    if _newclass:DrawAxis = _swig_property(_xgepy.Viewer_DrawAxis_get, _xgepy.Viewer_DrawAxis_set)
-    __swig_setmethods__["frustum"] = _xgepy.Viewer_frustum_set
-    __swig_getmethods__["frustum"] = _xgepy.Viewer_frustum_get
-    if _newclass:frustum = _swig_property(_xgepy.Viewer_frustum_get, _xgepy.Viewer_frustum_set)
-    __swig_setmethods__["debug_frustum"] = _xgepy.Viewer_debug_frustum_set
-    __swig_getmethods__["debug_frustum"] = _xgepy.Viewer_debug_frustum_get
-    if _newclass:debug_frustum = _swig_property(_xgepy.Viewer_debug_frustum_get, _xgepy.Viewer_debug_frustum_set)
-    __swig_setmethods__["octree"] = _xgepy.Viewer_octree_set
-    __swig_getmethods__["octree"] = _xgepy.Viewer_octree_get
-    if _newclass:octree = _swig_property(_xgepy.Viewer_octree_get, _xgepy.Viewer_octree_set)
-    __swig_setmethods__["bProgressiveRendering"] = _xgepy.Viewer_bProgressiveRendering_set
-    __swig_getmethods__["bProgressiveRendering"] = _xgepy.Viewer_bProgressiveRendering_get
-    if _newclass:bProgressiveRendering = _swig_property(_xgepy.Viewer_bProgressiveRendering_get, _xgepy.Viewer_bProgressiveRendering_set)
-    def __init__(self, *args): 
-        if self.__class__ == Viewer:
-            _self = None
-        else:
-            _self = self
-        this = _xgepy.new_Viewer(_self, *args)
-        try: self.this.append(this)
-        except: self.this = this
-    __swig_destroy__ = _xgepy.delete_Viewer
-    __del__ = lambda self : None;
-    def Render(self): return _xgepy.Viewer_Render(self)
-    def Redisplay(self): return _xgepy.Viewer_Redisplay(self)
-    def Keyboard(self, *args): return _xgepy.Viewer_Keyboard(self, *args)
-    def Mouse(self, *args): return _xgepy.Viewer_Mouse(self, *args)
-    def Resize(self, *args): return _xgepy.Viewer_Resize(self, *args)
-    def Close(self): return _xgepy.Viewer_Close(self)
-    def Run(self): return _xgepy.Viewer_Run(self)
-    def Wait(self): return _xgepy.Viewer_Wait(self)
-    __swig_getmethods__["SelfTest"] = lambda x: _xgepy.Viewer_SelfTest
-    if _newclass:SelfTest = staticmethod(_xgepy.Viewer_SelfTest)
-    __swig_setmethods__["m_close"] = _xgepy.Viewer_m_close_set
-    __swig_getmethods__["m_close"] = _xgepy.Viewer_m_close_get
-    if _newclass:m_close = _swig_property(_xgepy.Viewer_m_close_get, _xgepy.Viewer_m_close_set)
-    def doJob(self, *args): return _xgepy.Viewer_doJob(self, *args)
-    def __disown__(self):
-        self.this.disown()
-        _xgepy.disown_Viewer(self)
-        return weakref_proxy(self)
-Viewer_swigregister = _xgepy.Viewer_swigregister
-Viewer_swigregister(Viewer)
-
-def Viewer_SelfTest(nx=100, ny=100, nz=1):
-  return _xgepy.Viewer_SelfTest(nx, ny, nz)
-Viewer_SelfTest = _xgepy.Viewer_SelfTest
 
 class OctreeNode(_object):
     __swig_setmethods__ = {}
@@ -3233,6 +2806,115 @@ class Octree(_object):
 Octree_swigregister = _xgepy.Octree_swigregister
 Octree_swigregister(Octree)
 
+class GLCanvas(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, GLCanvas, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, GLCanvas, name)
+    __repr__ = _swig_repr
+    __swig_setmethods__["m_close"] = _xgepy.GLCanvas_m_close_set
+    __swig_getmethods__["m_close"] = _xgepy.GLCanvas_m_close_get
+    if _newclass:m_close = _swig_property(_xgepy.GLCanvas_m_close_get, _xgepy.GLCanvas_m_close_set)
+    __swig_setmethods__["m_redisplay"] = _xgepy.GLCanvas_m_redisplay_set
+    __swig_getmethods__["m_redisplay"] = _xgepy.GLCanvas_m_redisplay_get
+    if _newclass:m_redisplay = _swig_property(_xgepy.GLCanvas_m_redisplay_get, _xgepy.GLCanvas_m_redisplay_set)
+    __swig_setmethods__["trackball_mode"] = _xgepy.GLCanvas_trackball_mode_set
+    __swig_getmethods__["trackball_mode"] = _xgepy.GLCanvas_trackball_mode_get
+    if _newclass:trackball_mode = _swig_property(_xgepy.GLCanvas_trackball_mode_get, _xgepy.GLCanvas_trackball_mode_set)
+    __swig_setmethods__["trackball_center"] = _xgepy.GLCanvas_trackball_center_set
+    __swig_getmethods__["trackball_center"] = _xgepy.GLCanvas_trackball_center_get
+    if _newclass:trackball_center = _swig_property(_xgepy.GLCanvas_trackball_center_get, _xgepy.GLCanvas_trackball_center_set)
+    __swig_setmethods__["mouse_beginx"] = _xgepy.GLCanvas_mouse_beginx_set
+    __swig_getmethods__["mouse_beginx"] = _xgepy.GLCanvas_mouse_beginx_get
+    if _newclass:mouse_beginx = _swig_property(_xgepy.GLCanvas_mouse_beginx_get, _xgepy.GLCanvas_mouse_beginx_set)
+    __swig_setmethods__["mouse_beginy"] = _xgepy.GLCanvas_mouse_beginy_set
+    __swig_getmethods__["mouse_beginy"] = _xgepy.GLCanvas_mouse_beginy_get
+    if _newclass:mouse_beginy = _swig_property(_xgepy.GLCanvas_mouse_beginy_get, _xgepy.GLCanvas_mouse_beginy_set)
+    __swig_setmethods__["draw_lines"] = _xgepy.GLCanvas_draw_lines_set
+    __swig_getmethods__["draw_lines"] = _xgepy.GLCanvas_draw_lines_get
+    if _newclass:draw_lines = _swig_property(_xgepy.GLCanvas_draw_lines_get, _xgepy.GLCanvas_draw_lines_set)
+    __swig_setmethods__["draw_axis"] = _xgepy.GLCanvas_draw_axis_set
+    __swig_getmethods__["draw_axis"] = _xgepy.GLCanvas_draw_axis_get
+    if _newclass:draw_axis = _swig_property(_xgepy.GLCanvas_draw_axis_get, _xgepy.GLCanvas_draw_axis_set)
+    __swig_setmethods__["frustum"] = _xgepy.GLCanvas_frustum_set
+    __swig_getmethods__["frustum"] = _xgepy.GLCanvas_frustum_get
+    if _newclass:frustum = _swig_property(_xgepy.GLCanvas_frustum_get, _xgepy.GLCanvas_frustum_set)
+    __swig_setmethods__["debug_frustum"] = _xgepy.GLCanvas_debug_frustum_set
+    __swig_getmethods__["debug_frustum"] = _xgepy.GLCanvas_debug_frustum_get
+    if _newclass:debug_frustum = _swig_property(_xgepy.GLCanvas_debug_frustum_get, _xgepy.GLCanvas_debug_frustum_set)
+    __swig_setmethods__["octree"] = _xgepy.GLCanvas_octree_set
+    __swig_getmethods__["octree"] = _xgepy.GLCanvas_octree_get
+    if _newclass:octree = _swig_property(_xgepy.GLCanvas_octree_get, _xgepy.GLCanvas_octree_set)
+    __swig_setmethods__["bProgressiveRendering"] = _xgepy.GLCanvas_bProgressiveRendering_set
+    __swig_getmethods__["bProgressiveRendering"] = _xgepy.GLCanvas_bProgressiveRendering_get
+    if _newclass:bProgressiveRendering = _swig_property(_xgepy.GLCanvas_bProgressiveRendering_get, _xgepy.GLCanvas_bProgressiveRendering_set)
+    def __init__(self): 
+        if self.__class__ == GLCanvas:
+            _self = None
+        else:
+            _self = self
+        this = _xgepy.new_GLCanvas(_self, )
+        try: self.this.append(this)
+        except: self.this = this
+    __swig_destroy__ = _xgepy.delete_GLCanvas
+    __del__ = lambda self : None;
+    def setOctree(self, *args): return _xgepy.GLCanvas_setOctree(self, *args)
+    def bind(self): return _xgepy.GLCanvas_bind(self)
+    def swapBuffers(self): return _xgepy.GLCanvas_swapBuffers(self)
+    def unbind(self): return _xgepy.GLCanvas_unbind(self)
+    def clearScreen(self, ClearColor=True, ClearDepth=True): return _xgepy.GLCanvas_clearScreen(self, ClearColor, ClearDepth)
+    def setViewport(self, *args): return _xgepy.GLCanvas_setViewport(self, *args)
+    def setProjectionMatrix(self, *args): return _xgepy.GLCanvas_setProjectionMatrix(self, *args)
+    def setModelviewMatrix(self, *args): return _xgepy.GLCanvas_setModelviewMatrix(self, *args)
+    def setDefaultLight(self, *args): return _xgepy.GLCanvas_setDefaultLight(self, *args)
+    def pushModelviewMatrix(self, *args): return _xgepy.GLCanvas_pushModelviewMatrix(self, *args)
+    def popModelviewMatrix(self): return _xgepy.GLCanvas_popModelviewMatrix(self)
+    def pushProjectionMatrix(self, *args): return _xgepy.GLCanvas_pushProjectionMatrix(self, *args)
+    def popProjectionMatrix(self): return _xgepy.GLCanvas_popProjectionMatrix(self)
+    def setDepthTest(self, *args): return _xgepy.GLCanvas_setDepthTest(self, *args)
+    def setDepthWrite(self, *args): return _xgepy.GLCanvas_setDepthWrite(self, *args)
+    def setPolygonMode(self, *args): return _xgepy.GLCanvas_setPolygonMode(self, *args)
+    def setPointSize(self, *args): return _xgepy.GLCanvas_setPointSize(self, *args)
+    def setLineWidth(self, *args): return _xgepy.GLCanvas_setLineWidth(self, *args)
+    def setPolygonOffset(self, *args): return _xgepy.GLCanvas_setPolygonOffset(self, *args)
+    def renderBatch(self, *args): return _xgepy.GLCanvas_renderBatch(self, *args)
+    def renderScene(self): return _xgepy.GLCanvas_renderScene(self)
+    def redisplay(self): return _xgepy.GLCanvas_redisplay(self)
+    def onKeyboard(self, *args): return _xgepy.GLCanvas_onKeyboard(self, *args)
+    def onMouseDown(self, *args): return _xgepy.GLCanvas_onMouseDown(self, *args)
+    def onMouseMove(self, *args): return _xgepy.GLCanvas_onMouseMove(self, *args)
+    def onMouseUp(self, *args): return _xgepy.GLCanvas_onMouseUp(self, *args)
+    def onMouseWheel(self, *args): return _xgepy.GLCanvas_onMouseWheel(self, *args)
+    def onResize(self, *args): return _xgepy.GLCanvas_onResize(self, *args)
+    def onTimer(self): return _xgepy.GLCanvas_onTimer(self)
+    def close(self): return _xgepy.GLCanvas_close(self)
+    def runLoop(self): return _xgepy.GLCanvas_runLoop(self)
+    def getNative(self): return _xgepy.GLCanvas_getNative(self)
+    __swig_getmethods__["getShared"] = lambda x: _xgepy.GLCanvas_getShared
+    if _newclass:getShared = staticmethod(_xgepy.GLCanvas_getShared)
+    __swig_getmethods__["setShared"] = lambda x: _xgepy.GLCanvas_setShared
+    if _newclass:setShared = staticmethod(_xgepy.GLCanvas_setShared)
+    __swig_getmethods__["getCurrent"] = lambda x: _xgepy.GLCanvas_getCurrent
+    if _newclass:getCurrent = staticmethod(_xgepy.GLCanvas_getCurrent)
+    def __disown__(self):
+        self.this.disown()
+        _xgepy.disown_GLCanvas(self)
+        return weakref_proxy(self)
+GLCanvas_swigregister = _xgepy.GLCanvas_swigregister
+GLCanvas_swigregister(GLCanvas)
+
+def GLCanvas_getShared():
+  return _xgepy.GLCanvas_getShared()
+GLCanvas_getShared = _xgepy.GLCanvas_getShared
+
+def GLCanvas_setShared(*args):
+  return _xgepy.GLCanvas_setShared(*args)
+GLCanvas_setShared = _xgepy.GLCanvas_setShared
+
+def GLCanvas_getCurrent():
+  return _xgepy.GLCanvas_getCurrent()
+GLCanvas_getCurrent = _xgepy.GLCanvas_getCurrent
+
 class Unwrapper(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, Unwrapper, name, value)
@@ -3278,18 +2960,12 @@ class Bake(_object):
     def Unwrap(self, *args): return _xgepy.Bake_Unwrap(self, *args)
     def Add(self, *args): return _xgepy.Bake_Add(self, *args)
     def Export(self): return _xgepy.Bake_Export(self)
-    def Run(self): return _xgepy.Bake_Run(self)
+    def run(self): return _xgepy.Bake_run(self)
     def PostProcess(self): return _xgepy.Bake_PostProcess(self)
-    __swig_getmethods__["SelfTest"] = lambda x: _xgepy.Bake_SelfTest
-    if _newclass:SelfTest = staticmethod(_xgepy.Bake_SelfTest)
     __swig_destroy__ = _xgepy.delete_Bake
     __del__ = lambda self : None;
 Bake_swigregister = _xgepy.Bake_swigregister
 Bake_swigregister(Bake)
-
-def Bake_SelfTest():
-  return _xgepy.Bake_SelfTest()
-Bake_SelfTest = _xgepy.Bake_SelfTest
 
 HPC_PROP_NAME = _xgepy.HPC_PROP_NAME
 HPC_PROP_RGB_COLOR = _xgepy.HPC_PROP_RGB_COLOR
@@ -3342,6 +3018,10 @@ class Hpc(_object):
 Hpc_swigregister = _xgepy.Hpc_swigregister
 Hpc_swigregister(Hpc)
 
+BOOL_CODE_OR = _xgepy.BOOL_CODE_OR
+BOOL_CODE_AND = _xgepy.BOOL_CODE_AND
+BOOL_CODE_DIFF = _xgepy.BOOL_CODE_DIFF
+BOOL_CODE_XOR = _xgepy.BOOL_CODE_XOR
 class Plasm(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, Plasm, name, value)
@@ -3427,10 +3107,6 @@ class Plasm(_object):
     if _newclass:power = staticmethod(_xgepy.Plasm_power)
     __swig_getmethods__["skeleton"] = lambda x: _xgepy.Plasm_skeleton
     if _newclass:skeleton = staticmethod(_xgepy.Plasm_skeleton)
-    BOOL_CODE_OR = _xgepy.Plasm_BOOL_CODE_OR
-    BOOL_CODE_AND = _xgepy.Plasm_BOOL_CODE_AND
-    BOOL_CODE_DIFF = _xgepy.Plasm_BOOL_CODE_DIFF
-    BOOL_CODE_XOR = _xgepy.Plasm_BOOL_CODE_XOR
     __swig_getmethods__["boolop"] = lambda x: _xgepy.Plasm_boolop
     if _newclass:boolop = staticmethod(_xgepy.Plasm_boolop)
     __swig_getmethods__["Skin"] = lambda x: _xgepy.Plasm_Skin
@@ -3439,12 +3115,8 @@ class Plasm(_object):
     if _newclass:getTriangles = staticmethod(_xgepy.Plasm_getTriangles)
     __swig_getmethods__["getBatches"] = lambda x: _xgepy.Plasm_getBatches
     if _newclass:getBatches = staticmethod(_xgepy.Plasm_getBatches)
-    __swig_getmethods__["View"] = lambda x: _xgepy.Plasm_View
-    if _newclass:View = staticmethod(_xgepy.Plasm_View)
-    __swig_getmethods__["SelfTest"] = lambda x: _xgepy.Plasm_SelfTest
-    if _newclass:SelfTest = staticmethod(_xgepy.Plasm_SelfTest)
-    __swig_getmethods__["boolop_selftest"] = lambda x: _xgepy.Plasm_boolop_selftest
-    if _newclass:boolop_selftest = staticmethod(_xgepy.Plasm_boolop_selftest)
+    __swig_getmethods__["view"] = lambda x: _xgepy.Plasm_view
+    if _newclass:view = staticmethod(_xgepy.Plasm_view)
     __swig_getmethods__["convertOldXml"] = lambda x: _xgepy.Plasm_convertOldXml
     if _newclass:convertOldXml = staticmethod(_xgepy.Plasm_convertOldXml)
     __swig_destroy__ = _xgepy.delete_Plasm
@@ -3572,17 +3244,9 @@ def Plasm_getBatches(*args):
   return _xgepy.Plasm_getBatches(*args)
 Plasm_getBatches = _xgepy.Plasm_getBatches
 
-def Plasm_View(*args):
-  return _xgepy.Plasm_View(*args)
-Plasm_View = _xgepy.Plasm_View
-
-def Plasm_SelfTest():
-  return _xgepy.Plasm_SelfTest()
-Plasm_SelfTest = _xgepy.Plasm_SelfTest
-
-def Plasm_boolop_selftest():
-  return _xgepy.Plasm_boolop_selftest()
-Plasm_boolop_selftest = _xgepy.Plasm_boolop_selftest
+def Plasm_view(*args):
+  return _xgepy.Plasm_view(*args)
+Plasm_view = _xgepy.Plasm_view
 
 def Plasm_convertOldXml(*args):
   return _xgepy.Plasm_convertOldXml(*args)

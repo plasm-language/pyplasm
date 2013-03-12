@@ -14,9 +14,9 @@ void Quaternion::fromMatrix(Mat4f& m)
 {
 	float kRot[3][3]=
 	 {
-		m.a11(),m.a12(),m.a13(),
-		m.a21(),m.a22(),m.a23(),
-		m.a31(),m.a32(),m.a33()
+		{m.a11(),m.a12(),m.a13()},
+		{m.a21(),m.a22(),m.a23()},
+		{m.a31(),m.a32(),m.a33()}
 	 };
 
 	 // Algorithm in Ken Shoemake's article in 1987 SIGGRAPH course notes
@@ -57,78 +57,3 @@ void Quaternion::fromMatrix(Mat4f& m)
 	 }
 }
 
-
-////////////////////////////////////////////////////////////////////////////
-int Quaternion::SelfTest()
-{
-	Log::printf("Testing Quaternion...\n");
-
-	Quaternion q;
-	XgeReleaseAssert(q.getMatrix().almostIdentity(0.001f) && Utils::FuzzyEqual(q.getAngle(),0));
-
-	q=Quaternion(Vec3f(1,1,1),(float)M_PI/4);
-	XgeReleaseAssert(Utils::FuzzyEqual((q.getAxis()-Vec3f(1,1,1).normalize()).module(),0,0.0001f));
-	XgeReleaseAssert(Utils::FuzzyEqual(q.getAngle(),(float)M_PI/4,0.0001f));
-
-	//inverse
-	XgeReleaseAssert((q*q.Inverse()).getMatrix().almostIdentity(0.001f));
-
-	//multiply a vector
-	Vec3f V=Vec3f(Utils::FloatRand(0,1),Utils::FloatRand(0,1),Utils::FloatRand(0,1)).normalize();
-	XgeReleaseAssert(((q.getMatrix()* V)-(q * V)).module()<0.001f);
-
-	Vec3f rotations[]=
-	{
-		Vec3f(-1,-1,-1),
-		Vec3f(+1,-1,-1),
-		Vec3f(-1,+1,-1),
-		Vec3f(+1,+1,-1),
-		Vec3f(-1,-1,+1),
-		Vec3f(+1,-1,+1),
-		Vec3f(-1,+1,+1),
-		Vec3f(+1,+1,+1)
-	};
-
-	for (int i=0;i<8;i++)
-	{
-		float angle=(float)M_PI/4.0f;
-
-		rotations[i]=rotations[i].normalize();
-
-		Mat4f _rotmat=Mat4f::rotate(rotations[i],angle);
-		Quaternion q(_rotmat);
-		XgeReleaseAssert((q.getAxis()-rotations[i]).module()<0.001f && fabs(q.getAngle()-angle)<0.001f);
-
-		Mat4f m1=Mat4f::rotate(rotations[i],angle);
-		Mat4f m2=q.getMatrix();
-		XgeReleaseAssert((m2 - m1).almostZero(0.001f));
-
-		{
-			q=Quaternion(rotations[i],angle);
-			XgeReleaseAssert((q.getAxis()-rotations[i]).module()<0.001f && fabs(q.getAngle()-angle)<0.001f);
-		}
-
-		XgeReleaseAssert(((q.getMatrix()* V)-(q * V)).module()<0.001f);
-	}
-
-	q=Quaternion(Vec3f(1,0,0),Vec3f(0,1,0),Vec3f(0,0,1));
-	Vec3f X,Y,Z;
-	q.getAxis(X,Y,Z);
-	XgeReleaseAssert( (X-Vec3f(1,0,0)).module()<0.001);
-	XgeReleaseAssert( (Y-Vec3f(0,1,0)).module()<0.001);
-	XgeReleaseAssert( (Z-Vec3f(0,0,1)).module()<0.001);
-	XgeReleaseAssert(q.getMatrix().almostIdentity(0.001f));
-
-	//test product
-	Quaternion qx(Vec3f(1,0,0),(float)M_PI/4.0);
-	Quaternion qy(Vec3f(0,1,0),(float)-M_PI/3.0);
-	Quaternion qz(Vec3f(0,0,1),(float)M_PI/8.0);
-
-	Mat4f M1=(qx*qy*qz).getMatrix();
-	Mat4f M2=(Mat4f::rotatex((float)M_PI/4.0) * Mat4f::rotatey(-(float)M_PI/3.0) * Mat4f::rotatez((float)M_PI/8.0));
-	XgeReleaseAssert((M1 - M2 ).almostZero(0.0001f));
-	XgeReleaseAssert(((qx*qy*qz)*V - M2*V).module()<0.001f );
-
-
-	return 0;
-}

@@ -9,12 +9,12 @@
 
 //predeclaration
 class Batch;
-class Engine;
+class GLCanvas;
 
 //==================================================
 //!  perspective frustum
 /*!
-	Questa classe serve in generale ai viewer 
+	Questa classe serve in generale ai glcanvas 
 	per impostare il punto di vista e le matrici di 
 	trasformazione di modeling e di projection.
 
@@ -26,7 +26,7 @@ class Engine;
 	scartato in fase di rendering).
 */
 //==================================================
-class  XGE_API Frustum
+class Frustum
 {
 	
 public:
@@ -210,7 +210,7 @@ public:
 	}
 
 	//! if you want to display the frustum
-	void Render(Engine* engine);
+	void render(GLCanvas* glcanvas);
 
 	//! project (important, the frustum should be properly set and a refresh() is needed)
 	Vec3f project(Vec3f P);
@@ -223,15 +223,6 @@ public:
 
 	//! guess best projection matrix ()
 	void guessProjectionMatrix(Box3f box,float fov=DEFAULT_FOV);
-
-	//! automatic handle of mouse, modify the frustum after a mouse movement
-	bool defaultMouseWalkingMode(int button,int mouse_beginx,int mouse_beginy,int x,int y);
-
-	//! automatic handle of mouse, modify the frustum after a mouse movement
-	bool defaultMouseTrackballMode(int button,int mouse_beginx,int mouse_beginy,int x,int y,Vec3f center);
-
-	//! for basic movement inside the scene
-	bool defaultKeyboard(int x,int y,int key);
 
 	//! fix vup (==force to be a coordinate axis)
 	void fixVup();
@@ -259,8 +250,6 @@ public:
 	{
 		return repr();
 	}
-
-	//int SelfTest()
 
 }; //end class
 

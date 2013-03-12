@@ -14,7 +14,7 @@
 	the pick
 */
 //=========================================================
-class XGE_API Pick
+class Pick
 {
 public:
 
@@ -66,7 +66,7 @@ public:
 		if (!this->valid)
 			return;
 
-		// a little trich if the normal goes away from the viewer position (seems to be a problem of orientation of normals coming from Plasm)
+		// a little trich if the normal goes away from the glcanvas position (seems to be a problem of orientation of normals coming from Plasm)
 		Plane4f h(this->normal, this->normal * this->position);
 
 		if (h.getDistance(viewer_position) < 0) 

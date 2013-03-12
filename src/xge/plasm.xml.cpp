@@ -31,7 +31,7 @@ static TiXmlAttribute* getAttribute(TiXmlNode* xnode,const char* name)
 static std::string prefix="";
 
 //______________________________________________________________________________
-static SmartPointer<Hpc> openXmlNode(TiXmlNode* xnode,std::map<int, SmartPointer<Vector>  >& arrays)
+static SmartPointer<Hpc> openXmlNode(TiXmlNode* xnode,std::map<int, SmartPointer<Array>  >& arrays)
 {
 	XgeReleaseAssert(!strcmpi(xnode->Value(),"node"));
 	SmartPointer<Hpc> node(new Hpc);
@@ -61,7 +61,7 @@ static SmartPointer<Hpc> openXmlNode(TiXmlNode* xnode,std::map<int, SmartPointer
 		if (!strcmp("vmat",att_name)) 
 		{
 			node->vmat.reset(new Matf(node->spacedim));
-			Vector::parse((node->spacedim+1)*(node->spacedim+1),(float*)node->vmat->mem,att->Value(),(char*)"%e");
+			Array::parse((node->spacedim+1)*(node->spacedim+1),(float*)node->vmat->mem,att->Value(),(char*)"%e");
 			node->hmat.reset(new Matf(node->vmat->invert()));
 			continue;
 		}
@@ -221,7 +221,7 @@ void Plasm::convertOldXml(char* infilename,char* outfilename,char* prefix)
 	XgeReleaseAssert(!strcmpi(xname,"mesh"));
 	
 	//geometry
-	std::map<int, SmartPointer<Vector >  > arrays;
+	std::map<int, SmartPointer<Array >  > arrays;
 	TiXmlNode* xgeometry=getChild(xnode,"arrays");
 	for (TiXmlNode* xchild= xgeometry->FirstChild(); xchild != 0; xchild = xchild->NextSibling())
 	{
@@ -230,8 +230,8 @@ void Plasm::convertOldXml(char* infilename,char* outfilename,char* prefix)
 		int id    =atoi(getAttribute(xchild,"id"  )->Value());
 		int size  =atoi(getAttribute(xchild,"size")->Value());
 
-		SmartPointer<Vector> arr(new Vector(size));
-		Vector::parse(size,arr->mem(),xchild->FirstChild()->Value(),(char*)"%e");
+		SmartPointer<Array> arr(new Array(size));
+		Array::parse(size,(float*)arr->c_ptr(),xchild->FirstChild()->Value(),(char*)"%e");
 		arrays[id]=arr;
 	}
 

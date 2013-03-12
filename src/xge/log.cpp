@@ -2,14 +2,14 @@
 #include <xge/log.h>
 
 
-#ifdef _WINDOWS
+#if PYPLASM_WINDOWS
 HANDLE Log::__redirect=0;
 #endif
 
 ////////////////////////////////////////////////////////////////////
 bool Log::redirect(uint64 handle)
 {
-	#ifdef _WINDOWS
+	#if PYPLASM_WINDOWS
 	__redirect=(HANDLE)handle;
 	return true;
 	#else
@@ -26,7 +26,7 @@ void Log::printf(const char * format, ...)
 	va_list args;
 	va_start(args,format);
 
-	#ifdef _WINDOWS
+	#if PYPLASM_WINDOWS
 	if (!__redirect)
 	{
 		ret = vfprintf(stdout, format, args);	

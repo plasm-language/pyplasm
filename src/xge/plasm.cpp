@@ -7,7 +7,7 @@
 
 
 
-extern "C" XGE_API unsigned long xge_total_hpc=0;
+extern "C" unsigned long xge_total_hpc=0;
 
 
 Plasm::Statistic Plasm::stats[2048];
@@ -264,7 +264,7 @@ Boxf Plasm::limits(SmartPointer<Hpc> node)
 		{
 			for (std::vector<SmartPointer<Batch> >::iterator ct=child->batches.begin();ct!=child->batches.end();ct++)
 			{
-				float* p=(*ct)->vertices->mem();
+				float* p=(float*)(*ct)->vertices->c_ptr();
 
 				for (int I=0;I<(int)(*ct)->vertices->size();I+=3)
 					box.add((*child->vmat)*Vecf(1.0f,p[I+0],p[I+1],p[I+2]));
@@ -922,10 +922,10 @@ SmartPointer<Hpc> SkinInner(SmartPointer<Hpc> src,const std::string& url,SmartPo
 			(*ct)->texture0=Texture::open(url);
 
 			int nv=(*ct)->vertices->size()/3;
-			(*ct)->texture0coords.reset(new Vector(nv*2));
+			(*ct)->texture0coords.reset(new Array(nv*2));
 
-			float* pv=(*ct)->vertices  ->mem();
-			float* pt=(*ct)->texture0coords->mem();
+			float* pv=(float*)(*ct)->vertices  ->c_ptr();
+			float* pt=(float*)(*ct)->texture0coords->c_ptr();
 
 			for (int I=0;I<nv;I++,pv+=3,pt+=2)
 			{
@@ -957,7 +957,7 @@ SmartPointer<Hpc> Plasm::Skin(SmartPointer<Hpc> src,std::string url,SmartPointer
 
 
 ////////////////////////////////////////////////////////////////////////////
-SmartPointer<Vector> Plasm::getTriangles(SmartPointer<Hpc> src)
+SmartPointer<Array> Plasm::getTriangles(SmartPointer<Hpc> src)
 {
 	SmartPointer<Hpc> node=Plasm::shrink(src,false);
 
@@ -990,11 +990,11 @@ SmartPointer<Vector> Plasm::getTriangles(SmartPointer<Hpc> src)
 
 	//no triangles
 	if (!ntriangles)
-		return SmartPointer<Vector>();
+		return SmartPointer<Array>();
 
 	//step 2, fill triangles
-	SmartPointer<Vector > ret(new Vector(ntriangles*9));
-	float* p=ret->mem();
+	SmartPointer<Array > ret(new Array(ntriangles*9));
+	float* p=(float*)ret->c_ptr();
 
 	for (Hpc::const_iterator it=node->childs.begin();it!=node->childs.end();it++)
 	{
@@ -1010,7 +1010,7 @@ SmartPointer<Vector> Plasm::getTriangles(SmartPointer<Hpc> src)
 			if ((*ct)->primitive!=Batch::TRIANGLES) 
 				continue;
 
-			float* pv=(*ct)->vertices->mem();
+			float* pv=(float*)(*ct)->vertices->c_ptr();
 			int nt=(*ct)->vertices->size()/9;
 
 			for (int T=0;T<nt;T++,pv+=9)
@@ -1025,398 +1025,6 @@ SmartPointer<Vector> Plasm::getTriangles(SmartPointer<Hpc> src)
 	return ret;
 }
 
-
-
-
-
-///////////////////////////////////////////////////
-static inline SmartPointer<Hpc> mkpol_ukpol(SmartPointer<Hpc> src)
-{
-	std::vector<float> points;
-	std::vector<std::vector<int> > hulls;
-	int pointdim=Plasm::ukpol(src,points,hulls);
-	SmartPointer<Hpc> ret=Plasm::mkpol(pointdim,points,hulls);
-	return ret;
-}
-
-
-///////////////////////////////////////////////////
-template<typename T>
-static std::vector<T> make_vector(int n,T *v)
-{
-	std::vector<T> ret;
-	for (int i=0;i<n;i++) ret.push_back(v[i]);
-	return ret;
-}
-
-///////////////////////////////////////////////////
-int Plasm::SelfTest()
-{
-	Log::printf("Testing Plasm::..\n");
-
-	//simplex bulders
-	{
-		int N=0;
-		std::vector<SmartPointer<Hpc> >__simplices;
-		__simplices.push_back(Plasm::translate(Plasm::simplex(0),3,1,0.0f));
-		__simplices.push_back(Plasm::translate(Plasm::simplex(1),3,1,1.0f));
-		__simplices.push_back(Plasm::translate(Plasm::simplex(2),3,1,2.0f));
-		__simplices.push_back(Plasm::translate(Plasm::simplex(3),3,1,3.0f));
-		SmartPointer<Hpc> Struct=Plasm::Struct(__simplices);
-		Plasm::View(Struct,false);
-	}
-	XgeReleaseAssert(!xge_total_hpc);
-
-	//cube bulders (and check limits)
-	{
-		int N=0;
-		std::vector<SmartPointer<Hpc> > __cubes;
-		
-		__cubes.push_back(Plasm::translate(Plasm::cube(0),3,1,0.0f));
-		__cubes.push_back(Plasm::translate(Plasm::cube(1),3,1,1.0f));
-		__cubes.push_back(Plasm::translate(Plasm::cube(2),3,1,2.0f));
-		__cubes.push_back(Plasm::translate(Plasm::cube(3),3,1,3.0f));
-
-		SmartPointer<Hpc> cubes=Plasm::Struct(__cubes);
-		Boxf box=Plasm::limits(cubes);
-		XgeReleaseAssert(box.fuzzyEqual(Boxf(Vecf(1.0f,0.0f,0.0f,0.0f),Vecf(1.0f,4.0f,1.0f,1.0f))));
-
-		Plasm::View(cubes,false);
-	}
-	XgeReleaseAssert(!xge_total_hpc);
-
-	//join
-	{
-		int N=0;
-		std::vector<SmartPointer<Hpc> > __cubes;
-		__cubes.push_back(Plasm::translate(Plasm::cube(0),3,1,0.0f));
-		__cubes.push_back(Plasm::translate(Plasm::cube(1),3,1,1.0f));
-		__cubes.push_back(Plasm::translate(Plasm::cube(2),3,1,2.0f));
-		__cubes.push_back(Plasm::translate(Plasm::cube(3),3,1,3.0f));
-
-		SmartPointer<Hpc> join=Plasm::join(__cubes);
-		Plasm::View(join,false);
-	}
-	XgeReleaseAssert(!xge_total_hpc);
-
-
-	//mkpol
-	{
-		float dx=0;
-		float _dim0_points[]={dx+0,0,0};std::vector<float> dim0_points=make_vector(sizeof(_dim0_points)/sizeof(float),_dim0_points);
-		int  _dim0_hull0[]={0};std::vector<int> dim0_hull=make_vector(sizeof(_dim0_hull0)/sizeof(int),_dim0_hull0);
-		std::vector<std::vector<int> > dim0_hulls;dim0_hulls.push_back(dim0_hull);
-		SmartPointer<Hpc> dim0_mkpol=Plasm::mkpol(3,dim0_points,dim0_hulls);
-		XgeReleaseAssert(Plasm::getSpaceDim(dim0_mkpol)==3);
-		XgeReleaseAssert(Plasm::getPointDim(dim0_mkpol)==0);
-
-		dx+=1;
-		float _dim1_points[]={dx+0,0,0,dx+1,0,0};std::vector<float> dim1_points=make_vector(sizeof(_dim1_points)/sizeof(float),_dim1_points);
-		int  _dim1_hull[]={0,1};std::vector<int> dim1_hull=make_vector(sizeof(_dim1_hull)/sizeof(int),_dim1_hull);
-		std::vector<std::vector<int> > dim1_hulls;dim1_hulls.push_back(dim1_hull);
-		SmartPointer<Hpc> dim1_mkpol=Plasm::mkpol(3,dim1_points,dim1_hulls);
-		XgeReleaseAssert(Plasm::getSpaceDim(dim1_mkpol)==3);
-		XgeReleaseAssert(Plasm::getPointDim(dim1_mkpol)==1);
-
-		dx+=1;
-		float _dim2_points[]={dx+0,0,0,dx+1,0,0,dx+1,1,0,dx+0,1,0};std::vector<float> dim2_points=make_vector(sizeof(_dim2_points)/sizeof(float),_dim2_points);
-		int  _dim2_hull[]={0,1,2,3};std::vector<int> dim2_hull=make_vector(sizeof(_dim2_hull)/sizeof(int),_dim2_hull);
-		std::vector<std::vector<int> > dim2_hulls;dim2_hulls.push_back(dim2_hull);
-		SmartPointer<Hpc> dim2_mkpol=Plasm::mkpol(3,dim2_points,dim2_hulls);
-		XgeReleaseAssert(Plasm::getSpaceDim(dim2_mkpol)==3);
-		XgeReleaseAssert(Plasm::getPointDim(dim2_mkpol)==2);
-
-		dx+=1;
-		float _dim3_points[]={dx+0,0,0,dx+1,0,0,dx+1,1,0,dx+0,1,0, dx+0,0,1,dx+1,0,1,dx+1,1,1,dx+0,1,1};std::vector<float> dim3_points=make_vector(sizeof(_dim3_points)/sizeof(float),_dim3_points);
-		int  _dim3_hull[]={0,1,2,3,4,5,6,7};std::vector<int> dim3_hull=make_vector(sizeof(_dim3_hull)/sizeof(int),_dim3_hull);
-		std::vector<std::vector<int> > dim3_hulls;dim3_hulls.push_back(dim3_hull);
-		SmartPointer<Hpc> dim3_mkpol=Plasm::mkpol(3,dim3_points,dim3_hulls);
-		XgeReleaseAssert(Plasm::getSpaceDim(dim3_mkpol)==3);
-		XgeReleaseAssert(Plasm::getPointDim(dim3_mkpol)==3);
-
-
-		std::vector<SmartPointer<Hpc> > __args;
-		__args.push_back(dim0_mkpol);
-		__args.push_back(dim1_mkpol);
-		__args.push_back(dim2_mkpol);
-		__args.push_back(dim3_mkpol);
-
-		SmartPointer<Hpc> cubes=Plasm::Struct(__args);
-		Plasm::View(cubes,false);
-	}
-	XgeReleaseAssert(!xge_total_hpc);
-
-
-
-	
-	//rotate
-	{
-		int N=0;
-		std::vector<SmartPointer<Hpc> > __cubes;
-		__cubes.push_back(Plasm::rotate(Plasm::cube(2),3,1,2,0*(float)M_PI/8));
-		__cubes.push_back(Plasm::rotate(Plasm::cube(2),3,1,2,1*(float)M_PI/8));
-		__cubes.push_back(Plasm::rotate(Plasm::cube(2),3,1,2,2*(float)M_PI/8));
-		__cubes.push_back(Plasm::rotate(Plasm::cube(2),3,1,2,3*(float)M_PI/8));
-		SmartPointer<Hpc> cubes=Plasm::Struct(__cubes);
-		Plasm::View(cubes,false);
-	}
-	XgeReleaseAssert(!xge_total_hpc);
-
-	//scale
-	{
-		int N=0;
-		std::vector<SmartPointer<Hpc> > __cubes;
-
-		__cubes.push_back(Plasm::scale(Plasm::translate(Plasm::cube(2),2,1,0.0f), 3,2,1.0));
-		__cubes.push_back(Plasm::scale(Plasm::translate(Plasm::cube(2),2,1,1.0f),3,2,2.0));
-		__cubes.push_back(Plasm::scale(Plasm::translate(Plasm::cube(2),2,1,2.0f),3,2,3.0));
-		__cubes.push_back(Plasm::scale(Plasm::translate(Plasm::cube(2),2,1,3.0f),3,2,4.0));
-	
-		SmartPointer<Hpc> cubes=Plasm::Struct(__cubes);
-		Plasm::View(cubes,false);
-	}
-	XgeReleaseAssert(!xge_total_hpc);
-
-
-
-
-	//skeleton
-	{
-		int N=0;
-		std::vector<SmartPointer<Hpc> > __cubes;
-		__cubes.push_back(Plasm::translate(Plasm::cube(0),3,1,0.0f));
-		__cubes.push_back(Plasm::translate(Plasm::cube(1),3,1,1.0f));
-		__cubes.push_back(Plasm::translate(Plasm::cube(2),3,1,2.0f));
-		__cubes.push_back(Plasm::translate(Plasm::cube(3),3,1,3.0f));
-
-		SmartPointer<Hpc> cubes=Plasm::Struct(__cubes);
-
-		SmartPointer<Hpc> s0=Plasm::skeleton(cubes,0);
-		SmartPointer<Hpc> s1=Plasm::skeleton(cubes,1);
-		SmartPointer<Hpc> s2=Plasm::skeleton(cubes,2);
-
-		std::vector<SmartPointer<Hpc> > __args;
-		__args.push_back(s0);
-		__args.push_back(s1);
-		__args.push_back(s2);
-		SmartPointer<Hpc> s=Plasm::Struct(__args);
-
-		Plasm::View(s,false);
-	}
-	XgeReleaseAssert(!xge_total_hpc);
-
-
-
-	//ukpol
-	{
-		
-		float dx=0;
-		float dz=-2;
-		float _dim0_points[]={dx+0,0,dz+0};std::vector<float> dim0_points=make_vector(sizeof(_dim0_points)/sizeof(float),_dim0_points);
-		int  _dim0_hull[]={0};std::vector<int> dim0_hull=make_vector(sizeof(_dim0_hull)/sizeof(int),_dim0_hull);
-		std::vector<std::vector<int> > dim0_hulls;dim0_hulls.push_back(dim0_hull);
-		SmartPointer<Hpc> dim0_mkpol=Plasm::mkpol(3,dim0_points,dim0_hulls);
-		SmartPointer<Hpc> dim0_ukpol=mkpol_ukpol(dim0_mkpol);
-
-		dx+=1;dz+=1;
-		float _dim1_points[]={dx+0,0,dz+0, dx+1,0,dz+0};std::vector<float> dim1_points=make_vector(sizeof(_dim1_points)/sizeof(float),_dim1_points);
-		int  _dim1_hull[]={0,1};std::vector<int> dim1_hull=make_vector(sizeof(_dim1_hull)/sizeof(int),_dim1_hull);
-		std::vector<std::vector<int> > dim1_hulls;dim1_hulls.push_back(dim1_hull);
-		SmartPointer<Hpc> dim1_mkpol=Plasm::mkpol(3,dim1_points,dim1_hulls);
-		SmartPointer<Hpc> dim1_ukpol=mkpol_ukpol(dim1_mkpol);
-
-
-		dx+=1;dz+=1;
-		float _dim2_points[]={dx+0,0,dz+0, dx+1,0,dz+0, dx+1,1,dz+0, dx+0,1,dz+0};std::vector<float> dim2_points=make_vector(sizeof(_dim2_points)/sizeof(float),_dim2_points);
-		int  _dim2_hull[]={0,1,2,3};std::vector<int> dim2_hull=make_vector(sizeof(_dim2_hull)/sizeof(int),_dim2_hull);
-		std::vector<std::vector<int> > dim2_hulls;dim2_hulls.push_back(dim2_hull);
-		SmartPointer<Hpc> dim2_mkpol=Plasm::mkpol(3,dim2_points,dim2_hulls);
-		SmartPointer<Hpc> dim2_ukpol=mkpol_ukpol(dim2_mkpol);
-
-
-		dx+=1;dz+=1;
-		float _dim3_points[]={dx+0,0,dz+0, dx+1,0,dz+0, dx+1,1,dz+0, dx+0,1,dz+0, dx+0,0,dz+1, dx+1,0,dz+1, dx+1,1,dz+1, dx+0,1,dz+1};std::vector<float> dim3_points=make_vector(sizeof(_dim3_points)/sizeof(float),_dim3_points);
-		int  _dim3_hull[]={0,1,2,3,4,5,6,7};std::vector<int> dim3_hull=make_vector(sizeof(_dim3_hull)/sizeof(int),_dim3_hull);
-		std::vector<std::vector<int> > dim3_hulls;dim3_hulls.push_back(dim3_hull);
-		SmartPointer<Hpc> dim3_mkpol=Plasm::mkpol(3,dim3_points,dim3_hulls);
-		SmartPointer<Hpc> dim3_ukpol=mkpol_ukpol(dim3_mkpol);
-
-		std::vector<SmartPointer<Hpc> > __args;
-		__args.push_back(dim0_ukpol);
-		__args.push_back(dim1_ukpol);
-		__args.push_back(dim2_ukpol);
-		__args.push_back(dim3_ukpol);
-
-		SmartPointer<Hpc> cubes=Plasm::Struct(__args);
-		Plasm::View(cubes,false);
-	}
-	XgeReleaseAssert(!xge_total_hpc);
-
-
-		return 0;
-
-	//embed
-	{
-		SmartPointer<Hpc> embed=Plasm::embed(Plasm::cube(1),3);
-		XgeReleaseAssert(Plasm::getSpaceDim(embed)==3 && Plasm::getPointDim(embed)==1);
-		Plasm::View(embed,false);
-	}
-	XgeReleaseAssert(!xge_total_hpc);
-
-	//transform
-	{
-		SmartPointer<Hpc> cube3=Plasm::cube(3);
-
-
-		float __vmat[16]=
-		{
-			1,0,0,0,
-			0,1,0,1,
-			0,0,1,1,
-			0,0,0,1
-		};
-
-		SmartPointer<Matf> vmat(new Matf(3,__vmat));
-		SmartPointer<Matf> hmat(new Matf(vmat->invert()));
-		SmartPointer<Hpc> transform=Plasm::transform(cube3,vmat,hmat);
-
-		Plasm::View(transform,false);
-	}
-	XgeReleaseAssert(!xge_total_hpc);
-
-
-	//boolean operation 2d
-	{ 
-		int N=0;
-		SmartPointer<Hpc> base_cube=Plasm::translate(Plasm::translate(Plasm::cube(2),2,1,-0.5),2,2,-0.5);
-
-		std::vector<SmartPointer<Hpc> > __cubes;
-		__cubes.push_back(Plasm::rotate(base_cube,2,1,2,0*(float)M_PI/8));
-		__cubes.push_back(Plasm::rotate(base_cube,2,1,2,1*(float)M_PI/8));
-		__cubes.push_back(Plasm::rotate(base_cube,2,1,2,2*(float)M_PI/8));
-		__cubes.push_back(Plasm::rotate(base_cube,2,1,2,3*(float)M_PI/8));
-
-	
-		SmartPointer<Hpc> bool_or  =Plasm::translate(Plasm::boolop(BOOL_CODE_OR  ,__cubes),2,1,0.0f);
-		SmartPointer<Hpc> bool_and =Plasm::translate(Plasm::boolop(BOOL_CODE_AND ,__cubes),2,1,2.0f);
-		SmartPointer<Hpc> bool_dif =Plasm::translate(Plasm::boolop(BOOL_CODE_DIFF,__cubes),2,1,4.0f);
-		SmartPointer<Hpc> bool_xor =Plasm::translate(Plasm::boolop(BOOL_CODE_XOR ,__cubes),2,1,6.0f);
-
-		std::vector<SmartPointer<Hpc> > __args;
-		__args.push_back(bool_or);
-		__args.push_back(bool_and);
-		__args.push_back(bool_dif);
-		__args.push_back(bool_xor);
-		SmartPointer<Hpc> boolop=Plasm::Struct(__args);
-
-		Plasm::View(boolop,false);
-	}
-	XgeReleaseAssert(!xge_total_hpc);
-
-
-	//power
-	{
-		int N=0;
-		std::vector<SmartPointer<Hpc> > __cubes2d;
-		__cubes2d.push_back(Plasm::translate(Plasm::cube(2),2,1,0.0f));
-		__cubes2d.push_back(Plasm::translate(Plasm::cube(2),2,1,1.5f));
-
-		SmartPointer<Hpc> s1=Plasm::Struct(__cubes2d);
-
-		std::vector<SmartPointer<Hpc> > __cubes1d;
-		__cubes1d.push_back(Plasm::translate(Plasm::cube(1),1,1,0.0f));
-		__cubes1d.push_back(Plasm::translate(Plasm::cube(1),1,1,1.5f));
-
-		SmartPointer<Hpc> s2=Plasm::Struct(__cubes1d);
-
-		SmartPointer<Hpc> power=Plasm::power(s1,s2/*,1e-6f,10,0*/);
-		Plasm::View(power,false);
-	}
-	XgeReleaseAssert(!xge_total_hpc);
-
-
-	//boolean operation 3d
-	{ 
-		int N=0;
-		SmartPointer<Hpc> base_cube=Plasm::translate(Plasm::translate(Plasm::translate(Plasm::cube(3),3,1,-0.5),3,2,-0.5),3,3,-0.5);
-
-		std::vector< SmartPointer<Hpc> > __cubes;
-		__cubes.push_back(Plasm::rotate(base_cube,3,1,2,0*(float)M_PI/8));
-		__cubes.push_back(Plasm::rotate(base_cube,3,1,2,1*(float)M_PI/8));
-		__cubes.push_back(Plasm::rotate(base_cube,3,1,2,2*(float)M_PI/8));
-		__cubes.push_back(Plasm::rotate(base_cube,3,1,2,3*(float)M_PI/8));
-
-	
-		SmartPointer<Hpc> bool_or  =Plasm::translate(Plasm::boolop(BOOL_CODE_OR  ,__cubes),2,1,0.0f);
-		SmartPointer<Hpc> bool_and =Plasm::translate(Plasm::boolop(BOOL_CODE_AND ,__cubes),2,1,2.0f);
-		SmartPointer<Hpc> bool_dif =Plasm::translate(Plasm::boolop(BOOL_CODE_DIFF,__cubes),2,1,4.0f);
-		SmartPointer<Hpc> bool_xor =Plasm::translate(Plasm::boolop(BOOL_CODE_XOR ,__cubes),2,1,6.0f);
-
-		std::vector<SmartPointer<Hpc> > __args;
-		__args.push_back(bool_or);
-		__args.push_back(bool_and);
-		__args.push_back(bool_dif);
-		__args.push_back(bool_xor);
-		SmartPointer<Hpc> boolop=Plasm::Struct(__args);
-
-		Plasm::View(boolop,false);
-	}
-	XgeReleaseAssert(!xge_total_hpc);
-
-	//properties
-	{
-		SmartPointer<Hpc> base_cube=Plasm::translate(
-				Plasm::translate(
-					Plasm::translate(
-						Plasm::cube(3)
-					,3,1,-0.5)
-				,3,2,-0.5)
-			,3,3,-0.5);
-
-		char* Red   = "1.0 0.0 0.0 1.0";
-		char* Blue  = "0.0 0.0 1.0 1.0";
-		char* Green = "0.0 1.0 0.0 1.0";
-		char* Mtl   = "0.1 0.1 0.1 1.0   0.8 0.2 0.8 1.0   1.0 1.0 1.0 1.0   0.0 0.0 0.0 1.0   100.0";
-		
-		std::vector<SmartPointer<Hpc> > __cubes;
-		__cubes.push_back(Plasm::addProperty(Plasm::translate(base_cube,3,1,0.0f),HPC_PROP_RGB_COLOR    ,Red   ));
-		__cubes.push_back(Plasm::addProperty(Plasm::translate(base_cube,3,1,1.5f),HPC_PROP_VRML_MATERIAL,Mtl   ));
-		__cubes.push_back(Plasm::addProperty(Plasm::translate(base_cube,3,1,3.0f),HPC_PROP_RGB_COLOR    ,Blue  ));
-		__cubes.push_back(Plasm::addProperty(Plasm::translate(base_cube,3,1,4.5f),HPC_PROP_RGB_COLOR    ,Green ));
-
-		SmartPointer<Hpc> Struct=Plasm::Struct(__cubes);
-		Plasm::View(Struct,false);
-	}
-
-	//transparency
-	if (true)
-	{
-		SmartPointer<Hpc> cuboid_central=Plasm::cube(3,-0.3f,0.3f);
-	
-		SmartPointer<Hpc> cuboid_px=Plasm::addProperty(Plasm::translate(cuboid_central,3,1,+1),HPC_PROP_VRML_MATERIAL,"0.1 0.1 0.1 1.0   0.8 0.1 0.1 0.5  0 0 0 1.0   0.0 0.0 0.0 1.0   100.0");
-		SmartPointer<Hpc> cuboid_py=Plasm::addProperty(Plasm::translate(cuboid_central,3,2,+1),HPC_PROP_VRML_MATERIAL,"0.1 0.1 0.1 1.0   0.1 0.8 0.1 0.5  0 0 0 1.0   0.0 0.0 0.0 1.0   100.0");
-		SmartPointer<Hpc> cuboid_pz=Plasm::addProperty(Plasm::translate(cuboid_central,3,3,+1),HPC_PROP_VRML_MATERIAL,"0.1 0.1 0.1 1.0   0.1 0.1 0.8 0.5  0 0 0 1.0   0.0 0.0 0.0 1.0   100.0");
-
-		SmartPointer<Hpc> cuboid_nx=Plasm::addProperty(Plasm::translate(cuboid_central,3,1,-1),HPC_PROP_VRML_MATERIAL,"0.1 0.1 0.1 1.0   0.8 0.1 0.1 0.5  0 0 0 1.0   0.0 0.0 0.0 1.0   100.0");
-		SmartPointer<Hpc> cuboid_ny=Plasm::addProperty(Plasm::translate(cuboid_central,3,2,-1),HPC_PROP_VRML_MATERIAL,"0.1 0.1 0.1 1.0   0.1 0.8 0.1 0.5  0 0 0 1.0   0.0 0.0 0.0 1.0   100.0");
-		SmartPointer<Hpc> cuboid_nz=Plasm::addProperty(Plasm::translate(cuboid_central,3,3,-1),HPC_PROP_VRML_MATERIAL,"0.1 0.1 0.1 1.0   0.1 0.1 0.8 0.5  0 0 0 1.0   0.0 0.0 0.0 1.0   100.0");
-
-
-		std::vector<SmartPointer<Hpc> > args;
-		args.push_back(cuboid_central);
-		args.push_back(cuboid_px);
-		args.push_back(cuboid_py);
-		args.push_back(cuboid_pz);
-		args.push_back(cuboid_nx);
-		args.push_back(cuboid_ny);
-		args.push_back(cuboid_nz);
-		SmartPointer<Hpc> Out=Plasm::Struct(args);
-		Plasm::View(Out,false);
-	}
-
-	XgeReleaseAssert(!xge_total_hpc);
-	return 0;
-}
 
 
 
@@ -1584,20 +1192,9 @@ std::vector<SmartPointer<Batch> > Plasm::getBatches(SmartPointer<Hpc> src,bool b
 
 //////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////
-void Plasm::View(SmartPointer<Hpc> src,bool bBackground)
+void Plasm::view(SmartPointer<Hpc> src)
 {
-	std::vector<SmartPointer<Batch> > batches=getBatches(src);
-	SmartPointer<Octree> octree(new Octree(batches));
-
-	Viewer* viewer=new Viewer(octree);
-	viewer->Run();
-
-	if (bBackground)
-		return;
-
-	viewer->Wait();
-	delete viewer;
-	
-	//not necessary
-	//viewer.Wait();
+	GLCanvas glcanvas;
+  glcanvas.setOctree(SmartPointer<Octree>(new Octree(getBatches(src))));
+	glcanvas.runLoop();
 }

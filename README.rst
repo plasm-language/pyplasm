@@ -4,199 +4,88 @@ PLASM (Programming LAnguage for Solid Modeling)
 Plasm is a 'design language' for geometric and solid parametric design, 
 developed by the CAD Group at the Universities 'La Sapienza' and 'Roma Tre' in Italy.
 
-Plasm is available both as a desktop application and in NCLab (http://nclab.com).
-
---------------------------------------
-Linux compilation (Ubuntu/Debian .deb)
---------------------------------------
 
 Get Plasm::
 
-    git clone git://github.com/femhub/plasm.git
+	git clone git://github.com/plasm-language/pyplasm.git
+	cd pyplasm
 
-Install FreeImage developer library::
+To get the "develop" (unstable) version do also::
 
-    sudo apt-get install libfreeimage3 libfreeimage-dev
+	git checkout -b develop origin/develop
+	git remote show origin
 
-Install Freetype2 developer library::
-  
-    sudo apt-get install libfreetype6 libfreetype6-dev
+--------------------------------------
+Linux compilation
+--------------------------------------
 
-Install ALSA developer library::
+Install prerequisites::
 
-    sudo apt-get install libasound2 libasound2-dev
-
-Install Glew developer library (libglew1.6 for new 'oneiric' release)::
-	
-    # For older Ubuntu install libglew1.5 instead of this.
-    sudo apt-get install libglew1.8 libglew-dev 
-
-Install python2.7 (the version number is important)::
-
-    sudo apt-get install python2.7 python2.7-dev
-
-If you get errors about Juce library (juce_amalgamated.cpp)::
-
-    sudo apt-get install libxinerama-dev
-    sudo apt-get install libxrender-dev
-    sudo apt-get install libxcomposite-dev
-    sudo apt-get install libxcursor-dev
-    sudo apt-get install freeglut3-dev
-
-Install PyPlasm Python dependencies::
-
-    sudo apt-get install python-setuptools
-    sudo easy_install PyOpenGL PyOpenGL-accelerate
-
-Open a bash shell and type::
-
-    cd plasm
-    make clean
-    make
-    sudo make install
-
-To test the PyPlasm distribution, type::
-
-    python
-    from pyplasm import *
-    c=CUBOID([1,1,1])
-    VIEW(c)
-    quit()
-
-To run some other tests, type::
-	
-    python /usr/lib/python2.7/dist-packages/pyplasm/examples.py
-
-(OPTIONAL, only for DEBUGGING) if you want to run the self test procedure xgemain::
-
-    ./src/xgemain/xgemain
-
------------------------------------------------------------
-Linux compilation (openSUSE .RPM - tested on openSUSE 11.4)
------------------------------------------------------------
-
-Install FreeImage developer library::
-
-    sudo yast --install libfreeimage3
-    subo yast --install libfreeimage-devel
-
-Install Freetype2 developer library::
-
-    sudo yast --install libfreetype6
-    sudo yast --install freetype2-devel
+	PREREQUISITES=\
+		libfreetype6  libfreetype6-dev libasound2  libasound2-dev alsa alsa-devel \
+		python2.7 python2.7-dev python-setuptools \
+		libxinerama-dev libxrender-dev libxcomposite-dev libxcursor-dev
     
-Install ALSA developer library::
+	sudo apt-get install $PREREQUISITES # OpenSuse: "sudo zypper install $PREREQUISITES"
 
-    sudo yast --install alsa
-    sudo yast --install alsa-devel
+Install some extra python packages::
 
-Install Glew developer library::
-	
-    sudo yast --install glew
-    sudo yast --install libGLEW1_6
-    sudo yast --install libGLEW1_6-devel
+	sudo easy_install numpy  
+	sudo easy_install scipy
+	sudo easy_install PyOpenGL
 
-Install python2.7 (the version number is important)::
+Generate makefiles and make binaries::
 
-    sudo yast --install python
-    sudo yast --install python-devel
-
-Open a bash shell and type::
-
-    cd <the/directory/containing/this/file>
-    make clean
-    make
-    sudo make install
-
-To test the PyPlasm distribution, type::
-
-    python
-    from pyplasm import *
-    c=CUBOID([1,1,1])
-    VIEW(c)
-    quit()
-
-To run some other tests, type::
-	
-    python /usr/lib/python2.7/site-packages/pyplasm/examples.py
-
-(OPTIONAL, only for DEBUGGING) if you want to run the self test procedure xgemain::
-
-    ./src/xgemain/xgemain
+	cd /home/$USERNAME/pyplasm
+	mkdir build
+	cd build
+	cmake ../ 
+	make
+	sudo make install
+	cd ..
 
 
 -----------------------------------------------------------
 Macosx compilation 
 -----------------------------------------------------------
 
-
-Please use python 2.7 from Apple.
-You should have the following directories on your Macintosh HD::
-
-    /System/Library/Frameworks/Python.framework/Versions/2.7
-    /Library/Python/2.7/site-packages
-
-Also make sure that your python version is 2.7::
-
-    python --version
+Install cmake from http://www.cmake.org/cmake/resources/software.html
 
 Install PyOpenGL::
 
-    sudo easy_install pyopengl
+	sudo easy_install pyopengl
 
-Get pyplasm from github::
+Generate XCode project , build and install::
 
-    git clone git@github.com:plasm-language/pyplasm.git
-
-Compile pyplasm::
-
-    cd pyplasm
-    make clean
-    make
-    sudo make install
-
-Check that it's working::
-
-    python
-    from pyplasm import *
-    c=CUBOID([1,1,1])
-    VIEW(c)
-    quit()
-   
-
-
+	cd /home/$USERNAME/pyplasm
+	mkdir build
+	cd build
+	cmake -GXcode ../ 
+	xcodebuild      -project PyPlasm.xcodeproj -target ALL_BUILD  -configuration Release
+	sudo xcodebuild -project PyPlasm.xcodeproj -target install    -configuration Release
 
 -----------------------------------------------------------
-Windows compilation  (Visual Studio 2010!)
+Windows compilation 
 -----------------------------------------------------------
 
-(*) Open the project ./pyplasm.sln
+Install cmake rom http://www.cmake.org/cmake/resources/software.html
 
-(*) From the "Build menu" select "Batch Build"
+Run cmake-gui::
 
-(*) Click the "Select All" button
+	"Where is the source code"    <browse to the pyplasm directory>
+	"Where to build the binaries  <browse to the pyplasm directory>/build
 
-(*) Click the "Build" button
+Press configure/generate::
 
-(*) open a cygwin shell (http://www.cygwin.com/ you need to have the Makefile tools installed) and type::
+Open build/pyplasm.sln in Visual Studio and build "ALL" and "INSTALL" targets
 
-    cd <the/directory/containing/this/README/file>
-    make install
+-----------------------------------------------------------
+Test pyplasm is working
+-----------------------------------------------------------
 
-(*) in distrib/win32/pyplasm there will be the self-contained package for Python 2.6 To install it copy all files and directories::
-
-    distrib\win32\pyplasm\* -> C:\Python26\Lib\site-packages\pyplasm\*
-
-(*) To test  PyPlasm , open a MSDOS prompt and type::
-
-    c:\Python26\python.exe
-    from pyplasm import *
-    c=CUBOID([1,1,1])
-    VIEW(c)
-    quit()
-
-(*) to run some other tests, from a MSDOS prompt type::
-	
-    c:\Python26\python.exe C:\Python26\Lib\site-packages\pyplasm\examples.py
-
+	python
+	from pyplasm import *
+	c=CUBOID([1,1,1])
+	VIEW(c)
+	quit()
 

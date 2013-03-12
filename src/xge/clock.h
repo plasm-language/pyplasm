@@ -15,7 +15,7 @@ Esempio di uso
 */
 //===========================================================================
 
-class XGE_API Clock
+class Clock
 {
 public:
 
@@ -35,7 +35,7 @@ public:
 	//! operator -
 	int operator-(const Clock& a) const
 	{ 
-		#ifdef _WINDOWS
+		#if PYPLASM_WINDOWS
 		LARGE_INTEGER frequency; 
 		QueryPerformanceFrequency(&frequency);
 		return (int)((this->timestamp.QuadPart-a.timestamp.QuadPart) * 1000.0f/frequency.QuadPart);
@@ -69,7 +69,7 @@ public:
 	//! reset 
 	void reset()
 	{
-		#ifdef _WINDOWS
+		#if PYPLASM_WINDOWS
 		QueryPerformanceCounter(&timestamp);
 		#else
 		gettimeofday(&timestamp, NULL);
@@ -104,7 +104,7 @@ public:
 protected:
 
 	//! internal timestamp, dipendente dalla piattaforma
-	#ifdef _WINDOWS
+	#if PYPLASM_WINDOWS
 	LARGE_INTEGER timestamp;
 	#else	
 	timeval timestamp;
