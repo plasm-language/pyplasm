@@ -10,10 +10,6 @@ Get Plasm::
 	git clone git://github.com/plasm-language/pyplasm.git
 	cd pyplasm
 
-To get the "develop" (unstable) version do also::
-
-	git checkout -b develop origin/develop
-	git remote show origin
 
 --------------------------------------
 Linux compilation
@@ -34,6 +30,10 @@ Install some extra python packages::
 	sudo easy_install scipy
 	sudo easy_install PyOpenGL
 
+Check that your python is 2.7
+	
+	python --version
+
 Generate makefiles and make binaries::
 
 	cd /home/$USERNAME/pyplasm
@@ -41,7 +41,7 @@ Generate makefiles and make binaries::
 	cd build
 	cmake ../ 
 	make
-	sudo make install
+	sudo make install # if you get an error try the following "touch install_manifest.txt" and "chmod a+rw ./*"
 	cd ..
 
 
