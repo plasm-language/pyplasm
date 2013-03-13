@@ -1,0 +1,32 @@
+--- pyplasm-master/Makefile.orig	2013-01-09 03:29:00.000000000 +0100
++++ pyplasm-master/Makefile	2013-02-24 21:20:55.058108793 +0100
+@@ -32,18 +32,19 @@ endif
+ ifeq ($(PLATFORM_NAME),PLATFORM_Linux)
+ install:
+ 	echo "Installing pyplasm on Linux"
+-	rm -Rf  $(PYTHON_SITE_PACKAGES)/pyplasm
+-	cp -r src/pyplasm             $(PYTHON_SITE_PACKAGES)/pyplasm
+-	cp PLaSM.html                 $(PYTHON_SITE_PACKAGES)/pyplasm/ 
+-	cp README.rst                 $(PYTHON_SITE_PACKAGES)/pyplasm/  
+-	cp src/xge/libxge.so          $(PYTHON_SITE_PACKAGES)/pyplasm/xge/libxge.so
+-	cp src/xge/libxge.so		/usr/lib/
+-	cp src/xgemain/xgemain        $(PYTHON_SITE_PACKAGES)/pyplasm/xge/xgemain
+-	cp src/xgepy/libxgepy.so      $(PYTHON_SITE_PACKAGES)/pyplasm/xge/_xgepy.so
+-	chmod -R a+rwx                $(PYTHON_SITE_PACKAGES)/pyplasm
++	rm -Rf  		      $(DESTDIR)$(PYTHON_SITE_PACKAGES)/pyplasm
++	mkdir -p  		      $(DESTDIR)$(PYTHON_SITE_PACKAGES)/
++	cp -r src/pyplasm             $(DESTDIR)$(PYTHON_SITE_PACKAGES)/pyplasm
++	cp PLaSM.html                 $(DESTDIR)$(PYTHON_SITE_PACKAGES)/pyplasm/ 
++	cp README.rst                 $(DESTDIR)$(PYTHON_SITE_PACKAGES)/pyplasm/  
++	cp src/xge/libxge.so          $(DESTDIR)$(PYTHON_SITE_PACKAGES)/pyplasm/xge/libxge.so
++	#cp src/xge/libxge.so		/usr/lib/
++	cp src/xgemain/xgemain        $(DESTDIR)$(PYTHON_SITE_PACKAGES)/pyplasm/xge/xgemain
++	cp src/xgepy/libxgepy.so      $(DESTDIR)$(PYTHON_SITE_PACKAGES)/pyplasm/xge/_xgepy.so
++	chmod -R a+rwx                $(DESTDIR)$(PYTHON_SITE_PACKAGES)/pyplasm
+ 	rm -Rf   distrib/linux
+ 	mkdir -p distrib/linux
+-	cp -r $(PYTHON_SITE_PACKAGES)/pyplasm distrib/linux
++	cp -r $(DESTDIR)$(PYTHON_SITE_PACKAGES)/pyplasm distrib/linux
+ 	chmod -R a+rwx distrib/linux
+ endif
+ 
