@@ -48,12 +48,17 @@ Generate makefiles and make binaries::
 -----------------------------------------------------------
 Macosx compilation 
 -----------------------------------------------------------
+Install brew from http://mxcl.github.com/homebrew/
 
-Install cmake from http://www.cmake.org/cmake/resources/software.html
+Install XCode tools from AppStore
+
+Install cmake with "brew install cmake"
 
 Install PyOpenGL::
 
 	sudo easy_install pyopengl
+
+Install numpy/scipy with ScipySuperpack from http://fonnesbeck.github.com/ScipySuperpack/
 
 Generate XCode project , build and install::
 
@@ -63,6 +68,10 @@ Generate XCode project , build and install::
 	cmake -GXcode ../ 
 	xcodebuild      -project PyPlasm.xcodeproj -target ALL_BUILD  -configuration Release
 	sudo xcodebuild -project PyPlasm.xcodeproj -target install    -configuration Release
+
+If "cmake -GXcode ../" fails with errors about OPENGL_INCLUDE_DIRS and PYTHON_INCLUDE_DIRS you need to specify it manually:
+in Mac OsX 10.8 the right command line is
+cmake -GXcode -DOPENGL_INCLUDE_DIR=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers -DPYTHON_INCLUDE_DIR=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/Python.framework/Versions/2.7/include/python2.7 ../
 
 -----------------------------------------------------------
 Windows compilation 
