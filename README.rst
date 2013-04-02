@@ -46,21 +46,14 @@ Generate makefiles and make binaries::
 
 
 -----------------------------------------------------------
-Macosx compilation 
+MacOsX compilation 
 -----------------------------------------------------------
-Install brew from http://mxcl.github.com/homebrew/
-
-Install XCode tools from AppStore
-
-Install cmake with "brew install cmake"
-
-Install PyOpenGL::
-
-	sudo easy_install pyopengl
-
-Install numpy/scipy with ScipySuperpack from http://fonnesbeck.github.com/ScipySuperpack/
-
-Generate XCode project , build and install::
+1. Install XCode tools from AppStore (optionally install also Xcode command line tools)
+2. Install brew from http://mxcl.github.com/homebrew/
+3. Install cmake with ``brew install cmake``
+4. Install PyOpenGL with ``sudo easy_install pyopengl``
+5. Install numpy/scipy with ScipySuperpack from http://fonnesbeck.github.com/ScipySuperpack/ (browse the page to find the correct version for your MacOsX)
+6. Generate XCode project , build and install::
 
 	cd /home/$USERNAME/pyplasm
 	mkdir build
@@ -69,9 +62,12 @@ Generate XCode project , build and install::
 	xcodebuild      -project PyPlasm.xcodeproj -target ALL_BUILD  -configuration Release
 	sudo xcodebuild -project PyPlasm.xcodeproj -target install    -configuration Release
 
-If "cmake -GXcode ../" fails with errors about OPENGL_INCLUDE_DIRS and PYTHON_INCLUDE_DIRS you need to specify it manually:
-in Mac OsX 10.8 the right command line is
-cmake -GXcode -DOPENGL_INCLUDE_DIR=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers -DPYTHON_INCLUDE_DIR=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/Python.framework/Versions/2.7/include/python2.7 ../
+**Possible cmake errors**:
+
+If the command ``cmake -GXcode ../`` fails with errors about OPENGL_INCLUDE_DIRS and PYTHON_INCLUDE_DIRS you need to specify it manually:
+for example, in Mac OsX 10.8 the right command line is::
+
+	cmake -GXcode -DOPENGL_INCLUDE_DIR=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers -DPYTHON_INCLUDE_DIR=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/Python.framework/Versions/2.7/include/python2.7 ../
 
 -----------------------------------------------------------
 Windows 7/8 compilation 
@@ -96,7 +92,7 @@ http://sourceforge.net/projects/scipy/files/scipy/0.12.0rc1/scipy-0.12.0c1-win32
 
 - Swig 2.0.9
 http://prdownloads.sourceforge.net/swig/swigwin-2.0.9.zip
-(unzip Swig and move the folder to obtain C:\swigwin-2.0.9)
+(unzip Swig and move the folder to obtain C:/swigwin-2.0.9)
 
 - Cmake 2.8.10.2 - 32 bit 
 http://www.cmake.org/files/v2.8/cmake-2.8.10.2-win32-x86.exe
