@@ -834,7 +834,36 @@ def PRINTPOL (PolValue):
     sys.stdout.flush()
     return PolValue
 
+#===================================================================================
+# SETPROPERTY (wants a property name "RGBcolor"
+# Example SETPROPERTY(["RGBcolor","1.0 1.0 1.0 1.0"])(pol)
+#===================================================================================
 
+def SETPROPERTY(proparray):
+
+	def PROPBFS(obj,proparray):
+		# maintain a queue of paths
+		queue = []
+		# push the first path into the queue
+		queue.append([obj])
+		while queue:
+			# get the first path from the queue
+			path = queue.pop(0)
+			# get the last node from the path
+			node = path[-1]
+			# path found
+			if Plasm.getProperty(node, proparray[0]) == '':
+				node.setProperty(proparray[0],proparray[1])
+			# enumerate all adjacent nodes, construct a new path and push it into the queue
+			for adjacent in obj.childs:
+				new_path = list(path)
+				new_path.append(adjacent)
+				queue.append(new_path)
+
+	def SETPROPERTY0(pol):
+		PROPBFS(pol,proparray)
+
+	return SETPROPERTY0
 
 # ===================================================
 # TREE
