@@ -847,15 +847,13 @@ def SETPROPERTY(proparray):
 		# push the first path into the queue
 		queue.append(obj)
 		while queue:
-			# get the first path from the queue
-			path = queue.pop(0)
-			# get the last node from the path
-			node = path[-1]
+			# get the first node from the queue
+			node = queue.pop(0)
 			# path found
 			if Plasm.getProperty(node, proparray[0]) != '':
 				node.setProperty(proparray[0],proparray[1])
 			# enumerate all adjacent nodes, construct a new path and push it into the queue
-			for adjacent in obj.childs:
+			for adjacent in node.childs:
 				queue.append(adjacent)
 
 	def SETPROPERTY0(pol):
