@@ -852,7 +852,7 @@ def SETPROPERTY(proparray):
 			# get the last node from the path
 			node = path[-1]
 			# path found
-			if Plasm.getProperty(node, proparray[0]) == '':
+			if Plasm.getProperty(node, proparray[0]) != '':
 				node.setProperty(proparray[0],proparray[1])
 			# enumerate all adjacent nodes, construct a new path and push it into the queue
 			for adjacent in obj.childs:
