@@ -845,7 +845,7 @@ def SETPROPERTY(proparray):
 		# maintain a queue of paths
 		queue = []
 		# push the first path into the queue
-		queue.append([obj])
+		queue.append(obj)
 		while queue:
 			# get the first path from the queue
 			path = queue.pop(0)
@@ -856,9 +856,7 @@ def SETPROPERTY(proparray):
 				node.setProperty(proparray[0],proparray[1])
 			# enumerate all adjacent nodes, construct a new path and push it into the queue
 			for adjacent in obj.childs:
-				new_path = list(path)
-				new_path.append(adjacent)
-				queue.append(new_path)
+				queue.append(adjacent)
 
 	def SETPROPERTY0(pol):
 		PROPBFS(pol,proparray)
