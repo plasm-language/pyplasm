@@ -292,11 +292,8 @@ public:
 	}
 	
 	inline void setProperty(std::string name, std::string val) {
-		const char* pname=name.c_str();
-		const char* pvalue=val.c_str();		
-		
 		if (!this->prop) this->prop.reset(new PropertySet);
-		(*this->prop)[pname]=pvalue;
+		(*this->prop)[name]=val;
 	}
 };
 
