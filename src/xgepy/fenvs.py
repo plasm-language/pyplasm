@@ -842,9 +842,9 @@ def PRINTPOL (PolValue):
 def SETPROPERTY(proparray):
 
 	def PROPBFS(obj,proparray):
-		# maintain a queue of paths
+		# maintain a queue of nodes
 		queue = []
-		# push the first path into the queue
+		# push the first node into the queue
 		queue.append(obj)
 		while (len(queue) > 0):
 			# print(len(queue))
@@ -853,7 +853,7 @@ def SETPROPERTY(proparray):
 			# Prop found
 			if Plasm.getProperty(node, proparray[0]) != '':
 				node.setProperty(proparray[0],proparray[1])
-			# enumerate all adjacent nodes, construct a new path and push it into the queue
+			# enum all child nodes, push them into the queue
 			for i in range(len(node.childs)):
 				queue.append(node.childs[i])
 
