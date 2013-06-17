@@ -846,18 +846,20 @@ def SETPROPERTY(proparray):
 		queue = []
 		# push the first path into the queue
 		queue.append(obj)
-		while queue:
+		while (len(queue) > 0):
+			# print(len(queue))
 			# get the first node from the queue
-			node = queue.pop(0)
-			# path found
+			node = queue.pop()
+			# Prop found
 			if Plasm.getProperty(node, proparray[0]) != '':
 				node.setProperty(proparray[0],proparray[1])
 			# enumerate all adjacent nodes, construct a new path and push it into the queue
-			for adjacent in node.childs:
-				queue.append(adjacent)
+			for i in range(len(node.childs)):
+				queue.append(node.childs[i])
 
 	def SETPROPERTY0(pol):
 		PROPBFS(pol,proparray)
+		return pol
 
 	return SETPROPERTY0
 

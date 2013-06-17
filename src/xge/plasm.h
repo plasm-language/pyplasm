@@ -295,6 +295,10 @@ public:
 		if (!this->prop) this->prop.reset(new PropertySet);
 		(*this->prop)[name]=val;
 	}
+
+	inline void setPropertySecure(std::string name, std::string val) {
+		if (this->prop) (*this->prop)[name]=val;
+	}
 };
 
 
