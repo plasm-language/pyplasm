@@ -290,6 +290,11 @@ public:
 			*(this->hmat)=this->hmat->extract(this->spacedim);
 		}
 	}
+	
+	inline void setProperty(std::string name, std::string val) {
+		if (!this->prop) this->prop.reset(new PropertySet);
+		(*this->prop)[name]=val;
+	}
 };
 
 
