@@ -1,5 +1,7 @@
 
+
 import time
+
 start=time.clock()
 print "Evaluating fenvs.py.."
 
@@ -61,9 +63,9 @@ plasm_config=PlasmConfig()
 # Every
 #===================================================== 
 def every (predicate, iterable):
-    for x in iterable:
-        if not(predicate(x)):return False
-    return True
+	for x in iterable:
+		if not(predicate(x)):return False
+	return True
 
 
 
@@ -74,14 +76,14 @@ if __name__ == "__main__":
 # from http://www.daniweb.com/code/snippet564.html
 #===================================================== 
 def curry(fn, *cargs, **ckwargs):
-    def call_fn(*fargs, **fkwargs):
-        d = ckwargs.copy()
-        d.update(fkwargs)
-        return fn(*(cargs + fargs), **d)
-    return call_fn
+	def call_fn(*fargs, **fkwargs):
+		d = ckwargs.copy()
+		d.update(fkwargs)
+		return fn(*(cargs + fargs), **d)
+	return call_fn
 
 def C (fun):
-    return lambda arg1: lambda arg2: fun([arg1,arg2])
+	return lambda arg1: lambda arg2: fun([arg1,arg2])
 
 
 #===================================================== 
@@ -134,9 +136,9 @@ if __name__ == "__main__":
 # ===================================================== 
 
 def INV (mat):
-    dim=len(mat)
-    mat=Matf(CAT(mat)).invert()
-    return [ [mat.get(i,j) for j in range(0,dim) ] for i in range(0,dim) ]
+	dim=len(mat)
+	mat=Matf(CAT(mat)).invert()
+	return [ [mat.get(i,j) for j in range(0,dim) ] for i in range(0,dim) ]
 
 
 
@@ -148,10 +150,10 @@ if __name__ == "__main__":
 # =====================================================
  
 def AND (list):
-    """ and of all arguments in a list """
-    for i in list:
-        if not(i):return False
-    return True
+	""" and of all arguments in a list """
+	for i in list:
+		if not(i):return False
+	return True
 
 
 
@@ -165,10 +167,10 @@ if __name__ == "__main__":
 pol_type = Hpc
 
 def is_polyhedra_complex (obj):
-    return isinstance(obj, pol_type)
+	return isinstance(obj, pol_type)
 
 def ISPOL (obj):
-    return isinstance(obj, pol_type)
+	return isinstance(obj, pol_type)
 
 if __name__ == "__main__":
 	assert(ISPOL(Plasm.cube(2))==True)
@@ -178,8 +180,8 @@ if __name__ == "__main__":
 #===================================================== 
 
 def ID (anyValue):
-    """IDentity function. For any argument retruns the argument"""
-    return anyValue
+	"""IDentity function. For any argument retruns the argument"""
+	return anyValue
 
 if __name__ == "__main__":
 	assert(ID(True)==True)
@@ -190,8 +192,8 @@ if __name__ == "__main__":
 #===================================================== 
 
 def K(AnyValue):
-    def K0 (obj): return AnyValue
-    return K0
+	def K0 (obj): return AnyValue
+	return K0
 
 
 
@@ -205,9 +207,9 @@ if __name__ == "__main__":
 # ===================================================
 
 def DISTL(args):
-    Element, List = args
-    return [ [Element, e] for e in List ]
-    
+	Element, List = args
+	return [ [Element, e] for e in List ]
+	
 
 
 if __name__ == "__main__":
@@ -218,8 +220,8 @@ if __name__ == "__main__":
 # ===================================================
 
 def DISTR(args):
-    List, Element = args
-    return [ [e,Element] for e in List ]
+	List, Element = args
+	return [ [e,Element] for e in List ]
 
 
 
@@ -233,8 +235,8 @@ if __name__ == "__main__":
 
 def COMP(Funs):
    def compose(f,g):
-      def h(x): return f(g(x))
-      return h
+	  def h(x): return f(g(x))
+	  return h
    return reduce(compose,Funs)
 
 
@@ -248,8 +250,8 @@ if __name__ == "__main__":
 # ===================================================
 
 def AA (f):
-    def AA0 (args): return map(f, args)
-    return AA0
+	def AA0 (args): return map(f, args)
+	return AA0
 
 
 
@@ -265,12 +267,12 @@ if __name__ == "__main__":
 def Eq (x,y): return x == y
 
 def EQ(List):
-    for i in List:
-       if not i==List[0]: return False
-    return True
+	for i in List:
+	   if not i==List[0]: return False
+	return True
 
 def NEQ(List): 
-    return not EQ(List)
+	return not EQ(List)
 
 
 if __name__ == "__main__": 
@@ -322,8 +324,8 @@ if __name__ == "__main__":
 # ===================================================
 
 def APPLY(args):
-    f,x = args
-    return apply(f,[x])
+	f,x = args
+	return apply(f,[x])
 
 
 
@@ -335,12 +337,12 @@ if __name__ == "__main__":
 # ===================================================
 
 def INSR(f):
-    def INSR0(seq):
-        length=len(seq)
-        res = seq[-1]
-        for i in range(length - 2,-1,-1): res = f([seq[i], res])
-        return res
-    return INSR0 
+	def INSR0(seq):
+		length=len(seq)
+		res = seq[-1]
+		for i in range(length - 2,-1,-1): res = f([seq[i], res])
+		return res
+	return INSR0 
 
   
 
@@ -351,11 +353,11 @@ if __name__ == "__main__":
 # INSL
 # ===================================================
 def INSL(f):
-    def INSL0 (seq):
-        res = seq[0]
-        for item in seq[1:]: res = f([res,item])
-        return res
-    return INSL0   
+	def INSL0 (seq):
+		res = seq[0]
+		for item in seq[1:]: res = f([res,item])
+		return res
+	return INSL0   
 
    
 
@@ -381,11 +383,11 @@ if __name__ == "__main__":
 # ===================================================
 
 def IF (funs):
-    def IF1 (arg):
-        f1, f2, f3 = funs
-        return f2(arg) if f1(arg) else f3(arg)
-    return IF1
-        
+	def IF1 (arg):
+		f1, f2, f3 = funs
+		return f2(arg) if f1(arg) else f3(arg)
+	return IF1
+		
  
 
 if __name__ == "__main__": 
@@ -399,13 +401,13 @@ if __name__ == "__main__":
 # ===================================================
 
 def LIFT (f):
-    return lambda funs: COMP([f, CONS(funs)])
+	return lambda funs: COMP([f, CONS(funs)])
 
 
 def RAISE (f):
-    def RAISE0 (args):
-        return IF([ISSEQOF(ISFUN), LIFT(f), f])(args)
-    return RAISE0
+	def RAISE0 (args):
+		return IF([ISSEQOF(ISFUN), LIFT(f), f])(args)
+	return RAISE0
 
 
 
@@ -441,12 +443,12 @@ def ISSEQ (x): return isinstance(x,list)
 def ISSEQ_NOT_VOID (x): return True if (isinstance(x,list) and (len(x) >= 1)) else False
 
 def ISSEQOF (type_checker):
-    def ISSEQOF0 (arg):
-        if not isinstance(arg, list): return False
-        for item in arg:
-           if not type_checker(item): return False
-        return True
-    return ISSEQOF0
+	def ISSEQOF0 (arg):
+		if not isinstance(arg, list): return False
+		for item in arg:
+		   if not type_checker(item): return False
+		return True
+	return ISSEQOF0
 
 if __name__ == "__main__":
 	assert(ISSEQOF(lambda x: isinstance(x,int))([1,2,3])==True)
@@ -512,7 +514,7 @@ def SUM(args):
 		else:
 			return VECTSUM(args)
 
-	raise Exception("\'+\' function has been applied to %s!" % repr(args))        
+	raise Exception("\'+\' function has been applied to %s!" % repr(args))		
 
 
 ADD = SUM
@@ -553,7 +555,7 @@ def DIFF(args):
 		else:
 			return VECTDIFF(args)
 	
-	raise Exception("\'-\' function has been applied to %s!" % repr(args))     
+	raise Exception("\'-\' function has been applied to %s!" % repr(args))	 
 
 
 
@@ -564,11 +566,11 @@ if __name__ == "__main__":
 # n-ary PRODuct 
 # ===================================================
 
-def PROD(args):        
-    if isinstance(args,list) and ISPOL(args[0]): return  POWER(args)
-    if isinstance(args,list) and ISSEQOF(ISNUM)(args): return reduce(lambda x,y: x * y, args)
-    if isinstance(args,list) and len(args) == 2 and ISSEQOF(ISNUM)(args[0]) and ISSEQOF(ISNUM)(args[1]): return  Vecf(args[0])*Vecf(args[1])
-    raise Exception("PROD function has been applied to %s!" % repr(args))
+def PROD(args):		
+	if isinstance(args,list) and ISPOL(args[0]): return  POWER(args)
+	if isinstance(args,list) and ISSEQOF(ISNUM)(args): return reduce(lambda x,y: x * y, args)
+	if isinstance(args,list) and len(args) == 2 and ISSEQOF(ISNUM)(args[0]) and ISSEQOF(ISNUM)(args[1]): return  Vecf(args[0])*Vecf(args[1])
+	raise Exception("PROD function has been applied to %s!" % repr(args))
 
 
 
@@ -583,7 +585,7 @@ SQR = RAISE(RAISE(PROD))([ID,ID])
 # ===================================================
 
 def DIV(args):
-    return reduce(lambda x,y: x/float(y), args)
+	return reduce(lambda x,y: x/float(y), args)
 
 
 if __name__ == "__main__": 
@@ -686,7 +688,7 @@ if __name__ == "__main__":
 # ===================================================
 
 def INTSTO (n): 
-    return range(1,n+1)
+	return range(1,n+1)
 
 
 if __name__ == "__main__": 
@@ -694,7 +696,7 @@ if __name__ == "__main__":
 
 
 def FROMTO (args):   
-    return range(args[0],args[-1]+1)
+	return range(args[0],args[-1]+1)
 
 
 if __name__ == "__main__": 
@@ -705,7 +707,7 @@ if __name__ == "__main__":
 # ===================================================
 
 def SEL (n): 
-    return lambda lista: lista[int(n)-1]
+	return lambda lista: lista[int(n)-1]
 
 
 S1 = SEL(1)
@@ -727,36 +729,36 @@ if __name__ == "__main__":
 # ===================================================
 
 def N (n): 
-    """
-    N: Standard core of PyPLaSM
-    repetition operator. Returns the sequence with n repetitions of arg
-    (n::isintpos)(arg::tt) -> (isseq)
-    """
-    return lambda List: [List]*int(n)
+	"""
+	N: Standard core of PyPLaSM
+	repetition operator. Returns the sequence with n repetitions of arg
+	(n::isintpos)(arg::tt) -> (isseq)
+	"""
+	return lambda List: [List]*int(n)
 
 
 if __name__ == "__main__": 
 	assert(N(3)(10)==[10,10,10])
 
 def DIESIS (n): 
-    """
-    N: Standard core of PyPLaSM
-    repetition operator. Returns the sequence with n repetitions of arg
-    (n::isintpos)(arg::tt) -> (isseq)
-    """
-    return lambda List: [List]*int(n)
+	"""
+	N: Standard core of PyPLaSM
+	repetition operator. Returns the sequence with n repetitions of arg
+	(n::isintpos)(arg::tt) -> (isseq)
+	"""
+	return lambda List: [List]*int(n)
 
 
 if __name__ == "__main__": 
 	assert(DIESIS(3)(10)==[10,10,10])
 
 def NN (n): 
-    """
-    NN:   Standard core of PyPLaSM
-    sequence repetition operator. Returns the sequence CAT(N(seq))
-    (n::isintpos)(seq::tt) -> (isseq)
-    """
-    return lambda List: List*int(n)
+	"""
+	NN:   Standard core of PyPLaSM
+	sequence repetition operator. Returns the sequence CAT(N(seq))
+	(n::isintpos)(seq::tt) -> (isseq)
+	"""
+	return lambda List: List*int(n)
 
 
 if __name__ == "__main__": 
@@ -764,12 +766,12 @@ if __name__ == "__main__":
 
 
 def DOUBLE_DIESIS (n): 
-    """
-    NN:   Standard core of PyPLaSM
-    sequence repetition operator. Returns the sequence CAT(N(seq))
-    (n::isintpos)(seq::tt) -> (isseq)
-    """
-    return lambda List: List*int(n)
+	"""
+	NN:   Standard core of PyPLaSM
+	sequence repetition operator. Returns the sequence CAT(N(seq))
+	(n::isintpos)(seq::tt) -> (isseq)
+	"""
+	return lambda List: List*int(n)
 
 
 
@@ -783,26 +785,26 @@ if __name__ == "__main__":
 # ===================================================
 
 def C (fun):
-    return lambda arg1: lambda arg2: fun([arg1,arg2])
+	return lambda arg1: lambda arg2: fun([arg1,arg2])
 
 # ===================================================
 # Miscellanea (1/3) of "standard" functions 
 # ===================================================
 
 def AS(fun):
-    return lambda args: COMP([CONS, AA(fun)])(args)
+	return lambda args: COMP([CONS, AA(fun)])(args)
 
 
 if __name__ == "__main__": assert(AS(SEL)([1,2,3])([10,11,12])==[10,11,12])
 
 def AC(fun):
-    return lambda args: COMP(AA(fun)(args))
+	return lambda args: COMP(AA(fun)(args))
 
 
 if __name__ == "__main__": assert(AC(SEL)([1,2,3])([10,11,[12,[13]]])==13)
 
 def CHARSEQ (String):
-    return [String[i] for i in range(len(String))]
+	return [String[i] for i in range(len(String))]
 
 if __name__ == "__main__": assert(CHARSEQ('hello')==['h','e','l','l','o'])
 
@@ -812,8 +814,8 @@ if __name__ == "__main__":
 	assert(STRING(CHARSEQ('hello'))=='hello')
 
 def RANGE (Pair):
-    if ( (Pair[-1]-Pair[0]) >= 0 ): return range(Pair[0], Pair[-1] + 1)
-    return range(Pair[0], Pair[-1] - 1, -1)
+	if ( (Pair[-1]-Pair[0]) >= 0 ): return range(Pair[0], Pair[-1] + 1)
+	return range(Pair[0], Pair[-1] - 1, -1)
 
 
 
@@ -825,29 +827,56 @@ def SIGN (Number): return +1 if Number>=0 else -1
 if __name__ == "__main__": assert(SIGN(10)==1 and SIGN(-10)==-1)
 
 def PRINT (AnyValue):
-    print(AnyValue)
-    return AnyValue
+	print(AnyValue)
+	return AnyValue
 
 
 def PRINTPOL (PolValue):
-    Plasm.Print(PolValue)
-    sys.stdout.flush()
-    return PolValue
+	Plasm.Print(PolValue)
+	sys.stdout.flush()
+	return PolValue
 
+#===================================================================================
+# SETPROPERTY (wants a property name "RGBcolor"
+# Example SETPROPERTY(["RGBcolor","1.0 1.0 1.0 1.0"])(pol)
+#===================================================================================
 
+def SETPROPERTY(proparray):
+
+	def PROPBFS(obj,proparray):
+		# maintain a queue of nodes
+		queue = []
+		# push the first node into the queue
+		queue.append(obj)
+		while (len(queue) > 0):
+			# print(len(queue))
+			# get the first node from the queue
+			node = queue.pop()
+			# Prop found
+			if Plasm.getProperty(node, proparray[0]) != '':
+				node.setProperty(proparray[0],proparray[1])
+			# enum all child nodes, push them into the queue
+			for i in range(len(node.childs)):
+				queue.append(node.childs[i])
+
+	def SETPROPERTY0(pol):
+		PROPBFS(pol,proparray)
+		return pol
+
+	return SETPROPERTY0
 
 # ===================================================
 # TREE
 # ===================================================
 
 def TREE (f):
-    def TREE_NO_CURRIED (fun,List):
-        length = len(List)
-        if length == 1: return List[0]
-        k = int(len(List)/2)
-        return f([TREE_NO_CURRIED(f, List[:k])] + [TREE_NO_CURRIED(f, List[k:])])
-    return lambda x: TREE_NO_CURRIED(f,x)
-    
+	def TREE_NO_CURRIED (fun,List):
+		length = len(List)
+		if length == 1: return List[0]
+		k = int(len(List)/2)
+		return f([TREE_NO_CURRIED(f, List[:k])] + [TREE_NO_CURRIED(f, List[k:])])
+	return lambda x: TREE_NO_CURRIED(f,x)
+	
 
 if __name__ == "__main__": 
 	assert(TREE(lambda x: x[0] if x[0]>=x[-1] else x[-1])([1,2,3,4,3,2,1])==4)
@@ -858,16 +887,16 @@ if __name__ == "__main__":
 # ===================================================
 
 def MERGE (f):
-    def MERGE_NO_CURRIED (f, List):
-        list_a, list_b = List
-        if len(list_a) == 0: return list_b
-        if len(list_b) == 0: return list_a
-        res = f(list_a[0], list_b[0])
-        if not(res):
-            return [list_a[0]] + MERGE_NO_CURRIED(f,[list_a[1:], list_b])
-        else:
-            return [list_b[0]] + MERGE_NO_CURRIED(f,[list_a, list_b[1:]])
-    return lambda x: MERGE_NO_CURRIED(f,x)
+	def MERGE_NO_CURRIED (f, List):
+		list_a, list_b = List
+		if len(list_a) == 0: return list_b
+		if len(list_b) == 0: return list_a
+		res = f(list_a[0], list_b[0])
+		if not(res):
+			return [list_a[0]] + MERGE_NO_CURRIED(f,[list_a[1:], list_b])
+		else:
+			return [list_b[0]] + MERGE_NO_CURRIED(f,[list_a, list_b[1:]])
+	return lambda x: MERGE_NO_CURRIED(f,x)
 
 
 if __name__ == "__main__": 
@@ -878,10 +907,10 @@ if __name__ == "__main__":
 # ===================================================
 
 def CASE (ListPredFuns):
-    def CASE_NO_CURRIED (ListPredFuns, x):
-        for p in ListPredFuns:
-           if p[0](x): return p[1](x)
-    return lambda arg: CASE_NO_CURRIED(ListPredFuns, arg)
+	def CASE_NO_CURRIED (ListPredFuns, x):
+		for p in ListPredFuns:
+		   if p[0](x): return p[1](x)
+	return lambda arg: CASE_NO_CURRIED(ListPredFuns, arg)
 
 if __name__ == "__main__": 
 	assert(CASE([[LT(0),K(-1)],[C(EQ)(0),K(0)],[GT(0),K(+1)]])(-10)==-1)
@@ -904,15 +933,15 @@ def VIEW (obj,Background=True):
 # ===================================================
 
 def CUBOID (sizes_list):
-    dim = len(sizes_list)
-    pol = Plasm.scale(Plasm.cube(dim), Vecf([0.0] + sizes_list))
-    return pol
+	dim = len(sizes_list)
+	pol = Plasm.scale(Plasm.cube(dim), Vecf([0.0] + sizes_list))
+	return pol
 
 if __name__ == "__main__": 
 	assert(Plasm.limits(CUBOID([1,2,3]))==Boxf(Vecf(1,0,0,0),Vecf(1,1,2,3)))
 
 def CUBE (side):
-    return CUBOID([side, side, side])
+	return CUBOID([side, side, side])
 
 
 HEXAHEDRON=Plasm.cube(3,-1.0/math.sqrt(3.0),+1.0/math.sqrt(3.0))
@@ -923,7 +952,7 @@ HEXAHEDRON=Plasm.cube(3,-1.0/math.sqrt(3.0),+1.0/math.sqrt(3.0))
 # ===================================================
 
 def SIMPLEX (dim):
-    return Plasm.simplex(dim)
+	return Plasm.simplex(dim)
 
 if __name__ == "__main__": 
 	assert(Plasm.limits(SIMPLEX(3))==Boxf(Vecf(1,0,0,0),Vecf(1,1,1,1)))
@@ -934,12 +963,12 @@ if __name__ == "__main__":
 # ===================================================
 
 def PRINTPOL (obj):
-    Plasm.Print(obj)
-    return obj
+	Plasm.Print(obj)
+	return obj
 
 def PRINT(obj):
-    print obj
-    return obj
+	print obj
+	return obj
 
 
 # ===================================================
@@ -950,11 +979,11 @@ def RN (pol): return Plasm.getSpaceDim(pol)
 def DIM (pol):return Plasm.getPointDim(pol)
 
 def ISPOLDIM (dims):
-    def ISPOLDIM1(pol):
-        d = dims[0]
-        n = dims[1]
-        return  (d == DIM(pol)) and (n == RN(pol))
-    return ISPOLDIM1
+	def ISPOLDIM1(pol):
+		d = dims[0]
+		n = dims[1]
+		return  (d == DIM(pol)) and (n == RN(pol))
+	return ISPOLDIM1
 
 if __name__ == "__main__": 
 	assert(RN(Plasm.cube(2))==2 and DIM(Plasm.cube(2))==2)
@@ -977,7 +1006,7 @@ MK = COMP([MKPOL, CONS([LIST, K([[1]]), K([[1]])])])
 
 # convex hull of points
 def CONVEXHULL (points):
-    return MKPOL([points, [range(1,len(points)+1)], [[1]]])
+	return MKPOL([points, [range(1,len(points)+1)], [[1]]])
 
 
 # ===================================================
@@ -985,14 +1014,14 @@ def CONVEXHULL (points):
 # ===================================================
 
 def UKPOL (pol):  
-    v= StdVectorFloat()
-    u = StdVectorStdVectorInt()
-    pointdim=Plasm.ukpol(pol, v, u) 
-    points=[]
-    for i in xrange(0, len(v), pointdim):points+=[[v[i] for i in range(i,i+pointdim)]]
-    hulls=map(lambda x: [i + 1 for i in x], u)
-    pols=[[1]]
-    return  [points, hulls, pols]
+	v= StdVectorFloat()
+	u = StdVectorStdVectorInt()
+	pointdim=Plasm.ukpol(pol, v, u) 
+	points=[]
+	for i in xrange(0, len(v), pointdim):points+=[[v[i] for i in range(i,i+pointdim)]]
+	hulls=map(lambda x: [i + 1 for i in x], u)
+	pols=[[1]]
+	return  [points, hulls, pols]
 
 if __name__ == "__main__": 
 	assert(UKPOL(Plasm.cube(2))==[[[0,1],[0,0],[1,1],[1,0]],[[4,2,1,3]],[[1]]])
@@ -1034,15 +1063,15 @@ if __name__ == "__main__":
 # ===================================================
 
 def TRANSLATE (axis):
-    def TRANSLATE1 (axis,values):
-        def TRANSLATE2 (axis,values,pol):
-            axis    = [axis    ] if ISNUM(axis    ) else axis
-            values= [values] if ISNUM(values) else values
-            vt= Vecf(max(axis))
-            for a,t in zip(axis,values):vt.set(a,t)
-            return Plasm.translate(pol, vt)
-        return lambda pol: TRANSLATE2(axis,values,pol)    
-    return lambda values: TRANSLATE1(axis,values)
+	def TRANSLATE1 (axis,values):
+		def TRANSLATE2 (axis,values,pol):
+			axis	= [axis	] if ISNUM(axis	) else axis
+			values= [values] if ISNUM(values) else values
+			vt= Vecf(max(axis))
+			for a,t in zip(axis,values):vt.set(a,t)
+			return Plasm.translate(pol, vt)
+		return lambda pol: TRANSLATE2(axis,values,pol)	
+	return lambda values: TRANSLATE1(axis,values)
 T = TRANSLATE
 
 
@@ -1055,16 +1084,16 @@ if __name__ == "__main__":
 # ===================================================
 
 def SCALE (axis):
-    def SCALE1 (axis,values):
-        def SCALE2 (axis,values,pol):
-            axis    = [axis    ] if ISNUM(axis    ) else axis
-            values= [values] if ISNUM(values) else values
-            dim=max(axis)
-            vs = Vecf([1 for x in range(dim+1)]);vs.set(0,0.0)
-            for a,t in zip(axis,values):vs.set(a,t)
-            return Plasm.scale(pol, vs)
-        return lambda pol: SCALE2(axis,values,pol)    
-    return lambda values: SCALE1(axis,values)
+	def SCALE1 (axis,values):
+		def SCALE2 (axis,values,pol):
+			axis	= [axis	] if ISNUM(axis	) else axis
+			values= [values] if ISNUM(values) else values
+			dim=max(axis)
+			vs = Vecf([1 for x in range(dim+1)]);vs.set(0,0.0)
+			for a,t in zip(axis,values):vs.set(a,t)
+			return Plasm.scale(pol, vs)
+		return lambda pol: SCALE2(axis,values,pol)	
+	return lambda values: SCALE1(axis,values)
 S = SCALE
 
 
@@ -1077,12 +1106,12 @@ if __name__ == "__main__":
 # ===================================================
 
 def ROTATE (plane_indexes):
-    def ROTATE1 (angle):
-        def ROTATE2 (pol):
-            dim = max(plane_indexes)
-            return Plasm.rotate(pol, dim, plane_indexes[0] , plane_indexes[1], angle)
-        return ROTATE2    
-    return ROTATE1
+	def ROTATE1 (angle):
+		def ROTATE2 (pol):
+			dim = max(plane_indexes)
+			return Plasm.rotate(pol, dim, plane_indexes[0] , plane_indexes[1], angle)
+		return ROTATE2	
+	return ROTATE1
 R = ROTATE
 
 if __name__ == "__main__": 
@@ -1095,21 +1124,21 @@ if __name__ == "__main__":
 # ===================================================
 
 def SHEARING (i):
-    def SHEARING1 (shearing_vector_list):
-        def SHEARING2 (pol):
-            raise Exception("shearing not implemented!")
-        return SHEARING2    
-    return SHEARING1
+	def SHEARING1 (shearing_vector_list):
+		def SHEARING2 (pol):
+			raise Exception("shearing not implemented!")
+		return SHEARING2	
+	return SHEARING1
 H = SHEARING
-       
+	   
 # ===================================================
 # generic matrix
 # ===================================================
 def MAT (matrix):
-    def MAT0 (pol):
-        vmat= Matf(CAT(matrix))
-        return Plasm.transform(pol,vmat,vmat.invert() )
-    return MAT0   
+	def MAT0 (pol):
+		vmat= Matf(CAT(matrix))
+		return Plasm.transform(pol,vmat,vmat.invert() )
+	return MAT0   
 
 if __name__ == "__main__": 
 	assert(Plasm.limits(MAT([[1,0,0],[1,1,0],[2,0,1]])(Plasm.cube(2)))==Boxf(Vecf(1,1,2),Vecf(1,2,3)))
@@ -1119,10 +1148,10 @@ if __name__ == "__main__":
 # ===================================================
 
 def EMBED (up_dim):
-    def EMBED1 (pol):
-        new_dim_pol = Plasm.getSpaceDim(pol) + up_dim
-        return Plasm.embed(pol,new_dim_pol)
-    return EMBED1    
+	def EMBED1 (pol):
+		new_dim_pol = Plasm.getSpaceDim(pol) + up_dim
+		return Plasm.embed(pol,new_dim_pol)
+	return EMBED1	
 
 # ===================================================
 # STRUCT
@@ -1163,7 +1192,7 @@ def STRUCT(seq,nrec=0):
 	if len(pols)==0:
 		raise Exception("Cannot find geometry in STRUCT, found only transformations")
 	
-	return Plasm.Struct(pols)     
+	return Plasm.Struct(pols)	 
 
 if __name__ == "__main__": 
 	assert(Plasm.limits(STRUCT([Plasm.cube(2)  ,  T([1,2])([1,1]) ,  T([1,2])([1,1]) ,  Plasm.cube(2),Plasm.cube(2,1,2)  ])).fuzzyEqual(Boxf(Vecf(1,0,0),Vecf(1,4,4))))
@@ -1177,19 +1206,19 @@ if __name__ == "__main__":
 
 #also +, or SUM, can be used to indicates UNION
 def UNION (objs_list):
-        return Plasm.boolop(BOOL_CODE_OR, objs_list,plasm_config.tolerance(),plasm_config.maxnumtry(),plasm_config.useOctreePlanes())
+		return Plasm.boolop(BOOL_CODE_OR, objs_list,plasm_config.tolerance(),plasm_config.maxnumtry(),plasm_config.useOctreePlanes())
 
 #also ^ can be used to indicates INTERSECTION
 def INTERSECTION (objs_list):
-        return Plasm.boolop(BOOL_CODE_AND, objs_list,plasm_config.tolerance(),plasm_config.maxnumtry(),plasm_config.useOctreePlanes())
+		return Plasm.boolop(BOOL_CODE_AND, objs_list,plasm_config.tolerance(),plasm_config.maxnumtry(),plasm_config.useOctreePlanes())
 
 #also -, or DIFF, can be used to indicates DIFFERENCE
 def DIFFERENCE (objs_list):
-        return Plasm.boolop(BOOL_CODE_DIFF, objs_list,plasm_config.tolerance(),plasm_config.maxnumtry(),plasm_config.useOctreePlanes())
-        
+		return Plasm.boolop(BOOL_CODE_DIFF, objs_list,plasm_config.tolerance(),plasm_config.maxnumtry(),plasm_config.useOctreePlanes())
+		
 # xor
 def XOR (objs_list):
-        return Plasm.boolop(BOOL_CODE_XOR, objs_list,plasm_config.tolerance(),plasm_config.maxnumtry(),plasm_config.useOctreePlanes())
+		return Plasm.boolop(BOOL_CODE_XOR, objs_list,plasm_config.tolerance(),plasm_config.maxnumtry(),plasm_config.useOctreePlanes())
 
 if __name__ == "__main__": 
 	assert(Plasm.limits(UNION([Plasm.cube(2,0,1),Plasm.cube(2,0.5,1.5)])).fuzzyEqual(Boxf(Vecf(1,0,0),Vecf(1,1.5,1.5))))
@@ -1212,15 +1241,15 @@ if __name__ == "__main__":
 # also ** can be used to indicates POWER
 # ===================================================
 def POWER (objs_list):
-     
-     if not isinstance(objs_list,list) or len(objs_list)!=2:
-        raise Exception("POWER can only be applied to a list of 2 arguments") 
+	 
+	 if not isinstance(objs_list,list) or len(objs_list)!=2:
+		raise Exception("POWER can only be applied to a list of 2 arguments") 
 
-     if ISNUM(objs_list[0]) and ISNUM(objs_list[1]):
-        return math.pow(objs_list[0], objs_list[1])
+	 if ISNUM(objs_list[0]) and ISNUM(objs_list[1]):
+		return math.pow(objs_list[0], objs_list[1])
 
-     return Plasm.power(objs_list[0], objs_list[1])
-        
+	 return Plasm.power(objs_list[0], objs_list[1])
+		
 if __name__ == "__main__": 
 	assert(POWER([2,2])==4)
 	assert(Plasm.limits(POWER([Plasm.cube(2),Plasm.cube(1)])).fuzzyEqual(Boxf(Vecf(1,0,0,0),Vecf(1,1,1,1))))
@@ -1229,9 +1258,9 @@ if __name__ == "__main__":
 # Skeleton
 # ===================================================
 def SKELETON (ord):
-    def SKELETON_ORDER (pol):
-        return Plasm.skeleton(pol, ord)
-    return SKELETON_ORDER
+	def SKELETON_ORDER (pol):
+		return Plasm.skeleton(pol, ord)
+	return SKELETON_ORDER
 
 SKEL_0 =  SKELETON(0)
 SKEL_1 =  SKELETON(1)
@@ -1253,12 +1282,12 @@ if __name__ == "__main__":
 # ===================================================
 
 def GRID (sequence):
-    cursor,points,hulls= (0,[[0]],[])
-    for value in sequence:
-        points = points + [[cursor + abs(value)]] 
-        if value>=0: hulls += [[len(points)-2,len(points)-1]]
-        cursor = cursor + abs(value)
-    return  Plasm.mkpol(1, CAT(points), hulls,plasm_config.tolerance())   
+	cursor,points,hulls= (0,[[0]],[])
+	for value in sequence:
+		points = points + [[cursor + abs(value)]] 
+		if value>=0: hulls += [[len(points)-2,len(points)-1]]
+		cursor = cursor + abs(value)
+	return  Plasm.mkpol(1, CAT(points), hulls,plasm_config.tolerance())   
 
 QUOTE = GRID
 
@@ -1274,12 +1303,12 @@ Q = COMP([QUOTE, IF([ISSEQ, ID, CONS([ID])])])
 # ===================================================
 
 def INTERVALS (A):
-    def INTERVALS0 (N):
-        return QUOTE([float(A)/float(N) for i in range(N)])
-    return INTERVALS0
+	def INTERVALS0 (N):
+		return QUOTE([float(A)/float(N) for i in range(N)])
+	return INTERVALS0
 
 if __name__ == "__main__":
-    assert Plasm.limits(INTERVALS(10)(8))==Boxf(Vecf([1,0]),Vecf([1,10]))
+	assert Plasm.limits(INTERVALS(10)(8))==Boxf(Vecf([1,0]),Vecf([1,10]))
 
 
 
@@ -1290,10 +1319,10 @@ if __name__ == "__main__":
 # ===================================================
 
 def SIZE (List):
-    def SIZE1 (pol): 
-        size = Plasm.limits(pol).size()
-        return [size[i] for i in List] if isinstance(List,list) else size[List]
-    return SIZE1
+	def SIZE1 (pol): 
+		size = Plasm.limits(pol).size()
+		return [size[i] for i in List] if isinstance(List,list) else size[List]
+	return SIZE1
 
 if __name__ == "__main__": 
 	assert(SIZE(1)(Plasm.cube(2))==1)
@@ -1303,23 +1332,23 @@ if __name__ == "__main__":
 # MIN/MAX/MED
 # ===================================================
 def MIN  (List):
-    def MIN1 (pol):
-        box = Plasm.limits(pol)
-        return [box.p1[i] for i in List] if isinstance(List,list) else box.p1[List]
-    return MIN1
-    
+	def MIN1 (pol):
+		box = Plasm.limits(pol)
+		return [box.p1[i] for i in List] if isinstance(List,list) else box.p1[List]
+	return MIN1
+	
 def MAX  (List):
-    def MAX1 (pol):
-        box = Plasm.limits(pol)
-        return [box.p2[i] for i in List] if isinstance(List,list) else box.p2[List]
-    return MAX1
+	def MAX1 (pol):
+		box = Plasm.limits(pol)
+		return [box.p2[i] for i in List] if isinstance(List,list) else box.p2[List]
+	return MAX1
 
 
 def MED  (List):
-    def MED1 (pol):
-        center = Plasm.limits(pol).center()
-        return [center [i] for i in List] if isinstance(List,list) else center[List]
-    return MED1
+	def MED1 (pol):
+		center = Plasm.limits(pol).center()
+		return [center [i] for i in List] if isinstance(List,list) else center[List]
+	return MED1
 
 if __name__ == "__main__": 
 	assert(MIN(1)(Plasm.cube(2))==0)
@@ -1335,7 +1364,7 @@ if __name__ == "__main__":
 # identity matrix
 # ======================================
 def IDNT (N):
-    return [ [ 1 if r==c else 0 for c in range(0,N) ] for r in range(0,N)]
+	return [ [ 1 if r==c else 0 for c in range(0,N) ] for r in range(0,N)]
 
 if __name__ == "__main__": 
 	assert(IDNT(0)==[] and IDNT(2)==[[1,0],[0,1]])
@@ -1356,19 +1385,19 @@ if __name__ == "__main__":
 # =============================================
 
 def ALIGN (args):
-    def ALIGN0 (args,pols):
-        pol1 , pol2 = pols
-        box1,box2=(Plasm.limits(pol1),Plasm.limits(pol2))
-        if isinstance(args,list) and len(args)>0 and ISNUM(args[0]): 
-                args=[args] # if I get something like [index,pos1,pos2]... i need [[index,pos1,pos2],[index,pos1,pos2],...]
-        max_index=max([index for index,pos1,po2 in args])
-        vt=Vecf(max_index) 
-        for index,pos1,pos2 in args:
-                p1=box1.p1 if pos1 is MIN else (box1.p2 if pos1 is MAX else box1.center());p1=p1[index] if index<=p1.dim else 0.0
-                p2=box2.p1 if pos2 is MIN else (box2.p2 if pos2 is MAX else box2.center());p2=p2[index] if index<=p2.dim else 0.0                
-                vt.set(index,vt[index]-(p2-p1))
-        return Plasm.Struct([pol1,Plasm.translate(pol2,vt)])
-    return lambda pol: ALIGN0(args,pol)
+	def ALIGN0 (args,pols):
+		pol1 , pol2 = pols
+		box1,box2=(Plasm.limits(pol1),Plasm.limits(pol2))
+		if isinstance(args,list) and len(args)>0 and ISNUM(args[0]): 
+				args=[args] # if I get something like [index,pos1,pos2]... i need [[index,pos1,pos2],[index,pos1,pos2],...]
+		max_index=max([index for index,pos1,po2 in args])
+		vt=Vecf(max_index) 
+		for index,pos1,pos2 in args:
+				p1=box1.p1 if pos1 is MIN else (box1.p2 if pos1 is MAX else box1.center());p1=p1[index] if index<=p1.dim else 0.0
+				p2=box2.p1 if pos2 is MIN else (box2.p2 if pos2 is MAX else box2.center());p2=p2[index] if index<=p2.dim else 0.0				
+				vt.set(index,vt[index]-(p2-p1))
+		return Plasm.Struct([pol1,Plasm.translate(pol2,vt)])
+	return lambda pol: ALIGN0(args,pol)
 
 TOP = ALIGN([[3, MAX, MIN], [1, MED, MED], [2, MED, MED]])
 BOTTOM=ALIGN([[3, MIN, MAX], [1, MED, MED], [2, MED, MED]])
@@ -1391,14 +1420,14 @@ if __name__ == "__main__":
 # ===================================================
 
 def BOX (List):
-    def BOX0 (List,pol):
-        if not isinstance(List,list): List=[List]
-        dim = len(List) 
-        box=Plasm.limits(pol)
-        vt =Vecf([0] + [box.p1     [i] for i in List])
-        vs=Vecf([0] + [box.size()[i] for i in List]) 
-        return Plasm.translate(Plasm.scale(Plasm.cube(dim),vs),vt)
-    return lambda pol: BOX0(List,pol)
+	def BOX0 (List,pol):
+		if not isinstance(List,list): List=[List]
+		dim = len(List) 
+		box=Plasm.limits(pol)
+		vt =Vecf([0] + [box.p1	 [i] for i in List])
+		vs=Vecf([0] + [box.size()[i] for i in List]) 
+		return Plasm.translate(Plasm.scale(Plasm.cube(dim),vs),vt)
+	return lambda pol: BOX0(List,pol)
 
 if __name__ == "__main__": 
    assert(Plasm.limits(BOX([1,3])(Plasm.translate(Plasm.cube(3),Vecf(0,1,2,3))))==Boxf(Vecf(1,1,3),Vecf(1,2,4))) 
@@ -1409,8 +1438,8 @@ if __name__ == "__main__":
 # ===================================================
 
 def VECTPROD (args):
-    ret=Vec3f(args[0]).cross(Vec3f(args[1]))
-    return [ret.x,ret.y,ret.z]
+	ret=Vec3f(args[0]).cross(Vec3f(args[1]))
+	return [ret.x,ret.y,ret.z]
 
 if __name__ == "__main__":
    assert VECTPROD ([[1,0,0],[0,1,0]])==[0,0,1]
@@ -1432,17 +1461,17 @@ if __name__ == "__main__":
 
 
 def SCALARVECTPROD (args):
-    s,l=args
-    if not isinstance(l,list): s,l=l,s
-    return [s*l[i] for i in range(len(l))]
+	s,l=args
+	if not isinstance(l,list): s,l=l,s
+	return [s*l[i] for i in range(len(l))]
 
 if __name__ == "__main__":
   assert SCALARVECTPROD([2,[0,1,2]])==[0,2,4] and SCALARVECTPROD([[0,1,2],2])==[0,2,4]
 
 
 def MIXEDPROD (args):
-    A , B , C = args
-    return INNERPROD([VECTPROD([A,B]),C])
+	A , B , C = args
+	return INNERPROD([VECTPROD([A,B]),C])
 
 
 if __name__ == "__main__":
@@ -1469,14 +1498,121 @@ if __name__ == "__main__":
 	assert DIRPROJECT([1,0,0])([0,1,0])==[0,0,0]
 
 def ORTHOPROJECT (E):
-    def ORTHOPROJECT0 (V):
-        return VECTDIFF([V,DIRPROJECT((E))(V)])
-    return ORTHOPROJECT0
+	def ORTHOPROJECT0 (V):
+		return VECTDIFF([V,DIRPROJECT((E))(V)])
+	return ORTHOPROJECT0
 
 if __name__ == "__main__":
 	assert ORTHOPROJECT([1,0,0])([1,1,0])==[0,1,0]
 
+# /////////////////////////////////////////////
+# celle dw di una cella
+# /////////////////////////////////////////////
+def DOWNCELLS(g):
+	def DOWNCELLS0(cell):
+		it=g.goDw(cell);ret=[]
+		while not it.end(): ret+=[it.getNode()];it.goForward()
+		return ret
+	return DOWNCELLS0
 
+# /////////////////////////////////////////////
+# celle up di una cella
+# /////////////////////////////////////////////
+def UPCELLS(g):
+	def UPCELLS0(cell):
+		it=g.goUp(cell);ret=[]
+		while not it.end(): ret+=[it.getNode()];it.goForward()
+		return ret
+	return UPCELLS0
+
+# /////////////////////////////////////////////
+#  celle ad un certo livello del grafo
+# /////////////////////////////////////////////
+def CELLSPERLEVEL(g):
+	def CELLSPERLEVEL0(level):
+		it=g.each(level)
+		ret=[]
+		while not it.end():
+			ret+=[it.getNode()];it.goForward()
+		return REVERSE(ret)
+	return CELLSPERLEVEL0
+
+
+# /////////////////////////////////////////////
+# Generation of 1D graph
+# /////////////////////////////////////////////
+
+def Quote(g,numList):
+	""" To create the graph of a 1D cell complex """
+	sizes = [abs(num) for num in numList]
+	points = [Vecf([1.0, x]) for x in AL([0,PROGRESSIVESUM(sizes)])]
+	for point in points: node = g.addNode(0); g.setVecf(node,point)
+	nodes = CELLSPERLEVEL(g)(0)
+	edges = [[nodes[k],nodes[k+1]] for k in range(len(nodes)-1)]
+	for edge in edges: g.addNode(1)
+	nodes = CELLSPERLEVEL(g)(1)
+	for k in range(len(edges)):
+		if numList[k] > 0:
+			g.addArch(edges[k][0],nodes[k]);g.addArch(edges[k][1],nodes[k])
+			#aggiungi la doppia connettivita' dei nodi a livello top
+			g.addArch(nodes[k],edges[k][0]);g.addArch(nodes[k],edges[k][1])
+		else: g.remNode(nodes[k])
+	return g
+
+
+# /////////////////////////////////////////////
+# Generation of nD grids
+# /////////////////////////////////////////////
+
+def Grid(listOfListsOfNum):
+	numList = listOfListsOfNum[0]
+	g = Quote(Graph(1),numList)
+	for numList in listOfListsOfNum[1:]:
+		g1 = Quote(Graph(1),numList)
+		g = Graph.power(Matf(1),Matf(1),  g,None,None,  g1,None,None)
+	return g
+
+
+# ===================================================
+# GMAP (map on Graph)
+# ===================================================
+
+def GMAP(fun):
+	
+	if isinstance(fun, list):
+		fun = CONS(fun)
+
+	def cellsPerLevel(g,level):
+		it=g.each(level)
+		ret=[]
+		while not it.end():
+			ret+=[it.getNode()];it.goForward()
+		return ret
+	
+	def GMAP0 (pol):
+		  
+		temp = Plasm.shrink(pol,True)
+		ret=[]
+		for I in range(len(temp.childs)):
+			
+			g,vmat,hmat = temp.childs[I].g,temp.childs[I].vmat,temp.childs[I].hmat
+			g.embed(vmat.dim)
+			g.transform(vmat,hmat)
+			pointdim = g.getPointDim()
+			print "Child",pointdim
+				
+			for cell in cellsPerLevel(g,0):
+				point = [g.getVecf(cell)[i] for i in range(1,pointdim+1)]
+				point = AL([1.0,fun(point)])
+				g.setVecf(cell,Vecf(point))
+
+			for cell in cellsPerLevel(g,pointdim-1):
+				g.setVecf(cell,g.getFittingPlane(cell))
+				
+			ret+=[Hpc(g)]
+		return STRUCT(ret)
+
+	return GMAP0
 
 
 # ===================================================
@@ -1484,24 +1620,24 @@ if __name__ == "__main__":
 # ===================================================
 
 def MAP(fun):
-
+	
 	# speed up by caching points
 	cache={}
-
+	
 	def MAP0 (fun,pol):
-
+		
 		points, hulls, pols = UKPOL(pol)
-
-		if isinstance(fun, list): 
-			fun = CONS(fun)    
-
+		
+		if isinstance(fun, list):
+			fun = CONS(fun)
+		
 		# do not calculate the same points two times
 		mapped_points=[]
-
+		
 		for point in points:
-
+			
 			key=str(point)
-
+			
 			if key in cache:
 				# already calculated
 				mapped_point=cache[key]
@@ -1509,11 +1645,11 @@ def MAP(fun):
 				# to calculate (slow!)
 				mapped_point=fun(point)
 				cache[key]=mapped_point
-
+		
 			mapped_points+=[mapped_point]
-
+		
 		return MKPOL([mapped_points, hulls, pols])
-
+	
 	return lambda pol: MAP0(fun,pol)
 
 
@@ -1541,7 +1677,7 @@ def ISMATOF (ISTYPE): return COMP([COMP([AND, AR]), CONS([COMP([AA(ISTYPE), CAT]
 # ===================================================
 
 def FACT (N):
-    return PROD(INTSTO(N)) if N>0 else 1
+	return PROD(INTSTO(N)) if N>0 else 1
 
 if __name__ == "__main__": 
 	assert FACT(4)==24 and FACT(0)==1
@@ -1555,38 +1691,38 @@ def CIRCLE_POINTS(R,N):
    return [ [R*math.cos(i*2*PI/N),R*math.sin(i*2*PI/N)] for i in range(0,N) ]
 
 def CIRCUMFERENCE (R):
-    return lambda N: MAP(lambda p: [R*math.cos(p[0]),R*math.sin(p[0]) ])(INTERVALS(2*PI)(N))
+	return lambda N: MAP(lambda p: [R*math.cos(p[0]),R*math.sin(p[0]) ])(INTERVALS(2*PI)(N))
 
 def NGON (N):
-    return CIRCUMFERENCE(1)(N)
+	return CIRCUMFERENCE(1)(N)
 
 
 if __name__ == "__main__":
-    assert Plasm.limits(CIRCUMFERENCE(1)(8))==Boxf(Vecf(1,-1,-1),Vecf(1,+1,+1))
-    assert len(  (UKPOL(CIRCUMFERENCE(1)(4)))[0]  )==4*2 
+	assert Plasm.limits(CIRCUMFERENCE(1)(8))==Boxf(Vecf(1,-1,-1),Vecf(1,+1,+1))
+	assert len(  (UKPOL(CIRCUMFERENCE(1)(4)))[0]  )==4*2 
 
 # =============================================
 # RING 
 # =============================================
 
 def RING (radius):
-    R1 , R2 = radius
-    def RING0 (subds):
-        N , M = subds
-        domain= Plasm.translate(POWER([INTERVALS(2*PI)(N),INTERVALS(R2-R1)(M)]),Vecf([0.0,0.0,R1]))
-        fun=lambda p: [p[1]*math.cos(p[0]),p[1]*math.sin(p[0])]
-        return MAP(fun)(domain)
-    return RING0
+	R1 , R2 = radius
+	def RING0 (subds):
+		N , M = subds
+		domain= Plasm.translate(POWER([INTERVALS(2*PI)(N),INTERVALS(R2-R1)(M)]),Vecf([0.0,0.0,R1]))
+		fun=lambda p: [p[1]*math.cos(p[0]),p[1]*math.sin(p[0])]
+		return MAP(fun)(domain)
+	return RING0
 
 if __name__ == "__main__":
-    assert Plasm.limits(RING([0.5,1])([8,8]))==Boxf(Vecf(1,-1,-1),Vecf(1,+1,+1))
+	assert Plasm.limits(RING([0.5,1])([8,8]))==Boxf(Vecf(1,-1,-1),Vecf(1,+1,+1))
 
 
 def TUBE (args):
-    r1 , r2 , height= args
-    def TUBE0 (N):
-        return Plasm.power(RING([r1, r2])([N, 1]),QUOTE([height]))
-    return TUBE0
+	r1 , r2 , height= args
+	def TUBE0 (N):
+		return Plasm.power(RING([r1, r2])([N, 1]),QUOTE([height]))
+	return TUBE0
 
 
 
@@ -1596,15 +1732,15 @@ def TUBE (args):
 # =============================================
 
 def CIRCLE (R):
-    def CIRCLE0 (subs):
-        N , M = subs
-        domain= POWER([INTERVALS(2*PI)(N), INTERVALS(R)(M)])
-        fun=lambda p: [p[1]*math.cos(p[0]),p[1]*math.sin(p[0])]
-        return MAP(fun)(domain)
-    return CIRCLE0
+	def CIRCLE0 (subs):
+		N , M = subs
+		domain= POWER([INTERVALS(2*PI)(N), INTERVALS(R)(M)])
+		fun=lambda p: [p[1]*math.cos(p[0]),p[1]*math.sin(p[0])]
+		return MAP(fun)(domain)
+	return CIRCLE0
 
 if __name__ == "__main__": 
-    assert Plasm.limits(CIRCLE(1.0)([8,8]))==Boxf(Vecf(1,-1,-1),Vecf(1,+1,+1))
+	assert Plasm.limits(CIRCLE(1.0)([8,8]))==Boxf(Vecf(1,-1,-1),Vecf(1,+1,+1))
 
 
 # =============================================
@@ -1612,12 +1748,12 @@ if __name__ == "__main__":
 # =============================================
 
 def MY_CYLINDER (args):
-    R , H = args
-    def MY_CYLINDER0 (N):
-        points=CIRCLE_POINTS(R,N)
-        circle=Plasm.mkpol(2,CAT(points),[range(N)])
-        return Plasm.power(circle,Plasm.mkpol(1,[0,H],[[0,1]]))
-    return MY_CYLINDER0
+	R , H = args
+	def MY_CYLINDER0 (N):
+		points=CIRCLE_POINTS(R,N)
+		circle=Plasm.mkpol(2,CAT(points),[range(N)])
+		return Plasm.power(circle,Plasm.mkpol(1,[0,H],[[0,1]]))
+	return MY_CYLINDER0
 
 CYLINDER =MY_CYLINDER 
 
@@ -1632,61 +1768,86 @@ if __name__ == "__main__":
 # =============================================
 
 
+"""
 def SPHERE (radius):
-    def SPHERE0 (subds):
-        N , M = subds
-        domain = Plasm.translate( Plasm.power(INTERVALS(PI)(N) , INTERVALS(2*PI)(M)), Vecf(0, -PI/2,0 ) )
-        fx  = lambda p: radius * math.cos(p[0])  * math.sin  (p[1])
-        fy  = lambda p: radius * math.cos(p[0]) * math.cos (p[1])
-        fz  = lambda p: radius * math.sin(p[0]) 
-        ret=  MAP([fx, fy, fz])(domain)
-        return ret
-    return SPHERE0
+	def SPHERE0 (subds):
+		N , M = subds
+		domain = Plasm.translate( Plasm.power(INTERVALS(PI)(N) , INTERVALS(2*PI)(M)), Vecf(0, -PI/2,0 ) )
+		fx  = lambda p: radius * math.cos(p[0])  * math.sin  (p[1])
+		fy  = lambda p: radius * math.cos(p[0]) * math.cos (p[1])
+		fz  = lambda p: radius * math.sin(p[0])
+		ret=  MAP([fx, fy, fz])(domain)
+		return ret
+	return SPHERE0
+
+"""
+def SPHERE (radius):
+	def GSPHERE0 (subds):
+		N , M = subds
+		domain = Hpc(Grid([N*[PI/N],M*[2*PI/M]]))
+		domain = MAT([[1,0,0,0],[-PI/2,1,0,0],[-PI,0,1,0],[0,0,0,1]])(domain)
+		fx  = lambda p: radius * math.cos(p[0]) * math.sin  (p[1])
+		fy  = lambda p: radius * math.cos(p[0]) * math.cos (p[1])
+		fz  = lambda p: radius * math.sin(p[0])
+		ret=  GMAP([fx, fy, fz])(domain)
+		return ret
+	return GSPHERE0
 
 if __name__ == "__main__":
 	assert Plasm.limits(SPHERE(1)([8,8])).fuzzyEqual(Boxf(Vecf(1,-1,-1,-1),Vecf(1,+1,+1,+1)))
-	plasm_config.push(1e-4)
-	sphere=SPHERE(1)([16,16])
+	sphere=SPHERE(1)([24,32])
 	VIEW(sphere)
-	plasm_config.pop()
 
 
 # =============================================
 # TORUS
 # =============================================
 
+"""
 def TORUS (radius):
-    r1 , r2 = radius
-    def TORUS0 (subds):
-        N , M = subds
-        a=0.5*(r2-r1)
-        c=0.5*(r1+r2)
-        domain=Plasm.power(  INTERVALS(2*PI)(N),  INTERVALS(2*PI)(M)  )
-        fx =   lambda p: (c+a*math.cos(p[1])) * math.cos(p[0])
-        fy =   lambda p: (c+a*math.cos(p[1])) * math.sin (p[0])
-        fz =   lambda p: a*math.sin(p[1])
-        return MAP(([fx,fy,fz]))(domain)
-    return TORUS0
+	r1 , r2 = radius
+	def TORUS0 (subds):
+		N , M = subds
+		a=0.5*(r2-r1)
+		c=0.5*(r1+r2)
+		domain=Plasm.power(  INTERVALS(2*PI)(N),  INTERVALS(2*PI)(M)  )
+		fx =   lambda p: (c+a*math.cos(p[1])) * math.cos(p[0])
+		fy =   lambda p: (c+a*math.cos(p[1])) * math.sin (p[0])
+		fz =   lambda p: a*math.sin(p[1])
+		return GMAP([fx,fy,fz])(domain)
+	return TORUS0
+"""
+
+def TORUS (radius):
+	r1 , r2 = radius
+	def TORUS0 (subds):
+		N , M = subds
+		a=0.5*(r2-r1)
+		c=0.5*(r1+r2)
+		#domain = EMBED(1)(Hpc(Grid([N*[2*PI/N],M*[2*PI/M]])))
+		domain = EMBED(1)(PROD([ Hpc(Grid([N*[2*PI/N]])),  Hpc(Grid([M*[2*PI/M]])) ]))
+		fx =   lambda p: (c+a*math.cos(p[1])) * math.cos(p[0])
+		fy =   lambda p: (c+a*math.cos(p[1])) * math.sin(p[0])
+		fz =   lambda p: a*math.sin(p[1])
+		return GMAP([fx,fy,fz])(domain)
+	return TORUS0
 
 
 if __name__ == "__main__":
    assert Plasm.limits(TORUS([1,2])([8,8])).fuzzyEqual(Boxf(Vecf(1,-2,-2,-0.5),Vecf(1,+2,+2,+0.5)))
-   plasm_config.push(1e-4)
-   VIEW(TORUS([1,2])([20,20]))
-   plasm_config.pop()
-
+   VIEW(TORUS([1,2])([32,48]))
 
 # =============================================
 # CONE
 # =============================================
 
 def CONE (args):
-     radius , height = args
-     def CONE0(N):
-        basis = CIRCLE(radius)([N,1])
-        apex = T(3)(height)(SIMPLEX(0))
-        return  JOIN([basis, apex])
-     return CONE0
+	 radius , height = args
+	 def CONE0(N):
+		basis = CIRCLE(radius)([N,1])
+		apex = T(3)(height)(SIMPLEX(0))
+		return  JOIN([basis, apex])
+	 return CONE0
 
 if __name__ == "__main__":
    assert Plasm.limits(CONE([1.0,3.0])(16)).fuzzyEqual(Boxf(Vecf(1,-1,-1,0),Vecf(1,+1,+1,3)))
@@ -1737,12 +1898,12 @@ DODECAHEDRON = build_DODECAHEDRON()
 # =============================================
 
 def build_ICOSAHEDRON():
-    g = 0.5*(math.sqrt(5)-1)
-    b = 2.0/(math.sqrt(5*math.sqrt(5)))
-    rectx = T([1, 2])([-g, -1])(CUBOID([2*g, 2]))
-    recty = R([1, 3])(PI/2)(R([1, 2])(PI/2)(rectx))
-    rectz = R([2, 3])(PI/2)(R([1, 2])(PI/2)(rectx))
-    return S([1, 2, 3])([b, b, b])(JOIN([rectx, recty, rectz]))
+	g = 0.5*(math.sqrt(5)-1)
+	b = 2.0/(math.sqrt(5*math.sqrt(5)))
+	rectx = T([1, 2])([-g, -1])(CUBOID([2*g, 2]))
+	recty = R([1, 3])(PI/2)(R([1, 2])(PI/2)(rectx))
+	rectz = R([2, 3])(PI/2)(R([1, 2])(PI/2)(rectx))
+	return S([1, 2, 3])([b, b, b])(JOIN([rectx, recty, rectz]))
 
 ICOSAHEDRON = build_ICOSAHEDRON()
 
@@ -1796,9 +1957,9 @@ def TRIANGLEFAN (points):
 # ===================================================
 
 def MIRROR (D):
-    def MIRROR0 (pol):
-        return  STRUCT([S(D)(-1)(pol),pol])
-    return MIRROR0
+	def MIRROR0 (pol):
+		return  STRUCT([S(D)(-1)(pol),pol])
+	return MIRROR0
 
 
 # ===================================================
@@ -1826,8 +1987,8 @@ def POLYMARKER (type,MARKERSIZE=0.1):
 # ===================================================
 
 def CHOOSE (args):
-    N , K = args
-    return FACT(N)/float(FACT(K)*FACT(N-K))
+	N , K = args
+	return FACT(N)/float(FACT(K)*FACT(N-K))
 
 if __name__ == "__main__":
 	assert CHOOSE([7,3])==35
@@ -1887,13 +2048,14 @@ if __name__ == "__main__":
 	C3 = BEZIER(S1)([[0,6,0],[9,6,3],[10,6,-1]])
 
 	plasm_config.push(1e-4)
-	out = MAP(BEZIER(S2)([C0,C1,C2,C3]))(  Plasm.power(INTERVALS(1)(10),INTERVALS(1)(10))  )
+	domain = EMBED(1)(PROD([ Hpc(Grid([10*[1./10]])),  Hpc(Grid([10*[1./10]])) ]))
+	out = GMAP(BEZIER(S2)([C0,C1,C2,C3]))(  domain  )
 	plasm_config.pop()
 	VIEW(out)
 
 
 def BEZIERCURVE (controlpoints):
-    return BEZIER(S1)(controlpoints)
+	return BEZIER(S1)(controlpoints)
 
 # ======================================================
 # coons patch
@@ -1903,7 +2065,7 @@ def COONSPATCH (args):
 	su0_fn , su1_fn , s0v_fn , s1v_fn = args
 
 	def map_fn(point):
-		u,v=point
+		u,v,w=point
 
 		su0=su0_fn(point) if callable(su0_fn) else su0_fn
 		su1=su1_fn(point) if callable(su1_fn) else su1_fn
@@ -1923,7 +2085,8 @@ if __name__ == "__main__":
 	Sv0=BEZIER(S2)([[0,0,0],[0,0,3],[0,10,3],[0,10,0]])
 	Sv1=BEZIER(S2)([[10,0,0],[10,5,3],[10,10,0]])
 	plasm_config.push(1e-4)
-	out=MAP(COONSPATCH([Su0,Su1,Sv0,Sv1]))(Plasm.power(INTERVALS(1)(10),INTERVALS(1)(10)))
+	domain = EMBED(1)(PROD([ Hpc(Grid([10*[1./10]])),  Hpc(Grid([10*[1./10]])) ]))
+	out=GMAP(COONSPATCH([Su0,Su1,Sv0,Sv1]))(domain)
 	plasm_config.pop()
 	VIEW(out)
 
@@ -1936,7 +2099,7 @@ def RULEDSURFACE (args):
 	alpha_fn , beta_fn = args
 
 	def map_fn(point):
-		u,v=point
+		u,v,w = point
 		alpha,beta=alpha_fn(point),beta_fn(point)
 		ret=[0.0 for i in range(len(alpha))]	
 		for K in range(len(ret)): ret[K]=alpha[K]+v*beta[K]
@@ -1945,14 +2108,16 @@ def RULEDSURFACE (args):
 
 
 if __name__ == "__main__":
-	alpha= lambda point: [point[0],point[0],       0 ]
-	beta = lambda point: [      -1,      +1,point[0] ]
-	domain= T([1,2])([-1,-1])(Plasm.power(INTERVALS(2)(10),INTERVALS(2)(10)))
+	alpha= lambda point: [point[0],point[0],	   0 ]
+	beta = lambda point: [	  -1,	  +1, point[0] ]
+	#domain= T([1,2])([-1,-1])(Plasm.power(INTERVALS(2)(10),INTERVALS(2)(10)))
+	domain = EMBED(1)(PROD([ Hpc(Grid([10*[2./10]])),  Hpc(Grid([10*[2./10]])) ]))
+	domain = MAT([[1,0,0,0],[-1,1,0,0],[-1,0,1,0],[0,0,0,1]])(domain)
 	plasm_config.push(1e-4)
-	VIEW(MAP(RULEDSURFACE([alpha,beta]))(domain))
+	VIEW(GMAP(RULEDSURFACE([alpha,beta]))(domain))
 	plasm_config.pop()
 
-    
+	
 # ======================================================
 # PROFILE SURFACE
 # ======================================================
@@ -1961,7 +2126,7 @@ def PROFILEPRODSURFACE (args):
 	profile_fn,section_fn = args
 
 	def map_fun(point):
-		u,v=point
+		u,v,w=point
 		profile,section=profile_fn(point),section_fn(point)
 		ret=[profile[0]*section[0],profile[0]*section[1],profile[2]]
 		return ret
@@ -1971,13 +2136,13 @@ if __name__ == "__main__":
 	alpha=BEZIER(S1)([[0.1,0,0],[2,0,0],[0,0,4],[1,0,5]])
 	beta =BEZIER(S2)([[0,0,0],[3,-0.5,0],[3,3.5,0],[0,3,0]])
 	plasm_config.push(1e-4)
-	domain=Plasm.power(INTERVALS(1)(20),INTERVALS(1)(20))
-	out=Plasm.Struct([MAP(alpha)(domain),MAP(beta )(domain),MAP(PROFILEPRODSURFACE([alpha,beta]))(domain)])
+	domain = EMBED(1)(PROD([ Hpc(Grid([20*[1./20]])),  Hpc(Grid([20*[1./20]])) ]))
+	out = Plasm.Struct([GMAP(alpha)(domain),MAP(beta )(domain), GMAP(PROFILEPRODSURFACE([alpha,beta]))(domain)])
 	plasm_config.pop()
 	VIEW(out)
 
 
-    
+	
 # ======================================================
 # ROTATIONALSURFACE
 # ======================================================
@@ -1986,8 +2151,8 @@ def ROTATIONALSURFACE (args):
 	profile = args
 
 	def map_fn(point):
-		u,v=point
-		f,h,g= profile(point)
+		u,v,w = point
+		f,h,g = profile(point)
 		ret=[f*math.cos(v),f*math.sin(v),g]
 		return ret
 	return map_fn
@@ -1995,30 +2160,32 @@ def ROTATIONALSURFACE (args):
 if __name__ == "__main__":
 	profile=BEZIER(S1)([[0,0,0],[2,0,1],[3,0,4]]) # defined in xz!
 	plasm_config.push(1e-4)
-	domain=Plasm.power(INTERVALS(1)(10),INTERVALS(2*PI)(30)) # the first interval should be in 0,1 for bezier
-	out=MAP(ROTATIONALSURFACE(profile))(domain)
+	#domain=Plasm.power(INTERVALS(1)(10),INTERVALS(2*PI)(30)) # the first interval should be in 0,1 for bezier
+	domain = EMBED(1)(PROD([ Hpc(Grid([10*[1./10]])),  Hpc(Grid([30*[2*PI/30]])) ]))
+	out = GMAP(ROTATIONALSURFACE(profile))(domain)
 	plasm_config.pop()
 	VIEW(out)
 
 
 
-    
+	
 # ======================================================
 # CYLINDRICALSURFACE
 # ======================================================
 
 def CYLINDRICALSURFACE (args):
 	alpha_fun   = args[0]
-	beta_fun    = CONS(AA(K)(args[1]))
-	return RULEDSURFACE([alpha_fun,beta_fun])
+	beta_fun	= CONS(AA(K)(args[1]))
+	return RULEDSURFACE([alpha_fun, beta_fun])
 
 if __name__ == "__main__":
 	alpha=BEZIER(S1)([[1,1,0],[-1,1,0],[1,-1,0],[-1,-1,0]])
-	Udomain=INTERVALS(1)(20)
-	Vdomain=INTERVALS(1)(6)
-	domain=Plasm.power(Udomain,Vdomain)
-	fn=CYLINDRICALSURFACE([alpha,[0,0,1]])
-	VIEW(MAP(fn)(domain))
+	#Udomain=INTERVALS(1)(20)
+	#Vdomain=INTERVALS(1)(6)
+	#domain=Plasm.power(Udomain,Vdomain)
+	domain = EMBED(1)(PROD([ Hpc(Grid([20*[1./20]])),  Hpc(Grid([6*[1./6]])) ]))
+	fn = CYLINDRICALSURFACE([alpha,[0,0,1]])
+	VIEW(GMAP(fn)(domain))
 
 
 # ======================================================
@@ -2029,14 +2196,15 @@ if __name__ == "__main__":
 def CONICALSURFACE (args):
 	apex=args[0]
 	alpha_fn   = lambda point: apex
-	beta_fn    = lambda point: [ args[1](point)[i]-apex[i] for i in range(len(apex))]
+	beta_fn	= lambda point: [ args[1](point)[i]-apex[i] for i in range(len(apex))]
 	return RULEDSURFACE([alpha_fn, beta_fn])
 
 
 if __name__ == "__main__":
-	domain=Plasm.power(INTERVALS(1)(20),INTERVALS(1)(6))
-	beta=BEZIER(S1)([ [1,1,0],[-1,1,0],[1,-1,0],[-1,-1,0] ])
-	out=MAP(CONICALSURFACE([[0,0,1],beta]))(domain)
+	#domain=Plasm.power(INTERVALS(1)(20),INTERVALS(1)(6))
+	domain = EMBED(1)(PROD([ Hpc(Grid([20*[1./20]])),  Hpc(Grid([6*[1./6]])) ]))
+	beta = BEZIER(S1)([ [1,1,0],[-1,1,0],[1,-1,0],[-1,-1,0] ])
+	out = GMAP(CONICALSURFACE([[0,0,1],beta]))(domain)
 	VIEW(out)
 
 
@@ -2073,15 +2241,16 @@ if __name__ == "__main__":
 	c2=CUBICHERMITE(S1)([[0.5,0,0],[0,0.5,0],[0,1,0],[-1,0,0]])
 	sur3=CUBICHERMITE(S2)([c1,c2,[1,1,1],[-1,-1,-1]])
 	plasm_config.push(1e-4)
-	domain=Plasm.power(INTERVALS(1)(14),INTERVALS(1)(14))
-	out=MAP(sur3)(domain)
+	#domain=Plasm.power(INTERVALS(1)(14),INTERVALS(1)(14))
+	domain = EMBED(1)(PROD([ Hpc(Grid([14*[1./14]])),  Hpc(Grid([14*[1./14]])) ]))
+	out = GMAP(sur3)(domain)
 	plasm_config.pop()
 	VIEW(out)
 
 
 def HERMITE(args):
-    P1 , P2 , T1 , T2 = args
-    return CUBICHERMITE(S1)([P1, P2, T1, T2])
+	P1 , P2 , T1 , T2 = args
+	return CUBICHERMITE(S1)([P1, P2, T1, T2])
 
 
 
@@ -2130,7 +2299,7 @@ def SPLITCELLS (scene):
 
 
 def EXTRACT_WIRES (scene):
-    return SPLITCELLS(SKEL_1(scene))
+	return SPLITCELLS(SKEL_1(scene))
 
 # no notion of pols for xge mkpol!
 SPLITPOLS=SPLITCELLS
@@ -2144,7 +2313,7 @@ def PERMUTATIONS (SEQ):
 	ret=[]
 	for i in range(len(SEQ)):
 		element =SEQ[i]
-		rest    =PERMUTATIONS(SEQ[0:i] + SEQ[i+1:])
+		rest	=PERMUTATIONS(SEQ[0:i] + SEQ[i+1:])
 		for r in rest: ret+=[[element] + r]
 	return ret
 	
@@ -2178,13 +2347,13 @@ if __name__ == "__main__":
 # ===================================================
 
 def STAR (N):
-    def CIRCLEPOINTS (STARTANGLE):
-        def CIRCLEPOINTS1 (R):
-            def CIRCLEPOINTS0 (N):
-                return AA((COMP([CONS([RAISE(PROD)([K(R),COS]), RAISE(PROD)([K(R),SIN])]), (RAISE(SUM)([ID,K(STARTANGLE)]))])))(((COMP([COMP([AA(RAISE(PROD)), TRANS]), CONS([K((FROMTO([1,N]))), DIESIS(N)])]))((2*PI/N))))
-            return CIRCLEPOINTS0
-        return CIRCLEPOINTS1
-    return  (COMP([COMP([TRIANGLEFAN, CAT]), TRANS]))([CIRCLEPOINTS(0)(1)(N), CIRCLEPOINTS((PI/N))(2.5)(N)])
+	def CIRCLEPOINTS (STARTANGLE):
+		def CIRCLEPOINTS1 (R):
+			def CIRCLEPOINTS0 (N):
+				return AA((COMP([CONS([RAISE(PROD)([K(R),COS]), RAISE(PROD)([K(R),SIN])]), (RAISE(SUM)([ID,K(STARTANGLE)]))])))(((COMP([COMP([AA(RAISE(PROD)), TRANS]), CONS([K((FROMTO([1,N]))), DIESIS(N)])]))((2*PI/N))))
+			return CIRCLEPOINTS0
+		return CIRCLEPOINTS1
+	return  (COMP([COMP([TRIANGLEFAN, CAT]), TRANS]))([CIRCLEPOINTS(0)(1)(N), CIRCLEPOINTS((PI/N))(2.5)(N)])
 
 
 
@@ -2222,9 +2391,9 @@ def FINITECONE (pol):
 # ===================================================
 
 def PRISM (HEIGHT):
-    def PRISM0 (BASIS):
-        return Plasm.power(BASIS,QUOTE([HEIGHT]))
-    return PRISM0
+	def PRISM0 (BASIS):
+		return Plasm.power(BASIS,QUOTE([HEIGHT]))
+	return PRISM0
 
 
 # ===================================================
@@ -2286,16 +2455,16 @@ def ROTN (args):
 MKVERSORK = TOP([CYLINDER([1.0/100.0, 7.0/8.0])(6),CONE([1.0/16.0,1.0/8])(8)])
 
 def MKVECTOR (P1):
-    def MKVECTOR0 (P2):
-        TR = T([1, 2, 3])(P1)
-        U = VECTDIFF([P2,P1])
-        ALPHA = ACOS((INNERPROD([[0, 0, 1],UNITVECT(U)])))
-        B = VECTNORM(U)
-        SC = S([1, 2, 3])([B, B, B])
-        N = VECTPROD([[0, 0, 1],U])
-        ROT = ROTN([ALPHA, N])
-        return (COMP([COMP([TR, ROT]), SC]))(MKVERSORK)
-    return MKVECTOR0
+	def MKVECTOR0 (P2):
+		TR = T([1, 2, 3])(P1)
+		U = VECTDIFF([P2,P1])
+		ALPHA = ACOS((INNERPROD([[0, 0, 1],UNITVECT(U)])))
+		B = VECTNORM(U)
+		SC = S([1, 2, 3])([B, B, B])
+		N = VECTPROD([[0, 0, 1],U])
+		ROT = ROTN([ALPHA, N])
+		return (COMP([COMP([TR, ROT]), SC]))(MKVERSORK)
+	return MKVECTOR0
 
 
 # ===================================================
@@ -2310,7 +2479,7 @@ def ORTHO (matrix):
 	return SCALARMATPROD([0.5,SUM([matrix,TRANS(matrix)])])
 
 def SKEW (matrix):
-    return SCALARMATPROD([0.5,DIFF([matrix,TRANS(matrix)])])
+	return SCALARMATPROD([0.5,DIFF([matrix,TRANS(matrix)])])
 
 
 if __name__ == "__main__":
@@ -2430,7 +2599,7 @@ def TENSORPRODSURFACE (args):
 		def map_fn(point):
 
 			# resolve basis
-			u,v=point
+			u,v,w=point
 			U=[f([u]) for f in ubasis]
 			V=[f([v]) for f in vbasis]
 			
@@ -2459,9 +2628,11 @@ def BILINEARSURFACE(controlpoints):
 
 if __name__ == "__main__":
 	controlpoints=[[[0,0,0],[2,-4,2]],[[0,3,1],[4,0,0]]]
-	domain=Plasm.power(INTERVALS(1)(10),INTERVALS(1)(10))
+	#domain=Plasm.power(INTERVALS(1)(10),INTERVALS(1)(10))
+	domain = EMBED(1)(PROD([ Hpc(Grid([10*[1./10]])),  Hpc(Grid([10*[1./10]])) ]))
+	
 	mapping=BILINEARSURFACE(controlpoints)
-	VIEW(MAP(mapping)(domain))
+	VIEW(GMAP(mapping)(domain))
 
 # ======================================================
 # BIQUADRATICSURFACE
@@ -2476,10 +2647,11 @@ def BIQUADRATICSURFACE (controlpoints):
 
 if __name__ == "__main__":
 	controlpoints=[[[0,0,0],[2,0,1],[3,1,1]],[[1,3,-1],[3,2,0],[4,2,0]],[[0,9,0],[2,5,1],[3,3,2]]]
-	domain=Plasm.power(INTERVALS(1)(10),INTERVALS(1)(10))
+	#domain=Plasm.power(INTERVALS(1)(10),INTERVALS(1)(10))
+	domain = EMBED(1)(PROD([ Hpc(Grid([10*[1./10]])),  Hpc(Grid([10*[1./10]])) ]))
 	mapping=BIQUADRATICSURFACE(controlpoints)
 	plasm_config.push(1e-4)
-	VIEW(MAP(mapping)(domain))
+	VIEW(GMAP(mapping)(domain))
 	plasm_config.pop()
 
 
@@ -2497,10 +2669,11 @@ def HERMITESURFACE(controlpoints):
 
 if __name__ == "__main__":
 	controlpoints=[[[0,0,0 ],[2,0,1],[3,1,1],[4,1,1]],[[1,3,-1],[3,2,0],[4,2,0],[4,2,0]],[[0,4,0 ],[2,4,1],[3,3,2],[5,3,2]],[[0,6,0 ],[2,5,1],[3,4,1],[4,4,0]]]
-	domain=Plasm.power(INTERVALS(1)(10),INTERVALS(1)(10))
-	mapping=HERMITESURFACE(controlpoints)
+	#domain=Plasm.power(INTERVALS(1)(10),INTERVALS(1)(10))
+	domain = EMBED(1)(PROD([ Hpc(Grid([20*[1./20]])),  Hpc(Grid([20*[1./20]])) ]))
+	mapping = HERMITESURFACE(controlpoints)
 	plasm_config.push(1e-4)
-	VIEW(MAP(mapping)(domain))
+	VIEW(GMAP(mapping)(domain))
 	plasm_config.pop()
 
 # ======================================================
@@ -2508,9 +2681,9 @@ if __name__ == "__main__":
 # ======================================================
 
 def BEZIERSURFACE (controlpoints):
-    M = len(controlpoints   )-1
-    N = len(controlpoints[0])-1
-    return TENSORPRODSURFACE([BERNSTEINBASIS(S1)(M), BERNSTEINBASIS(S1)(N)])(controlpoints)
+	M = len(controlpoints   )-1
+	N = len(controlpoints[0])-1
+	return TENSORPRODSURFACE([BERNSTEINBASIS(S1)(M), BERNSTEINBASIS(S1)(N)])(controlpoints)
 
 if __name__ == "__main__":
 	controlpoints=[
@@ -2518,10 +2691,11 @@ if __name__ == "__main__":
 		[[ 3,0,2],[2 ,2.5,5],[3,6,5],[4,8,2]],
 		[[ 6,0,2],[8 ,3 , 5],[7,6,4.5],[6,10,2.5]],
 		[[10,0,0],[11,3  ,4],[11,6,3],[10,9,0]]]
-	domain=Plasm.power(INTERVALS(1)(10),INTERVALS(1)(10))
+	#domain=Plasm.power(INTERVALS(1)(10),INTERVALS(1)(10))
+	domain = EMBED(1)(PROD([ Hpc(Grid([20*[1./20]])),  Hpc(Grid([20*[1./20]])) ]))
 	mapping=BEZIERSURFACE(controlpoints)
 	plasm_config.push(1e-4)
-	VIEW(MAP(mapping)(domain))
+	VIEW(GMAP(mapping)(domain))
 	plasm_config.pop()
 
 # ======================================================
@@ -2564,18 +2738,18 @@ def TENSORPRODSOLID (args):
 # ======================================================
 
 def BEZIERMANIFOLD (degrees):
-	basis=[BERNSTEINBASIS(S1)(d) for d in degrees]
+	basis = [BERNSTEINBASIS(S1)(d) for d in degrees]
 	return TENSORPRODSOLID(basis)
 
 if __name__ == "__main__":
-	grid1D = INTERVALS(1)(5)
+	grid1D = Hpc(Grid([10*[1./10]]))
 	domain3D = Plasm.power(Plasm.power(grid1D,grid1D),grid1D)
 	degrees = [2,2,2]
 	Xtensor =  [[[0,1,2],[-1,0,1],[0,1,2]],[[0,1,2],[-1,0,1],[0,1,2]],[[0,1,2],[-1,0,1],[0,1,2]]]
 	Ytensor =  [[[0,0,0.8],[1,1,1],[2,3,2]],[[0,0,0.8],[1,1,1],[2,3,2]],[[0,0,0.8],[1,1,1],[2,3,2]]]
 	Ztensor =  [[[0,0,0],[0,0,0],[0,0,0]],[[1,1,1],[1,1,1],[1,1,1]],[[2,2,1],[2,2,1],[2,2,1]]] 
 	mapping = BEZIERMANIFOLD(degrees)([Xtensor,Ytensor,Ztensor])
-	out=MAP(mapping)(domain3D)
+	out = GMAP(mapping)(domain3D)
 	VIEW(out)
 
 # ===================================================
@@ -2605,10 +2779,10 @@ def SUBSEQ (I_J):
 # NORTH,SOUTH,WEST,EAST
 # ===================================================
 
-NORTH    = CONS([CONS([MAX(1), MAX(2)]), CONS([MIN(1), MIN(2)])])
-SOUTH    = CONS([CONS([MIN(1), MIN(2)]), CONS([MAX(1), MIN(2)])])
-WEST     = CONS([CONS([MIN(1), MAX(2)]), CONS([MIN(1), MIN(2)])])
-EAST     = CONS([CONS([MAX(1), MIN(2)]), CONS([MAX(1), MAX(2)])])
+NORTH	= CONS([CONS([MAX(1), MAX(2)]), CONS([MIN(1), MIN(2)])])
+SOUTH	= CONS([CONS([MIN(1), MIN(2)]), CONS([MAX(1), MIN(2)])])
+WEST	 = CONS([CONS([MIN(1), MAX(2)]), CONS([MIN(1), MIN(2)])])
+EAST	 = CONS([CONS([MAX(1), MIN(2)]), CONS([MAX(1), MAX(2)])])
 
 MXMY = COMP([STRUCT, CONS([COMP([COMP([T([1, 2]), AA(RAISE(DIFF))]), MED([1, 2])]), ID])])
 MXBY = COMP([STRUCT, CONS([COMP([COMP([T([1, 2]), AA(RAISE(DIFF))]), CONS([MED(1), MIN(2)])]), ID])])
@@ -2636,14 +2810,14 @@ def RIF (size):
 # ===================================================
 
 def FRACTALSIMPLEX (D):
-    def FRACTALSIMPLEX0 (N):
+	def FRACTALSIMPLEX0 (N):
 
 		mkpols = COMP([COMP([COMP([COMP([STRUCT, AA(MKPOL)]), AA(AL)]), DISTR]), CONS([ID, K([[FROMTO([1,D+1])], [[1]]])])])
 
 		def COMPONENT (args):
 			i, seq = args
 			firstseq =   seq[0:i-1]
-			pivot    = seq[i-1]
+			pivot	= seq[i-1]
 			lastseq = seq[i:len(seq)]
 			firstpart = AA(MEANPOINT)(DISTR([firstseq, pivot]))
 			lastpart  = AA(MEANPOINT)(DISTR([lastseq , pivot]))
@@ -2654,7 +2828,7 @@ def FRACTALSIMPLEX (D):
 	
 		return (COMP([COMP([COMP([COMP([mkpols, splitting]), CONS([S1])])])]))(UKPOL(SIMPLEX(D)))
 
-    return FRACTALSIMPLEX0
+	return FRACTALSIMPLEX0
 
 
 # ===================================================
@@ -2680,9 +2854,9 @@ def VECT2DTOANGLE(v):
 # ===================================================
 
 def CART(l):
-    CART2 = COMP([COMP([CAT, AA(DISTL)]), DISTR])
-    F1 = AA((AA(CONS([ID]))))
-    return TREE(COMP([AA(CAT), CART2]))(F1(l))
+	CART2 = COMP([COMP([CAT, AA(DISTL)]), DISTR])
+	F1 = AA((AA(CONS([ID]))))
+	return TREE(COMP([AA(CAT), CART2]))(F1(l))
 
 
 def POWERSET(l):
@@ -2835,7 +3009,7 @@ def LEX (args):
 				dim = DIM(POL)
 				newrow = K((AR([CAT([[0, 1],DIESIS((dim-2))(0)]),A])))
 				update = (COMP([CONS, CAT]))([[S1, newrow],AA(SEL)((FROMTO([3,dim+1])))])
-				matrix=  update(IDNT(dim+1))              
+				matrix=  update(IDNT(dim+1))			  
 				return (MAT(matrix))(POL)
 			return SHEARTENSOR0
 
@@ -2894,7 +3068,7 @@ if __name__ == "__main__":
 # ===================================================
 
 def SWEEP (v):
-    def SWEEP0 (pol):
+	def SWEEP0 (pol):
 
 		ret=Plasm.power(pol,QUOTE([1]))
 
@@ -2906,7 +3080,7 @@ def SWEEP (v):
 
 		return PROJECT(1)(ret)
 
-    return SWEEP0
+	return SWEEP0
 
 # ===================================================
 # MINKOWSKI
@@ -2974,11 +3148,11 @@ def THINSOLID (surface,delta=1e-4):
 
 	def map_fn(point):
 
-		u,v,w=point
+		u,v,w = point
 		# calculate normal as cross product of its gradient
-		P0=surface([u,v])
-		PX=surface([u+delta,v])
-		PY=surface([u,v+delta])
+		P0=surface([u,v,w])
+		PX=surface([u+delta,v,w])
+		PY=surface([u,v+delta,w])
 		GX=[PX[i]-P0[i] for i in range(3)]
 		GY=[PY[i]-P0[i] for i in range(3)]
 		normal=UNITVECT(VECTPROD([GX,GY]))
@@ -2993,11 +3167,11 @@ if __name__ == "__main__":
 	Su1 = COMP([BEZIERCURVE([[0,10,0],[2.5,10,3],[5,10,-3],[7.5,10,3],[10,10,0]]),CONS([S1]) ])
 	S0v = COMP([BEZIERCURVE([[0,0,0],[0,0,3],[0,10,3],[0,10,0]]) , CONS([S2]) ]) 
 	S1v = COMP([BEZIERCURVE([[10,0,0],[10,5,3],[10,10,0]]) ,CONS([S2])   ])
-	surface=COONSPATCH([Su0,Su1,S0v,S1v])
-	VIEW(MAP(  surface ) (Plasm.power(INTERVALS(1)(10),INTERVALS(1)(10))))
+	surface = COONSPATCH([Su0,Su1,S0v,S1v])
+	VIEW(GMAP(  surface ) (EMBED(1)(Plasm.power(Hpc(Grid([20*[1./20]])),Hpc(Grid([20*[1./20]]))))))
 	solidMapping = THINSOLID(surface)
-	Domain3D = Plasm.power(Plasm.power(INTERVALS(1)(5),INTERVALS(1)(5)),INTERVALS(0.5)(5))
-	VIEW(MAP(solidMapping)(Domain3D))
+	Domain3D = Plasm.power(Plasm.power(Hpc(Grid([20*[1./20]])),Hpc(Grid([20*[1./20]]))),Hpc(Grid([2*[1./2]])))
+	VIEW(GMAP(solidMapping)(Domain3D))
 
 	
 # //////////////////////////////////////////////////////////////////
@@ -3059,14 +3233,14 @@ def RATIONALBEZIER (controlpoints_fn):
 
 
 def ELLIPSE (args):
-    A , B = args
-    def ELLIPSE0 (N):
-        C = 0.5*math.sqrt(2)
-        mapping = RATIONALBEZIER([[A, 0, 1], [A*C, B*C, C], [0, B, 1]])
-        quarter = MAP(mapping)((INTERVALS(1.0)(N)))
-        half = STRUCT([quarter, S(2)(-1)(quarter)])
-        return STRUCT([half, S(1)(-1)(half)])
-    return ELLIPSE0
+	A , B = args
+	def ELLIPSE0 (N):
+		C = 0.5*math.sqrt(2)
+		mapping = RATIONALBEZIER([[A, 0, 1], [A*C, B*C, C], [0, B, 1]])
+		quarter = MAP(mapping)((INTERVALS(1.0)(N)))
+		half = STRUCT([quarter, S(2)(-1)(quarter)])
+		return STRUCT([half, S(1)(-1)(half)])
+	return ELLIPSE0
 
 
 if __name__ == "__main__":
@@ -3259,12 +3433,12 @@ def DISPLAYNUBSPLINE (args,marker_size=0.1):
 
 if __name__ == "__main__":
 	ControlPoints=[[0,0],[-1,2],[1,4],[2,3],[1,1],[1,2],[2.5,1], [2.5,3], [4,4],[5,0]]
-	VIEW(DISPLAYNUBSPLINE([3,[0,0,0,0, 1,2,3,4,5, 6    ,7,7,7,7], ControlPoints]))
+	VIEW(DISPLAYNUBSPLINE([3,[0,0,0,0, 1,2,3,4,5, 6	,7,7,7,7], ControlPoints]))
 
 
 # =================================================
 # RATIONALBSPLINE
-# =================================================    
+# =================================================	
 
 
 def RATIONALBSPLINE (degree):
@@ -3358,17 +3532,17 @@ def COLOR(C):
 
 	return COLOR0
 
-GRAY    = Color4f([0.5, 0.5, 0.5, 1.0])
+GRAY	= Color4f([0.5, 0.5, 0.5, 1.0])
 GREEN   = Color4f([0.0, 1.0, 0.0, 1.0])
 BLACK   = Color4f([0.0, 0.0, 0.0, 1.0])
-BLUE    = Color4f([0.0, 0.0, 1.0, 1.0])
+BLUE	= Color4f([0.0, 0.0, 1.0, 1.0])
 BROWN   = Color4f([0.5, 0.5, 0.5, 1.0])
-CYAN    = Color4f([0.0, 1.0, 1.0, 1.0])
+CYAN	= Color4f([0.0, 1.0, 1.0, 1.0])
 MAGENTA = Color4f([1.0, 0.0, 1.0, 1.0])
 ORANGE  = Color4f([1.0, 0.5, 1.0, 1.0])
 PURPLE  = Color4f([0.5, 0.0, 0.5, 1.0])
 WHITE   = Color4f([1.0, 1.0, 1.0, 1.0])
-RED     = Color4f([1.0, 0.0, 0.0, 1.0])
+RED	 = Color4f([1.0, 0.0, 0.0, 1.0])
 YELLOW  = Color4f([1.0, 1.0, 0.0, 1.0])
 
 
@@ -3395,8 +3569,8 @@ def MATERIAL(M):
 		a=M[3] if len(M)==4 else 1.0
 		ambient =[r*0.4,g*0.4,b*0.4,alpha]
 		diffuse =[r*0.6,g*0.6,b*0.6,alpha]
-		specular=[0    ,0    ,0    ,alpha]
-		emission=[0    ,0    ,0    ,alpha]
+		specular=[0	,0	,0	,alpha]
+		emission=[0	,0	,0	,alpha]
 		shininess
 		M=ambient + diffuse + specular + emission + [shininess]
 
@@ -3433,7 +3607,7 @@ def TEXTURE(params):
 			params=params[1:]
 
 		# complete with default parameters
-		params+=[True,True, 0.0,0.0,  0.0,   1.0,1.0,    0.0,0.0   ][len(params):]
+		params+=[True,True, 0.0,0.0,  0.0,   1.0,1.0,	0.0,0.0   ][len(params):]
 
 		# unpack
 		repeatS, repeatT, cx, cy, rot, sx, sy, tx, ty=params
@@ -3483,7 +3657,7 @@ def TEXTURE(params):
 				* Matf.translateV (Vecf(0.0,-cx,-cy,0)) \
 				* Matf.translateV (Vecf(0.0,tx,ty,0))  \
 				* Matf(3).swapCols(perm) \
-				* Matf.scaleV     (vs) \
+				* Matf.scaleV	 (vs) \
 				* Matf.translateV (vt)
 
 
@@ -3492,7 +3666,7 @@ def TEXTURE(params):
 	return lambda pol: TEXTURE0(params,pol)
 
 if __name__ == "__main__":
-	VIEW(TEXTURE(":images/gioconda.png")(CUBOID([1,1])))
+	VIEW(TEXTURE("gioconda.png")(CUBOID([1,1])))
 
 
 
