@@ -240,8 +240,8 @@ SmartPointer<Batch> Graph::getBatch()
 	}
 
 	//safety check
-	XgeDebugAssert(pv==batch->vertices->c_ptr()+ntriangles*9);
-	XgeDebugAssert(pn==batch->normals->mem ()+ntriangles*9);
+	//XgeDebugAssert(pv==batch->vertices->c_ptr()+ntriangles*9);
+	//XgeDebugAssert(pn==batch->normals->mem   ()+ntriangles*9);
 
 	return SmartPointer<Batch>(new Batch(*this->batch));
 }
