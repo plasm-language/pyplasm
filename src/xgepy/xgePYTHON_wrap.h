@@ -20,7 +20,7 @@ class SwigDirector_GLCanvas : public GLCanvas, public Swig::Director {
 public:
     SwigDirector_GLCanvas(PyObject *self);
     virtual ~SwigDirector_GLCanvas();
-    virtual void setOctree(std::tr1::shared_ptr< Octree > octree);
+    virtual void setOctree(std::shared_ptr< Octree > octree);
     virtual bool bind();
     virtual void swapBuffers();
     virtual bool unbind();
@@ -39,7 +39,7 @@ public:
     virtual void setPointSize(float value);
     virtual void setLineWidth(float value);
     virtual void setPolygonOffset(float value);
-    virtual void renderBatch(std::tr1::shared_ptr< Batch > batch);
+    virtual void renderBatch(std::shared_ptr< Batch > batch);
     virtual void renderScene();
     virtual void redisplay();
     virtual bool onKeyboard(int key, int x, int y);

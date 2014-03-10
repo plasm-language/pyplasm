@@ -1272,7 +1272,7 @@ public:
         }
 
         if (transform.isSingularity())
-            return nullptr;
+            return Ptr(nullptr);
 
         {
             Path p;

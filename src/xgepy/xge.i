@@ -3,14 +3,10 @@
 
 %{ #include "xge/xge.h" %}
 
-// I prefer to use TR1 extension of STL instead boost for compilation time!
-#define SWIG_SHARED_PTR_NAMESPACE    std
-#define SWIG_SHARED_PTR_SUBNAMESPACE tr1
-  
 %include <stl.i>
-%include <boost_shared_ptr.i>
+%include <std_shared_ptr.i>
 
-#define SmartPointer std::tr1::shared_ptr
+#define SmartPointer std::shared_ptr
 
 
 ////////////////////////////////////////////////////////
@@ -117,3 +113,4 @@
    XgeModule::init();
    atexit(XgePyShutdown);
 %}
+

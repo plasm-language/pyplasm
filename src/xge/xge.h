@@ -24,7 +24,7 @@ typedef unsigned long long int      uint64;
 #else
   #include <stdlib.h>
   #include <string.h>
-  #include <tr1/memory>
+  #include <memory>
   #include <stdexcept>
   #include <strings.h>
   #include <sys/time.h>
@@ -54,7 +54,7 @@ typedef unsigned long long int      uint64;
   #if PYPLASM_WINDOWS
   #define SmartPointer std::shared_ptr
   #else
-  #define SmartPointer std::tr1::shared_ptr
+  #define SmartPointer std::shared_ptr
   #endif
 #endif
 

@@ -463,9 +463,9 @@ public:
 	inline bool isValid() const
 	{
 		return 
-			   !isnan(this->x) && finite(this->x)
-			&& !isnan(this->y) && finite(this->y)
-			&& !isnan(this->z) && finite(this->z);
+			   !isnan(this->x) && isfinite(this->x)
+			&& !isnan(this->y) && isfinite(this->y)
+			&& !isnan(this->z) && isfinite(this->z);
 	}
 
 	//! test fuzzy equality (error tolerance)
@@ -1726,7 +1726,7 @@ public:
 	inline Vecf normalize() const
 	{
 		float m=module();
-		if (!m || isnan(m) || !finite(m)) m=1;
+		if (!m || isnan(m) || !isfinite(m)) m=1;
 		return Vecf(*this)/m;
 	}
 
