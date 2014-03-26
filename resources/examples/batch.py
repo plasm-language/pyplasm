@@ -50,6 +50,7 @@ batches+=Plasm.getBatches(cube)
 octree=Octree(batches)
 
 # create the viewer and run it
-viewer=Viewer(octree)
-viewer.Run()
+viewer=GLCanvas()
+viewer.setOctree(octree)
+viewer.runLoop()
 
