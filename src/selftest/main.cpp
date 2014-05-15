@@ -1628,7 +1628,7 @@ public:
     setViewport(frustum->x,frustum->y,frustum->width,frustum->height);
     setProjectionMatrix(frustum->projection_matrix);
     setModelviewMatrix(frustum->getModelviewMatrix());
-    setDefaultLight(this->frustum->pos);
+    setDefaultLight(this->frustum->pos,this->frustum->dir);
 
     SmartPointer<Batch> cube=Batch::Cube(this->box);
     cube->matrix=T * cube->matrix;

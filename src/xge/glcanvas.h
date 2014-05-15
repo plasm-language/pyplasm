@@ -12,6 +12,9 @@ class GLCanvas
 public:
 
   class Native;
+  
+  //m_fix_lighting
+  bool m_fix_lighting;
 
   //close signal
   bool m_close;
@@ -73,7 +76,7 @@ public:
 	virtual void  setModelviewMatrix(Mat4f mat);
 
   //!setDefaultLight
-	virtual void  setDefaultLight (Vec3f pos);
+	virtual void  setDefaultLight (Vec3f pos,Vec3f dir);
 	
 	//! pushModelviewMatrix
 	virtual void pushModelviewMatrix(Mat4f mat,bool AccumulateWithCurrent=true);

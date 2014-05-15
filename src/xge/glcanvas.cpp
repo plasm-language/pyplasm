@@ -504,6 +504,7 @@ GLCanvas::GLCanvas() : native(0)
   this->trackball_mode        = true;
   this->trackball_center      = Vec3f(0,0,0);
   this->frustum               = SmartPointer<Frustum>(new Frustum());
+  this->m_fix_lighting        = false;
 
   this->frustum->guessBestPosition(Box3f(Vec3f(-1,-1,-1),Vec3f(+1,+1,+1)));
 
@@ -589,17 +590,48 @@ void GLCanvas::clearScreen(bool ClearColor,bool ClearDepth)
 }
 
 ////////////////////////////////////////////////////////////
-void GLCanvas::setDefaultLight(Vec3f pos)
+void GLCanvas::setDefaultLight(Vec3f pos,Vec3f dir)
 {
   glEnable(GL_LIGHTING);
-  float white[4] ={ 1, 1, 1, 1 };
-  float light_pos[4]={pos.x, pos.y, pos.z,1};
-  glEnable(GL_LIGHT0);
-  glLightfv(GL_LIGHT0, GL_POSITION, light_pos);
-  glLightfv(GL_LIGHT0, GL_AMBIENT, white);
-  glLightfv(GL_LIGHT0, GL_DIFFUSE, white);
-  glLightfv(GL_LIGHT0, GL_SPECULAR, white);
-  glLightfv(GL_LIGHT0, GL_EMISSION, white);
+  
+  //problem of triangle winding wrong
+  if (m_fix_lighting)
+  {
+    float ambient[4] ={ 0.3, 0.3, 0.3, 0.3 };
+    float diffuse[4] ={ 0.8, 0.8, 0.8, 0.8 };
+    float specular[4] ={ 0.0, 0.0, 0.0, 0.0 };
+    float emission[4] ={ 0.0, 0.0, 0.0, 0.0 };
+    
+    float light_pos0[4]={+dir.x, +dir.y, +dir.z,0};
+    float light_pos1[4]={-dir.x, -dir.y, -dir.z,0};
+  
+    glEnable(GL_LIGHT0);
+    glLightfv(GL_LIGHT0, GL_POSITION, light_pos0);
+    glLightfv(GL_LIGHT0, GL_AMBIENT,  ambient);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE,  diffuse);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
+    glLightfv(GL_LIGHT0, GL_EMISSION, emission);
+  
+    glEnable(GL_LIGHT1);
+    glLightfv(GL_LIGHT1, GL_POSITION, light_pos1);
+    glLightfv(GL_LIGHT1, GL_AMBIENT,  ambient);
+    glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuse);
+    glLightfv(GL_LIGHT1, GL_SPECULAR, specular);
+    glLightfv(GL_LIGHT1, GL_EMISSION, emission);
+  }
+  //default lighting
+  else
+  {
+    float white[4] ={ 1, 1, 1, 1 };
+    float light_pos[4]={pos.x, pos.y, pos.z,1};
+    float light_pos0[4]={dir.x, dir.y, dir.z,0};
+    glEnable(GL_LIGHT0);
+    glLightfv(GL_LIGHT0, GL_POSITION, light_pos);
+    glLightfv(GL_LIGHT0, GL_AMBIENT, white);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, white);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, white);
+    glLightfv(GL_LIGHT0, GL_EMISSION, white);
+  }
 }
 
 
@@ -777,6 +809,12 @@ bool GLCanvas::onKeyboard(int key,int x,int y)
     frustum->pos+=frustum->right*frustum->walk_speed;
     this->redisplay();
     return true;
+      
+  case 't':
+  case 'T':
+      m_fix_lighting=!m_fix_lighting;
+      this->redisplay();
+      return true;
 
   case 'w':
   case 'W':
@@ -1185,7 +1223,7 @@ void GLCanvas::renderScene()
   setViewport(frustum->x,frustum->y,frustum->width,frustum->height);
   setProjectionMatrix(frustum->projection_matrix);
   setModelviewMatrix(frustum->getModelviewMatrix());
-  setDefaultLight(this->frustum->pos);
+  setDefaultLight(this->frustum->pos,this->frustum->dir);
 
   //debug_frustum mode
   if (debug_frustum) 
