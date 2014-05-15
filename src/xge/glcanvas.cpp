@@ -160,7 +160,7 @@ protected:
       glClearDepth(1.0f);
       glClearColor(0.3f,0.4f,0.5f, 0.00f);
 
-      glLightModelf(GL_LIGHT_MODEL_TWO_SIDE,0);
+      glLightModelf(GL_LIGHT_MODEL_TWO_SIDE,GL_TRUE);
       static float white[]={+1.00f,+1.00f,+1.00f,+1.00f};
       glLightfv(GL_LIGHT0,GL_AMBIENT ,white);
       glLightfv(GL_LIGHT0,GL_DIFFUSE ,white);
