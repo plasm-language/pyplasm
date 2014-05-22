@@ -597,8 +597,9 @@ void GLCanvas::setDefaultLight(Vec3f pos,Vec3f dir)
   //problem of triangle winding wrong
   if (m_fix_lighting)
   {
-    float ambient[4] ={ 0.3, 0.3, 0.3, 0.3 };
-    float diffuse[4] ={ 0.8, 0.8, 0.8, 0.8 };
+    glLightModelf(GL_LIGHT_MODEL_TWO_SIDE,GL_TRUE);
+    float ambient [4] ={ 0.3, 0.3, 0.3, 0.3 };
+    float diffuse [4] ={ 0.8, 0.8, 0.8, 0.8 };
     float specular[4] ={ 0.0, 0.0, 0.0, 0.0 };
     float emission[4] ={ 0.0, 0.0, 0.0, 0.0 };
     
@@ -615,22 +616,23 @@ void GLCanvas::setDefaultLight(Vec3f pos,Vec3f dir)
     glEnable(GL_LIGHT1);
     glLightfv(GL_LIGHT1, GL_POSITION, light_pos1);
     glLightfv(GL_LIGHT1, GL_AMBIENT,  ambient);
-    glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuse);
+    glLightfv(GL_LIGHT1, GL_DIFFUSE,  diffuse);
     glLightfv(GL_LIGHT1, GL_SPECULAR, specular);
     glLightfv(GL_LIGHT1, GL_EMISSION, emission);
   }
   //default lighting
   else
   {
+    glLightModelf(GL_LIGHT_MODEL_TWO_SIDE,GL_FALSE);
     float white[4] ={ 1, 1, 1, 1 };
     float light_pos[4]={pos.x, pos.y, pos.z,1};
-    float light_pos0[4]={dir.x, dir.y, dir.z,0};
     glEnable(GL_LIGHT0);
     glLightfv(GL_LIGHT0, GL_POSITION, light_pos);
     glLightfv(GL_LIGHT0, GL_AMBIENT, white);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, white);
     glLightfv(GL_LIGHT0, GL_SPECULAR, white);
     glLightfv(GL_LIGHT0, GL_EMISSION, white);
+    glDisable(GL_LIGHT1);
   }
 }
 
