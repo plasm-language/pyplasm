@@ -11,6 +11,7 @@ typedef signed long long int        int64;
 typedef unsigned long long int      uint64;
 #endif
 
+
 //windows specific stuff
 #if PYPLASM_WINDOWS
   #include <windows.h>
@@ -18,7 +19,6 @@ typedef unsigned long long int      uint64;
   #pragma warning (disable:4251) // class 'std::tr1::shared_ptr<_Ty>' needs to have dll-interface to be used by clients of class
   #pragma warning (disable:4244) // 'initializing' : conversion from 'double' to 'float', possible loss of data
   #define strcmpi(s1,s2) _strcmpi(s1,s2)
-  #define isnan(a)       _isnan(a)
   #define finite(a)      _finite(a)
   #define getcwd         _getcwd
 #else

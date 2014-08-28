@@ -598,10 +598,10 @@ void GLCanvas::setDefaultLight(Vec3f pos,Vec3f dir)
   if (m_fix_lighting)
   {
     glLightModelf(GL_LIGHT_MODEL_TWO_SIDE,GL_TRUE);
-    float ambient [4] ={ 0.3, 0.3, 0.3, 0.3 };
-    float diffuse [4] ={ 0.8, 0.8, 0.8, 0.8 };
-    float specular[4] ={ 0.0, 0.0, 0.0, 0.0 };
-    float emission[4] ={ 0.0, 0.0, 0.0, 0.0 };
+    float ambient [4] ={ 0.3f, 0.3f, 0.3f, 0.3f };
+    float diffuse [4] ={ 0.8f, 0.8f, 0.8f, 0.8f };
+    float specular[4] ={ 0.0f, 0.0f, 0.0f, 0.0f };
+    float emission[4] ={ 0.0f, 0.0f, 0.0f, 0.0f };
     
     float light_pos0[4]={+dir.x, +dir.y, +dir.z,0};
     float light_pos1[4]={-dir.x, -dir.y, -dir.z,0};
