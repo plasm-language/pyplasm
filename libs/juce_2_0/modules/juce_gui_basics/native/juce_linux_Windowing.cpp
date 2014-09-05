@@ -1459,7 +1459,7 @@ public:
         {
             lastMousePos = mousePos;
 
-            if (parentWindow != nullptr && (styleFlags & windowHasTitleBar) == 0)
+            if (parentWindow != 0 && (styleFlags & windowHasTitleBar) == 0)
             {
                 Window wRoot = 0, wParent = 0;
 
