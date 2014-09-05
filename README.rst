@@ -29,7 +29,7 @@ Install prerequisites::
 
 Install some extra python packages::
 
-	sudo easy_install PyOpenGL
+	sudo easy_install PyOpenGL PyOpenGL-accelerate 
 
 Check that your python is 2.7
 	
