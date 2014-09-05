@@ -6859,11 +6859,13 @@ void SwigDirector_GLCanvas::setModelviewMatrix(Mat4f mat) {
 }
 
 
-void SwigDirector_GLCanvas::setDefaultLight(Vec3f pos) {
+void SwigDirector_GLCanvas::setDefaultLight(Vec3f pos, Vec3f dir) {
   SWIG_PYTHON_THREAD_BEGIN_BLOCK;
   {
     swig::SwigVar_PyObject obj0;
     obj0 = SWIG_NewPointerObj(SWIG_as_voidptr(&pos), SWIGTYPE_p_Vec3f,  0 );
+    swig::SwigVar_PyObject obj1;
+    obj1 = SWIG_NewPointerObj(SWIG_as_voidptr(&dir), SWIGTYPE_p_Vec3f,  0 );
     if (!swig_get_self()) {
       Swig::DirectorException::raise("'self' uninitialized, maybe you forgot to call GLCanvas.__init__.");
     }
@@ -6871,9 +6873,9 @@ void SwigDirector_GLCanvas::setDefaultLight(Vec3f pos) {
     const size_t swig_method_index = 10;
     const char * const swig_method_name = "setDefaultLight";
     PyObject* method = swig_get_method(swig_method_index, swig_method_name);
-    swig::SwigVar_PyObject result = PyObject_CallFunction(method, (char *)"(O)" ,(PyObject *)obj0);
+    swig::SwigVar_PyObject result = PyObject_CallFunction(method, (char *)"(OO)" ,(PyObject *)obj0,(PyObject *)obj1);
 #else
-    swig::SwigVar_PyObject result = PyObject_CallMethod(swig_get_self(), (char *)"setDefaultLight", (char *)"(O)" ,(PyObject *)obj0);
+    swig::SwigVar_PyObject result = PyObject_CallMethod(swig_get_self(), (char *)"setDefaultLight", (char *)"(OO)" ,(PyObject *)obj0,(PyObject *)obj1);
 #endif
     if (!result) {
       PyObject *error = PyErr_Occurred();
@@ -82533,6 +82535,66 @@ SWIGINTERN PyObject *Octree_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObjec
   return SWIG_Py_Void();
 }
 
+SWIGINTERN PyObject *_wrap_GLCanvas_m_fix_lighting_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  GLCanvas *arg1 = (GLCanvas *) 0 ;
+  bool arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  bool val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:GLCanvas_m_fix_lighting_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_GLCanvas, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "GLCanvas_m_fix_lighting_set" "', argument " "1"" of type '" "GLCanvas *""'"); 
+  }
+  arg1 = reinterpret_cast< GLCanvas * >(argp1);
+  ecode2 = SWIG_AsVal_bool(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "GLCanvas_m_fix_lighting_set" "', argument " "2"" of type '" "bool""'");
+  } 
+  arg2 = static_cast< bool >(val2);
+  {
+    SWIG_PYTHON_THREAD_BEGIN_ALLOW;
+    if (arg1) (arg1)->m_fix_lighting = arg2;
+    SWIG_PYTHON_THREAD_END_ALLOW;
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_GLCanvas_m_fix_lighting_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  GLCanvas *arg1 = (GLCanvas *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  bool result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:GLCanvas_m_fix_lighting_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_GLCanvas, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "GLCanvas_m_fix_lighting_get" "', argument " "1"" of type '" "GLCanvas *""'"); 
+  }
+  arg1 = reinterpret_cast< GLCanvas * >(argp1);
+  {
+    SWIG_PYTHON_THREAD_BEGIN_ALLOW;
+    result = (bool) ((arg1)->m_fix_lighting);
+    SWIG_PYTHON_THREAD_END_ALLOW;
+  }
+  resultobj = SWIG_From_bool(static_cast< bool >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_GLCanvas_m_close_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   GLCanvas *arg1 = (GLCanvas *) 0 ;
@@ -83855,16 +83917,20 @@ SWIGINTERN PyObject *_wrap_GLCanvas_setDefaultLight(PyObject *SWIGUNUSEDPARM(sel
   PyObject *resultobj = 0;
   GLCanvas *arg1 = (GLCanvas *) 0 ;
   Vec3f arg2 ;
+  Vec3f arg3 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   void *argp2 ;
   int res2 = 0 ;
+  void *argp3 ;
+  int res3 = 0 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
   Swig::Director *director = 0;
   bool upcall = false;
   
-  if (!PyArg_ParseTuple(args,(char *)"OO:GLCanvas_setDefaultLight",&obj0,&obj1)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"OOO:GLCanvas_setDefaultLight",&obj0,&obj1,&obj2)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_GLCanvas, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "GLCanvas_setDefaultLight" "', argument " "1"" of type '" "GLCanvas *""'"); 
@@ -83883,13 +83949,26 @@ SWIGINTERN PyObject *_wrap_GLCanvas_setDefaultLight(PyObject *SWIGUNUSEDPARM(sel
       if (SWIG_IsNewObj(res2)) delete temp;
     }
   }
+  {
+    res3 = SWIG_ConvertPtr(obj2, &argp3, SWIGTYPE_p_Vec3f,  0  | 0);
+    if (!SWIG_IsOK(res3)) {
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "GLCanvas_setDefaultLight" "', argument " "3"" of type '" "Vec3f""'"); 
+    }  
+    if (!argp3) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "GLCanvas_setDefaultLight" "', argument " "3"" of type '" "Vec3f""'");
+    } else {
+      Vec3f * temp = reinterpret_cast< Vec3f * >(argp3);
+      arg3 = *temp;
+      if (SWIG_IsNewObj(res3)) delete temp;
+    }
+  }
   director = SWIG_DIRECTOR_CAST(arg1);
   upcall = (director && (director->swig_get_self()==obj0));
   try {
     if (upcall) {
-      (arg1)->GLCanvas::setDefaultLight(arg2);
+      (arg1)->GLCanvas::setDefaultLight(arg2,arg3);
     } else {
-      (arg1)->setDefaultLight(arg2);
+      (arg1)->setDefaultLight(arg2,arg3);
     }
   } catch (Swig::DirectorException&) {
     SWIG_fail;
@@ -91502,6 +91581,8 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"Octree_getNode", _wrap_Octree_getNode, METH_VARARGS, NULL},
 	 { (char *)"Octree_find", _wrap_Octree_find, METH_VARARGS, NULL},
 	 { (char *)"Octree_swigregister", Octree_swigregister, METH_VARARGS, NULL},
+	 { (char *)"GLCanvas_m_fix_lighting_set", _wrap_GLCanvas_m_fix_lighting_set, METH_VARARGS, NULL},
+	 { (char *)"GLCanvas_m_fix_lighting_get", _wrap_GLCanvas_m_fix_lighting_get, METH_VARARGS, NULL},
 	 { (char *)"GLCanvas_m_close_set", _wrap_GLCanvas_m_close_set, METH_VARARGS, NULL},
 	 { (char *)"GLCanvas_m_close_get", _wrap_GLCanvas_m_close_get, METH_VARARGS, NULL},
 	 { (char *)"GLCanvas_m_redisplay_set", _wrap_GLCanvas_m_redisplay_set, METH_VARARGS, NULL},

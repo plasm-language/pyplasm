@@ -28,7 +28,7 @@ public:
     virtual void setViewport(int x, int y, int width, int height);
     virtual void setProjectionMatrix(Mat4f mat);
     virtual void setModelviewMatrix(Mat4f mat);
-    virtual void setDefaultLight(Vec3f pos);
+    virtual void setDefaultLight(Vec3f pos, Vec3f dir);
     virtual void pushModelviewMatrix(Mat4f mat, bool AccumulateWithCurrent = true);
     virtual void popModelviewMatrix();
     virtual void pushProjectionMatrix(Mat4f mat, bool AccumulateWithCurrent = true);

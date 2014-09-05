@@ -294,10 +294,10 @@ SmartPointer<Batch> Batch::Quad(int x1,int y1,int x2,int y2,int z)
 	batch->setColor(Color4f(1,1,1));
 	
 	float _vertices[] = {
-		x1,y1,z,  
-		x2,y1,z,  
-		x2,y2,z, 
-		x1,y2,z
+		(float)x1,(float)y1,(float)z,  
+		(float)x2,(float)y1,(float)z,  
+		(float)x2,(float)y2,(float)z, 
+		(float)x1,(float)y2,(float)z
 	};
 
 	batch->vertices.reset(new Array(12,_vertices));

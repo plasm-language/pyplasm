@@ -421,7 +421,8 @@ public:
 //		XgeDebugAssert(m && !isnan(m) && finite(m));
 //		for (int i=0;i<=dim;i++) this->mem[i]/=m;
 //#else //_DEBUG
-		if (m && !isnan(m) && isfinite(m))
+
+		if (m && !isnan(m) && std::isfinite(m))
 		{
 			for (int i=0;i<=dim;i++) 
 				this->mem[i]/=m;

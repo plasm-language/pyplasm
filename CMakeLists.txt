@@ -57,10 +57,10 @@ ELSE()
    # enable 64 bit file support (see http://learn-from-the-guru.blogspot.it/2008/02/large-file-support-in-linux-for-cc.html)
   ADD_DEFINITIONS(-D_FILE_OFFSET_BITS=64)
   SET(CMAKE_C_FLAGS    ${CMAKE_C_FLAGS}   "-fPIC")
-  SET(CMAKE_CXX_FLAGS  ${CMAKE_CXX_FLAGS} "-fPIC")
+  SET(CMAKE_CXX_FLAGS  ${CMAKE_CXX_FLAGS} "-fPIC -std=gnu++0x")
   INCLUDE_DIRECTORIES("/usr/local/include")
-  INCLUDE_DIRECTORIES("/usr/include")   
-    
+  INCLUDE_DIRECTORIES("/usr/include")
+
 ENDIF()
 
 ADD_SUBDIRECTORY(libs)
