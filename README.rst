@@ -18,16 +18,17 @@ Linux compilation
 Install prerequisites::
 
 	PREREQUISITES=\
-		libfreetype6  libfreetype6-dev libasound2  libasound2-dev alsa alsa-devel \
-		python2.7 python2.7-dev python-setuptools \
-		libxinerama-dev libxrender-dev libxcomposite-dev libxcursor-dev
-    
+		libfreetype6 libfreetype6-dev libasound2 libasound2-dev alsa-base alsa-utils \
+		python python-dev python-setuptools libxinerama-dev libxrender-dev libxcomposite-dev \
+		libxcursor-dev swig libglu1-mesa-dev libfreeimage3 libglew1.10 libpng12-0 \
+		libpng12-dev libjpeg-dev libxxf86vm1 libxxf86vm-dev libxi6 libxi-dev \
+		libxrandr-dev mesa-common-dev mesa-utils-extra libgl1-mesa-dev libglapi-mesa \
+		python-numpy python-scipy
+
 	sudo apt-get install $PREREQUISITES # OpenSuse: "sudo zypper install $PREREQUISITES"
 
 Install some extra python packages::
 
-	sudo easy_install numpy  
-	sudo easy_install scipy
 	sudo easy_install PyOpenGL
 
 Check that your python is 2.7
