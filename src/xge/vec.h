@@ -4,6 +4,8 @@
 #include <xge/xge.h>
 #include <xge/archive.h>
 
+#include <cmath>
+
 //predeclaration
 class Mat4f;
 class Matf;
