@@ -18,10 +18,10 @@ static Mat4f getTransformationToBox(Box3f box)
   float cos_pi_4= cos((float)M_PI/4.0);
 
   float _mat[16]={
-    size.x?(0.5*size.x/cos_pi_4):1.0f , 0                                , 0                               , mid.x,  
-    0                                 , size.y?(0.5*size.y/cos_pi_4):1.0f, 0                               , mid.y, 
-    0                                 , 0                                , size.z?0.5*size.z/cos_pi_4:1.0f , mid.z, 
-    0                                 , 0                                , 0                               , 1    
+    (float)(size.x?(0.5*size.x/cos_pi_4):1.0f ), (float)(0                                ), (float)(0                               ), (float)(mid.x),  
+    (float)(0                                 ), (float)(size.y?(0.5*size.y/cos_pi_4):1.0f), (float)(0                               ), (float)(mid.y), 
+    (float)(0                                 ), (float)(0                                ), (float)(size.z?0.5*size.z/cos_pi_4:1.0f ), (float)(mid.z), 
+    (float)(0                                 ), (float)(0                                ), (float)(0                               ), (float)(1    )
   };
 
   Mat4f T_to_box=Mat4f(_mat);
