@@ -144,10 +144,10 @@ Run Visual Studio::
 -----------------------------------------------------------
 Test pyplasm is working
 -----------------------------------------------------------
+run python script::
 
-	python
-	from pyplasm import *
-	c=CUBOID([1,1,1])
-	VIEW(c)
-	quit()
+        from pyplasm import *
+        c=CUBOID([1,1,1])
+        VIEW(c)
+        quit()
 
