@@ -280,7 +280,7 @@ public:
 Unwrapper::Unwrapper()
 {
 	this->texturedim=1024;
-	this->texture_template=":texture1.%02d.png";
+	this->texture_template="./texture1.%02d.png";
 	this->factor=1;
 	this->ntriangles_done=0;
 }

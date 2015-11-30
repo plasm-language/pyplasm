@@ -44,6 +44,10 @@ public:
   \param epsilon for tolerance in picking
   */
   explicit Manipulator(float epsilon=0.1f);
+  
+  //destructor
+  virtual ~Manipulator()
+  {}
 
   //! set a new box to manipulate
   /*!

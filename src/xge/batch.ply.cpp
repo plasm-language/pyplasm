@@ -3517,7 +3517,6 @@ std::vector<SmartPointer<Batch> > Batch::openPly(std::string filename,bool bReve
 
 
 	// first try to open in ASCII mode
-	filename=FileSystem::FullPath(filename);
 	FILE *file = fopen( filename.c_str(), "rt" );
 
 	if (!file)

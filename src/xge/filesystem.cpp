@@ -4,89 +4,13 @@
 #include <sys/stat.h>
 #include <zlib.h>
 
-
-//must be set from outside
-std::string FileSystem::ResourcesDir="";
-
-
-/////////////////////////////////////////////////
-/////////////////////////////////////////////////
-static std::string normalize_path(std::string filename)
-{
-	std::string ret=filename;
-	for (int i=0;i<(int)ret.length();i++)
-	{
-		if (ret[i]=='\\') ret[i]='/';
-	}
-	return ret;
-}
-
-
-
-/////////////////////////////////////////////////
-/////////////////////////////////////////////////
-std::string FileSystem::FullPath(std::string Filename)
-{
-	std::string ret=normalize_path(Filename);
-
-	//if starts with :
-	if (ret.length() && ret[0]==':')
-	{
-		if (ResourcesDir.length()==0)
-		{
-			ResourcesDir=getenv("TRS_RESOURCES")?getenv("TRS_RESOURCES"):".";
-			ResourcesDir=normalize_path(ResourcesDir);	
-		}
-
-		ret=ret.substr(1);
-		char last_char=ResourcesDir[ResourcesDir.length()-1];
-		std::string sep=(last_char!='/' && last_char!='\\' && ret!="")?"/":"";
-		ret=ResourcesDir + sep + ret;
-	}
-	
-	return ret;
-}
-
-
-
-/////////////////////////////////////////////////
-/////////////////////////////////////////////////
-std::string FileSystem::ShortPath(std::string Filename)
-{
-	std::string ret=normalize_path(Filename);
-
-	//the ResourceDir is not set so leave the path unchanged
-	if (ResourcesDir.length()==0)
-		return ret;
-		
-	//if the string is something like c:/free/trs_resources/file.txt -> :file.txt
-	if (Utils::StartsWith(ret,ResourcesDir))
-	{
-		ret=std::string(ret.c_str()+ResourcesDir.length());
-		char first_char=ret[0];
-		if (first_char=='/') ret=std::string(ret.c_str()+1);
-		ret=":" + ret;
-	}	
-	return ret;
-}
+#include <JUCE/AppConfig.h>
+#include <JUCE/modules/juce_core/juce_core.h>
 
 
 
 ////////////////////////////////////////////////////////////////////
-std::string FileSystem::Extension(std::string filename)
-{
-	int i=(int)(filename.length()-1);
-
-	while  (i>=0 && filename[i]!='.') 
-		--i;
-
-	return (i>=0)?filename.substr(i):"";
-}
-
-
-
-////////////////////////////////////////////////////////////////////
-unsigned char* FileSystem::ReadFile(std::string Filename,unsigned long& filesize,bool bZeroTerminated)
+unsigned char* FileSystem::ReadFile(std::string filename,unsigned long& filesize,bool bZeroTerminated)
 {
 	static const int megabyte=1024*1024;
 
@@ -94,7 +18,6 @@ unsigned char* FileSystem::ReadFile(std::string Filename,unsigned long& filesize
 	unsigned char* buff=0;
 
 	//i can read always using gz
-	std::string filename=FileSystem::FullPath(Filename);
 	gzFile gzfile=gzopen(filename.c_str(),"rb");
 
 	if (!gzfile)
@@ -136,25 +59,4 @@ unsigned char* FileSystem::ReadFile(std::string Filename,unsigned long& filesize
 }
 
 
-/////////////////////////////////////////////////
-/////////////////////////////////////////////////
-uint64 FileSystem::FileSize(std::string filename)
-{
-	filename=FullPath(filename);
-	struct stat __buf;
-	stat(filename.c_str(), &__buf);
-	return  __buf.st_size;
-}
-
-
-/////////////////////////////////////////////////
-/////////////////////////////////////////////////
-bool FileSystem::FileExists(std::string filename)
-{
-	filename=FullPath(filename);
-	FILE* file= fopen( filename.c_str(), "rb" );
-	bool ret=(file != NULL );
-	if (file) fclose(file);
-	return ret;
-}
 

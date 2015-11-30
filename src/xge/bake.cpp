@@ -103,13 +103,13 @@ void Bake::Add(Mat4f T,SmartPointer<Batch> batch)
 bool Bake::Export()
 {
 	
-	std::string rib_filename      =":main.rib";
-	std::string rib_world_filename=":main.world.rib";
-	std::string frame_template    =":main.%03d.rib";
+	std::string rib_filename      ="./main.rib";
+	std::string rib_world_filename="./main.world.rib";
+	std::string frame_template    ="./main.%03d.rib";
 	
 	//_________________________________________________________________________ export the world
 	{
-		FILE* rib_world_file = fopen(FileSystem::FullPath(rib_world_filename).c_str(),"wt");
+		FILE* rib_world_file = fopen(rib_world_filename.c_str(),"wt");
 		if (!rib_world_file)
 		{
 			Log::printf("cannot save RIB world file %s\n",rib_world_filename.c_str());
@@ -147,7 +147,7 @@ bool Bake::Export()
 		int Frame=0;
 		for (std::map<Texture* , std::vector<SmartPointer<Batch> > >::iterator it=texture1_map.begin();it!=texture1_map.end();it++,Frame++)
 		{
-			std::string frame_filename=FileSystem::FullPath(Utils::Format(frame_template.c_str(),Frame));
+			std::string frame_filename=Utils::Format(frame_template.c_str(),Frame);
 
 			FILE* frame_file = fopen(frame_filename.c_str(),"wt");
 			if (!frame_file)
@@ -204,7 +204,7 @@ bool Bake::Export()
 
 	//_________________________________________________________________________ export the main RIB
 	{
-		FILE* rib_file = fopen(FileSystem::FullPath(rib_filename).c_str(),"wt");
+		FILE* rib_file = fopen(rib_filename.c_str(),"wt");
 
 		if (!rib_file)
 		{
@@ -214,13 +214,13 @@ bool Bake::Export()
 
 		XgeReleaseAssert(rib_file);
 		fprintf(rib_file,"version 3.03\n");
-		fprintf(rib_file,Utils::Format("Option \"searchpath\" \"shader\" [\"resources/shaders:%s:&:$RIBDIR\"]\n",FileSystem::FullPath(":resources/shaders/rib").c_str()).c_str()); 
+		fprintf(rib_file,Utils::Format("Option \"searchpath\" \"shader\" [\"resources/shaders:%s:&:$RIBDIR\"]\n","./resources/shaders/rib").c_str()); 
 
 		int texturedim=texture1_map.begin()->first->width;
 		fprintf(rib_file,Utils::Format("Format %d %d 1\n",texturedim,texturedim).c_str());
 		fprintf(rib_file,"Attribute \"cull\" \"hidden\" [0] \"backfacing\" [0]\n");
 		fprintf(rib_file,"Attribute \"dice\" \"rasterorient\" [0]\n");
-		fprintf(rib_file,"ReadArchive \"%s\"\n",FileSystem::FullPath(rib_world_filename).c_str());
+		fprintf(rib_file,"ReadArchive \"%s\"\n",rib_world_filename.c_str());
 
 		//write points to the file
 		if (PointOcclusion)
@@ -269,7 +269,7 @@ bool Bake::Export()
 
 
 			//Important for 3delight I must use TIFF file format!
-			std::string rib_tif_filename=FileSystem::FullPath(it->first->filename);
+			std::string rib_tif_filename=it->first->filename;
 
 			fprintf(rib_file,"   Display \"%s\"  \"file\" \"rgba\"\n"        ,rib_tif_filename.c_str()); 
 			fprintf(rib_file,"   Display \"+%s\" \"framebuffer\" \"rgba\"\n" ,rib_tif_filename.c_str());
@@ -307,7 +307,7 @@ bool Bake::Export()
 			if (DebugMode) 
 				fprintf(rib_file,"      Declare \"W\" \"varying color\"\n");
 
-			std::string frame_filename=FileSystem::FullPath(Utils::Format(frame_template.c_str(),Frame)).c_str();
+			std::string frame_filename=Utils::Format(frame_template.c_str(),Frame);
 			fprintf(rib_file,"      ReadArchive \"%s\"\n",frame_filename.c_str());
 			fprintf(rib_file,"      AttributeEnd\n");
 
@@ -352,7 +352,7 @@ bool Bake::run()
 	bOk=ExecuteShellCmd(cmd.c_str(),false);
 
 
-	cmd=Utils::Format("\"%s\\bin\\renderdl.exe\" \"%s\"",DelightDir.c_str(),FileSystem::FullPath(":main.rib").c_str());
+	cmd=Utils::Format("\"%s\\bin\\renderdl.exe\" \"%s\"",DelightDir.c_str(),"./main.rib");
 	cmd=Utils::Replace(cmd,"/","\\");
 	Log::printf("Executing %s\n",cmd.c_str());
 	bOk=ExecuteShellCmd(cmd.c_str(),true);

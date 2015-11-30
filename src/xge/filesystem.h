@@ -8,24 +8,6 @@ class FileSystem
 {
 public:
 
-	//! all the path which starts with ":" 
-	static std::string ResourcesDir;
-
-	//!get Filename for file starting with ":" (means take from ResourcesDir)
-	//Example   FullPath(":symbols/videocamera.xml") -> c:/trs2009_resources/videocamera.xml
-	static std::string FullPath(std::string filename);
-
-	//!resolve an absolute path, it it starts with ResourcesDir it will be replaced by ":"
-	//!Example shortPath("c:/trs2009_resources/videocamera.xml") -> ":symbols/videocamera.xml"
-	static std::string ShortPath(std::string filename);
-
-	//! restituisce l'estensione del nome di un file
-	/*!
-		\param filename il filename di cui trovare l'estensione
-		\return l'estensione del file (compreso di punto es .tga), altrimenti "" se il file non esiste
-	*/
-	 static std::string Extension(std::string filename);
-
 	//! legge il contenuto di un file
 	/*!
 		Se il filename termina con .gz allora il file viene automaticamente decompresso (gunzipped)
@@ -37,11 +19,6 @@ public:
 	*/
 	static unsigned char* ReadFile(std::string filename,unsigned long& filesize,bool bZeroTerminated=false);
 
-	//! return the file size
-	static uint64 FileSize(std::string filename);
-
-	//! test if a file exists
-	static bool FileExists(std::string filename);
 
 
 }; //end class

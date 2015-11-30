@@ -24,7 +24,7 @@ ADD_SUBDIRECTORY(tinyxml)
 set_target_properties(tinyxml PROPERTIES FOLDER libs/)
 
 # JUCE
-ADD_SUBDIRECTORY(juce_2_0)
+ADD_SUBDIRECTORY(JUCE)
 set_target_properties(Juce PROPERTIES FOLDER libs/)
 
 

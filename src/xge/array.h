@@ -25,6 +25,8 @@ nel rendering ad esempio di set di triangoli.\n
 */
 //===========================================================================
 
+class GLCanvas;
+
 class Array
 { 
 public:
@@ -284,7 +286,9 @@ public:
 	//! destructor
 	~Array();
 
-	
+  //uploadIfNeeded
+	void uploadIfNeeded(GLCanvas& gl);
+
 
 	//!assignment operator
 	/*!

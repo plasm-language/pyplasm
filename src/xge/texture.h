@@ -3,6 +3,7 @@
 
 #include <xge/xge.h>
 
+class GLCanvas;
 
 //================================================
 //! class which stores texture maps
@@ -47,6 +48,9 @@ public:
 		@endpy
 	*/
 	Texture();
+
+  //uploadIfNeeded
+  void uploadIfNeeded(GLCanvas& gl);
 
 	//! constructor
 	/*! 

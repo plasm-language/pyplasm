@@ -48,17 +48,16 @@ class PyViewer(GLCanvas):
 		self.manipulator.onMouseUp(button,x,y,ray)
 		self.redisplay()				
 
-	def renderScene(self):	
-		self.clearScreen        ()
-		self.setViewport        (self.frustum.x,self.frustum.y,self.frustum.width,self.frustum.height);
+	def renderOpenGL(self):	
+		self.clearScreen()
+		self.setViewport(self.frustum.x,self.frustum.y,self.frustum.width,self.frustum.height);
 		self.setProjectionMatrix(self.frustum.projection_matrix);
-		self.setModelviewMatrix (self.frustum.getModelviewMatrix());
-		self.setDefaultLight    (self.frustum.pos)		
+		self.setModelviewMatrix(self.frustum.getModelviewMatrix());
+		self.setDefaultLight(self.frustum.pos)		
 		batch=Batch.Cube(self.box)
 		batch.matrix= self.T * batch.matrix
 		self.renderBatch(batch)
 		self.manipulator.render(self)
-		self.swapBuffers()
 
 
 viewer=PyViewer()

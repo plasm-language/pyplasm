@@ -145,9 +145,9 @@ Run Visual Studio::
 Test pyplasm is working
 -----------------------------------------------------------
 
-	python
-	from pyplasm import *
-	c=CUBOID([1,1,1])
-	VIEW(c)
-	quit()
+python
+from pyplasm import *
+c=CUBOID([1,1,1])
+VIEW(c)
+quit()
 

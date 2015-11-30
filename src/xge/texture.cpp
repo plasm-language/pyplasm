@@ -3,16 +3,17 @@
 #include <xge/texture.h>
 #include <xge/mempool.h>
 #include <xge/glcanvas.h>
+#include <xge/xge_gl.h>
 
-#define DONT_SET_USING_JUCE_NAMESPACE 1
-#include <juce_2_0/juce.h>
+#include <JUCE/AppConfig.h>
+#include <JUCE/modules/juce_core/juce_core.h>
+#include <JUCE/modules/juce_graphics/juce_graphics.h>
+#include <JUCE/modules/juce_opengl/juce_opengl.h>
 
 //all loaded textures
 static std::map<std::string,SmartPointer<Texture> > textures_in_cache;
 
 
-///////////////////////////////////////////////
-//readTga
 ///////////////////////////////////////////////
 static SmartPointer<Texture> readTga(std::string filename)			
 {    
@@ -56,8 +57,6 @@ static SmartPointer<Texture> readTga(std::string filename)
 }
 
 
-///////////////////////////////////////////////
-//readTga
 ///////////////////////////////////////////////
 static bool writeTga(std::string filename,Texture* tex)
 {
@@ -215,12 +214,38 @@ Texture::Texture(int width,int height,int bpp,unsigned char* buffer)
 
 
 
-// ----------------------------------------------------------------------------
-// ----------------------------------------------------------------------------
-
+/////////////////////////////////////////////////////////////////////////////////////
 Texture::~Texture()
 {
 	deallocBuffer();
+}
+
+/////////////////////////////////////////////////////////////////////////////////////
+Texture::Gpu::~Gpu()
+{GLDestroyLater::push_back(GLDestroyLater::DestroyTexture,id);}
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+void Texture::uploadIfNeeded(GLCanvas& gl)
+{
+  if (this->gpu)
+    return;
+
+  juce::OpenGLContext* context=(juce::OpenGLContext*)gl.getGLContext();
+
+  unsigned int texid;
+  glGenTextures(1,&texid);XgeReleaseAssert(texid); 
+  glPixelStorei (GL_UNPACK_ALIGNMENT, 1);
+  glBindTexture (GL_TEXTURE_2D, texid);
+  float maxsize;
+  glGetFloatv(GL_MAX_TEXTURE_SIZE,&maxsize); 
+  XgeDebugAssert (this->width<=maxsize && this->height<=maxsize);
+
+  unsigned int format=(this->bpp==24)?GL_RGB:(this->bpp==32?GL_RGBA:GL_LUMINANCE);
+  unsigned int type=GL_UNSIGNED_BYTE;
+  gluBuild2DMipmaps(GL_TEXTURE_2D,this->bpp/8,this->width, this->height,format, type, this->buffer);
+
+  this->gpu=SmartPointer<Texture::Gpu>(new Texture::Gpu(texid));	
 }
 
 
@@ -319,9 +344,6 @@ void Texture::change(int width,int height,int bpp,const std::vector<unsigned cha
 //------------------------------------------------------------------------
 SmartPointer<Texture> Texture::open(std::string filename,bool bUseCacheIfPossible,bool bCacheInMemory)
 {
-	//kind of normalization of path
-	filename=FileSystem::ShortPath(FileSystem::FullPath(filename));
-
 	if (!filename.length()) 
 	{
 		Log::printf("Texture::open cannot open texture because filename is empty\n");
@@ -338,11 +360,9 @@ SmartPointer<Texture> Texture::open(std::string filename,bool bUseCacheIfPossibl
 		}
 	}
 
-	//now i need the full path
-	filename=FileSystem::FullPath(filename);
 
 	//opening from disk
-  juce::File jfile(filename.c_str());
+  juce::File   jfile(juce::File::getCurrentWorkingDirectory().getChildFile(filename.c_str()));
   juce::String jext=jfile.getFileExtension().toLowerCase();
 
   SmartPointer<Texture> ret;
@@ -412,9 +432,6 @@ SmartPointer<Texture> Texture::open(std::string filename,bool bUseCacheIfPossibl
 
 	Log::printf("image file %s loaded from disk width(%d) height(%d) bpp(%d)\n",filename.c_str(),ret->width,ret->height,ret->bpp);
 
-	//set back to short path
-	filename=FileSystem::ShortPath(filename);
-
 	if (bCacheInMemory)
 		textures_in_cache[Utils::ToLower(filename)]=ret;
 
@@ -440,10 +457,8 @@ bool Texture::save(std::string filename)
 		Log::printf("Texture::save failed to save the texture file %s (reason:  filename empty)\n");
 		return false;
 	}
-
-	filename=FileSystem::FullPath(filename);
   
-  juce::File jfile(filename.c_str()); 
+  juce::File   jfile(juce::File::getCurrentWorkingDirectory().getChildFile(filename.c_str()));
   juce::String jext=jfile.getFileExtension().toLowerCase();
 
   if (jext==".tga")
@@ -517,7 +532,6 @@ bool Texture::save(std::string filename)
     }
   }
 
-	filename=FileSystem::ShortPath(filename);
 	this->filename=filename;	
 	return true;
 }

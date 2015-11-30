@@ -1,5 +1,5 @@
 #include <xge/xge.h>
-
+#include <xge/glcanvas.h>
 
 ////////////////////////////////////////////////////////////
 int ArchiveSelfTest()
@@ -7,10 +7,10 @@ int ArchiveSelfTest()
 	Log::printf("Testing Archive...\n");
 
 	std::vector<std::string> filenames;
-	filenames.push_back(":temp.xml");
-	filenames.push_back(":temp.xml.gz");
-	filenames.push_back(":temp.bin");
-	filenames.push_back(":temp.bin.gz");
+	filenames.push_back("./temp.xml");
+	filenames.push_back("./temp.xml.gz");
+	filenames.push_back("./temp.bin");
+	filenames.push_back("./temp.bin.gz");
 
 	for (int i=0;i<(int)filenames.size();i++)
 	{
@@ -205,7 +205,6 @@ int ArchiveSelfTest()
 	return 0;
 }
 
-
 //////////////////////////////////////////////////////////////
 int ArraySelfTest()
 {
@@ -261,8 +260,6 @@ int ArraySelfTest()
 	return 0;
 }
 
-
-
 /////////////////////////////////////////////////////////
 int BakeSelfTest()
 {
@@ -273,12 +270,12 @@ int BakeSelfTest()
 	bake.PointOcclusion=false;
 	std::vector< SmartPointer<Batch> > batches=bake.Unwrap
 	(
-		Plasm::getBatches(Plasm::open(":resources/models/temple.hpc.xml")) ,
+		Plasm::getBatches(Plasm::open("./resources/models/temple.hpc.xml")) ,
 		5.0f,
-		":resources/models/temple.%02d.png",
+		"./resources/models/temple.%02d.png",
 		1024
 	);
-	Batch::Save(":resources/models/temple.ao.mesh.gz",batches);
+	Batch::Save("./resources/models/temple.ao.mesh.gz",batches);
 	bake.Add(batches);
 	bake.Export();
 	bake.run();
@@ -289,8 +286,6 @@ int BakeSelfTest()
 	glcanvas.runLoop();
 	return 0;
 }
-
-
 
 //////////////////////////////////////////////////////////////////////
 int Ball3fSelfTest()
@@ -321,7 +316,6 @@ int Ball3fSelfTest()
 	return 0;
 }
 
-
 //////////////////////////////////////////////////////////////////////
 int BallfSelfTest()
 {
@@ -348,7 +342,6 @@ int BallfSelfTest()
 
 	return 0;
 }
-
 
 //////////////////////////////////////////////////////////////////////
 int Box3fSelfTest()
@@ -384,7 +377,6 @@ int Box3fSelfTest()
 
 	return 0;
 }
-
 
 //////////////////////////////////////////////////////////////////////
 int BoxfSelfTest()
@@ -432,7 +424,6 @@ int BoxfSelfTest()
 
 	return 0;
 }
-
 
 //////////////////////////////////////////////////////////////
 int EncoderSelfTest()
@@ -544,13 +535,11 @@ int EncoderSelfTest()
 	return 0;
 }
 
-
 //////////////////////////////////////////////////////////////
 int DecoderSelfTest()
 {
 	return 0;
 }
-
 
 /////////////////////////////////////////////
 int GraphKMemSelfTest()
@@ -591,8 +580,6 @@ int GraphKMemSelfTest()
 
 }
  
-
-//////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
 int GraphSelfTest()
 {
@@ -1477,7 +1464,6 @@ int GraphSelfTest()
 	return 0;
 }
 
-
 //////////////////////////////////////////////////////////////////////
 int PlasmBoolopSelftest()
 {
@@ -1558,12 +1544,7 @@ int PlasmBoolopSelftest()
 	return 0;
 }
 
-
-
-
 ///////////////////////////////////////////////////////////////////////
-#include <xge/glcanvas.h>
-
 class DisplayManipulator: public GLCanvas
 {
 public:
@@ -1582,7 +1563,7 @@ public:
   }
 
   //onKeyboard
-  virtual bool onKeyboard(int key,int x,int y)
+  virtual bool onKeyboard(int key,int x,int y) override
   {
     if (key=='t' || key=='T')
     {
@@ -1610,19 +1591,19 @@ public:
   }
 
   //onMouseDown
-  virtual void onMouseDown(int button,int x,int y)
+  virtual void onMouseDown(int button,int x,int y) override
     {manipulator.onMouseDown(button,x,y,frustum->unproject(x,y)); redisplay();}
 
   //onMouseMove
-  virtual void onMouseMove(int button,int x,int y)
+  virtual void onMouseMove(int button,int x,int y) override
     {manipulator.onMouseMove(button,x,y,frustum->unproject(x,y));redisplay();}
 
   //onMouseUp
-  virtual void onMouseUp(int button,int x,int y)
+  virtual void onMouseUp(int button,int x,int y) override
     {manipulator.onMouseUp(button,x,y,frustum->unproject(x,y));redisplay();}
 
-  //renderScene
-  virtual  void renderScene()
+  //renderOpenGL
+  virtual void renderOpenGL() override
   {
     clearScreen();
     setViewport(frustum->x,frustum->y,frustum->width,frustum->height);
@@ -1634,19 +1615,14 @@ public:
     cube->matrix=T * cube->matrix;
     renderBatch(cube);
     manipulator.render(this);
-    swapBuffers();
   }
 }; //end class
-
 
 void ManipulatorSelfTest()
 {
 	DisplayManipulator v;
 	v.runLoop();
 }
-
-
-
 
 /////////////////////////////////////////////////////////////////
 int Mat4fSelfTest()
@@ -1774,14 +1750,10 @@ int Mat4fSelfTest()
 
 }
 
-
-
-
 /////////////////////////////////////////////////////////////////
 int MatfSelfTest()
 {
 	Log::printf("Testing Matf...\n");
-
 
 	Matf M1(0);M1.mem[0]=0.0f;
 	XgeReleaseAssert(M1.dim==0 && M1(0,0)==0.0f);
@@ -1971,7 +1943,6 @@ int MatfSelfTest()
 	return 0;
 }
 
-
 /////////////////////////////////////////// 
 int MemPoolSelfTest()
 {
@@ -2002,11 +1973,6 @@ int MemPoolSelfTest()
 
 	return 0;
 }
-
-
-
-
-
 
 /////////////////////////////////////////////
 int Plane4fSelfTest()
@@ -2071,8 +2037,6 @@ int Plane4fSelfTest()
 	return 0;
 
 }
-
-
 
 /////////////////////////////////////////////
 int PlanefSelfTest()
@@ -2205,9 +2169,6 @@ int PlanefSelfTest()
 	return 0;
 }
 
-
-
-
 ///////////////////////////////////////////////////
 static inline SmartPointer<Hpc> mkpol_ukpol(SmartPointer<Hpc> src)
 {
@@ -2218,6 +2179,7 @@ static inline SmartPointer<Hpc> mkpol_ukpol(SmartPointer<Hpc> src)
 	return ret;
 }
 
+///////////////////////////////////////////////////
 template<typename T>
 static std::vector<T> make_vector(int n,T *v)
 {
@@ -2226,8 +2188,7 @@ static std::vector<T> make_vector(int n,T *v)
 	return ret;
 }
 
-
-
+///////////////////////////////////////////////////
 int PlasmSelfTest()
 {
 	Log::printf("Testing Plasm::..\n");
@@ -2324,9 +2285,6 @@ int PlasmSelfTest()
 	}
 	XgeReleaseAssert(!xge_total_hpc);
 
-
-
-	
 	//rotate
 	{
 		int N=0;
@@ -2596,9 +2554,6 @@ int PlasmSelfTest()
 	return 0;
 }
 
-
-
-
 ////////////////////////////////////////////////////////////////////////////
 int QuaternionSelfTest()
 {
@@ -2673,7 +2628,6 @@ int QuaternionSelfTest()
 
 	return 0;
 }
-
 
 ////////////////////////////////////////////////////////////////////////////
 int Ray3fSelfTest()
@@ -2766,9 +2720,6 @@ int Ray3fSelfTest()
 	return 0;
 }
 
-
-
-
 ////////////////////////////////////////////////////////////////////////////
 int RayfSelfTest()
 {
@@ -2805,8 +2756,6 @@ int RayfSelfTest()
 	return 0;
 }
 
-
-
 /////////////////////////////////////////////////////////////////
 class TextureViewer:public GLCanvas
 {
@@ -2816,31 +2765,46 @@ class TextureViewer:public GLCanvas
 public:
 
 	//constructor
-	TextureViewer(SmartPointer<Texture> texture0,SmartPointer<Texture> texture1)
-	{
-		this->texture0=texture0;
-		this->texture1=texture1;
-	}
+	TextureViewer(SmartPointer<Texture> texture0_,SmartPointer<Texture> texture1_=SmartPointer<Texture>()) : texture0(texture0_),texture1(texture1_)
+	{}
 
-	//renderScene
-	virtual void renderScene()
+	//renderOpenGL
+	virtual void renderOpenGL() override
 	{
 		int W=this->frustum->width;
 		int H=this->frustum->height;
-		SmartPointer<Batch> batch(new Batch);
+
+		SmartPointer<Batch> batch(new Batch());
 		batch->primitive=Batch::QUADS;
 		batch->setColor(Color4f(1,1,1));
-		float _vertices[]       = {0,0,0,  W,0,0,  W,H,0, 0,H,0};batch->vertices.reset(new Array(12,_vertices));
-		batch->texture0=texture0;
-		batch->texture1=texture1;
-		float _texture0coords[] ={0,0, 1,0, 1,1, 0,1};batch->texture0coords.reset(new Array(8,_texture0coords));
-		float _texture1coords[] ={0,0, 1,0, 1,1, 0,1};batch->texture1coords.reset(new Array(8,_texture1coords));
+		float vertices[] = 
+    {
+      0,0,0,  
+      W,0,0,  
+      W,H,0, 
+      0,H,0
+    };
+    batch->vertices.reset(new Array(12,vertices));
+
+    if (texture0)
+    {
+      batch->texture0=texture0;
+      float texture0coords[]={0,0, 1,0, 1,1, 0,1};
+      batch->texture0coords.reset(new Array(8,texture0coords));
+    }
+
+    if (texture1)
+    {
+		  batch->texture1=texture1;
+		  float texture1coords[] ={0,0, 1,0, 1,1, 0,1};
+      batch->texture1coords.reset(new Array(8,texture1coords));
+    }
+
 		clearScreen();
 		setViewport(0,0,W,H);
 		setProjectionMatrix(Mat4f::ortho(0,W,0,H,-1,+1));
 		setModelviewMatrix(Mat4f());
 		renderBatch(batch);
-		swapBuffers();
 	}
 };
 
@@ -2848,52 +2812,55 @@ int TextureSelfTest()
 {
 	Log::printf("Testing Texture...\n");
 	
-	SmartPointer<Texture> gioconda=Texture::open(":resources/img/gioconda.tga",false,false);
+	SmartPointer<Texture> gioconda=Texture::open("./resources/img/gioconda.tga",false,false);
+  
+  //make sure the teture is kept in memory
+  {
+    {TextureViewer v(gioconda);v.runLoop();}
+    {TextureViewer v(gioconda);v.runLoop();}
+  }
 
 	//two textures
 	if (true)
 	{
-		SmartPointer<Texture> back    =Texture::open(":resources/img/gioconda.tga",false,false);
-		SmartPointer<Texture> texture1=Texture::open(":resources/img/gioconda.texture1.tga",false,false);
+		SmartPointer<Texture> back    =Texture::open("./resources/img/gioconda.tga",false,false);
+    SmartPointer<Texture> texture1;//Texture::open("./resources/img/gioconda.texture1.tga",false,false);
     TextureViewer v1(back,texture1);v1.runLoop();
 	}
 
 	//TGA open/save
 	if (true)
 	{
-		bool ret=gioconda->save(":temp_gioconda.copy.tga");
-		XgeReleaseAssert(gioconda->filename==":temp_gioconda.copy.tga");
+		bool ret=gioconda->save("./temp_gioconda.copy.tga");
 
 		XgeReleaseAssert(ret);
-		SmartPointer<Texture> back=Texture::open(":temp_gioconda.copy.tga",false,false);
-		SmartPointer<Texture> texture1=Texture::open(":resources/img/gioconda.texture1.tga",false,false);
-		XgeReleaseAssert(back && texture1);
+		SmartPointer<Texture> back=Texture::open("./temp_gioconda.copy.tga",false,false);
+		SmartPointer<Texture> texture1;//Texture::open("./resources/img/gioconda.texture1.tga",false,false);
+		XgeReleaseAssert(back);
 		TextureViewer v(back,texture1);v.runLoop();
 	}
 
 	//test PNG load/save
 	if (true)
 	{
-		bool ret=gioconda->save(":temp_gioconda.copy.png");
-		XgeReleaseAssert(gioconda->filename==":temp_gioconda.copy.png");
+		bool ret=gioconda->save("./temp_gioconda.copy.png");
 
 		XgeReleaseAssert(ret);
-		SmartPointer<Texture> back=Texture::open(":temp_gioconda.copy.png",false,false);
-		SmartPointer<Texture> texture1=Texture::open(":resources/img/gioconda.texture1.png",false,false);
-		XgeReleaseAssert(back && texture1);
+		SmartPointer<Texture> back=Texture::open("./temp_gioconda.copy.png",false,false);
+		SmartPointer<Texture> texture1;//Texture::open("./resources/img/gioconda.texture1.png",false,false);
+		XgeReleaseAssert(back);
 		TextureViewer v(back,texture1);v.runLoop();
 	}
 
 	//test jpeg load/save
 	if (true)
 	{
-		bool ret=gioconda->save(":temp_gioconda.copy.jpg");
-		XgeReleaseAssert(gioconda->filename==":temp_gioconda.copy.jpg");
+		bool ret=gioconda->save("./temp_gioconda.copy.jpg");
 
 		XgeReleaseAssert(ret);
-		SmartPointer<Texture> back=Texture::open(":temp_gioconda.copy.jpg",false,false);
-		SmartPointer<Texture> texture1=Texture::open(":resources/img/gioconda.texture1.jpg",false,false);
-		XgeReleaseAssert(back && texture1);
+		SmartPointer<Texture> back=Texture::open("./temp_gioconda.copy.jpg",false,false);
+		SmartPointer<Texture> texture1;//Texture::open("./resources/img/gioconda.texture1.jpg",false,false);
+		XgeReleaseAssert(back);
 		TextureViewer v(back,texture1);v.runLoop();
 	}
 
@@ -2901,8 +2868,6 @@ int TextureSelfTest()
 
 	return 0;
 }
-
-
 
 ///////////////////////////////////////////////
 int UtilsSelfTest()
@@ -2946,11 +2911,6 @@ int UtilsSelfTest()
 	return 0;
 }
 
-
-
-
-
-
 /////////////////////////////////////////////////////////////
 int Vec3fSelfTest()
 {
@@ -2991,16 +2951,12 @@ int Vec3fSelfTest()
 	return 0;
 }
 
-
-
 /////////////////////////////////////////////////////////////
 int Vec4fSelfTest()
 {
 	Log::printf("Testing Vec4f...\n");
 
 	Vec4f v;
-	
-
 	XgeReleaseAssert(v==Vec4f(0,0,0,0));
 
 	v=Vec4f(1,2,3,4);
@@ -3033,8 +2989,6 @@ int Vec4fSelfTest()
 
 	return 0;
 }
-
-
 
 /////////////////////////////////////////////////////////////
 int VecfSelfTest()
@@ -3081,7 +3035,6 @@ int VecfSelfTest()
 	return 0;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////
 void GLCanvasSelfTest(int nx=100,int ny=100,int nz=1)
 {
@@ -3106,10 +3059,10 @@ void GLCanvasSelfTest(int nx=100,int ny=100,int nz=1)
 }
 
 /////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////
 int main(int nargs,char** argv)
 {	
   XgeModule::init();
+  
   {
 	  UtilsSelfTest();
 	  MemPoolSelfTest();
@@ -3132,6 +3085,7 @@ int main(int nargs,char** argv)
 	  QuaternionSelfTest();
 	  ArraySelfTest();
 	  GraphSelfTest();
+
     GLCanvasSelfTest();
     ManipulatorSelfTest();
     TextureSelfTest(); 

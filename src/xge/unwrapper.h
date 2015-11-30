@@ -32,7 +32,7 @@ protected:
 
 public:
 
-	//where to save textures (default ":texture1.%02d.png")
+	//where to save textures (default "./texture1.%02d.png")
 	std::string texture_template;
 
 	//user configuration (default 1024)

@@ -30,7 +30,7 @@ static inline void skipLine(FILE* file)
 // -------------------------------------------------------------------------
 void Batch::saveObj(std::string filename,std::vector<SmartPointer<Batch> > batches)
 {
-	FILE* file=fopen(FileSystem::FullPath(filename).c_str(),"wt");
+	FILE* file=fopen(filename.c_str(),"wt");
 	XgeReleaseAssert(file);
 
 	Box3f box;
@@ -128,8 +128,6 @@ void Batch::saveObj(std::string filename,std::vector<SmartPointer<Batch> > batch
 std::vector<SmartPointer<Batch> >  Batch::openObj(std::string filename)
 {
 	char buf[2048];
-	
-	filename=FileSystem::FullPath(filename);
 
 	//open the Text obj file
 	FILE* file=fopen(filename.c_str(),"rt");

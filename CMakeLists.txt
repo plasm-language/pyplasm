@@ -36,6 +36,7 @@ ELSEIF (APPLE)
   ADD_DEFINITIONS(-DPYPLASM_APPLE=1)
   
   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wformat-nonliteral -Wformat-security -Wno-write-strings -Wno-reorder -Wno-unused-variable")
+  set(CMAKE_MACOSX_RPATH ON)
   MESSAGE("-- Setting PYPLASM_APPLE")
   
 ELSE()
@@ -63,6 +64,7 @@ ELSE()
 
 ENDIF()
 
+ADD_DEFINITIONS(-DPYPLASM_JUCE=1)
 ADD_SUBDIRECTORY(libs)
 ADD_SUBDIRECTORY(src)
 

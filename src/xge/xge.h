@@ -121,5 +121,6 @@ public:
   static void shutdown();
 };
 
+
 #endif //_XGE_H__
 

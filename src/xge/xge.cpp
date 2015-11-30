@@ -1,65 +1,95 @@
 #include <xge/xge.h>
 #include <xge/glcanvas.h>
 
-#define DONT_SET_USING_JUCE_NAMESPACE 1
-#include <juce_2_0/juce.h>
+#include <JUCE/AppConfig.h>
+#include <JUCE/modules/juce_opengl/juce_opengl.h>
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 class XgeApplication : public juce::JUCEApplication
 {
 public:
-#if PYPLASM_APPLE
-  JUCE_AUTORELEASEPOOL
-#endif
-  
-  XgeApplication                                  ()                                 {}
-  ~XgeApplication                                 ()                                 {}
-  void                 shutdown                   ()                                 {}
-  const juce::String   getApplicationName         ()                                 {return "PyPlasm GLCanvas";}
-  const juce::String   getApplicationVersion      ()                                 {return "1.0";}
-  bool                 moreThanOneInstanceAllowed ()                                 {return true;}
-  void                 anotherInstanceStarted     (const juce::String&)              {}
-  void                 initialise                 (const juce::String& commandLine)  {}
+
+  //constructor
+  XgeApplication()                                 
+  {}
+
+  //destrutor
+  virtual ~XgeApplication()                                 
+  {}
+
+  //getApplicationName
+  virtual const juce::String getApplicationName() override                          
+  {return "PyPlasm";}
+
+  //getApplicationVersion
+  const juce::String getApplicationVersion() override
+  {return "1.0";}
+
+  //moreThanOneInstanceAllowed
+  virtual bool moreThanOneInstanceAllowed() override
+  {return true;}
+
+  //anotherInstanceStarted
+  virtual void anotherInstanceStarted(const juce::String&) override 
+  {}
+
+  //initialise
+  virtual void initialise(const juce::String& commandLine)  override
+  {
+    //GLCanvas (shared)
+    {
+      std::cout<<"Creating shared GLCanvas..."<<std::endl;
+      GLCanvas* shared=new GLCanvas();
+      if (!shared->makeCurrent())
+      {
+        std::cout<<"failed to create GLCanvas"<<std::endl;
+        std::cout<<"Failed to create GLCanvas because your video card or driver does not support at least OpenGL ES 2.0."<<std::endl;
+        return;
+      }
+
+      shared->doneCurrent();
+      std::cout<<"shared GLCanvas created"<<std::endl;
+    }
+  }
+
+  //shutdown
+  virtual void shutdown() override
+  {
+    delete GLCanvas::getShared();
+    GLCanvas::getShared()=nullptr;
+  }
+
 };
 
-static SmartPointer<XgeApplication> app;
 
+//see START_JUCE_APPLICATION(XgeApplication)
 #if PYPLASM_APPLE
-namespace juce
-{
-  void initialiseNSApplication();
-};
+namespace juce {extern void initialiseNSApplication();}
 #endif
 
+static juce::ScopedPointer< juce::JUCEApplicationBase > app;
 
 //////////////////////////////////////////////////////////////////
 void XgeModule::init()
 {
-  if (!app)
-  {
-	  Log::printf("XgeModule::init\n");
-    
-#if PYPLASM_APPLE
-    juce::initialiseNSApplication();
-#endif
+  if (app) return;
+  juce::JUCEApplicationBase::createInstance = (juce::JUCEApplicationBase::CreateInstanceFunction)-1;//to avoid a juce assert
 
-    juce::initialiseJuce_GUI();
-    juce::JUCEApplication::createInstance = (juce::JUCEApplication::CreateInstanceFunction)-1;//need not to be 0 
-    app=SmartPointer<XgeApplication>(new XgeApplication());
-    app->initialiseApp("dummy");
-    GLCanvas::setShared(SmartPointer<GLCanvas>(new GLCanvas));
-  }
+  #if PYPLASM_APPLE
+  juce::initialiseNSApplication();
+  new juce::ScopedAutoReleasePool();
+  #endif
+  juce::initialiseJuce_GUI();
+  app=new XgeApplication();
+  app->initialiseApp();
 }
 
 //////////////////////////////////////////////////////////////////
 void XgeModule::shutdown()
 {
-  if (app)
-  {
-    Log::printf("XgeModule::shutdown\n");
-    GLCanvas::setShared(SmartPointer<GLCanvas>());
-    app->shutdown();
-    app.reset();
-    juce::shutdownJuce_GUI();
-  }
+  if (!app) return;
+  app->shutdownApp();
+  juce::shutdownJuce_GUI();
 }
+

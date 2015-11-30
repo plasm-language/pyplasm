@@ -5,9 +5,6 @@
 // -------------------------------------------------------------------------
 std::vector<SmartPointer<Batch> > Batch::openPtx(std::string filename,bool bUseReflectance)
 {
-
-	filename=FileSystem::FullPath(filename);
-
 	FILE* file=fopen(filename.c_str(),"rt");
 
 	if (!file)

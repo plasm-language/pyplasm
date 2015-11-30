@@ -30,12 +30,10 @@ Archive::~Archive()
 
 
 ////////////////////////////////////////////////////////////
-bool Archive::Open(std::string Filename,bool bWriteMode)
+bool Archive::Open(std::string filename,bool bWriteMode)
 {
 	if (Loading() || Saving())
 		Close();
-
-	std::string filename=FileSystem::FullPath(Filename);
 
 	this->bWriteMode  = bWriteMode;
 	this->bTextMode   = Utils::ToLower(filename).find(".xml")!=std::string::npos;

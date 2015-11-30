@@ -1,6 +1,9 @@
 
 ADD_DEFINITIONS(-DPYPLASM_BUILDING_XGE=1)
 
+FIND_PACKAGE(OpenGL REQUIRED)
+INCLUDE_DIRECTORIES(${OPENGL_INCLUDE_DIR})
+
 INCLUDE_DIRECTORIES("../../libs")
 INCLUDE_DIRECTORIES("../../libs/zlib")
 INCLUDE_DIRECTORIES("../../libs/tinyxml")
@@ -22,11 +25,17 @@ ADD_DEPENDENCIES(xge tinyxml)
 ADD_DEPENDENCIES(xge libz)
 ADD_DEPENDENCIES(xge qhull)
 ADD_DEPENDENCIES(xge Juce)
-TARGET_LINK_LIBRARIES(xge tinyxml libz qhull Juce)
+TARGET_LINK_LIBRARIES(xge tinyxml libz qhull Juce ${OPENGL_LIBRARIES})
+
+IF (PYPLASM_WINDOWS)
+  TARGET_LINK_LIBRARIES(xge Dbghelp.lib)
+ENDIF()
 
 if (PYPLASM_LINUX)
-  TARGET_LINK_LIBRARIES(xge tinyxml dl pthread rt GL GLU)
-ELSEIF(PYPLASM_APPLE)
+  TARGET_LINK_LIBRARIES(xge dl pthread rt)
+ENDIF()
+
+IF (PYPLASM_APPLE)
   TARGET_LINK_LIBRARIES(xge tinyxml "-framework Foundation -framework OpenGL -framework AGL -framework CoreAudio -framework CoreMIDI -framework IOKit -framework QuartzCore -framework AudioToolbox -framework AppKit")
 ENDIF()
 

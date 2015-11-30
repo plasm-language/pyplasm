@@ -3,24 +3,34 @@
 
 #include <xge/xge.h>
 
+class GLCanvas;
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////
+class GLDestroyLater
+{
+public:
+
+  //destroyLater
+  enum Type {DestroyArrayBuffer=1,DestroyTexture=2};
+
+  //push_back
+  static void push_back(int type,unsigned int id);
+
+  //flush
+  static void flush(GLCanvas& gl);
+
+};
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 class GLCanvas
 {
 public:
 
-  class Native;
+  class Pimpl;
   
   //m_fix_lighting
   bool m_fix_lighting;
-
-  //close signal
-  bool m_close;
-
-  //redisplay signal
-	bool m_redisplay;
 
 	//! navigation using trackball
 	bool  trackball_mode;
@@ -51,17 +61,25 @@ public:
 	//~destructor
 	virtual ~GLCanvas();
 
+  //getShader
+  static GLCanvas*& getShared()
+  {static GLCanvas* ret=nullptr;return ret;;}
+
+  //isShared
+  bool isShared() const
+  {return getShared()==this;}
+
+  //getGLContext
+  void* getGLContext();
+
   //setOctree
   virtual void setOctree(SmartPointer<Octree> octree);
 
-	//! bind
-	virtual bool bind();
-  
-  //swapBuffers
-  virtual void  swapBuffers();
+	//! makeCurrent
+	virtual bool makeCurrent();
 
-	//! unbind
-	virtual bool unbind();
+	//! doneCurrent
+	virtual void doneCurrent();
 
 	//!clearScreen
 	virtual void  clearScreen(bool ClearColor=true,bool ClearDepth=true);
@@ -109,14 +127,13 @@ public:
 	virtual void setPolygonOffset(float value);
 
 	//renderBatch
-	virtual void  renderBatch (SmartPointer<Batch> batch);
+	virtual void  renderBatch(SmartPointer<Batch> batch);
 
-  //! renderScene
-	virtual void renderScene();
+  //! renderOpenGL
+	virtual void renderOpenGL();
 
 	//! redisplay
-	virtual void redisplay()
-    {frustum->refresh();m_redisplay=true;}
+	virtual void redisplay();
 
 	//! virtuals
 	virtual bool onKeyboard(int key,int x,int y) ;
@@ -136,39 +153,20 @@ public:
   //onResize
 	virtual void onResize(int width,int height);
 
-  //onTimer
-  virtual void onTimer();
-
 	// close
 	virtual void close();
 	
 	//runLoop
 	virtual void runLoop();
 
-  //getNative
-  inline Native* getNative()
-    {return native;}
-
-  //getShader
-  static GLCanvas* getShared()
-    {assert(gl_shared);return gl_shared.get();}
-
-  //setShared
-  static void setShared(SmartPointer<GLCanvas> value)
-    {gl_shared=value;}
-
-  //getCurrent
-  static GLCanvas* getCurrent()
-    {return gl_current;}
-
+  //getNativeHandle
+  inline Pimpl* getNativeHandle()
+  {return pimpl;}
 
 protected:
 
-  friend class Native;
-  Native* native;
-
-  static SmartPointer<GLCanvas> gl_shared;
-  static GLCanvas*              gl_current;
+  friend class Pimpl;
+  Pimpl* pimpl;
 
 };
 
