@@ -7,8 +7,6 @@ PROJECT(PyPlasm)
 
 SET(CMAKE_BUILD_TYPE "Release")
 
-
-
 # some basic tests 
 INCLUDE(CMakeBackwardCompatibilityCXX)
 INCLUDE(CheckCSourceCompiles)
@@ -20,6 +18,8 @@ SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS On)
 SET (CMAKE_NUM_PROCS 8)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR})
+
+SET(PYTHON_REQUIRED_VERSION 2.7)
 
 ####################################################
 # platform
@@ -34,6 +34,7 @@ ELSEIF (APPLE)
 
   SET(PYPLASM_APPLE 1)
   ADD_DEFINITIONS(-DPYPLASM_APPLE=1)
+  SET(PYTHON_REQUIRED_VERSION 2.6) # i want to use the original version coming from apple
   
   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wformat-nonliteral -Wformat-security -Wno-write-strings -Wno-reorder -Wno-unused-variable")
   set(CMAKE_MACOSX_RPATH ON)

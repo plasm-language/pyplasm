@@ -49,26 +49,38 @@ Generate makefiles and make binaries::
 -----------------------------------------------------------
 MacOsX compilation 
 -----------------------------------------------------------
+
+IMPORTANT: do not install brew and use ONLY the official python already installed on your osx (should be 2.6) 
+
 1. Install XCode tools from AppStore (optionally install also Xcode command line tools)
-2. Install brew from http://mxcl.github.com/homebrew/
-3. Install cmake with ``brew install cmake``
-4. Install PyOpenGL with ``sudo easy_install pyopengl``
-5. Install numpy/scipy with ScipySuperpack from http://fonnesbeck.github.com/ScipySuperpack/ (browse the page to find the correct version for your MacOsX)
-6. Generate XCode project , build and install::
+
+2. Install PyOpenGL (https://pypi.python.org/pypi/PyOpenGL)::
+
+	tar -zxvf PyOpenGL-X.X.X.tar.gz
+	cd PyOpenGL-X.X.X
+	python setup.py install
+
+3. Install cmake for OSX (https://cmake.org/download/)
+   Example: cmake-3.4.1-Darwin-x86_64.dmg
+
+4. Download pyplasm in your home directory (example: /home/$USERNAME/pyplasm)
+   Open a terminal and create the build directory::
 
 	cd /home/$USERNAME/pyplasm
 	mkdir build
-	cd build
-	cmake -GXcode ../ 
+	
+5. Run Cmake application::
+
+	"Where is the source code"    /Users/$USERNAME/pyplasm
+	"Where to build the binaries  /Users/$USERNAME/pyplasm/build
+	
+	Press configure, then generate.
+
+6. Build and install::
+
+	cd /home/$USERNAME/pyplasm/build
 	xcodebuild      -project PyPlasm.xcodeproj -target ALL_BUILD  -configuration Release
 	sudo xcodebuild -project PyPlasm.xcodeproj -target install    -configuration Release
-
-**Possible cmake errors**:
-
-If the command ``cmake -GXcode ../`` fails with errors about OPENGL_INCLUDE_DIRS and PYTHON_INCLUDE_DIRS you need to specify it manually:
-for example, in Mac OsX 10.8 the right command line is::
-
-	cmake -GXcode -DOPENGL_INCLUDE_DIR=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers -DPYTHON_INCLUDE_DIR=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/Python.framework/Versions/2.7/include/python2.7 ../
 
 -----------------------------------------------------------
 Windows 7/8 compilation 
