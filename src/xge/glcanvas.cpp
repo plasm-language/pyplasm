@@ -127,7 +127,9 @@ private:
   //renderOpenGL 
   virtual void renderOpenGL() override
   {
-    if (!owner) return;
+    if (!owner)
+      return;
+    
     assert(!owner->isShared());
     
     if (!isShowing() || !isActive()) 
@@ -135,11 +137,8 @@ private:
 
     GLDestroyLater::flush(*owner);
 
-    //I want the rendering to happen with the main message lock
+    
     {
-      juce::MessageManagerLock message_manager_lock;
-      if (!message_manager_lock.lockWasGained()) return;
-
       glEnable(GL_LIGHTING);
       glEnable(GL_POINT_SMOOTH);
       glEnable(GL_DEPTH_TEST);

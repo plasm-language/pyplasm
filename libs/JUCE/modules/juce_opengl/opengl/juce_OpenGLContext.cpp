@@ -217,7 +217,16 @@ public:
         
         if (! context.makeActive())
             return false;
-
+      
+        //pyplasm!
+        //I want the rendering to happen with the main message lock
+        //important that this lock is acquired before NativeContext::Locker otherwise deadlock
+#if 1
+        juce::MessageManagerLock message_manager_lock(this);
+        if (!message_manager_lock.lockWasGained())
+          return;
+#endif
+      
         NativeContext::Locker locker (*nativeContext);
 
         JUCE_CHECK_OPENGL_ERROR
