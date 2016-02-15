@@ -50,7 +50,7 @@ Generate makefiles and make binaries::
 MacOsX compilation 
 -----------------------------------------------------------
 
-IMPORTANT: do not install brew and use ONLY the official python already installed on your osx (should be 2.6) 
+IMPORTANT: do not install brew and use ONLY the official python already installed on your osx (should be 2.7; you can type 'python --version' in a terminal) 
 
 1. Install XCode tools from AppStore (optionally install also Xcode command line tools)
 
