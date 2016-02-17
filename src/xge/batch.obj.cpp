@@ -1,5 +1,7 @@
 #include <xge/xge.h>
 
+#include <iostream>
+
 // -------------------------------------------------------------------------
 // -------------------------------------------------------------------------
 static inline void skipLine(FILE* file)
@@ -123,162 +125,74 @@ void Batch::saveObj(std::string filename,std::vector<SmartPointer<Batch> > batch
 }
 
 
+#define TINYOBJLOADER_IMPLEMENTATION // define this in only *one* .cc
+#include "tiny_obj_loader.h"
+
+
 // -------------------------------------------------------------------------
 // -------------------------------------------------------------------------
 std::vector<SmartPointer<Batch> >  Batch::openObj(std::string filename)
 {
-	char buf[2048];
+        std::vector<float> vertices ; 
+	std::vector<float> normals  ; 
+	std::vector<float> texcoords; 
 
-	//open the Text obj file
-	FILE* file=fopen(filename.c_str(),"rt");
+	std::vector<tinyobj::shape_t>    shapes;
+	std::vector<tinyobj::material_t> materials;
+	std::string                      err;
+	bool bOk = tinyobj::LoadObj(shapes, materials, err, filename.c_str());
 
-	if (!file)  
-		return std::vector<SmartPointer<Batch> >();
+	if (!err.empty()) 
+	  std::cout << err << std::endl;
 
-	std::vector<float> vertices;
-	std::vector<float> normals;
-	std::vector<float> texcoords;
-	
-	std::vector<int> vertices_indices;
-	std::vector<int> normals_indices;
-	std::vector<int> texcoords_indices;
+	if (!bOk) 
+	  return std::vector<SmartPointer<Batch> >();
 
-	int nline=0;
-	while (fscanf(file, "%s", buf) != EOF) 
-	{
-		switch (buf[0]) 
-		{		
-		case 'v': /* vertex! */
-			{
-				if (!buf[1])
-				{
-					float X,Y,Z;
-					fscanf(file, "%e %e %e", &X, &Y, &Z);
-					vertices.push_back(X);
-					vertices.push_back(Y);
-					vertices.push_back(Z);
+	for (size_t S = 0; S < shapes.size(); S++) 
+        {
+	      const tinyobj::shape_t& shape=shapes[S];
+	      const tinyobj::mesh_t&  mesh=shape.mesh;
+	      bool bValidM =mesh.material_ids.size()>0;
+	      bool bValidN =mesh.normals     .size()>0;
+	      bool bValidT =mesh.texcoords   .size()>0;
 
-				}
-				else if (buf[1]=='n')
-				{
-					float NX,NY,NZ;
-					fscanf(file, "%e %e %e", &NX, &NY, &NZ);
-					normals.push_back(NX);
-					normals.push_back(NY);
-					normals.push_back(NZ);
-				}
-				else if (buf[1]=='t')
-				{
-					float TX, TY;
-					fscanf(file, "%e %e", &TX, &TY);
-					texcoords.push_back(TX);
-					texcoords.push_back(TY);
-				}
-				nline++;
-				break;
-			}
-			
-		case 'f': /* face */
-			{	
-				int c;
-				int V,N,T;
+	      assert((mesh.indices.size() % 3) == 0);
+	      for (size_t f = 0; f < mesh.indices.size() / 3; f++) 
+	      {
+		for (int I=0;I<3;I++)
+		{
+		  int idx=mesh.indices[3*f+I];
+                  vertices.push_back(mesh.positions[3*idx+0]);
+                  vertices.push_back(mesh.positions[3*idx+1]);
+                  vertices.push_back(mesh.positions[3*idx+2]);
+                  
+		  // if (bValidM) gl.color(mesh.material_ids[f]>0? ccolor(materials[mesh.material_ids[f]]) : Colors::White);
+		  if (bValidN) 
+                  {
+                     normals.push_back(mesh.normals[3*idx+0]);
+                     normals.push_back(mesh.normals[3*idx+1]);
+                     normals.push_back(mesh.normals[3*idx+2]);
+                  }
 
-				for (int i=0;i<3;i++)
-				{
-					fscanf(file,"%d",&V);
-
-					if (V<0) V=((int)vertices.size()/3)+V; else V--;
-
-					XgeReleaseAssert(V>=0 && V<((int)vertices.size()/3));
-				
-					vertices_indices.push_back(V*3+0); 
-					vertices_indices.push_back(V*3+1);
-					vertices_indices.push_back(V*3+2); 
-
-					 /* v/t/n */
-					if (normals.size() && texcoords.size())
-					{
-						c=fgetc(file);
-						XgeReleaseAssert(c=='/');
-						fscanf(file,"%d",&T);
-						if (T<0) V=((int)texcoords.size()/2)+T; else T--;
-						XgeReleaseAssert(T>=0 && T<((int)texcoords.size()/2));
-
-						texcoords_indices.push_back(T*2+0);
-						texcoords_indices.push_back(T*2+1);
-
-						c=fgetc(file);
-						XgeReleaseAssert(c=='/');
-						fscanf(file,"%d",&N);
-						if (N<0) N=((int)normals.size()/3)+N; else N--;
-						XgeReleaseAssert(N>=0 && N<((int)normals.size()/3));
-
-						normals_indices.push_back(N*3+0);
-						normals_indices.push_back(N*3+1);
-						normals_indices.push_back(N*3+2);
-					}
-					else if (normals.size()) /* v//n */
-					{
-						c=fgetc(file);
-						XgeReleaseAssert(c=='/');
-						c=fgetc(file);
-						XgeReleaseAssert(c=='/');
-						fscanf(file,"%d",&N);
-						if (N<0) N=((int)normals.size()/3)+N; else N--;
-						XgeReleaseAssert(N>=0 && N<((int)normals.size()/3));
-
-						normals_indices.push_back(N*3+0);
-						normals_indices.push_back(N*3+1);
-						normals_indices.push_back(N*3+2);
-					}
-					else if (texcoords.size())
-					{
-						c=fgetc(file);
-						XgeReleaseAssert(c=='/');
-						fscanf(file,"%d",&T);
-						if (T<0) V=((int)texcoords.size()/2)+T; else T--;
-						XgeReleaseAssert(T>=0 && T<((int)texcoords.size()/2));
-
-						texcoords_indices.push_back(T*2+0);
-						texcoords_indices.push_back(T*2+1);
-
-						c=fgetc(file);
-						if (c!='/') ungetc(c,file);
-					}
-
-					if (i<2) 
-					{
-						c=fgetc(file);
-						XgeReleaseAssert(c==' ');
-					}
-				}
-				
-				nline++;
-				break;
-			}
-
-		default: /* skip the line */
-			{
-				skipLine(file);
-				nline++;
-				break;
-			}
+		  if (bValidT) 
+                  {
+                    texcoords.push_back(mesh.texcoords[2*idx+0]);
+                    texcoords.push_back(mesh.texcoords[2*idx+1]);
+                  }
 		}
+	      }
 	}
 
-	fclose(file);
-	
-	SmartPointer<Batch> batch(new Batch);
+	if (vertices.empty())
+	    return std::vector<SmartPointer<Batch> >();
+
+	SmartPointer<Batch> batch(new Batch());
 	batch->primitive=Batch::TRIANGLES;
+	batch->vertices.reset(new Array(vertices));
 
-	if (!vertices.size() || !vertices_indices.size())
-		return std::vector<SmartPointer<Batch> >();
-
-	batch->vertices.reset(new Array(vertices_indices,vertices));
-
-	if (normals_indices .size() && normals.size())  
+	if (!normals.empty())  
 	{
-		batch->normals.reset(new Array(normals_indices,normals));
+	  batch->normals.reset(new Array(normals));
 	}
 	else
 	{
@@ -302,10 +216,10 @@ std::vector<SmartPointer<Batch> >  Batch::openObj(std::string filename)
 	}
 
 
-	if (texcoords_indices.size() && texcoords.size())  
-		batch->texture0coords.reset(new Array(texcoords_indices,texcoords));
+	if (!texcoords.empty())  
+		batch->texture0coords.reset(new Array(texcoords));
 
-	std::vector<SmartPointer<Batch> > ret;
+	std::vector< SmartPointer<Batch> > ret;
 	ret.push_back(batch);
 	return ret;
 }
