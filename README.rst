@@ -23,7 +23,7 @@ Install prerequisites::
 		libxcursor-dev swig libglu1-mesa-dev libfreeimage3 libglew1.10 libpng12-0 \
 		libpng12-dev libjpeg-dev libxxf86vm1 libxxf86vm-dev libxi6 libxi-dev \
 		libxrandr-dev mesa-common-dev mesa-utils-extra libgl1-mesa-dev libglapi-mesa \
-		python-numpy python-scipy
+		python-numpy python-scipy libldap2-dev
 
 	sudo apt-get install $PREREQUISITES # OpenSuse: "sudo zypper install $PREREQUISITES"
 
