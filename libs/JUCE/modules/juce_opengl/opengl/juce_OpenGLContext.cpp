@@ -224,7 +224,7 @@ public:
 #if 1
         juce::MessageManagerLock message_manager_lock(this);
         if (!message_manager_lock.lockWasGained())
-          return;
+          return false;
 #endif
       
         NativeContext::Locker locker (*nativeContext);
