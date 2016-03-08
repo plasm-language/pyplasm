@@ -88,8 +88,7 @@ Windows 7/8 compilation
 
 Install:
 
-- Visual Studio (Express edition is free)
-http://www.microsoft.com/visualstudio/eng/products/visual-studio-express-products
+- Visual Studio 2015 community
 
 - Python 2.7.3 - 32 bit 
 http://www.python.org/ftp/python/2.7.3/python-2.7.3.msi
@@ -107,8 +106,7 @@ http://sourceforge.net/projects/scipy/files/scipy/0.12.0rc1/scipy-0.12.0c1-win32
 http://prdownloads.sourceforge.net/swig/swigwin-2.0.9.zip
 (unzip Swig and move the folder to obtain C:/swigwin-2.0.9)
 
-- Cmake 2.8.10.2 - 32 bit 
-http://www.cmake.org/files/v2.8/cmake-2.8.10.2-win32-x86.exe
+- Cmake 3.x - 32 bit 
 (during the installation select: "Add CMake to the system PATH for all users")
 
 Run cmake-gui::
