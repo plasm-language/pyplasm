@@ -128,7 +128,7 @@ public:
 	inline void normalize() 
 	{
 		float m=getNormal().module();
-		XgeDebugAssert(m && !isnan(m) && finite(m));
+		XgeDebugAssert(m && !std::isnan(m) && finite(m));
 		this->x/=m;
 		this->y/=m;
 		this->z/=m;
@@ -418,11 +418,11 @@ public:
 		float m=getNormal().module();
 
 //#ifdef _DEBUG
-//		XgeDebugAssert(m && !isnan(m) && finite(m));
+//		XgeDebugAssert(m && !std::isnan(m) && finite(m));
 //		for (int i=0;i<=dim;i++) this->mem[i]/=m;
 //#else //_DEBUG
 
-		if (m && !isnan(m) && std::isfinite(m))
+		if (m && !std::isnan(m) && std::isfinite(m))
 		{
 			for (int i=0;i<=dim;i++) 
 				this->mem[i]/=m;
