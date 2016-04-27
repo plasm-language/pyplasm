@@ -260,12 +260,12 @@ public:
 	inline bool isValid() const
 	{
 		return 
-			   !isnan(this->p1.x) && std::isfinite(this->p1.x)
-			&& !isnan(this->p1.y) && std::isfinite(this->p1.y)
-			&& !isnan(this->p1.z) && std::isfinite(this->p1.z)
-			&& !isnan(this->p2.x) && std::isfinite(this->p2.x)
-			&& !isnan(this->p2.y) && std::isfinite(this->p2.y)
-			&& !isnan(this->p2.z) && std::isfinite(this->p2.z)
+			   !std::isnan(this->p1.x) && std::isfinite(this->p1.x)
+			&& !std::isnan(this->p1.y) && std::isfinite(this->p1.y)
+			&& !std::isnan(this->p1.z) && std::isfinite(this->p1.z)
+			&& !std::isnan(this->p2.x) && std::isfinite(this->p2.x)
+			&& !std::isnan(this->p2.y) && std::isfinite(this->p2.y)
+			&& !std::isnan(this->p2.z) && std::isfinite(this->p2.z)
 			&& this->p1.x<=this->p2.x 
 			&& this->p1.y<=this->p2.y 
 			&& this->p1.z<=this->p2.z;
@@ -756,7 +756,7 @@ public:
 
 		for (int i=1;i<=p1.dim;i++)
 		{
-			if (isnan(p1[i]) || !std::isfinite(p1[i])) return false;
+			if (std::isnan(p1[i]) || !std::isfinite(p1[i])) return false;
 			if (this->p1[i]   >   this->p2[i] ) return false;
 		}
 		return true;
