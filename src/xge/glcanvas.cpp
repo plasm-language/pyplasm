@@ -361,20 +361,38 @@ void GLCanvas::doneCurrent()
 {pimpl->doneCurrent();}
 
 
-///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
+#if 1
+
+static bool bExitRunLoop=false;
+
+void GLCanvas::runLoop()
+{
+  bExitRunLoop=false;
+
+  while (!bExitRunLoop)
+    juce::MessageManager::getInstance()->runDispatchLoopUntil(200);
+}
+
+void GLCanvas::close()
+{bExitRunLoop=true;}
+
+#else //this version does not work on linux
+
 void GLCanvas::runLoop()
 {
   juce::MessageManager::getInstance()->runDispatchLoop();
   juce::MessageManager::getInstance()->hasStopMessageBeenSent()=false;
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////
 void GLCanvas::close()
 {
   try
   {juce::MessageManager::getInstance()->stopDispatchLoop();}
   catch(...){}
 }
+
+#endif 
 
 ////////////////////////////////////////////////////////////
 void GLCanvas::setViewport(int x,int y,int width,int height)
