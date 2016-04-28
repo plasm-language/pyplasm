@@ -35,15 +35,19 @@ void Batch::saveObj(std::string filename,std::vector<SmartPointer<Batch> > batch
 	FILE* file=fopen(filename.c_str(),"wt");
 	XgeReleaseAssert(file);
 
-	Box3f box;
-	for (int I=0;I<(int)batches.size();I++)
-	{
-		SmartPointer<Batch> batch=batches[I];
-		box.add(batch->getBox());
-	}
+  Mat4f prepend_T;
 
-	Mat4f ToUnitBox= Mat4f::scale(1.0f/box.size().x,1.0f/box.size().y,1.0f/box.size().z) * Mat4f::translate(-box.p1.x,-box.p1.y,-box.p1.z);
+  if (bool bToUnitBox=false)
+  {
+	  Box3f box;
+	  for (int I=0;I<(int)batches.size();I++)
+	  {
+		  SmartPointer<Batch> batch=batches[I];
+		  box.add(batch->getBox());
+	  }
 
+	  prepend_T= Mat4f::scale(1.0f/box.size().x,1.0f/box.size().y,1.0f/box.size().z) * Mat4f::translate(-box.p1.x,-box.p1.y,-box.p1.z);
+  }
 
 	int Cont=1;
 
@@ -56,7 +60,7 @@ void Batch::saveObj(std::string filename,std::vector<SmartPointer<Batch> > batch
 
 		Mat4f matrix=batch->matrix;
 
-		matrix=ToUnitBox * matrix;
+		matrix=prepend_T * matrix;
 
 		Mat4f inv=matrix.invert();
 
