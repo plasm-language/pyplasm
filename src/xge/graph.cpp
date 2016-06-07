@@ -6,8 +6,8 @@
 #include <algorithm>
 
 
-
 #if PYPLASM_WINDOWS
+#define NOMINMAX 1
 #include <windows.h>
 #else
 #define CALLBACK 

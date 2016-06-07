@@ -72,6 +72,11 @@ public:
   //getGLContext
   void* getGLContext();
 
+  //getWorldBox
+  virtual Box3f getWorldBox() {
+    return octree? this->octree->world_box : Box3f(Vec3f(-1,-1,-1),Vec3f(+1,+1,+1));
+  }
+
   //setOctree
   virtual void setOctree(SmartPointer<Octree> octree);
 
@@ -167,6 +172,9 @@ protected:
 
   friend class Pimpl;
   Pimpl* pimpl;
+
+  //renderModel
+  virtual void renderModel();
 
 };
 

@@ -346,9 +346,9 @@ void GLCanvas::redisplay()
 void GLCanvas::setOctree(SmartPointer<Octree> octree)
 {
   this->octree=octree;
-  if (!octree) return;
-	this->trackball_center =this->octree->world_box.center();
-	this->frustum->guessBestPosition(this->octree->world_box);
+  Box3f world_box=getWorldBox();
+	this->trackball_center =world_box.center();
+	this->frustum->guessBestPosition(world_box);
   this->redisplay();
 }
 
@@ -806,12 +806,11 @@ void GLCanvas::onResize(int width,int height)
 
   float zNear=0.001f;
   float zFar=1000;
-  if (this->octree)
-  {
-    float maxdim=octree->world_box.maxsize();;
-    zNear = maxdim / 50.0f ;
-    zFar  = maxdim * 10;
-  }
+
+  Box3f world_box=getWorldBox();
+  float maxdim=world_box.maxsize();;
+  zNear = maxdim / 50.0f ;
+  zFar  = maxdim * 10;
 
   frustum->projection_matrix=Mat4f::perspective(DEFAULT_FOV,width/(float)height,zNear,zFar);
   this->redisplay();
@@ -967,7 +966,59 @@ void GLCanvas::renderBatch(SmartPointer<Batch> _batch)
   }
 }
 
+///////////////////////////////////////////////////////////////////////////////
+void GLCanvas::renderModel()
+{
+  if (!this->octree)
+    return;
 
+  std::vector<SmartPointer<Batch> > transparent;
+  SmartPointer<Frustum> frustum=debug_frustum?debug_frustum:this->frustum;
+  FrustumIterator it_frustum=this->octree->find(frustum);
+  Clock t1;
+  bool bQuitRenderingLoop=false;
+  for (;!bQuitRenderingLoop && !it_frustum.end();it_frustum.moveNext())
+  {
+    OctreeNode* node=it_frustum.getNode();
+    std::vector<SmartPointer<Batch> >& v=node->batches;
+
+    for (int i=0;!bQuitRenderingLoop && i<(int)v.size();i++) 
+    {
+      if (frustum->intersect(v[i]->getBox()))
+      {
+        if (v[i]->diffuse.a<1)
+        {
+          transparent.push_back(v[i]);
+        }
+        else
+        {
+          renderBatch(v[i]);
+
+          if (this->draw_lines && v[i]->primitive>=Batch::TRIANGLES)
+          {
+            setDepthWrite(false);
+            setLineWidth(2);
+            setPolygonMode(Batch::LINES);
+            Color4f ambient=v[i]->ambient;
+            Color4f diffuse=v[i]->diffuse;
+            v[i]->setColor(Color4f(0,0,0,0.05f));
+            renderBatch(v[i]);
+            v[i]->ambient=ambient;
+            v[i]->diffuse=diffuse;
+            setDepthWrite(true);
+            setPolygonMode(Batch::POLYGON);
+            setLineWidth(2);
+          }
+        }
+      }	
+    }
+  }
+
+  //draw transparent object in reverse order
+  for (int i=(transparent.size()-1);!bQuitRenderingLoop && i>=0 ;i--)
+    renderBatch(transparent[i]);
+
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 void GLCanvas::renderOpenGL()
@@ -997,54 +1048,7 @@ void GLCanvas::renderOpenGL()
     setLineWidth(1);
   }
 
-  if (this->octree)
-  {
-    std::vector<SmartPointer<Batch> > transparent;
-    SmartPointer<Frustum> frustum=debug_frustum?debug_frustum:this->frustum;
-    FrustumIterator it_frustum=this->octree->find(frustum);
-    Clock t1;
-    bool bQuitRenderingLoop=false;
-    for (;!bQuitRenderingLoop && !it_frustum.end();it_frustum.moveNext())
-    {
-      OctreeNode* node=it_frustum.getNode();
-      std::vector<SmartPointer<Batch> >& v=node->batches;
-
-      for (int i=0;!bQuitRenderingLoop && i<(int)v.size();i++) 
-      {
-        if (frustum->intersect(v[i]->getBox()))
-        {
-          if (v[i]->diffuse.a<1)
-          {
-            transparent.push_back(v[i]);
-          }
-          else
-          {
-            renderBatch(v[i]);
-
-            if (this->draw_lines && v[i]->primitive>=Batch::TRIANGLES)
-            {
-              setDepthWrite(false);
-              setLineWidth(2);
-              setPolygonMode(Batch::LINES);
-              Color4f ambient=v[i]->ambient;
-              Color4f diffuse=v[i]->diffuse;
-              v[i]->setColor(Color4f(0,0,0,0.05f));
-              renderBatch(v[i]);
-              v[i]->ambient=ambient;
-              v[i]->diffuse=diffuse;
-              setDepthWrite(true);
-              setPolygonMode(Batch::POLYGON);
-              setLineWidth(2);
-            }
-          }
-        }	
-      }
-    }
-
-    //draw transparent object in reverse order
-    for (int i=(transparent.size()-1);!bQuitRenderingLoop && i>=0 ;i--)
-      renderBatch(transparent[i]);
-  }
+  renderModel();
 }
 
 
