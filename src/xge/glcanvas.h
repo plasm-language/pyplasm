@@ -132,7 +132,7 @@ public:
 	virtual void setPolygonOffset(float value);
 
 	//renderBatch
-	virtual void  renderBatch(SmartPointer<Batch> batch);
+	virtual void  renderBatch(SmartPointer<Batch> batch,int first=0,int last=-1);
 
   //! renderOpenGL
 	virtual void renderOpenGL();

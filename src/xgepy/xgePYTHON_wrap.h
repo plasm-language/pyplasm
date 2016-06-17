@@ -20,6 +20,7 @@ class SwigDirector_GLCanvas : public GLCanvas, public Swig::Director {
 public:
     SwigDirector_GLCanvas(PyObject *self);
     virtual ~SwigDirector_GLCanvas();
+    virtual Box3f getWorldBox();
     virtual void setOctree(std::shared_ptr< Octree > octree);
     virtual bool makeCurrent();
     virtual void doneCurrent();
@@ -38,7 +39,7 @@ public:
     virtual void setPointSize(float value);
     virtual void setLineWidth(float value);
     virtual void setPolygonOffset(float value);
-    virtual void renderBatch(std::shared_ptr< Batch > batch);
+    virtual void renderBatch(std::shared_ptr< Batch > batch, int first = 0, int last = -1);
     virtual void renderOpenGL();
     virtual void redisplay();
     virtual bool onKeyboard(int key, int x, int y);
@@ -49,6 +50,10 @@ public:
     virtual void onResize(int width, int height);
     virtual void close();
     virtual void runLoop();
+    virtual void renderModel();
+    virtual void renderModelSwigPublic() {
+      GLCanvas::renderModel();
+    }
 
 /* Internal director utilities */
 public:
@@ -79,7 +84,7 @@ private:
       return method;
     }
 private:
-    mutable swig::SwigVar_PyObject vtable[33];
+    mutable swig::SwigVar_PyObject vtable[37];
 #endif
 
 };

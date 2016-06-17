@@ -6,6 +6,8 @@
 #include <Carbon/Carbon.h>
 #endif
 
+#include <sstream>
+
 #include <JUCE/AppConfig.h>
 #include <JUCE/modules/juce_opengl/juce_opengl.h>
 
@@ -604,6 +606,20 @@ bool GLCanvas::onKeyboard(int key,int x,int y)
     this->redisplay();
     return true;
 
+  case 'p': case 'P':
+  {
+	  std::cout<<"def MYVIEW(obj):"<<std::endl;
+    std::cout<<"  glcanvas=GLCanvas()"<<std::endl;
+    std::cout<<"  glcanvas.setOctree(Octree(Plasm.getBatches(obj)))"<<std::endl;
+    std::cout<<"  glcanvas.frustum.pos="<<frustum->pos.repr()<<std::endl;
+    std::cout<<"  glcanvas.frustum.dir="<<frustum->dir.repr()<<std::endl;
+    std::cout<<"  glcanvas.frustum.vup="<<frustum->vup.repr()<<std::endl;
+    std::cout<<"  glcanvas.redisplay()"<<std::endl;
+	  std::cout<<"  glcanvas.runLoop()"<<std::endl;
+    std::cout<<""<<std::endl;
+    return true;
+  }
+
   case 'F':case 'f':
     {
       if (!debug_frustum)
@@ -818,7 +834,7 @@ void GLCanvas::onResize(int width,int height)
 
 
 ///////////////////////////////////////////////////////////////
-void GLCanvas::renderBatch(SmartPointer<Batch> _batch)
+void GLCanvas::renderBatch(SmartPointer<Batch> _batch,int first,int last)
 {
   if (!_batch)
     return;
@@ -923,7 +939,11 @@ void GLCanvas::renderBatch(SmartPointer<Batch> _batch)
     glMultMatrixf(_m);
 
     int num_vertices=batch.vertices->size()/3;
-    glDrawArrays(batch.primitive, 0, num_vertices);
+
+    if (last==-1)
+      last=num_vertices;
+
+    glDrawArrays(batch.primitive, first, last);
   }
   glPopMatrix();
 

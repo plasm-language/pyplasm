@@ -6612,6 +6612,42 @@ SwigDirector_GLCanvas::SwigDirector_GLCanvas(PyObject *self): GLCanvas(), Swig::
 SwigDirector_GLCanvas::~SwigDirector_GLCanvas() {
 }
 
+Box3f SwigDirector_GLCanvas::getWorldBox() {
+  void *swig_argp ;
+  int swig_res = 0 ;
+  
+  Box3f c_result;
+  SWIG_PYTHON_THREAD_BEGIN_BLOCK;
+  {
+    if (!swig_get_self()) {
+      Swig::DirectorException::raise("'self' uninitialized, maybe you forgot to call GLCanvas.__init__.");
+    }
+#if defined(SWIG_PYTHON_DIRECTOR_VTABLE)
+    const size_t swig_method_index = 0;
+    const char * const swig_method_name = "getWorldBox";
+    PyObject* method = swig_get_method(swig_method_index, swig_method_name);
+    swig::SwigVar_PyObject result = PyObject_CallFunction(method, NULL, NULL);
+#else
+    swig::SwigVar_PyObject result = PyObject_CallMethod(swig_get_self(), (char *) "getWorldBox", NULL);
+#endif
+    if (!result) {
+      PyObject *error = PyErr_Occurred();
+      if (error) {
+        Swig::DirectorMethodException::raise("Error detected when calling 'GLCanvas.getWorldBox'");
+      }
+    }
+    swig_res = SWIG_ConvertPtr(result,&swig_argp,SWIGTYPE_p_Box3f,  0  | 0);
+    if (!SWIG_IsOK(swig_res)) {
+      Swig::DirectorTypeMismatchException::raise(SWIG_ErrorType(SWIG_ArgError(swig_res)), "in output value of type '""Box3f""'");
+    }
+    c_result = *(reinterpret_cast< Box3f * >(swig_argp));
+    if (SWIG_IsNewObj(swig_res)) delete reinterpret_cast< Box3f * >(swig_argp);
+  }
+  SWIG_PYTHON_THREAD_END_BLOCK;
+  return (Box3f) c_result;
+}
+
+
 void SwigDirector_GLCanvas::setOctree(std::shared_ptr< Octree > octree) {
   SWIG_PYTHON_THREAD_BEGIN_BLOCK;
   {
@@ -6621,7 +6657,7 @@ void SwigDirector_GLCanvas::setOctree(std::shared_ptr< Octree > octree) {
       Swig::DirectorException::raise("'self' uninitialized, maybe you forgot to call GLCanvas.__init__.");
     }
 #if defined(SWIG_PYTHON_DIRECTOR_VTABLE)
-    const size_t swig_method_index = 0;
+    const size_t swig_method_index = 1;
     const char * const swig_method_name = "setOctree";
     PyObject* method = swig_get_method(swig_method_index, swig_method_name);
     swig::SwigVar_PyObject result = PyObject_CallFunction(method, (char *)"(O)" ,(PyObject *)obj0);
@@ -6647,7 +6683,7 @@ bool SwigDirector_GLCanvas::makeCurrent() {
       Swig::DirectorException::raise("'self' uninitialized, maybe you forgot to call GLCanvas.__init__.");
     }
 #if defined(SWIG_PYTHON_DIRECTOR_VTABLE)
-    const size_t swig_method_index = 1;
+    const size_t swig_method_index = 2;
     const char * const swig_method_name = "makeCurrent";
     PyObject* method = swig_get_method(swig_method_index, swig_method_name);
     swig::SwigVar_PyObject result = PyObject_CallFunction(method, NULL, NULL);
@@ -6679,7 +6715,7 @@ void SwigDirector_GLCanvas::doneCurrent() {
       Swig::DirectorException::raise("'self' uninitialized, maybe you forgot to call GLCanvas.__init__.");
     }
 #if defined(SWIG_PYTHON_DIRECTOR_VTABLE)
-    const size_t swig_method_index = 2;
+    const size_t swig_method_index = 3;
     const char * const swig_method_name = "doneCurrent";
     PyObject* method = swig_get_method(swig_method_index, swig_method_name);
     swig::SwigVar_PyObject result = PyObject_CallFunction(method, NULL, NULL);
@@ -6708,7 +6744,7 @@ void SwigDirector_GLCanvas::clearScreen(bool ClearColor, bool ClearDepth) {
       Swig::DirectorException::raise("'self' uninitialized, maybe you forgot to call GLCanvas.__init__.");
     }
 #if defined(SWIG_PYTHON_DIRECTOR_VTABLE)
-    const size_t swig_method_index = 3;
+    const size_t swig_method_index = 4;
     const char * const swig_method_name = "clearScreen";
     PyObject* method = swig_get_method(swig_method_index, swig_method_name);
     swig::SwigVar_PyObject result = PyObject_CallFunction(method, (char *)"(OO)" ,(PyObject *)obj0,(PyObject *)obj1);
@@ -6741,7 +6777,7 @@ void SwigDirector_GLCanvas::setViewport(int x, int y, int width, int height) {
       Swig::DirectorException::raise("'self' uninitialized, maybe you forgot to call GLCanvas.__init__.");
     }
 #if defined(SWIG_PYTHON_DIRECTOR_VTABLE)
-    const size_t swig_method_index = 6;
+    const size_t swig_method_index = 7;
     const char * const swig_method_name = "setViewport";
     PyObject* method = swig_get_method(swig_method_index, swig_method_name);
     swig::SwigVar_PyObject result = PyObject_CallFunction(method, (char *)"(OOOO)" ,(PyObject *)obj0,(PyObject *)obj1,(PyObject *)obj2,(PyObject *)obj3);
@@ -6768,7 +6804,7 @@ void SwigDirector_GLCanvas::setProjectionMatrix(Mat4f mat) {
       Swig::DirectorException::raise("'self' uninitialized, maybe you forgot to call GLCanvas.__init__.");
     }
 #if defined(SWIG_PYTHON_DIRECTOR_VTABLE)
-    const size_t swig_method_index = 7;
+    const size_t swig_method_index = 8;
     const char * const swig_method_name = "setProjectionMatrix";
     PyObject* method = swig_get_method(swig_method_index, swig_method_name);
     swig::SwigVar_PyObject result = PyObject_CallFunction(method, (char *)"(O)" ,(PyObject *)obj0);
@@ -6795,7 +6831,7 @@ void SwigDirector_GLCanvas::setModelviewMatrix(Mat4f mat) {
       Swig::DirectorException::raise("'self' uninitialized, maybe you forgot to call GLCanvas.__init__.");
     }
 #if defined(SWIG_PYTHON_DIRECTOR_VTABLE)
-    const size_t swig_method_index = 8;
+    const size_t swig_method_index = 9;
     const char * const swig_method_name = "setModelviewMatrix";
     PyObject* method = swig_get_method(swig_method_index, swig_method_name);
     swig::SwigVar_PyObject result = PyObject_CallFunction(method, (char *)"(O)" ,(PyObject *)obj0);
@@ -6824,7 +6860,7 @@ void SwigDirector_GLCanvas::setDefaultLight(Vec3f pos, Vec3f dir) {
       Swig::DirectorException::raise("'self' uninitialized, maybe you forgot to call GLCanvas.__init__.");
     }
 #if defined(SWIG_PYTHON_DIRECTOR_VTABLE)
-    const size_t swig_method_index = 9;
+    const size_t swig_method_index = 10;
     const char * const swig_method_name = "setDefaultLight";
     PyObject* method = swig_get_method(swig_method_index, swig_method_name);
     swig::SwigVar_PyObject result = PyObject_CallFunction(method, (char *)"(OO)" ,(PyObject *)obj0,(PyObject *)obj1);
@@ -6853,7 +6889,7 @@ void SwigDirector_GLCanvas::pushModelviewMatrix(Mat4f mat, bool AccumulateWithCu
       Swig::DirectorException::raise("'self' uninitialized, maybe you forgot to call GLCanvas.__init__.");
     }
 #if defined(SWIG_PYTHON_DIRECTOR_VTABLE)
-    const size_t swig_method_index = 10;
+    const size_t swig_method_index = 11;
     const char * const swig_method_name = "pushModelviewMatrix";
     PyObject* method = swig_get_method(swig_method_index, swig_method_name);
     swig::SwigVar_PyObject result = PyObject_CallFunction(method, (char *)"(OO)" ,(PyObject *)obj0,(PyObject *)obj1);
@@ -6878,7 +6914,7 @@ void SwigDirector_GLCanvas::popModelviewMatrix() {
       Swig::DirectorException::raise("'self' uninitialized, maybe you forgot to call GLCanvas.__init__.");
     }
 #if defined(SWIG_PYTHON_DIRECTOR_VTABLE)
-    const size_t swig_method_index = 12;
+    const size_t swig_method_index = 13;
     const char * const swig_method_name = "popModelviewMatrix";
     PyObject* method = swig_get_method(swig_method_index, swig_method_name);
     swig::SwigVar_PyObject result = PyObject_CallFunction(method, NULL, NULL);
@@ -6907,7 +6943,7 @@ void SwigDirector_GLCanvas::pushProjectionMatrix(Mat4f mat, bool AccumulateWithC
       Swig::DirectorException::raise("'self' uninitialized, maybe you forgot to call GLCanvas.__init__.");
     }
 #if defined(SWIG_PYTHON_DIRECTOR_VTABLE)
-    const size_t swig_method_index = 13;
+    const size_t swig_method_index = 14;
     const char * const swig_method_name = "pushProjectionMatrix";
     PyObject* method = swig_get_method(swig_method_index, swig_method_name);
     swig::SwigVar_PyObject result = PyObject_CallFunction(method, (char *)"(OO)" ,(PyObject *)obj0,(PyObject *)obj1);
@@ -6932,7 +6968,7 @@ void SwigDirector_GLCanvas::popProjectionMatrix() {
       Swig::DirectorException::raise("'self' uninitialized, maybe you forgot to call GLCanvas.__init__.");
     }
 #if defined(SWIG_PYTHON_DIRECTOR_VTABLE)
-    const size_t swig_method_index = 15;
+    const size_t swig_method_index = 16;
     const char * const swig_method_name = "popProjectionMatrix";
     PyObject* method = swig_get_method(swig_method_index, swig_method_name);
     swig::SwigVar_PyObject result = PyObject_CallFunction(method, NULL, NULL);
@@ -6959,7 +6995,7 @@ void SwigDirector_GLCanvas::setDepthTest(bool value) {
       Swig::DirectorException::raise("'self' uninitialized, maybe you forgot to call GLCanvas.__init__.");
     }
 #if defined(SWIG_PYTHON_DIRECTOR_VTABLE)
-    const size_t swig_method_index = 16;
+    const size_t swig_method_index = 17;
     const char * const swig_method_name = "setDepthTest";
     PyObject* method = swig_get_method(swig_method_index, swig_method_name);
     swig::SwigVar_PyObject result = PyObject_CallFunction(method, (char *)"(O)" ,(PyObject *)obj0);
@@ -6986,7 +7022,7 @@ void SwigDirector_GLCanvas::setDepthWrite(bool vaue) {
       Swig::DirectorException::raise("'self' uninitialized, maybe you forgot to call GLCanvas.__init__.");
     }
 #if defined(SWIG_PYTHON_DIRECTOR_VTABLE)
-    const size_t swig_method_index = 17;
+    const size_t swig_method_index = 18;
     const char * const swig_method_name = "setDepthWrite";
     PyObject* method = swig_get_method(swig_method_index, swig_method_name);
     swig::SwigVar_PyObject result = PyObject_CallFunction(method, (char *)"(O)" ,(PyObject *)obj0);
@@ -7013,7 +7049,7 @@ void SwigDirector_GLCanvas::setPolygonMode(int value) {
       Swig::DirectorException::raise("'self' uninitialized, maybe you forgot to call GLCanvas.__init__.");
     }
 #if defined(SWIG_PYTHON_DIRECTOR_VTABLE)
-    const size_t swig_method_index = 18;
+    const size_t swig_method_index = 19;
     const char * const swig_method_name = "setPolygonMode";
     PyObject* method = swig_get_method(swig_method_index, swig_method_name);
     swig::SwigVar_PyObject result = PyObject_CallFunction(method, (char *)"(O)" ,(PyObject *)obj0);
@@ -7040,7 +7076,7 @@ void SwigDirector_GLCanvas::setPointSize(float value) {
       Swig::DirectorException::raise("'self' uninitialized, maybe you forgot to call GLCanvas.__init__.");
     }
 #if defined(SWIG_PYTHON_DIRECTOR_VTABLE)
-    const size_t swig_method_index = 19;
+    const size_t swig_method_index = 20;
     const char * const swig_method_name = "setPointSize";
     PyObject* method = swig_get_method(swig_method_index, swig_method_name);
     swig::SwigVar_PyObject result = PyObject_CallFunction(method, (char *)"(O)" ,(PyObject *)obj0);
@@ -7067,7 +7103,7 @@ void SwigDirector_GLCanvas::setLineWidth(float value) {
       Swig::DirectorException::raise("'self' uninitialized, maybe you forgot to call GLCanvas.__init__.");
     }
 #if defined(SWIG_PYTHON_DIRECTOR_VTABLE)
-    const size_t swig_method_index = 20;
+    const size_t swig_method_index = 21;
     const char * const swig_method_name = "setLineWidth";
     PyObject* method = swig_get_method(swig_method_index, swig_method_name);
     swig::SwigVar_PyObject result = PyObject_CallFunction(method, (char *)"(O)" ,(PyObject *)obj0);
@@ -7094,7 +7130,7 @@ void SwigDirector_GLCanvas::setPolygonOffset(float value) {
       Swig::DirectorException::raise("'self' uninitialized, maybe you forgot to call GLCanvas.__init__.");
     }
 #if defined(SWIG_PYTHON_DIRECTOR_VTABLE)
-    const size_t swig_method_index = 21;
+    const size_t swig_method_index = 22;
     const char * const swig_method_name = "setPolygonOffset";
     PyObject* method = swig_get_method(swig_method_index, swig_method_name);
     swig::SwigVar_PyObject result = PyObject_CallFunction(method, (char *)"(O)" ,(PyObject *)obj0);
@@ -7112,21 +7148,25 @@ void SwigDirector_GLCanvas::setPolygonOffset(float value) {
 }
 
 
-void SwigDirector_GLCanvas::renderBatch(std::shared_ptr< Batch > batch) {
+void SwigDirector_GLCanvas::renderBatch(std::shared_ptr< Batch > batch, int first, int last) {
   SWIG_PYTHON_THREAD_BEGIN_BLOCK;
   {
     swig::SwigVar_PyObject obj0;
     obj0 = SWIG_NewPointerObj(SWIG_as_voidptr(&batch), SWIGTYPE_p_std__shared_ptrT_Batch_t,  0 );
+    swig::SwigVar_PyObject obj1;
+    obj1 = SWIG_From_int(static_cast< int >(first));
+    swig::SwigVar_PyObject obj2;
+    obj2 = SWIG_From_int(static_cast< int >(last));
     if (!swig_get_self()) {
       Swig::DirectorException::raise("'self' uninitialized, maybe you forgot to call GLCanvas.__init__.");
     }
 #if defined(SWIG_PYTHON_DIRECTOR_VTABLE)
-    const size_t swig_method_index = 22;
+    const size_t swig_method_index = 23;
     const char * const swig_method_name = "renderBatch";
     PyObject* method = swig_get_method(swig_method_index, swig_method_name);
-    swig::SwigVar_PyObject result = PyObject_CallFunction(method, (char *)"(O)" ,(PyObject *)obj0);
+    swig::SwigVar_PyObject result = PyObject_CallFunction(method, (char *)"(OOO)" ,(PyObject *)obj0,(PyObject *)obj1,(PyObject *)obj2);
 #else
-    swig::SwigVar_PyObject result = PyObject_CallMethod(swig_get_self(), (char *)"renderBatch", (char *)"(O)" ,(PyObject *)obj0);
+    swig::SwigVar_PyObject result = PyObject_CallMethod(swig_get_self(), (char *)"renderBatch", (char *)"(OOO)" ,(PyObject *)obj0,(PyObject *)obj1,(PyObject *)obj2);
 #endif
     if (!result) {
       PyObject *error = PyErr_Occurred();
@@ -7146,7 +7186,7 @@ void SwigDirector_GLCanvas::renderOpenGL() {
       Swig::DirectorException::raise("'self' uninitialized, maybe you forgot to call GLCanvas.__init__.");
     }
 #if defined(SWIG_PYTHON_DIRECTOR_VTABLE)
-    const size_t swig_method_index = 23;
+    const size_t swig_method_index = 26;
     const char * const swig_method_name = "renderOpenGL";
     PyObject* method = swig_get_method(swig_method_index, swig_method_name);
     swig::SwigVar_PyObject result = PyObject_CallFunction(method, NULL, NULL);
@@ -7171,7 +7211,7 @@ void SwigDirector_GLCanvas::redisplay() {
       Swig::DirectorException::raise("'self' uninitialized, maybe you forgot to call GLCanvas.__init__.");
     }
 #if defined(SWIG_PYTHON_DIRECTOR_VTABLE)
-    const size_t swig_method_index = 24;
+    const size_t swig_method_index = 27;
     const char * const swig_method_name = "redisplay";
     PyObject* method = swig_get_method(swig_method_index, swig_method_name);
     swig::SwigVar_PyObject result = PyObject_CallFunction(method, NULL, NULL);
@@ -7203,7 +7243,7 @@ bool SwigDirector_GLCanvas::onKeyboard(int key, int x, int y) {
       Swig::DirectorException::raise("'self' uninitialized, maybe you forgot to call GLCanvas.__init__.");
     }
 #if defined(SWIG_PYTHON_DIRECTOR_VTABLE)
-    const size_t swig_method_index = 25;
+    const size_t swig_method_index = 28;
     const char * const swig_method_name = "onKeyboard";
     PyObject* method = swig_get_method(swig_method_index, swig_method_name);
     swig::SwigVar_PyObject result = PyObject_CallFunction(method, (char *)"(OOO)" ,(PyObject *)obj0,(PyObject *)obj1,(PyObject *)obj2);
@@ -7241,7 +7281,7 @@ void SwigDirector_GLCanvas::onMouseDown(int button, int x, int y) {
       Swig::DirectorException::raise("'self' uninitialized, maybe you forgot to call GLCanvas.__init__.");
     }
 #if defined(SWIG_PYTHON_DIRECTOR_VTABLE)
-    const size_t swig_method_index = 26;
+    const size_t swig_method_index = 29;
     const char * const swig_method_name = "onMouseDown";
     PyObject* method = swig_get_method(swig_method_index, swig_method_name);
     swig::SwigVar_PyObject result = PyObject_CallFunction(method, (char *)"(OOO)" ,(PyObject *)obj0,(PyObject *)obj1,(PyObject *)obj2);
@@ -7272,7 +7312,7 @@ void SwigDirector_GLCanvas::onMouseMove(int button, int x, int y) {
       Swig::DirectorException::raise("'self' uninitialized, maybe you forgot to call GLCanvas.__init__.");
     }
 #if defined(SWIG_PYTHON_DIRECTOR_VTABLE)
-    const size_t swig_method_index = 27;
+    const size_t swig_method_index = 30;
     const char * const swig_method_name = "onMouseMove";
     PyObject* method = swig_get_method(swig_method_index, swig_method_name);
     swig::SwigVar_PyObject result = PyObject_CallFunction(method, (char *)"(OOO)" ,(PyObject *)obj0,(PyObject *)obj1,(PyObject *)obj2);
@@ -7303,7 +7343,7 @@ void SwigDirector_GLCanvas::onMouseUp(int button, int x, int y) {
       Swig::DirectorException::raise("'self' uninitialized, maybe you forgot to call GLCanvas.__init__.");
     }
 #if defined(SWIG_PYTHON_DIRECTOR_VTABLE)
-    const size_t swig_method_index = 28;
+    const size_t swig_method_index = 31;
     const char * const swig_method_name = "onMouseUp";
     PyObject* method = swig_get_method(swig_method_index, swig_method_name);
     swig::SwigVar_PyObject result = PyObject_CallFunction(method, (char *)"(OOO)" ,(PyObject *)obj0,(PyObject *)obj1,(PyObject *)obj2);
@@ -7330,7 +7370,7 @@ void SwigDirector_GLCanvas::onMouseWheel(int delta) {
       Swig::DirectorException::raise("'self' uninitialized, maybe you forgot to call GLCanvas.__init__.");
     }
 #if defined(SWIG_PYTHON_DIRECTOR_VTABLE)
-    const size_t swig_method_index = 29;
+    const size_t swig_method_index = 32;
     const char * const swig_method_name = "onMouseWheel";
     PyObject* method = swig_get_method(swig_method_index, swig_method_name);
     swig::SwigVar_PyObject result = PyObject_CallFunction(method, (char *)"(O)" ,(PyObject *)obj0);
@@ -7359,7 +7399,7 @@ void SwigDirector_GLCanvas::onResize(int width, int height) {
       Swig::DirectorException::raise("'self' uninitialized, maybe you forgot to call GLCanvas.__init__.");
     }
 #if defined(SWIG_PYTHON_DIRECTOR_VTABLE)
-    const size_t swig_method_index = 30;
+    const size_t swig_method_index = 33;
     const char * const swig_method_name = "onResize";
     PyObject* method = swig_get_method(swig_method_index, swig_method_name);
     swig::SwigVar_PyObject result = PyObject_CallFunction(method, (char *)"(OO)" ,(PyObject *)obj0,(PyObject *)obj1);
@@ -7384,7 +7424,7 @@ void SwigDirector_GLCanvas::close() {
       Swig::DirectorException::raise("'self' uninitialized, maybe you forgot to call GLCanvas.__init__.");
     }
 #if defined(SWIG_PYTHON_DIRECTOR_VTABLE)
-    const size_t swig_method_index = 31;
+    const size_t swig_method_index = 34;
     const char * const swig_method_name = "close";
     PyObject* method = swig_get_method(swig_method_index, swig_method_name);
     swig::SwigVar_PyObject result = PyObject_CallFunction(method, NULL, NULL);
@@ -7409,7 +7449,7 @@ void SwigDirector_GLCanvas::runLoop() {
       Swig::DirectorException::raise("'self' uninitialized, maybe you forgot to call GLCanvas.__init__.");
     }
 #if defined(SWIG_PYTHON_DIRECTOR_VTABLE)
-    const size_t swig_method_index = 32;
+    const size_t swig_method_index = 35;
     const char * const swig_method_name = "runLoop";
     PyObject* method = swig_get_method(swig_method_index, swig_method_name);
     swig::SwigVar_PyObject result = PyObject_CallFunction(method, NULL, NULL);
@@ -7420,6 +7460,33 @@ void SwigDirector_GLCanvas::runLoop() {
       PyObject *error = PyErr_Occurred();
       if (error) {
         Swig::DirectorMethodException::raise("Error detected when calling 'GLCanvas.runLoop'");
+      }
+    }
+  }
+  SWIG_PYTHON_THREAD_END_BLOCK;
+}
+
+
+void SwigDirector_GLCanvas::renderModel() {
+  SWIG_PYTHON_THREAD_BEGIN_BLOCK;
+  {
+    swig_set_inner("renderModel", true);
+    if (!swig_get_self()) {
+      Swig::DirectorException::raise("'self' uninitialized, maybe you forgot to call GLCanvas.__init__.");
+    }
+#if defined(SWIG_PYTHON_DIRECTOR_VTABLE)
+    const size_t swig_method_index = 36;
+    const char * const swig_method_name = "renderModel";
+    PyObject* method = swig_get_method(swig_method_index, swig_method_name);
+    swig::SwigVar_PyObject result = PyObject_CallFunction(method, NULL, NULL);
+#else
+    swig::SwigVar_PyObject result = PyObject_CallMethod(swig_get_self(), (char *) "renderModel", NULL);
+#endif
+    swig_set_inner("renderModel", false);
+    if (!result) {
+      PyObject *error = PyErr_Occurred();
+      if (error) {
+        Swig::DirectorMethodException::raise("Error detected when calling 'GLCanvas.renderModel'");
       }
     }
   }
@@ -64787,6 +64854,31 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_delete_Manipulator(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Manipulator *arg1 = (Manipulator *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:delete_Manipulator",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Manipulator, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_Manipulator" "', argument " "1"" of type '" "Manipulator *""'"); 
+  }
+  arg1 = reinterpret_cast< Manipulator * >(argp1);
+  {
+    SWIG_PYTHON_THREAD_BEGIN_ALLOW;
+    delete arg1;
+    SWIG_PYTHON_THREAD_END_ALLOW;
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_Manipulator_setObject(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Manipulator *arg1 = (Manipulator *) 0 ;
@@ -65219,31 +65311,6 @@ SWIGINTERN PyObject *_wrap_Manipulator_getOperation(PyObject *SWIGUNUSEDPARM(sel
     SWIG_PYTHON_THREAD_END_ALLOW;
   }
   resultobj = SWIG_From_int(static_cast< int >(result));
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_delete_Manipulator(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  Manipulator *arg1 = (Manipulator *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  
-  if (!PyArg_ParseTuple(args,(char *)"O:delete_Manipulator",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Manipulator, SWIG_POINTER_DISOWN |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_Manipulator" "', argument " "1"" of type '" "Manipulator *""'"); 
-  }
-  arg1 = reinterpret_cast< Manipulator * >(argp1);
-  {
-    SWIG_PYTHON_THREAD_BEGIN_ALLOW;
-    delete arg1;
-    SWIG_PYTHON_THREAD_END_ALLOW;
-  }
-  resultobj = SWIG_Py_Void();
   return resultobj;
 fail:
   return NULL;
@@ -83313,6 +83380,40 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_GLCanvas_getWorldBox(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  GLCanvas *arg1 = (GLCanvas *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  Swig::Director *director = 0;
+  bool upcall = false;
+  Box3f result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:GLCanvas_getWorldBox",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_GLCanvas, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "GLCanvas_getWorldBox" "', argument " "1"" of type '" "GLCanvas *""'"); 
+  }
+  arg1 = reinterpret_cast< GLCanvas * >(argp1);
+  director = SWIG_DIRECTOR_CAST(arg1);
+  upcall = (director && (director->swig_get_self()==obj0));
+  try {
+    if (upcall) {
+      result = (arg1)->GLCanvas::getWorldBox();
+    } else {
+      result = (arg1)->getWorldBox();
+    }
+  } catch (Swig::DirectorException&) {
+    SWIG_fail;
+  }
+  resultobj = SWIG_NewPointerObj((new Box3f(static_cast< const Box3f& >(result))), SWIGTYPE_p_Box3f, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_GLCanvas_setOctree(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   GLCanvas *arg1 = (GLCanvas *) 0 ;
@@ -84494,7 +84595,126 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_GLCanvas_renderBatch(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap_GLCanvas_renderBatch__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  GLCanvas *arg1 = (GLCanvas *) 0 ;
+  std::shared_ptr< Batch > arg2 ;
+  int arg3 ;
+  int arg4 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  int val3 ;
+  int ecode3 = 0 ;
+  int val4 ;
+  int ecode4 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  Swig::Director *director = 0;
+  bool upcall = false;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOO:GLCanvas_renderBatch",&obj0,&obj1,&obj2,&obj3)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_GLCanvas, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "GLCanvas_renderBatch" "', argument " "1"" of type '" "GLCanvas *""'"); 
+  }
+  arg1 = reinterpret_cast< GLCanvas * >(argp1);
+  {
+    int newmem = 0;
+    res2 = SWIG_ConvertPtrAndOwn(obj1, &argp2, SWIGTYPE_p_std__shared_ptrT_Batch_t,  0 , &newmem);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "GLCanvas_renderBatch" "', argument " "2"" of type '" "std::shared_ptr< Batch >""'"); 
+    }
+    if (argp2) arg2 = *(reinterpret_cast< std::shared_ptr< Batch > * >(argp2));
+    if (newmem & SWIG_CAST_NEW_MEMORY) delete reinterpret_cast< std::shared_ptr< Batch > * >(argp2);
+  }
+  ecode3 = SWIG_AsVal_int(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "GLCanvas_renderBatch" "', argument " "3"" of type '" "int""'");
+  } 
+  arg3 = static_cast< int >(val3);
+  ecode4 = SWIG_AsVal_int(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "GLCanvas_renderBatch" "', argument " "4"" of type '" "int""'");
+  } 
+  arg4 = static_cast< int >(val4);
+  director = SWIG_DIRECTOR_CAST(arg1);
+  upcall = (director && (director->swig_get_self()==obj0));
+  try {
+    if (upcall) {
+      (arg1)->GLCanvas::renderBatch(arg2,arg3,arg4);
+    } else {
+      (arg1)->renderBatch(arg2,arg3,arg4);
+    }
+  } catch (Swig::DirectorException&) {
+    SWIG_fail;
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_GLCanvas_renderBatch__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  GLCanvas *arg1 = (GLCanvas *) 0 ;
+  std::shared_ptr< Batch > arg2 ;
+  int arg3 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  int val3 ;
+  int ecode3 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  Swig::Director *director = 0;
+  bool upcall = false;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOO:GLCanvas_renderBatch",&obj0,&obj1,&obj2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_GLCanvas, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "GLCanvas_renderBatch" "', argument " "1"" of type '" "GLCanvas *""'"); 
+  }
+  arg1 = reinterpret_cast< GLCanvas * >(argp1);
+  {
+    int newmem = 0;
+    res2 = SWIG_ConvertPtrAndOwn(obj1, &argp2, SWIGTYPE_p_std__shared_ptrT_Batch_t,  0 , &newmem);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "GLCanvas_renderBatch" "', argument " "2"" of type '" "std::shared_ptr< Batch >""'"); 
+    }
+    if (argp2) arg2 = *(reinterpret_cast< std::shared_ptr< Batch > * >(argp2));
+    if (newmem & SWIG_CAST_NEW_MEMORY) delete reinterpret_cast< std::shared_ptr< Batch > * >(argp2);
+  }
+  ecode3 = SWIG_AsVal_int(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "GLCanvas_renderBatch" "', argument " "3"" of type '" "int""'");
+  } 
+  arg3 = static_cast< int >(val3);
+  director = SWIG_DIRECTOR_CAST(arg1);
+  upcall = (director && (director->swig_get_self()==obj0));
+  try {
+    if (upcall) {
+      (arg1)->GLCanvas::renderBatch(arg2,arg3);
+    } else {
+      (arg1)->renderBatch(arg2,arg3);
+    }
+  } catch (Swig::DirectorException&) {
+    SWIG_fail;
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_GLCanvas_renderBatch__SWIG_2(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   GLCanvas *arg1 = (GLCanvas *) 0 ;
   std::shared_ptr< Batch > arg2 ;
@@ -84537,6 +84757,84 @@ SWIGINTERN PyObject *_wrap_GLCanvas_renderBatch(PyObject *SWIGUNUSEDPARM(self), 
   return resultobj;
 fail:
   return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_GLCanvas_renderBatch(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[5];
+  int ii;
+  
+  if (!PyTuple_Check(args)) SWIG_fail;
+  argc = args ? (int)PyObject_Length(args) : 0;
+  for (ii = 0; (ii < 4) && (ii < argc); ii++) {
+    argv[ii] = PyTuple_GET_ITEM(args,ii);
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GLCanvas, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      int res = SWIG_ConvertPtr(argv[1], 0, SWIGTYPE_p_std__shared_ptrT_Batch_t, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        return _wrap_GLCanvas_renderBatch__SWIG_2(self, args);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GLCanvas, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      int res = SWIG_ConvertPtr(argv[1], 0, SWIGTYPE_p_std__shared_ptrT_Batch_t, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        {
+          int res = SWIG_AsVal_int(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          return _wrap_GLCanvas_renderBatch__SWIG_1(self, args);
+        }
+      }
+    }
+  }
+  if (argc == 4) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_GLCanvas, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      int res = SWIG_ConvertPtr(argv[1], 0, SWIGTYPE_p_std__shared_ptrT_Batch_t, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        {
+          int res = SWIG_AsVal_int(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          {
+            int res = SWIG_AsVal_int(argv[3], NULL);
+            _v = SWIG_CheckState(res);
+          }
+          if (_v) {
+            return _wrap_GLCanvas_renderBatch__SWIG_0(self, args);
+          }
+        }
+      }
+    }
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'GLCanvas_renderBatch'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    GLCanvas::renderBatch(std::shared_ptr< Batch >,int,int)\n"
+    "    GLCanvas::renderBatch(std::shared_ptr< Batch >,int)\n"
+    "    GLCanvas::renderBatch(std::shared_ptr< Batch >)\n");
+  return 0;
 }
 
 
@@ -85026,6 +85324,45 @@ SWIGINTERN PyObject *_wrap_GLCanvas_getNativeHandle(PyObject *SWIGUNUSEDPARM(sel
     SWIG_PYTHON_THREAD_END_ALLOW;
   }
   resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GLCanvas__Pimpl, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_GLCanvas_renderModel(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  GLCanvas *arg1 = (GLCanvas *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  Swig::Director *director = 0;
+  bool upcall = false;
+  SwigDirector_GLCanvas *darg = 0;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:GLCanvas_renderModel",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_GLCanvas, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "GLCanvas_renderModel" "', argument " "1"" of type '" "GLCanvas *""'"); 
+  }
+  arg1 = reinterpret_cast< GLCanvas * >(argp1);
+  director = SWIG_DIRECTOR_CAST(arg1);
+  if (!director || !(director->swig_get_inner("renderModel"))) {
+    SWIG_SetErrorMsg(PyExc_RuntimeError,"accessing protected member renderModel");
+    SWIG_fail;
+  }
+  upcall = (director && (director->swig_get_self()==obj0));
+  try {
+    darg = dynamic_cast<SwigDirector_GLCanvas *>(arg1);
+    if (upcall) {
+      (darg)->renderModelSwigPublic();
+    } else {
+      (darg)->renderModel();
+    }
+  } catch (Swig::DirectorException&) {
+    SWIG_fail;
+  }
+  resultobj = SWIG_Py_Void();
   return resultobj;
 fail:
   return NULL;
@@ -91017,6 +91354,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"Manipulator_freeze_z_set", _wrap_Manipulator_freeze_z_set, METH_VARARGS, NULL},
 	 { (char *)"Manipulator_freeze_z_get", _wrap_Manipulator_freeze_z_get, METH_VARARGS, NULL},
 	 { (char *)"new_Manipulator", _wrap_new_Manipulator, METH_VARARGS, NULL},
+	 { (char *)"delete_Manipulator", _wrap_delete_Manipulator, METH_VARARGS, NULL},
 	 { (char *)"Manipulator_setObject", _wrap_Manipulator_setObject, METH_VARARGS, NULL},
 	 { (char *)"Manipulator_isRunning", _wrap_Manipulator_isRunning, METH_VARARGS, NULL},
 	 { (char *)"Manipulator_canManipulate", _wrap_Manipulator_canManipulate, METH_VARARGS, NULL},
@@ -91026,7 +91364,6 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"Manipulator_render", _wrap_Manipulator_render, METH_VARARGS, NULL},
 	 { (char *)"Manipulator_setOperation", _wrap_Manipulator_setOperation, METH_VARARGS, NULL},
 	 { (char *)"Manipulator_getOperation", _wrap_Manipulator_getOperation, METH_VARARGS, NULL},
-	 { (char *)"delete_Manipulator", _wrap_delete_Manipulator, METH_VARARGS, NULL},
 	 { (char *)"Manipulator_swigregister", Manipulator_swigregister, METH_VARARGS, NULL},
 	 { (char *)"Batch_Write", _wrap_Batch_Write, METH_VARARGS, NULL},
 	 { (char *)"Batch_Read", _wrap_Batch_Read, METH_VARARGS, NULL},
@@ -91368,6 +91705,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"GLCanvas_getShared", _wrap_GLCanvas_getShared, METH_VARARGS, NULL},
 	 { (char *)"GLCanvas_isShared", _wrap_GLCanvas_isShared, METH_VARARGS, NULL},
 	 { (char *)"GLCanvas_getGLContext", _wrap_GLCanvas_getGLContext, METH_VARARGS, NULL},
+	 { (char *)"GLCanvas_getWorldBox", _wrap_GLCanvas_getWorldBox, METH_VARARGS, NULL},
 	 { (char *)"GLCanvas_setOctree", _wrap_GLCanvas_setOctree, METH_VARARGS, NULL},
 	 { (char *)"GLCanvas_makeCurrent", _wrap_GLCanvas_makeCurrent, METH_VARARGS, NULL},
 	 { (char *)"GLCanvas_doneCurrent", _wrap_GLCanvas_doneCurrent, METH_VARARGS, NULL},
@@ -91398,6 +91736,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"GLCanvas_close", _wrap_GLCanvas_close, METH_VARARGS, NULL},
 	 { (char *)"GLCanvas_runLoop", _wrap_GLCanvas_runLoop, METH_VARARGS, NULL},
 	 { (char *)"GLCanvas_getNativeHandle", _wrap_GLCanvas_getNativeHandle, METH_VARARGS, NULL},
+	 { (char *)"GLCanvas_renderModel", _wrap_GLCanvas_renderModel, METH_VARARGS, NULL},
 	 { (char *)"disown_GLCanvas", _wrap_disown_GLCanvas, METH_VARARGS, NULL},
 	 { (char *)"GLCanvas_swigregister", GLCanvas_swigregister, METH_VARARGS, NULL},
 	 { (char *)"Unwrapper_texture_template_set", _wrap_Unwrapper_texture_template_set, METH_VARARGS, NULL},
