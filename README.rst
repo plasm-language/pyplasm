@@ -50,35 +50,40 @@ Generate makefiles and make binaries::
 MacOsX compilation 
 -----------------------------------------------------------
 
-IMPORTANT: do not install brew and use ONLY the official python already installed on your osx (should be 2.7; you can type 'python --version' in a terminal) 
+IMPORTANT: do not install brew since it can cause conflicts with the following installation 
 
 1. Install XCode tools from AppStore (optionally install also Xcode command line tools)
 
-2. Install PyOpenGL (https://pypi.python.org/pypi/PyOpenGL)::
+2. Install “Anaconda” for OSX/Python2.7 (NOTE: the python version is important) from
+   the following URL::
 
-	tar -zxvf PyOpenGL-X.X.X.tar.gz
-	cd PyOpenGL-X.X.X
-	python setup.py install
+         https://www.continuum.io/downloads
 
-3. Install cmake for OSX (https://cmake.org/download/)
+3. Install PyOpenGL::
+
+    conda install pyopengl
+
+4. Install cmake for OSX (https://cmake.org/download/)
    Example: cmake-3.4.1-Darwin-x86_64.dmg
 
-4. Download pyplasm in your home directory (example: /home/$USERNAME/pyplasm)
+5. Download pyplasm in your home directory (example: /home/$USERNAME/pyplasm)
    Open a terminal and create the build directory::
 
 	cd /home/$USERNAME/pyplasm
 	mkdir build
 	
-5. Run Cmake application::
+6. Run Cmake from command line (NOTE the substring 2.7.12-1 could be a little different)::
 
-	"Where is the source code"    /Users/$USERNAME/pyplasm
-	"Where to build the binaries  /Users/$USERNAME/pyplasm/build
-	
-	Press configure, then generate.
+        cd build
+        cmake ../ \
+             -DPYTHON_LIBRARY=/Users/$USER/anaconda/pkgs/python-2.7.12-1/lib/libpython2.7.dylib \
+             -DPYTHON_INCLUDE_DIR=/Users/$USER/anaconda/pkgs/python-2.7.12-1/include/python2.7/ \
+             -DPYTHON_EXECUTABLE=/Users/$USER/anaconda/bin/python \
+             -DPYPLASM_REGENERATE_SWIG_WRAPPERS=1
 
-6. Build and install::
+7. Build and install::
 
-	cd /home/$USERNAME/pyplasm/build
+	cd /home/$USER/pyplasm/build
 	xcodebuild      -project PyPlasm.xcodeproj -target ALL_BUILD  -configuration Release
 	sudo xcodebuild -project PyPlasm.xcodeproj -target install    -configuration Release
 
@@ -155,7 +160,7 @@ Run Visual Studio::
 Test pyplasm is working
 -----------------------------------------------------------
 
-python
+python #if you are using anaconda it will be something like /Users/$USER/anaconda/bin/python
 from pyplasm import *
 c=CUBOID([1,1,1])
 VIEW(c)
