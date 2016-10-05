@@ -112,6 +112,7 @@ http://prdownloads.sourceforge.net/swig/swigwin-2.0.9.zip
 (unzip Swig and move the folder to obtain C:/swigwin-2.0.9)
 
 - Cmake 3.x - 32 bit 
+https://cmake.org/files/v3.7/cmake-3.7.0-rc1-win32-x86.msi
 (during the installation select: "Add CMake to the system PATH for all users")
 
 Run cmake-gui::
