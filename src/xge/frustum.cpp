@@ -110,11 +110,19 @@ void Frustum::guessBestPosition(const Box3f& box)
 {   
 	XgeDebugAssert(box.isValid());
 
-  
-   
-	this->pos=box.center()+1.5f*box.size();
-	this->dir=(box.center()-pos).normalize();
-	this->vup=Vec3f(0,0,1);
+  //special case, 2d object in Z plane
+  if (box.p1.z==box.p2.z)
+  {
+	  this->pos=box.center()+2*Vec3f(0,0,box.maxsize());
+	  this->dir=Vec3f(0,0,-1);
+	  this->vup=Vec3f(0,1,0);
+  }
+  else
+  {
+	  this->pos=box.center()+1.5f*box.size();
+	  this->dir=(box.center()-pos).normalize();
+	  this->vup=Vec3f(0,0,1);
+  }
 
 	//default projection matrix
   float maxdim = box.maxsize();
