@@ -63,27 +63,29 @@ IMPORTANT: do not install brew since it can cause conflicts with the following i
 
     conda install pyopengl
 
-4. Install cmake for OSX (https://cmake.org/download/)
-   Example: cmake-3.4.1-Darwin-x86_64.dmg
+4. Install cmake for OSX 
+   https://cmake.org/files/v3.6/cmake-3.6.2-Darwin-x86_64.dmg
 
-5. Download pyplasm in your home directory (example: /home/$USERNAME/pyplasm)
+5. Download pyplasm in your Users directory (example: /Users/$USERNAME/pyplasm)
    Open a terminal and create the build directory::
 
-	cd /home/$USERNAME/pyplasm
+	cd /Users/$USERNAME/pyplasm
 	mkdir build
 	
-6. Run Cmake from command line (NOTE the substring 2.7.12-1 could be a little different)::
+6. Run Cmake from command line (NOTE make sure the substring 2.7.12-1 is what you have!)::
 
         cd build
-        cmake ../ \
+        
+        /Applications/CMake.app/Contents/bin/cmake ../ \
+             -G Xcode \
              -DPYTHON_LIBRARY=/Users/$USER/anaconda/pkgs/python-2.7.12-1/lib/libpython2.7.dylib \
              -DPYTHON_INCLUDE_DIR=/Users/$USER/anaconda/pkgs/python-2.7.12-1/include/python2.7/ \
              -DPYTHON_EXECUTABLE=/Users/$USER/anaconda/bin/python \
-             -DPYPLASM_REGENERATE_SWIG_WRAPPERS=1
+             -DPYPLASM_REGENERATE_SWIG_WRAPPERS=0        
 
 7. Build and install::
 
-	cd /home/$USER/pyplasm/build
+	cd /Users/$USER/pyplasm/build
 	xcodebuild      -project PyPlasm.xcodeproj -target ALL_BUILD  -configuration Release
 	sudo xcodebuild -project PyPlasm.xcodeproj -target install    -configuration Release
 
