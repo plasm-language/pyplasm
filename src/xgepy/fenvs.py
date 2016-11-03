@@ -3821,6 +3821,12 @@ def SIMPLEXGRID(size):
     return model2hpc0
 
 
+def FLAT(hpc) :
+  ret=[]
+  temp=Plasm.shrink(hpc,False)
+  for I in range(temp.getNumberOfChilds()):   
+    ret.append(temp.childs[I])
+  return ret
 
 print "...fenvs.py imported in",(time.clock() - start),"seconds"
 
