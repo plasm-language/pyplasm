@@ -321,6 +321,7 @@ GLCanvas::GLCanvas() : pimpl(nullptr)
   this->trackball_center      = Vec3f(0,0,0);
   this->frustum               = SmartPointer<Frustum>(new Frustum());
   this->m_fix_lighting        = false;
+  this->batch_line_width      = 1;
 
   this->pimpl=new Pimpl(this);
 
@@ -605,6 +606,17 @@ bool GLCanvas::onKeyboard(int key,int x,int y)
     this->draw_lines=!this->draw_lines;
     this->redisplay();
     return true;
+
+  case 'v':case 'V':
+    this->batch_line_width=std::max(0,this->batch_line_width-1);
+    this->redisplay();
+    return true;
+
+  case 'b':case 'B':
+    this->batch_line_width=std::max(0,this->batch_line_width+1);
+    this->redisplay();
+    return true;
+
 
   case 'p': case 'P':
   {
@@ -943,7 +955,9 @@ void GLCanvas::renderBatch(SmartPointer<Batch> _batch,int first,int last)
     if (last==-1)
       last=num_vertices;
 
+    setLineWidth(batch_line_width);
     glDrawArrays(batch.primitive, first, last);
+    setLineWidth(1);
   }
   glPopMatrix();
 
@@ -1017,7 +1031,7 @@ void GLCanvas::renderModel()
           if (this->draw_lines && v[i]->primitive>=Batch::TRIANGLES)
           {
             setDepthWrite(false);
-            setLineWidth(2);
+            setLineWidth(batch_line_width);
             setPolygonMode(Batch::LINES);
             Color4f ambient=v[i]->ambient;
             Color4f diffuse=v[i]->diffuse;
@@ -1027,7 +1041,7 @@ void GLCanvas::renderModel()
             v[i]->diffuse=diffuse;
             setDepthWrite(true);
             setPolygonMode(Batch::POLYGON);
-            setLineWidth(2);
+            setLineWidth(1);
           }
         }
       }	

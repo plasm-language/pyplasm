@@ -173,6 +173,8 @@ protected:
   friend class Pimpl;
   Pimpl* pimpl;
 
+  int batch_line_width;
+
   //renderModel
   virtual void renderModel();
 
