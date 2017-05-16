@@ -95,23 +95,18 @@ Windows 7/8 compilation
 
 Install:
 
-- Visual Studio 2015 community
+- Visual Studio 2017 community
 
-- Python 2.7.3 - 32 bit 
-http://www.python.org/ftp/python/2.7.3/python-2.7.3.msi
+- Anaconda Python 2.7.x - 64 bit (downlaod from that page)
+https://www.continuum.io/downloads
 
-- PyOpenGL 3.0.2 - 32 bit
-https://pypi.python.org/packages/any/P/PyOpenGL/PyOpenGL-3.0.2.win32.exe#md5=4f1c66d6d87dcdf98ecc7ff4ce61a7e6
+- Install Python
 
-- numpy 1.7.0 - 32 bit
-http://sourceforge.net/projects/numpy/files/NumPy/1.7.0/numpy-1.7.0-win32-superpack-python2.7.exe/download
-
-- SciPy 0.12.0 rc1 - 32 bit
-http://sourceforge.net/projects/scipy/files/scipy/0.12.0rc1/scipy-0.12.0c1-win32-superpack-python2.7.exe/download
-
-- Swig 2.0.9
-http://prdownloads.sourceforge.net/swig/swigwin-2.0.9.zip
-(unzip Swig and move the folder to obtain C:/swigwin-2.0.9)
+- Using Anaconda navigator install packages
+	- PyOpenGL
+	- numpy
+	- scipy
+	- swig
 
 - Cmake 3.x - 32 bit 
 (during the installation select: "Add CMake to the system PATH for all users")
@@ -124,15 +119,10 @@ Run cmake-gui::
 Press configure::
 
  	"Build directory does not exist..." > Yes
-	"Specify the generator for this project": Visual Studio 11
+	"Specify the generator for this project": Visual Studio 15 2017 Win64
 	Select: "Use default native compilers" 
 	Wait...  "Configuring done"!
 	Select: "Ungrouped Entries" > "PYPLASM_REGENERATE_SWIG_WRAPPERS" and check it
-	
-Press configure again::
-
-	Error
-	Select: "SWIG_EXECUTABLE" > "SWIG_EXECUTABLE-NOTFOUND" and specify: C:/swigwin-2.0.9/swig.exe
 
 Press configure again::
 
@@ -162,9 +152,9 @@ Run Visual Studio::
 Test pyplasm is working
 -----------------------------------------------------------
 
-python #if you are using anaconda it will be something like /Users/$USER/anaconda/bin/python
-from pyplasm import *
-c=CUBOID([1,1,1])
-VIEW(c)
-quit()
+Start python or ipython then try::
 
+	from pyplasm import *
+	c=CUBOID([1,1,1])
+	VIEW(c)
+	quit()
