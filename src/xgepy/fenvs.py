@@ -3536,7 +3536,7 @@ GRAY	= Color4f([0.5, 0.5, 0.5, 1.0])
 GREEN   = Color4f([0.0, 1.0, 0.0, 1.0])
 BLACK   = Color4f([0.0, 0.0, 0.0, 1.0])
 BLUE	= Color4f([0.0, 0.0, 1.0, 1.0])
-BROWN   = Color4f([0.5, 0.5, 0.5, 1.0])
+BROWN   = Color4f([0.6, 0.2, 0.2, 1.0])
 CYAN	= Color4f([0.0, 1.0, 1.0, 1.0])
 MAGENTA = Color4f([1.0, 0.0, 1.0, 1.0])
 ORANGE  = Color4f([1.0, 0.5, 1.0, 1.0])
@@ -3550,6 +3550,25 @@ YELLOW  = Color4f([1.0, 1.0, 0.0, 1.0])
 if __name__ == "__main__": 
    (Plasm.getProperty(COLOR(RED)(Plasm.cube(3)),"RGBcolor")==("%s %s %s %s" % (1.0,0.0,0.0,1.0)))
 
+#===================================================================================
+# Hex (wants a string /#[a-zA-Z0-9]{6}/ and optionally a float A
+# Example HEX("#ff0000")(pol)
+#===================================================================================
+
+def HEX(color, alpha = 1):
+
+	def hex_to_rgb(value):
+	    value = value.lstrip('#')
+	    lv = len(value)
+	    return tuple(int(value[i:i + lv // 3], 16) for i in range(0, lv, lv // 3))
+	
+	rgb = hex_to_rgb(color)
+	
+	return COLOR(Color4f([rgb[0]/255., rgb[1]/255., rgb[2]/255., alpha]))
+
+
+if __name__ == "__main__": 
+   (Plasm.getProperty(HEX("#ff0000")(Plasm.cube(3)),"RGBcolor")==("%s %s %s %s" % (1.0,0.0,0.0,1.0)))
 
 #===================================================================================
 # Materials (want a list of 17 elements(ambientRGBA, diffuseRGBA specularRGBA emissionRGBA shininess)
