@@ -147,6 +147,8 @@ Run Visual Studio::
 	In the "Solution Explorer" panel highlight: "INSTALL"
 	Menu BUILD: "Build INSTALL"
 	Wait till the project is built: "Build: 3 succeeded, 0 failed..."
+	NOTE: if you have errors in this step, try to run Visual Studio "As Administrator"
+	      could be that Visual studio needs admin permission in order to install files
 
 -----------------------------------------------------------
 Test pyplasm is working
