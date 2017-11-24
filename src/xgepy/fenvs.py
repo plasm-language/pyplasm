@@ -2,8 +2,30 @@
 
 import time
 
+import sys
+if (sys.version_info > (3, 0)):
+  from functools import reduce
+
+  # map is different in python3.x
+  __map3__ = map 
+  __map2__ = lambda func, *iterable: list(__map3__(func, *iterable)) 
+  map = __map2__
+
+  # long is not defined
+  long = int
+
+  # xrange is not defined
+  xrange = range
+
+  # range is different in python 3
+  __range3__ = range
+  __range2__ = lambda *arg : list(__range3__(*arg))
+  range = __range2__
+
+
+
 start=time.clock()
-print "Evaluating fenvs.py.."
+print("Evaluating fenvs.py..")
 
 #default values (see PlasmConfig)
 DEFAULT_TOLERANCE=1e-6
@@ -234,12 +256,10 @@ if __name__ == "__main__":
 # ===================================================
 
 def COMP(Funs):
-   def compose(f,g):
-	  def h(x): return f(g(x))
-	  return h
-   return reduce(compose,Funs)
-
-
+  def compose(f,g):
+    def h(x): return f(g(x))
+    return h
+  return reduce(compose,Funs)
 
 if __name__ == "__main__":
 	assert(COMP([lambda x: x+[3],lambda x: x+[2],lambda x: x+[1]])([0])==[0,1,2,3])
@@ -325,7 +345,7 @@ if __name__ == "__main__":
 
 def APPLY(args):
 	f,x = args
-	return apply(f,[x])
+	return f(*[x])
 
 
 
@@ -967,7 +987,7 @@ def PRINTPOL (obj):
 	return obj
 
 def PRINT(obj):
-	print obj
+	print(obj)
 	return obj
 
 
@@ -995,7 +1015,12 @@ if __name__ == "__main__":
 def MKPOL (args_list):
    points, cells, pols = args_list
    dim = len(points[0])
-   return Plasm.mkpol(dim, CAT(points), map(lambda x: [i-1 for i in x], cells),plasm_config.tolerance())
+
+   points=CAT(points)
+   if (sys.version_info > (3, 0)):
+     points=[float(p) for p in points]
+   indices=map(lambda x: [i-1 for i in x], cells)
+   return Plasm.mkpol(dim, points, indices,plasm_config.tolerance())
 
 if __name__ == "__main__": 
 	assert(Plasm.limits(MKPOL([  [[0,0],[1,0],[1,1],[0,1]] , [[1,2,3,4]] , None ]))==Boxf(Vecf(1,0,0),Vecf(1,1,1)))
@@ -1243,10 +1268,10 @@ if __name__ == "__main__":
 def POWER (objs_list):
 	 
 	 if not isinstance(objs_list,list) or len(objs_list)!=2:
-		raise Exception("POWER can only be applied to a list of 2 arguments") 
+	   raise Exception("POWER can only be applied to a list of 2 arguments") 
 
 	 if ISNUM(objs_list[0]) and ISNUM(objs_list[1]):
-		return math.pow(objs_list[0], objs_list[1])
+		 return math.pow(objs_list[0], objs_list[1])
 
 	 return Plasm.power(objs_list[0], objs_list[1])
 		
@@ -1599,7 +1624,7 @@ def GMAP(fun):
 			g.embed(vmat.dim)
 			g.transform(vmat,hmat)
 			pointdim = g.getPointDim()
-			print "Child",pointdim
+			print( "Child",pointdim)
 				
 			for cell in cellsPerLevel(g,0):
 				point = [g.getVecf(cell)[i] for i in range(1,pointdim+1)]
@@ -1844,9 +1869,9 @@ if __name__ == "__main__":
 def CONE (args):
 	 radius , height = args
 	 def CONE0(N):
-		basis = CIRCLE(radius)([N,1])
-		apex = T(3)(height)(SIMPLEX(0))
-		return  JOIN([basis, apex])
+		 basis = CIRCLE(radius)([N,1])
+		 apex = T(3)(height)(SIMPLEX(0))
+		 return  JOIN([basis, apex])
 	 return CONE0
 
 if __name__ == "__main__":
@@ -2935,7 +2960,7 @@ def SEGMENT (sx):
 		P0=A
 		P1=[A[i]+(B[i]-A[i])*sx for i in range(N)]
 
-		print P0,P1
+		print( P0,P1)
 		return POLYLINE([P0,P1])
 	return SEGMENT0
 
@@ -3847,9 +3872,9 @@ def FLAT(hpc) :
     ret.append(temp.childs[I])
   return ret
 
-print "...fenvs.py imported in",(time.clock() - start),"seconds"
+print("...fenvs.py imported in",(time.clock() - start),"seconds")
 
 
 if __name__ == "__main__":
-  print "self test on fenvs ended"
+  print( "self test on fenvs ended")
 

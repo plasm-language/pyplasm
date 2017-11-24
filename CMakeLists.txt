@@ -20,7 +20,11 @@ SET (CMAKE_NUM_PROCS 8)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR})
 
 # problems checking python version number in Anaconda
-SET(PYTHON_REQUIRED_VERSION)
+if (VISUS_APPLE)
+  SET(PYTHON_REQUIRED_VERSION)
+else()
+  SET(PYTHON_REQUIRED_VERSION 3)
+endif()
 
 ####################################################
 # platform
