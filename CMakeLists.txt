@@ -4,7 +4,6 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
 PROJECT(PyPlasm)
 
-
 SET(CMAKE_BUILD_TYPE "Release")
 
 # some basic tests 
@@ -19,9 +18,8 @@ SET (CMAKE_NUM_PROCS 8)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR})
 
-# problems checking python version number in Anaconda
-if (VISUS_APPLE)
-  SET(PYTHON_REQUIRED_VERSION)
+if (APPLE)
+  SET(PYTHON_REQUIRED_VERSION) # apple install 2.7 by default
 else()
   SET(PYTHON_REQUIRED_VERSION 3)
 endif()

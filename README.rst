@@ -8,66 +8,66 @@ developed by the CAD Group at the Universities 'La Sapienza' and 'Roma Tre' in I
 Linux compilation (Ubuntu)
 --------------------------------------
 
-Install prerequisites::
+Install prerequisites:
 
-	sudo apt-get install python3 python3-dev libasound2-dev libfreetype6-dev xorg-dev libglu1-mesa-dev 
+```
+sudo apt-get install python3 python3-dev libasound2-dev libfreetype6-dev xorg-dev libglu1-mesa-dev
+```
 
-Install some extra python packages::
+Install some extra python packages:
 
-	sudo pip3 install PyOpenGL PyOpenGL-accelerate  numpy
+```
+sudo pip3 install PyOpenGL PyOpenGL-accelerate  numpy
+```
 
-Generate makefiles and make binaries::
+Generate makefiles and make binaries:
 
-  git clone git://github.com/plasm-language/pyplasm.git
-	cd pyplasm
-	mkdir build && cd build
-	cmake ../ 
-	make -j 4
-	sudo make install 
-
+```
+git clone git://github.com/plasm-language/pyplasm.git
+cd pyplasm
+mkdir build && cd build
+cmake ../
+make -j 4
+sudo make install
+```
 
 -----------------------------------------------------------
 MacOsX compilation 
 -----------------------------------------------------------
 
-IMPORTANT: do not install brew since it can cause conflicts with the following installation 
+Install XCode tools from AppStore (optionally install also Xcode command line tools)
 
-1. Install XCode tools from AppStore (optionally install also Xcode command line tools)
+Install brew and and cmake:
 
-2. Install “Anaconda” for OSX/Python2.7 (NOTE: the python version is important) from
-   the following URL::
+```
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+brew install cmake
+```
 
-         https://www.continuum.io/downloads
+Install python prerequisites::
 
-3. Install PyOpenGL::
+```
+sudo /path/to/python/right/pip install pyopengl numpy
+```
 
-    conda install pyopengl
+From a terminal::
 
-4. Install cmake for OSX 
-   https://cmake.org/files/v3.6/cmake-3.6.2-Darwin-x86_64.dmg
+```
+git clone git://github.com/plasm-language/pyplasm.git
+cd pyplasm
+mkdir build && cd build
+cmake -G Xcode ../
+cmake      --build . --target ALL_BUILD      --config Release
+sudo cmake --build . --target install        --config Release # check the installation path is right
+```
 
-5. Download pyplasm in your Users directory (example: /Users/$USERNAME/pyplasm)
-   Open a terminal and create the build directory::
+In case you want to use Python3, install it using brew (`brew install python3`) or anaconda.
+Double check PYTHON_* values in cmake ('advanced' mode); use the right 'pip' and 'python' binaries.
+For example. Using brew you will see:
 
-	cd /Users/$USERNAME/pyplasm
-	mkdir build
-	
-6. Run Cmake from command line (NOTE make sure the substring 2.7.12-1 is what you have!)::
-
-        cd build
-        
-        /Applications/CMake.app/Contents/bin/cmake ../ \
-             -G Xcode \
-             -DPYTHON_LIBRARY=/Users/$USER/anaconda/pkgs/python-2.7.12-1/lib/libpython2.7.dylib \
-             -DPYTHON_INCLUDE_DIR=/Users/$USER/anaconda/pkgs/python-2.7.12-1/include/python2.7/ \
-             -DPYTHON_EXECUTABLE=/Users/$USER/anaconda/bin/python \
-             -DPYPLASM_REGENERATE_SWIG_WRAPPERS=0        
-
-7. Build and install::
-
-	cd /Users/$USER/pyplasm/build
-	xcodebuild      -project PyPlasm.xcodeproj -target ALL_BUILD  -configuration Release
-	sudo xcodebuild -project PyPlasm.xcodeproj -target install    -configuration Release
+-- PYTHON_EXECUTABLE: /usr/local/bin/python3
+-- PYTHON_SITE_PACKAGES_DIR /Library/Python/3.6/site-packages
+-- CMAKE_INSTALL_PREFIX: /Library/Python/3.6/site-packages/pyplasm
 
 -----------------------------------------------------------
 Windows compilation 
@@ -102,7 +102,9 @@ Test pyplasm is working
 
 Start python (make sure to use the right version) and type::
 
-	from pyplasm import *
-	c=CUBOID([1,1,1])
-	VIEW(c)
-	quit()
+```
+from pyplasm import *
+c=CUBOID([1,1,1])
+VIEW(c)
+quit()
+```
