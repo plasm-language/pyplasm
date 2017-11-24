@@ -4,46 +4,26 @@ PLASM (Programming LAnguage for Solid Modeling)
 Plasm is a 'design language' for geometric and solid parametric design, 
 developed by the CAD Group at the Universities 'La Sapienza' and 'Roma Tre' in Italy.
 
-
-Get Plasm::
-
-	git clone git://github.com/plasm-language/pyplasm.git
-	cd pyplasm
-
-
 --------------------------------------
-Linux compilation
+Linux compilation (Ubuntu)
 --------------------------------------
 
 Install prerequisites::
 
-	PREREQUISITES=\
-		libfreetype6 libfreetype6-dev libasound2 libasound2-dev alsa-base alsa-utils \
-		python python-dev python-setuptools libxinerama-dev libxrender-dev libxcomposite-dev \
-		libxcursor-dev swig libglu1-mesa-dev libfreeimage3 libglew1.10 libpng12-0 \
-		libpng12-dev libjpeg-dev libxxf86vm1 libxxf86vm-dev libxi6 libxi-dev \
-		libxrandr-dev mesa-common-dev mesa-utils-extra libgl1-mesa-dev libglapi-mesa \
-		python-numpy python-scipy libldap2-dev
-
-	sudo apt-get install $PREREQUISITES # OpenSuse: "sudo zypper install $PREREQUISITES"
+	sudo apt-get install python3 python3-dev libasound2-dev libfreetype6-dev xorg-dev libglu1-mesa-dev 
 
 Install some extra python packages::
 
-	sudo easy_install PyOpenGL PyOpenGL-accelerate 
-
-Check that your python is 2.7
-	
-	python --version
+	sudo pip3 install PyOpenGL PyOpenGL-accelerate  numpy
 
 Generate makefiles and make binaries::
 
-	cd /home/$USERNAME/pyplasm
-	mkdir build
-	cd build
+  git clone git://github.com/plasm-language/pyplasm.git
+	cd pyplasm
+	mkdir build && cd build
 	cmake ../ 
-	make
-	sudo make install # if you get an error try the following "touch install_manifest.txt" and "chmod a+rw ./*"
-	cd ..
+	make -j 4
+	sudo make install 
 
 
 -----------------------------------------------------------
@@ -90,71 +70,37 @@ IMPORTANT: do not install brew since it can cause conflicts with the following i
 	sudo xcodebuild -project PyPlasm.xcodeproj -target install    -configuration Release
 
 -----------------------------------------------------------
-Windows 7/8 compilation 
+Windows compilation 
 -----------------------------------------------------------
 
-Install:
+Install Visual Studio 2017 community from ```https://www.visualstudio.com/it/downloads/```
 
-- Visual Studio 2017 community
+Install Download and install Cmake from `https://cmake.org/download/` 
 
-- Anaconda Python 2.7.x - 64 bit (downlaod from that page)
-https://www.continuum.io/downloads
+Install Download and install python 3.x from `https://www.python.org/downloads/windows/`
 
-- Install Python
+Open a prompt and type:
 
-- Using Anaconda navigator install packages
-	- PyOpenGL
-	- numpy
-	- scipy
-	- swig
+```
+c:\Python36\Scripts\pip install PyOpenGL numpy
+```
 
-- Cmake 3.x - 32 bit 
-(during the installation select: "Add CMake to the system PATH for all users")
+Open a DOS prompt and type:
 
-Run cmake-gui::
-
-	"Where is the source code"    <browse to the pyplasm directory>
-	"Where to build the binaries  <browse to the pyplasm directory>/build
-
-Press configure::
-
- 	"Build directory does not exist..." > Yes
-	"Specify the generator for this project": Visual Studio 15 2017 Win64
-	Select: "Use default native compilers" 
-	Wait...  "Configuring done"!
-	Select: "Ungrouped Entries" > "PYPLASM_REGENERATE_SWIG_WRAPPERS" and check it
-
-Press configure again::
-
-	Wait...  "Configuring done"!
-
-Press generate::
-
-	Wait...  "Generating done"!
-	
-Run Visual Studio::
-
-	File > Open > Project/Solution... > ..\pyplasm\build\PyPlasm.sln
-	Wait till the project is loaded
-
-	In the upper fields:
-	"Solution Configurations": Release
-	"Solution Platforms": Win32
-
-	Menu BUILD: "Build ALL_BUILD"
-	Wait till the project is built: "Build: 9 succeeded, 0 failed..."
-
-	In the "Solution Explorer" panel highlight: "INSTALL"
-	Menu BUILD: "Build INSTALL"
-	Wait till the project is built: "Build: 3 succeeded, 0 failed..."
-	NOTE: if you have errors in this step, try to run Visual Studio "As Administrator"
-	      could be that Visual studio needs admin permission in order to install files
+```
+cd pyplasm
+mkdir build 
+cd build
+cmake -G "Visual Studio 15 2017 Win64" ..
+cmake --build . --target ALL_BUILD      --config Release
+cmake --build . --target INSTALL        --config Release
+```
 
 -----------------------------------------------------------
 Test pyplasm is working
 -----------------------------------------------------------
 
-Start python or ipython then try::
+Start python (make sure to use the right version) and type::
 
 	from pyplasm import *
 	c=CUBOID([1,1,1])
