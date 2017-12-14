@@ -10,26 +10,26 @@ Linux compilation (Ubuntu)
 
 Install prerequisites:
 
-```
-sudo apt-get install python3 python3-dev libasound2-dev libfreetype6-dev xorg-dev libglu1-mesa-dev
-```
+
+  sudo apt-get install python3 python3-dev libasound2-dev libfreetype6-dev xorg-dev libglu1-mesa-dev
+
 
 Install some extra python packages:
 
-```
-sudo pip3 install PyOpenGL PyOpenGL-accelerate  numpy
-```
+
+  sudo pip3 install PyOpenGL PyOpenGL-accelerate  numpy
+
 
 Generate makefiles and make binaries:
 
-```
-git clone git://github.com/plasm-language/pyplasm.git
-cd pyplasm
-mkdir build && cd build
-cmake ../
-make -j 4
-sudo make install
-```
+
+  git clone git://github.com/plasm-language/pyplasm.git
+  cd pyplasm
+  mkdir build && cd build
+  cmake ../
+  make -j 4
+  sudo make install
+
 
 -----------------------------------------------------------
 MacOsX compilation 
@@ -39,27 +39,26 @@ Install XCode tools from AppStore (optionally install also Xcode command line to
 
 Install brew and and cmake:
 
-```
-/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-brew install cmake
-```
+
+  /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+  brew install cmake
+
 
 Install python prerequisites::
 
-```
-sudo /path/to/python/right/pip install pyopengl numpy
-```
+  sudo /path/to/python/right/pip install pyopengl numpy
+
 
 From a terminal::
 
-```
-git clone git://github.com/plasm-language/pyplasm.git
-cd pyplasm
-mkdir build && cd build
-cmake -G Xcode ../
-cmake      --build . --target ALL_BUILD      --config Release
-sudo cmake --build . --target install        --config Release # check the installation path is right
-```
+
+  git clone git://github.com/plasm-language/pyplasm.git
+  cd pyplasm
+  mkdir build && cd build
+  cmake -G Xcode ../
+  cmake      --build . --target ALL_BUILD      --config Release
+  sudo cmake --build . --target install        --config Release # check the installation path is right
+
 
 In case you want to use Python3, install it using brew (`brew install python3`) or anaconda.
 Double check PYTHON_* values in cmake ('advanced' mode); use the right 'pip' and 'python' binaries.
@@ -81,20 +80,20 @@ Install Download and install python 3.x from `https://www.python.org/downloads/w
 
 Open a prompt and type:
 
-```
-c:\Python36\Scripts\pip install PyOpenGL numpy
-```
+
+  c:\Python36\Scripts\pip install PyOpenGL numpy
+
 
 Open a DOS prompt and type:
 
-```
-cd pyplasm
-mkdir build 
-cd build
-cmake -G "Visual Studio 15 2017 Win64" ..
-cmake --build . --target ALL_BUILD      --config Release
-cmake --build . --target INSTALL        --config Release
-```
+
+  cd pyplasm
+  mkdir build 
+  cd build
+  cmake -G "Visual Studio 15 2017 Win64" ..
+  cmake --build . --target ALL_BUILD      --config Release
+  cmake --build . --target INSTALL        --config Release
+
 
 -----------------------------------------------------------
 Test pyplasm is working
@@ -102,9 +101,7 @@ Test pyplasm is working
 
 Start python (make sure to use the right version) and type::
 
-```
-from pyplasm import *
-c=CUBOID([1,1,1])
-VIEW(c)
-quit()
-```
+  from pyplasm import *
+  c=CUBOID([1,1,1])
+  VIEW(c)
+  quit()
