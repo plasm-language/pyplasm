@@ -8,19 +8,19 @@ developed by the CAD Group at the Universities 'La Sapienza' and 'Roma Tre' in I
 Linux compilation (Ubuntu)
 --------------------------------------
 
-Install prerequisites:
+Install prerequisites::
 
 
   sudo apt-get install python3 python3-dev libasound2-dev libfreetype6-dev xorg-dev libglu1-mesa-dev
 
 
-Install some extra python packages:
+Install some extra python packages::
 
 
   sudo pip3 install PyOpenGL PyOpenGL-accelerate  numpy
 
 
-Generate makefiles and make binaries:
+Generate makefiles and make binaries::
 
 
   git clone git://github.com/plasm-language/pyplasm.git
@@ -37,7 +37,7 @@ MacOsX compilation
 
 Install XCode tools from AppStore (optionally install also Xcode command line tools)
 
-Install brew and and cmake:
+Install brew and and cmake::
 
 
   /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
@@ -72,20 +72,17 @@ For example. Using brew you will see:
 Windows compilation 
 -----------------------------------------------------------
 
-Install Visual Studio 2017 community from ```https://www.visualstudio.com/it/downloads/```
+Install Visual Studio 2017 community from `https://www.visualstudio.com/it/downloads/`
 
 Install Download and install Cmake from `https://cmake.org/download/` 
 
 Install Download and install python 3.x from `https://www.python.org/downloads/windows/`
 
-Open a prompt and type:
-
+Open a prompt and type::
 
   c:\Python36\Scripts\pip install PyOpenGL numpy
 
-
-Open a DOS prompt and type:
-
+Open a DOS prompt and type::
 
   cd pyplasm
   mkdir build 
