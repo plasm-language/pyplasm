@@ -4,6 +4,11 @@ PLASM (Programming LAnguage for Solid Modeling)
 Plasm is a 'design language' for geometric and solid parametric design, 
 developed by the CAD Group at the Universities 'La Sapienza' and 'Roma Tre' in Italy.
 
+* `osx linux` build status: [![Build Status](https://travis-ci.org/plasm-language/pyplasm.svg?branch=master)](https://travis-ci.org/plasm-language/pyplasm)
+
+* `windows` build status:   [![Build status](https://ci.appveyor.com/api/projects/status/x0k7gxjra4at835g?svg=true)](https://ci.appveyor.com/project/scrgiorgio/pyplasm)
+
+
 Table of content:
 
 [Install using PIP binaries](#pip-distribution)
