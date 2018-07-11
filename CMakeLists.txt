@@ -18,11 +18,7 @@ SET (CMAKE_NUM_PROCS 8)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR})
 
-if (APPLE)
-  SET(PYTHON_REQUIRED_VERSION) # apple install 2.7 by default
-else()
-  SET(PYTHON_REQUIRED_VERSION 3)
-endif()
+SET(PYTHON_REQUIRED_VERSION 3)
 
 ####################################################
 # platform

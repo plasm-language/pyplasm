@@ -4,6 +4,10 @@ PLASM (Programming LAnguage for Solid Modeling)
 Plasm is a 'design language' for geometric and solid parametric design, 
 developed by the CAD Group at the Universities 'La Sapienza' and 'Roma Tre' in Italy.
 
+See also: http://www.plasm.net/
+
+Current build status:
+
 * `osx linux` build status: [![Build Status](https://travis-ci.org/plasm-language/pyplasm.svg?branch=master)](https://travis-ci.org/plasm-language/pyplasm)
 
 * `windows` build status:   [![Build status](https://ci.appveyor.com/api/projects/status/x0k7gxjra4at835g?svg=true)](https://ci.appveyor.com/project/scrgiorgio/pyplasm)
@@ -34,8 +38,8 @@ c:\Python36\python.exe -c "from pyplasm import *; c=CUBOID([1,1,1]); VIEW(c)"
 In Linux/MacOSX type:
 
 ```
-pip3 uninstall pyplasm
-pip3 install pyplasm
+sudo pip3 uninstall -y pyplasm
+sudo pip3 install pyplasm
 ```
 
 
@@ -99,19 +103,19 @@ c:\Python36\Scripts\twine.exe upload --repository-url https://upload.pypi.org/le
 
 Install XCode tools from AppStore (optionally install also Xcode command line tools)
 
-Install brew and pyplasm prerequisites:
-
-```
-ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-brew install git cmake swig python3
-sudo pip3 -H install numpy setuptools wheel twine pyopengl
-```
-
 Run xcode command line tools:
 ```
 sudo xcode-select --install
 # if command line tools do not work, type the following:
 # sudo xcode-select --r
+```
+
+Install brew and pyplasm prerequisites:
+
+```
+ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+brew install git cmake swig python3
+sudo pip3 install numpy setuptools wheel twine pyopengl
 ```
 
 From a terminal:
@@ -121,7 +125,7 @@ git clone git://github.com/plasm-language/pyplasm.git
 cd pyplasm
 mkdir build && cd build
 cmake -G Xcode ../
-cmake      --build . --target ALL_BUILD --config Release
+cmake      --build . --target ALL_BUILD --config Release -- -j 8
 sudo cmake --build . --target install   --config Release 
 ```
 
@@ -129,6 +133,14 @@ Test if it's working:
 
 ```
 python3 -c "from pyplasm import *; c=CUBOID([1,1,1]); VIEW(c)"
+```
+
+(OPTIONAL For developers) If you want to upload to PIP:
+
+```
+cd /Library/Python/3.6/site-packages/pyplasm
+sudo python3 setup.py bdist_wheel --python-tag=cp36 --plat-name=macosx_10_13_x86_64 
+twine upload --repository-url https://upload.pypi.org/legacy/ dist/*.whl
 ```
 
 # Linux compilation
@@ -152,8 +164,8 @@ git clone git://github.com/plasm-language/pyplasm.git
 cd pyplasm
 mkdir build && cd build
 cmake ../
-make -j 4
-sudo make install
+cmake      --build . --target ALL_BUILD --config Release -- -j 8
+sudo cmake --build . --target install   --config Release 
 ```
 
 Test if it's working:
