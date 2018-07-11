@@ -26,6 +26,6 @@ build_script:
   - cd build 
   - set PATH=C:\Python36-x64;C:\Python36-x64\Scripts;%PATH%
   - pip install numpy setuptools wheel twine
-  - cmake -G "%GENERATOR%" 
+  - cmake -G "%GENERATOR%" ..\
   - cmake --build . --target ALL_BUILD --config %Configuration%
   - cmake --build . --target INSTALL   --config %Configuration% 

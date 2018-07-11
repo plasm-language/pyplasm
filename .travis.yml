@@ -50,20 +50,11 @@ install:
     - |
       if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
         sudo apt-get -qy update
-        sudo apt-get -qy install swig3.0 git cmake  libssl-dev uuid-dev  qt5-default qttools5-dev-tools libx11-xcb1 python3 python3-pip
+        sudo apt-get -qy install swig3.0 git cmake  libssl-dev libx11-xcb1 python3 python3-pip
         sudo pip3 install numpy setuptools wheel
         sudo python3 -m pip install --upgrade pip setuptools wheel
       fi     
       
-    # (linux) install qt 5.9.1
-    - |
-      if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
-        sudo add-apt-repository ppa:beineri/opt-qt591-trusty -y; 
-        sudo apt-get update -qq
-        sudo apt-get install -qq qt59base
-        source /opt/qt59/bin/qt59-env.sh
-      fi     
-
     # (linux) Download and install recent cmake
     - |
       if [[ ${TRAVIS_OS_NAME} == "linux" ]]; then
@@ -76,7 +67,7 @@ install:
     # (osx) brew install dependencies
     - | 
       if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then 
-        brew install swig qt5   
+        brew install swig    
         brew upgrade python # from 2 -> 3
         pip3 install numpy setuptools wheel
         gem install xcpretty # this is to solve logs too long
@@ -97,7 +88,7 @@ script:
       
     - | 
       if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then      
-      	cmake -GXcode -DQt5_DIR=/usr/local/opt/qt/lib/cmake/Qt5 ..
+      	cmake -GXcode ../
       	set -o pipefail &&  cmake --build ./ --target ALL_BUILD --config $BUILD_TYPE | xcpretty -c
       	cmake --build ./                     --target RUN_TESTS --config $BUILD_TYPE
       	cmake --build ./                     --target install   --config $BUILD_TYPE 
