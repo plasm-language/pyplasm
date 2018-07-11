@@ -39,9 +39,24 @@ IF (PYPLASM_REGENERATE_SWIG_WRAPPERS)
   SWIG_LINK_LIBRARIES(xgepy ${PYTHON_LIBRARIES} xge)
   INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/xgepy.py DESTINATION "${CMAKE_INSTALL_PREFIX}")
 ELSE()
+
   MESSAGE("-- Using existing swig wrappers")
   ADD_LIBRARY(_xgepy SHARED xge.i xgePYTHON_wrap.cxx xgePYTHON_wrap.h xgepy.py)
-  TARGET_LINK_LIBRARIES(_xgepy ${PYTHON_LIBRARIES} xge)
+  
+  set(PYTHON_IS_ANACONDA 0)
+  string(FIND "${PYTHON_EXECUTABLE}" "anaconda" _index_)
+	if("${_index_}" GREATER -1)
+  	set(PYTHON_IS_ANACONDA 1)
+  endif()
+  
+  # see https://groups.google.com/a/continuum.io/forum/#!topic/anaconda/057P4uNWyCU
+  if(APPLE)
+    TARGET_LINK_LIBRARIES(_xgepy xge)
+    set_target_properties(_xgepy PROPERTIES LINK_FLAGS "-undefined dynamic_lookup")
+	else()
+		TARGET_LINK_LIBRARIES(_xgepy ${PYTHON_LIBRARIES} xge)
+	endif()
+  
   ADD_DEPENDENCIES(_xgepy xge)
   INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/xgepy.py DESTINATION "${CMAKE_INSTALL_PREFIX}")
   IF (PYPLASM_WINDOWS)

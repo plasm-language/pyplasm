@@ -35,11 +35,21 @@ c:\Python36\Scripts\pip install pyplasm
 c:\Python36\python.exe -c "from pyplasm import *; c=CUBOID([1,1,1]); VIEW(c)"
 ```
 
-In Linux/MacOSX type:
+In MacOSX, if you are using python 3.x in brew:
 
 ```
 sudo pip3 uninstall -y pyplasm
-sudo pip3 install pyplasm
+sudo pip3 install --no-cache-dir pyplasm
+```
+
+In MacOsx if you are using anaconda 3.6:
+
+```
+pip --version # check it is anaconda
+conda install pip numpy PyOpenGL
+pip uninstall -y pyplasm
+pip install --no-cache-dir pyplasm
+
 ```
 
 
@@ -139,6 +149,7 @@ python3 -c "from pyplasm import *; c=CUBOID([1,1,1]); VIEW(c)"
 
 ```
 cd /Library/Python/3.6/site-packages/pyplasm
+sudo rm -f dist/*
 sudo python3 setup.py bdist_wheel --python-tag=cp36 --plat-name=macosx_10_13_x86_64 
 twine upload --repository-url https://upload.pypi.org/legacy/ dist/*.whl
 ```
