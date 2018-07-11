@@ -27,20 +27,31 @@ Table of content:
 # Pip Distribution
 
 
-In windows type:
+In windows, if you are using `official` python 3.x:
 
 ```
-c:\Python36\Scripts\pip uninstall pyplasm
-c:\Python36\Scripts\pip install numpy PyOpenGL
-c:\Python36\Scripts\pip uninstall -y pyplasm
-c:\Python36\Scripts\pip install --no-cache-dir pyplasm
-c:\Python36\python.exe -c "from pyplasm import *; c=CUBOID([1,1,1]); VIEW(c)"
+set PIP=c:\Python36\Scripts\pip
+set PYTHON=c:\Python36\python.exe
+%PIP% install numpy PyOpenGL
+%PIP% uninstall -y pyplasm
+%PIP% install --no-cache-dir pyplasm
+%PYTHON% -c "from pyplasm import *; c=CUBOID([1,1,1]); VIEW(c)"
 ```
+
+In windows, if you are using anaconda 3.6:
+
+```
+set PATH=c:\Users\%USERNAME%\Anaconda3;c:\Users\%USERNAME%\Anaconda3\Scripts;%PATH%
+conda install pip numpy PyOpenGL
+pip uninstall -y pyplasm
+pip install --no-cache-dir pyplasm
+python -c "from pyplasm import *; c=CUBOID([1,1,1]); VIEW(c)"
+```
+
 
 In MacOSX, if you are using python 3.x in brew:
 
 ```
-sudo pip3 uninstall -y pyplasm
 sudo pip3 install numpy PyOpenGL
 sudo pip3 uninstall -y pyplasm
 sudo pip3 install --no-cache-dir pyplasm
@@ -49,13 +60,13 @@ sudo pip3 install --no-cache-dir pyplasm
 In MacOsx if you are using anaconda 3.6:
 
 ```
-pip --version # check it is anaconda
 conda install pip numpy PyOpenGL
 pip uninstall -y pyplasm
 pip install --no-cache-dir pyplasm
 
 ```
 
+NOTE Pip distribution for linux is not supported (problem compiling juce on manylinux docker container)
 
 # Windows compilation 
 

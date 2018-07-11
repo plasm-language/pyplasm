@@ -2,7 +2,7 @@ import os, sys, setuptools
 import shutil
 
 #increase this number for PIP
-VERSION="1.1.0"
+VERSION="1.1.1"
 this_dir="."
 
 # findFilesInCurrentDirectory
