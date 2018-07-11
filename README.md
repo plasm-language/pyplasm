@@ -72,32 +72,41 @@ mkdir build
 cd build
 
 set CMAKE="C:\Program Files\CMake\bin\cmake.exe"
-
 %CMAKE% -G "Visual Studio 15 2017 Win64" ..
 %CMAKE% --build . --target ALL_BUILD --config Release
 %CMAKE% --build . --target INSTALL   --config Release
+```
 
+Test if it's working:
+
+```
 %PYTHON% -c "from pyplasm import *; c=CUBOID([1,1,1]); VIEW(c)"
+```
 
-REM (For developers) If you want to upload to PIP
-REM cd C:\Python36\lib\site-packages\pyplasm
-REM %PYTHON% setup.py bdist_wheel --python-tag=cp36 --plat-name=win_amd64 
-REM c:\Python36\Scripts\twine.exe upload --repository-url https://upload.pypi.org/legacy/ dist/*.whl
+(OPTIONAL For developers) If you want to upload to PIP
+```
+cd C:\Python36\lib\site-packages\pyplasm
+%PYTHON% setup.py bdist_wheel --python-tag=cp36 --plat-name=win_amd64 
+c:\Python36\Scripts\twine.exe upload --repository-url https://upload.pypi.org/legacy/ dist/*.whl
+```
 
 # MacOsX compilation 
 
 Install XCode tools from AppStore (optionally install also Xcode command line tools)
 
-Install brew and and cmake:
-
-```/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-brew install cmake
-```
-
-Install python prerequisites:
+Install brew and pyplasm prerequisites:
 
 ```
-sudo pip3 install pyopengl numpy
+ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+brew install git cmake swig python3
+sudo pip3 -H install numpy setuptools wheel twine pyopengl
+```
+
+Run xcode command line tools:
+```
+sudo xcode-select --install
+# if command line tools do not work, type the following:
+# sudo xcode-select --r
 ```
 
 From a terminal:
@@ -107,21 +116,15 @@ git clone git://github.com/plasm-language/pyplasm.git
 cd pyplasm
 mkdir build && cd build
 cmake -G Xcode ../
-cmake      --build . --target ALL_BUILD      --config Release
-sudo cmake --build . --target install        --config Release # check the installation path is right
+cmake      --build . --target ALL_BUILD --config Release
+sudo cmake --build . --target install   --config Release 
 ```
 
-In case you want to use Python3, install it using brew (`brew install python3`) or anaconda.
-Double check PYTHON_* values in cmake ('advanced' mode); use the right 'pip' and 'python' binaries.
-For example. Using brew you will see:
+Test if it's working:
 
--- PYTHON_EXECUTABLE: /usr/local/bin/python3
--- PYTHON_SITE_PACKAGES_DIR /Library/Python/3.6/site-packages
--- CMAKE_INSTALL_PREFIX: /Library/Python/3.6/site-packages/pyplasm
-
-
+```
 python3 -c "from pyplasm import *; c=CUBOID([1,1,1]); VIEW(c)"
-
+```
 
 # Linux compilation
 
@@ -146,8 +149,11 @@ mkdir build && cd build
 cmake ../
 make -j 4
 sudo make install
+```
 
+Test if it's working:
+
+```
 python3 -c "from pyplasm import *; c=CUBOID([1,1,1]); VIEW(c)"
-
 ```
 
