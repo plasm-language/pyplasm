@@ -1,0 +1,122 @@
+
+language: cpp
+
+sudo: false
+
+notifications:
+  email:
+    recipients:
+      - scrgiorgio@gmail.com
+    on_success: always
+    on_failure: always 
+   
+matrix:
+
+  include:
+
+    - os: osx
+      osx_image: xcode9.4
+      compiler: clang
+      env: COMPILER=clang++ BUILD_TYPE=Release 
+
+    - os: linux
+      dist: trusty
+      env: COMPILER=g++-4 BUILD_TYPE=Release 
+      addons: 
+        apt:
+          packages: g++-4
+          sources:
+            - ubuntu-toolchain-r-test
+      
+  exclude:
+
+    - os: osx
+      osx_image: xcode9.4
+      compiler: clang
+      env: COMPILER=clang++ BUILD_TYPE=Debug 
+
+    - os: linux
+      dist: trusty
+      env: COMPILER=g++-4 BUILD_TYPE=Debug
+      addons: 
+        apt:
+          packages: g++-4
+          sources:
+            - ubuntu-toolchain-r-test
+
+install:
+
+    # (linux) install linux dependencies
+    - |
+      if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+        sudo apt-get -qy update
+        sudo apt-get -qy install swig3.0 git cmake  libssl-dev uuid-dev  qt5-default qttools5-dev-tools libx11-xcb1 python3 python3-pip
+        sudo pip3 install numpy setuptools wheel
+        sudo python3 -m pip install --upgrade pip setuptools wheel
+      fi     
+      
+    # (linux) install qt 5.9.1
+    - |
+      if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+        sudo add-apt-repository ppa:beineri/opt-qt591-trusty -y; 
+        sudo apt-get update -qq
+        sudo apt-get install -qq qt59base
+        source /opt/qt59/bin/qt59-env.sh
+      fi     
+
+    # (linux) Download and install recent cmake
+    - |
+      if [[ ${TRAVIS_OS_NAME} == "linux" ]]; then
+        CMAKE_URL="http://www.cmake.org/files/v3.4/cmake-3.4.3-Linux-x86_64.tar.gz"
+        mkdir -p ${TRAVIS_BUILD_DIR}/deps/cmake
+        travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C ${TRAVIS_BUILD_DIR}/deps/cmake
+        export PATH=${TRAVIS_BUILD_DIR}/deps/cmake/bin:${PATH}
+      fi
+      
+    # (osx) brew install dependencies
+    - | 
+      if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then 
+        brew install swig qt5   
+        brew upgrade python # from 2 -> 3
+        pip3 install numpy setuptools wheel
+        gem install xcpretty # this is to solve logs too long
+      fi    
+ 
+script:
+    - cd "${TRAVIS_BUILD_DIR}"
+    - mkdir build && cd build
+    - |
+      if [[ ${TRAVIS_OS_NAME} == "linux" ]]; then  
+      	cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE ../   
+      	cmake --build ./ --target all
+      	cmake --build ./ --target test
+      	cmake --build ./ --target install
+      	cd install 
+      	python3 setup.py bdist_wheel --python-tag=cp36  --plat-name=linux_x86_64 
+      fi    
+      
+    - | 
+      if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then      
+      	cmake -GXcode -DQt5_DIR=/usr/local/opt/qt/lib/cmake/Qt5 ..
+      	set -o pipefail &&  cmake --build ./ --target ALL_BUILD --config $BUILD_TYPE | xcpretty -c
+      	cmake --build ./                     --target RUN_TESTS --config $BUILD_TYPE
+      	cmake --build ./                     --target install   --config $BUILD_TYPE 
+      	cd install 
+      	python3 setup.py bdist_wheel --python-tag=cp36 --plat-name=macosx_10_13_x86_64 
+      fi          
+    
+before_deploy:
+  - export DEPLOY_FILENAME=$(ls ${TRAVIS_BUILD_DIR}/build/install/dist/*.whl) 
+  - echo "deploying $DEPLOY_FILENAME to GitHub releases"    
+
+deploy:
+  provider: releases
+  api_key:
+    secure: vvs+N/XwsigYj6pZIR0Lksg+FnA2M7bCy4aHj7at1nPOtX3ZHHdkSgIyd06awkiWSNg++fM6GIi7ewU+ftX9rGxgRFG5eWIKQyuHHPvNSIIcJe1cY7440Y6Kb2p58BFeGQxLJl0y3XlCObPW7yMoY7h9i6kTL6w7k3NkdWkFpdDaNXXEaGnzeoaM6u+iBmgAWgX9Ozlu+ogjFpw5b7QPtKgi1Bey/IbIeVWExuFnXsTJe3MDobdFvgJ0tewErnWAey3V8IXQzVMqdOIAl+xtu3RMmsdNymDAZpof31wFNLCr7BMmIg/O2QW1tnvNXuFX9Gpry5CKb7i0oxthiLyNTkh2sZQcAJcBdWJlP4LiSCBoJ2HuAc5XSqss8aXt/hHAzL3ICPtd6wVPlHEMK1+/EsC4WcO5X0ngzmGnn8eceIBFJiqYhI+c85GqUWPrFw+REKUsAwthMK0tNErruWZR1uubYnlyQYHpSaPdKie6o0aWK8Xit+GN3jkcqRrhQDwX3WFLxw2N07eh/f3vCD4m7GwRJfi5LXDuoLp3Qg5w23gi4ewp71v9oTZNT4K3vVEYuwzCyglppjyszQDvBAwxgxnWtSZh2nGEtwtDL5dRiIXehqfaK7mRKQ8iZwpQkuyTD+rsl45nTuNjeKYC3BLHd+NZhJI8qmcD6oykt+oxzjg=
+  file: ${DEPLOY_FILENAME}
+  skip_cleanup: true
+  on:
+    repo: sci-visus/OpenVisus
+    tags: true
+    all_branches: true
+
