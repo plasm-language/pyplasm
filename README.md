@@ -42,6 +42,7 @@ In MacOSX, if you are using python 3.x in brew:
 ```
 sudo pip3 uninstall -y pyplasm
 sudo pip3 install numpy PyOpenGL
+sudo pip3 uninstall -y pyplasm
 sudo pip3 install --no-cache-dir pyplasm
 ```
 
