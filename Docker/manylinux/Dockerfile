@@ -14,7 +14,7 @@ RUN  set -x \
 	&& make -j 8  \
 	&& make install  \
 	&& hash -r  \
-	&& cd .. && rm -Rf cmake-3.12.0-rc1
+	&& cd .. && rm -Rf cmake-3.12.0-rc1*
 	
 # openssl 
 RUN set -x \
@@ -24,7 +24,7 @@ RUN set -x \
 	&& ./config -fpic shared --prefix=/usr/local \
 	&& make \
 	&& make install \
-	&& cd ../ && rm -Rf openssl-1.0.2a 
+	&& cd ../ && rm -Rf openssl-1.0.2a* 
 
 # python3
 RUN set -x \
@@ -39,16 +39,20 @@ RUN set -x \
 	&& make -j 4 \
 	&& make install \
 	&& cd ../ \
-	&& rm -Rf Python-3.6.5
+	&& rm -Rf Python-3.6.5*
 	
 # install pip3 packages
-RUN set -x \	
+RUN set -x \
 	&& pip3 install --upgrade pip \
 	&& pip3 install numpy setuptools wheel twine auditwheel PyOpenGL PyOpenGL-accelerate
 
 
 # /////////////////////////////////////////////
 # pyplasm (forcing clone)
+
+RUN yum install -y alsa-lib-devel freetype-devel libX11-devel libXext-devel libXinerama-devel libXcursor-devel 
+RUN yum install -y libXdamage-devel libXv-devel libxkbfile-devel alsa-lib-devel cups-devel ffmpeg-devel libXrandr-devel
+
 
 ENV PYPLASM_HOME  /home/pyplasm
 ENV GIT_BRANCH master
@@ -57,6 +61,8 @@ ADD https://api.github.com/repos/plasm-language/pyplasm/git/refs/heads/$GIT_BRAN
 RUN git clone -b$GIT_BRANCH https://github.com/plasm-language/pyplasm.git $PYPLASM_HOME
 RUN mkdir -p $PYPLASM_HOME/build
 WORKDIR $PYPLASM_HOME/build 
+
+...broken from here....
 
 RUN cmake ../
 RUN cmake --build . --target all -- -j 4
