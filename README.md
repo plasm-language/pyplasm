@@ -31,6 +31,7 @@ In windows type:
 
 ```
 c:\Python36\Scripts\pip uninstall pyplasm
+c:\Python36\Scripts\pip install numpy PyOpenGL
 c:\Python36\Scripts\pip install pyplasm
 c:\Python36\python.exe -c "from pyplasm import *; c=CUBOID([1,1,1]); VIEW(c)"
 ```
@@ -39,6 +40,7 @@ In MacOSX, if you are using python 3.x in brew:
 
 ```
 sudo pip3 uninstall -y pyplasm
+sudo pip3 install numpy PyOpenGL
 sudo pip3 install --no-cache-dir pyplasm
 ```
 
@@ -165,7 +167,7 @@ sudo apt-get install python3 python3-dev libasound2-dev libfreetype6-dev xorg-de
 Install some extra python packages (make sure to use the right pip3 version):
 
 ```
-sudo -H pip3 install setuptools PyOpenGL PyOpenGL-accelerate  numpy
+sudo pip3 install setuptools PyOpenGL PyOpenGL-accelerate  numpy
 ```
 
 Generate makefiles and make binaries:
@@ -175,8 +177,8 @@ git clone git://github.com/plasm-language/pyplasm.git
 cd pyplasm
 mkdir build && cd build
 cmake ../
-cmake         --build . --target all     --config Release -- -j 8
-sudo -H cmake --build . --target install --config Release 
+cmake      --build . --target ALL_BUILD --config Release -- -j 8
+sudo cmake --build . --target install   --config Release 
 ```
 
 Test if it's working:
@@ -185,10 +187,3 @@ Test if it's working:
 python3 -c "from pyplasm import *; c=CUBOID([1,1,1]); VIEW(c)"
 ```
 
-(OPTIONAL For developers) If you want to upload to PIP:
-
-```
-cd /usr/lib/python3.6/dist-packages/pyplasm
-sudo -H python3 setup.py bdist_wheel --python-tag=cp36 --plat-name=linux_x86_64 
-twine upload --repository-url https://upload.pypi.org/legacy/ dist/*.whl
-```
