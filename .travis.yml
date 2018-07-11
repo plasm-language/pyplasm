@@ -80,7 +80,6 @@ script:
       if [[ ${TRAVIS_OS_NAME} == "linux" ]]; then  
       	cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE ../   
       	cmake --build ./ --target all
-      	cmake --build ./ --target test
       	cmake --build ./ --target install
       	cd install 
       	python3 setup.py bdist_wheel --python-tag=cp36  --plat-name=linux_x86_64 
@@ -90,7 +89,6 @@ script:
       if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then      
       	cmake -GXcode ../
       	set -o pipefail &&  cmake --build ./ --target ALL_BUILD --config $BUILD_TYPE | xcpretty -c
-      	cmake --build ./                     --target RUN_TESTS --config $BUILD_TYPE
       	cmake --build ./                     --target install   --config $BUILD_TYPE 
       	cd install 
       	python3 setup.py bdist_wheel --python-tag=cp36 --plat-name=macosx_10_13_x86_64 
