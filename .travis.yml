@@ -28,21 +28,6 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
       
-  exclude:
-
-    - os: osx
-      osx_image: xcode9.4
-      compiler: clang
-      env: COMPILER=clang++ BUILD_TYPE=Debug 
-
-    - os: linux
-      dist: trusty
-      env: COMPILER=g++-4 BUILD_TYPE=Debug
-      addons: 
-        apt:
-          packages: g++-4
-          sources:
-            - ubuntu-toolchain-r-test
 
 install:
 
@@ -51,6 +36,7 @@ install:
       if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
         sudo apt-get -qy update
         sudo apt-get -qy install swig3.0 git cmake  libssl-dev libx11-xcb1 python3 python3-pip
+        sudo apt-get install python3 python3-dev libasound2-dev libfreetype6-dev xorg-dev libglu1-mesa-dev python3-pip libldap2-dev
         sudo pip3 install numpy setuptools wheel
         sudo python3 -m pip install --upgrade pip setuptools wheel
       fi     
@@ -81,31 +67,12 @@ script:
       	cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE ../   
       	cmake --build ./ --target all
       	cmake --build ./ --target install
-      	cd install 
-      	python3 setup.py bdist_wheel --python-tag=cp36  --plat-name=linux_x86_64 
       fi    
       
     - | 
       if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then      
       	cmake -GXcode ../
-      	set -o pipefail &&  cmake --build ./ --target ALL_BUILD --config $BUILD_TYPE | xcpretty -c
-      	cmake --build ./                     --target install   --config $BUILD_TYPE 
-      	cd install 
-      	python3 setup.py bdist_wheel --python-tag=cp36 --plat-name=macosx_10_13_x86_64 
+      	cmake --build ./ --target ALL_BUILD --config $BUILD_TYPE
+      	cmake --build ./ --target install   --config $BUILD_TYPE 
       fi          
     
-before_deploy:
-  - export DEPLOY_FILENAME=$(ls ${TRAVIS_BUILD_DIR}/build/install/dist/*.whl) 
-  - echo "deploying $DEPLOY_FILENAME to GitHub releases"    
-
-deploy:
-  provider: releases
-  api_key:
-    secure: vvs+N/XwsigYj6pZIR0Lksg+FnA2M7bCy4aHj7at1nPOtX3ZHHdkSgIyd06awkiWSNg++fM6GIi7ewU+ftX9rGxgRFG5eWIKQyuHHPvNSIIcJe1cY7440Y6Kb2p58BFeGQxLJl0y3XlCObPW7yMoY7h9i6kTL6w7k3NkdWkFpdDaNXXEaGnzeoaM6u+iBmgAWgX9Ozlu+ogjFpw5b7QPtKgi1Bey/IbIeVWExuFnXsTJe3MDobdFvgJ0tewErnWAey3V8IXQzVMqdOIAl+xtu3RMmsdNymDAZpof31wFNLCr7BMmIg/O2QW1tnvNXuFX9Gpry5CKb7i0oxthiLyNTkh2sZQcAJcBdWJlP4LiSCBoJ2HuAc5XSqss8aXt/hHAzL3ICPtd6wVPlHEMK1+/EsC4WcO5X0ngzmGnn8eceIBFJiqYhI+c85GqUWPrFw+REKUsAwthMK0tNErruWZR1uubYnlyQYHpSaPdKie6o0aWK8Xit+GN3jkcqRrhQDwX3WFLxw2N07eh/f3vCD4m7GwRJfi5LXDuoLp3Qg5w23gi4ewp71v9oTZNT4K3vVEYuwzCyglppjyszQDvBAwxgxnWtSZh2nGEtwtDL5dRiIXehqfaK7mRKQ8iZwpQkuyTD+rsl45nTuNjeKYC3BLHd+NZhJI8qmcD6oykt+oxzjg=
-  file: ${DEPLOY_FILENAME}
-  skip_cleanup: true
-  on:
-    repo: sci-visus/OpenVisus
-    tags: true
-    all_branches: true
-
