@@ -1,0 +1,31 @@
+version: '1.0.{build}'
+
+os: Visual Studio 2017
+
+platform:
+  - x64
+  
+notifications:
+  - provider: Email
+    to:
+      - scrgiorgio@gmail.com
+    on_build_success: true
+    on_build_failure: true
+    on_build_status_changed: true  
+  
+environment:
+  Configuration: Release
+  GENERATOR: Visual Studio 15 2017 Win64
+
+install:
+  - choco install -y --allow-empty-checksums swig 
+
+build_script:
+  - cd %APPVEYOR_BUILD_FOLDER%
+  - mkdir build 
+  - cd build 
+  - set PATH=C:\Python36-x64;C:\Python36-x64\Scripts;%PATH%
+  - pip install numpy setuptools wheel twine
+  - cmake -G "%GENERATOR%" 
+  - cmake --build . --target ALL_BUILD --config %Configuration%
+  - cmake --build . --target INSTALL   --config %Configuration% 
