@@ -32,7 +32,8 @@ In windows type:
 ```
 c:\Python36\Scripts\pip uninstall pyplasm
 c:\Python36\Scripts\pip install numpy PyOpenGL
-c:\Python36\Scripts\pip install pyplasm
+c:\Python36\Scripts\pip uninstall -y pyplasm
+c:\Python36\Scripts\pip install --no-cache-dir pyplasm
 c:\Python36\python.exe -c "from pyplasm import *; c=CUBOID([1,1,1]); VIEW(c)"
 ```
 
