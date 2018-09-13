@@ -1,7 +1,7 @@
 
 language: cpp
 
-sudo: false
+sudo: required	
 
 notifications:
   email:
@@ -9,70 +9,215 @@ notifications:
       - scrgiorgio@gmail.com
     on_success: always
     on_failure: always 
-   
+    
+env:
+  global:
+    - BUILD_TYPE=RelWithDebInfo 
+    - PYPI_USERNAME=scrgiorgio
+    - secure: "Qa5RdtGwgXMDbgvvn6HiWw5MJgQeDwCPZVbhwcOC+DrkqvMgGEiOwViHU/uhgTM70k0MqUCLOK6MacwXeA5rjuW++KD9aqCK1QZKxJrRqVJR5JXblyQlgDo0qVJk/h2iM306GxOiw9eMV3aIoKKGuH1Z008U8rPf1Ld3sEMUFSMVPf+yaNH3+NXky3+GSLp+02y/BlB1EDLjFtRzBOzRK+l/nbZDLrrzBWwXZu3YM3Drd1q9saDgKcfOCZhHPDZuZrC335W4IF6KUXuByD0cnQ3QsUCox6zqw1aanqBMRrz3+VxggbZTR+Lkr//bJDzhBhywCfgcCA0KcHQSJWi0oQ6WTwFGUEiXGCJR2OMNfRs2T8VEhiRdkGKCYmJjXgzvICL3lz9B3l5kVu3XJJ6mF0oMIkNYPWjKaoxFZViLMc+D7puHVeMTVuApMp8uNoemXeRM3o35fte29DCWyGlOBMRt/QoqOqZyOFNEYPvHZPFCoOcleGHdyIFTVSs6/oLbUjjtk+UX5hofcZ2dtXFLm6RhNdkazPQFjifcGbnWmiZ6LL6H5cM4z8H1eKo8UnK2FucnHeewogqLwtC3495IcEH92XUQEoH3lg8gWI7ZVOrMWXgn7ciFJQWWcMQxRopXkptvbGSPk+Y0X7Dj34TEeV+VVATkYinceALRgdKyo4s="
+  
 matrix:
 
   include:
 
+    # ///////////////////////////////// osx 10.13
+    
     - os: osx
-      osx_image: xcode9.4
+      osx_image: xcode9.4 #10.13
       compiler: clang
-      env: COMPILER=clang++ BUILD_TYPE=Release 
+      env: [
+        APPLE_OSX_VERSION=10.13,
+        COMPILER=clang++,
+        PYTHON_VERSION=2.7.15,
+        PYTHON_EXECUTABLE=$HOME/.pyenv/versions/2.7.15/bin/python ,
+        PYTHON_INCLUDE_DIR=$HOME/.pyenv/versions/2.7.15/include/python2.7,
+        PYTHON_LIBRARY=$HOME/.pyenv/versions/2.7.15/lib/libpython2.7.dylib
+      ] 
+      
+    - os: osx
+      osx_image: xcode9.4 #10.13
+      compiler: clang
+      env: [
+        APPLE_OSX_VERSION=10.13,
+        COMPILER=clang++,
+        PYTHON_VERSION=3.6.6,
+        PYTHON_EXECUTABLE=$HOME/.pyenv/versions/3.6.6/bin/python ,
+        PYTHON_INCLUDE_DIR=$HOME/.pyenv/versions/3.6.6/include/python3.6m,
+        PYTHON_LIBRARY=$HOME/.pyenv/versions/3.6.6/lib/libpython3.6m.dylib
+      ]                   
+          
+    - os: osx
+      osx_image: xcode9.4 
+      compiler: clang
+      env: [
+        APPLE_OSX_VERSION=10.13,
+        COMPILER=clang++,
+        PYTHON_VERSION=3.7.0,
+        PYTHON_EXECUTABLE=$HOME/.pyenv/versions/3.7.0/bin/python ,
+        PYTHON_INCLUDE_DIR=$HOME/.pyenv/versions/3.7.0/include/python3.7m,
+        PYTHON_LIBRARY=$HOME/.pyenv/versions/3.7.0/lib/libpython3.7m.dylib
+      ]
+      
+    # ///////////////////////////////// osx 10.12
+    
+    - os: osx
+      osx_image: xcode8.3
+      compiler: clang
+      env: [
+        APPLE_OSX_VERSION=10.12,
+        COMPILER=clang++,
+        PYTHON_VERSION=2.7.15,
+        PYTHON_EXECUTABLE=$HOME/.pyenv/versions/2.7.15/bin/python ,
+        PYTHON_INCLUDE_DIR=$HOME/.pyenv/versions/2.7.15/include/python2.7,
+        PYTHON_LIBRARY=$HOME/.pyenv/versions/2.7.15/lib/libpython2.7.dylib
+      ]   
+            
+    - os: osx
+      osx_image: xcode8.3
+      compiler: clang
+      env: [
+        APPLE_OSX_VERSION=10.12,
+        COMPILER=clang++,
+        PYTHON_VERSION=3.6.6,
+        PYTHON_EXECUTABLE=$HOME/.pyenv/versions/3.6.6/bin/python ,
+        PYTHON_INCLUDE_DIR=$HOME/.pyenv/versions/3.6.6/include/python3.6m,
+        PYTHON_LIBRARY=$HOME/.pyenv/versions/3.6.6/lib/libpython3.6m.dylib 
+      ]    
 
+    - os: osx
+      osx_image: xcode8.3
+      compiler: clang
+      env: [
+        APPLE_OSX_VERSION=10.12,
+        COMPILER=clang++,
+        PYTHON_VERSION=3.7.0,
+        PYTHON_EXECUTABLE=$HOME/.pyenv/versions/3.7.0/bin/python ,
+        PYTHON_INCLUDE_DIR=$HOME/.pyenv/versions/3.7.0/include/python3.7m,
+        PYTHON_LIBRARY=$HOME/.pyenv/versions/3.7.0/lib/libpython3.7m.dylib
+      ]     
+      
+    # ///////////////////////////////// Ubuntu 14.04 
+    
     - os: linux
       dist: trusty
-      env: COMPILER=g++-4 BUILD_TYPE=Release 
+      env: [
+          COMPILER=g++-4,
+          PYTHON_VERSION=2.7,
+          PYTHON_INCLUDE_DIR=/usr/include/python2.7,
+          PYTHON_LIBRARY=/usr/lib/x86_64-linux-gnu/libpython2.7.so,
+          PYTHON_EXECUTABLE=/usr/bin/python2.7
+        ]
       addons: 
         apt:
-          packages: g++-4
-          sources:
-            - ubuntu-toolchain-r-test
+          packages: ['g++-4']
+          sources: ['ubuntu-toolchain-r-test']       
+          
+    - os: linux
+      dist: trusty
+      env: [
+          COMPILER=g++-4,
+          PYTHON_VERSION=3.4,
+          PYTHON_INCLUDE_DIR=/usr/include/python3.4m,
+          PYTHON_LIBRARY=/usr/lib/x86_64-linux-gnu/libpython3.4m.so,
+          PYTHON_EXECUTABLE=/usr/bin/python3.4
+        ]
+      addons: 
+        apt:
+          packages: ['g++-4']
+          sources: ['ubuntu-toolchain-r-test']
+         
+    - os: linux
+      dist: trusty
+      env: [
+          COMPILER=g++-4,
+          PYTHON_VERSION=3.5,
+          PYTHON_INCLUDE_DIR=/usr/include/python3.5m,
+          PYTHON_LIBRARY=/usr/lib/x86_64-linux-gnu/libpython3.5m.so,
+          PYTHON_EXECUTABLE=/usr/bin/python3.5
+        ]
+      addons: 
+        apt:
+          packages: ['g++-4']
+          sources: ['ubuntu-toolchain-r-test']
+                    
+    - os: linux
+      dist: trusty
+      env: [
+         COMPILER=g++-4,
+         PYTHON_VERSION=3.6,
+         PYTHON_INCLUDE_DIR=/usr/include/python3.6m,
+         PYTHON_LIBRARY=/usr/lib/x86_64-linux-gnu/libpython3.6m.so,
+         PYTHON_EXECUTABLE=/usr/bin/python3.6
+        ]       
+      addons: 
+        apt:
+          packages: ['g++-4']
+          sources: ['ubuntu-toolchain-r-test']
+    
+    
+script:
+    - | 
+      if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then   
+     
+        # python
+        cd $HOME     
+        curl -L https://raw.githubusercontent.com/yyuu/pyenv-installer/master/bin/pyenv-installer -O 
+        chmod a+x pyenv-installer 
+        ./pyenv-installer 
+        rm ./pyenv-installer 
+        export PATH="$HOME/.pyenv/bin:$PATH"
+        eval "$(pyenv init -)"
+        eval "$(pyenv virtualenv-init -)"
+        CONFIGURE_OPTS=--enable-shared pyenv install -s $PYTHON_VERSION    
+        CONFIGURE_OPTS=--enable-shared pyenv global     $PYTHON_VERSION 
+        python -m pip install --upgrade pip
+        python -m pip install numpy setuptools wheel twine          
+                
+        #  brew install dependencies
+        brew install swig        
+        
+        cd "${TRAVIS_BUILD_DIR}" && mkdir build && cd build      
+        cmake -GXcode -DPYTHON_VERSION=${PYTHON_VERSION} -DPYTHON_EXECUTABLE=${PYTHON_EXECUTABLE} -DPYTHON_INCLUDE_DIR=${PYTHON_INCLUDE_DIR} -DPYTHON_LIBRARY=${PYTHON_LIBRARY} -DCMAKE_INSTALL_PREFIX=${TRAVIS_BUILD_DIR}/build/install ../
+        cmake --build ./ --target ALL_BUILD   --config $BUILD_TYPE
+        cmake --build ./ --target install     --config $BUILD_TYPE
+        cmake --build ./ --target dist        --config $BUILD_TYPE
+      fi 
       
-
-install:
-
-    # (linux) install linux dependencies
-    - |
-      if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+    - |     
+      if [[ ${TRAVIS_OS_NAME} == "linux" ]]; then 
+      
+        #  install linux dependencies
+        sudo add-apt-repository -y ppa:deadsnakes/ppa
         sudo apt-get -qy update
-        sudo apt-get -qy install swig3.0 git cmake  libssl-dev libx11-xcb1 python3 python3-pip
-        sudo apt-get install python3 python3-dev libasound2-dev libfreetype6-dev xorg-dev libglu1-mesa-dev python3-pip libldap2-dev
-        sudo pip3 install numpy setuptools wheel
-        sudo python3 -m pip install --upgrade pip setuptools wheel
-      fi     
-      
-    # (linux) Download and install recent cmake
-    - |
-      if [[ ${TRAVIS_OS_NAME} == "linux" ]]; then
+        sudo apt-get -qy install --allow-unauthenticated swig3.0 git cmake libssl-dev libx11-xcb1 python${PYTHON_VERSION} python${PYTHON_VERSION}-dev
+        sudo apt-get -qy install libasound2-dev libfreetype6-dev xorg-dev libglu1-mesa-dev python3-pip libldap2-dev
+        curl -L https://bootstrap.pypa.io/get-pip.py -o /tmp/get-pip.py
+        sudo -H python${PYTHON_VERSION} /tmp/get-pip.py
+        sudo -H python${PYTHON_VERSION} -m pip install --upgrade pip
+        sudo -H python${PYTHON_VERSION} -m pip install numpy setuptools wheel twine
+        
+        # Download and install recent cmake
         CMAKE_URL="http://www.cmake.org/files/v3.4/cmake-3.4.3-Linux-x86_64.tar.gz"
         mkdir -p ${TRAVIS_BUILD_DIR}/deps/cmake
         travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C ${TRAVIS_BUILD_DIR}/deps/cmake
-        export PATH=${TRAVIS_BUILD_DIR}/deps/cmake/bin:${PATH}
-      fi
+        export PATH=${TRAVIS_BUILD_DIR}/deps/cmake/bin:${PATH}        
       
-    # (osx) brew install dependencies
-    - | 
-      if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then 
-        brew install swig    
-        brew upgrade python # from 2 -> 3
-        pip3 install numpy setuptools wheel
-        gem install xcpretty # this is to solve logs too long
+        cd "${TRAVIS_BUILD_DIR}" && mkdir build && cd build  
+        cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPYTHON_VERSION=${PYTHON_VERSION} -DPYTHON_EXECUTABLE=${PYTHON_EXECUTABLE} -DPYTHON_INCLUDE_DIR=${PYTHON_INCLUDE_DIR} -DPYTHON_LIBRARY=${PYTHON_LIBRARY} ..
+        cmake --build ./ --target all
+        cmake --build ./ --target install
+        cmake --build ./ --target dist
       fi    
- 
-script:
-    - cd "${TRAVIS_BUILD_DIR}"
-    - mkdir build && cd build
-    - |
-      if [[ ${TRAVIS_OS_NAME} == "linux" ]]; then  
-      	cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE ../   
-      	cmake --build ./ --target all
-      	cmake --build ./ --target install
-      fi    
-      
-    - | 
-      if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then      
-      	cmake -GXcode ../
-      	cmake --build ./ --target ALL_BUILD --config $BUILD_TYPE
-      	cmake --build ./ --target install   --config $BUILD_TYPE 
-      fi          
-    
+
+before_deploy:
+  - export DEPLOY_FILENAME=$(ls ${TRAVIS_BUILD_DIR}/build/install/dist/*.whl) 
+
+after_deploy:
+  - echo "[distutils]"                > $HOME/.pypirc
+  - echo "index-servers ="           >> $HOME/.pypirc
+  - echo "    pypi"                  >> $HOME/.pypirc
+  - echo "[pypi]"                    >> $HOME/.pypirc
+  - echo "username=$PYPI_USERNAME"   >> $HOME/.pypirc
+  - echo "password=$PYPI_PASSWORD"   >> $HOME/.pypirc
+  - if [ -n "$TRAVIS_TAG" ]; then twine upload --skip-existing $DEPLOY_FILENAME ; else echo "Not on a tag, won't deploy to pypi" ; fi
+

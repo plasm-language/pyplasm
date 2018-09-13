@@ -2,8 +2,17 @@ import os, sys, setuptools
 import shutil
 
 #increase this number for PIP
-VERSION="1.1.1"
+VERSION="1.2"
 this_dir="."
+
+
+shutil.rmtree('./build', ignore_errors=True)
+shutil.rmtree('./dist', ignore_errors=True)
+shutil.rmtree('./pyplasm.egg-info', ignore_errors=True)
+shutil.rmtree('./__pycache__', ignore_errors=True)
+shutil.rmtree('./examples\__pycache__', ignore_errors=True)
+
+
 
 # findFilesInCurrentDirectory
 def findFilesInCurrentDirectory():
