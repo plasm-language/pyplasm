@@ -22,18 +22,7 @@ matrix:
 
     # ///////////////////////////////// osx 10.13
     
-    - os: osx
-      osx_image: xcode9.4 #10.13
-      compiler: clang
-      env: [
-        APPLE_OSX_VERSION=10.13,
-        COMPILER=clang++,
-        PYTHON_VERSION=2.7.15,
-        PYTHON_EXECUTABLE=$HOME/.pyenv/versions/2.7.15/bin/python ,
-        PYTHON_INCLUDE_DIR=$HOME/.pyenv/versions/2.7.15/include/python2.7,
-        PYTHON_LIBRARY=$HOME/.pyenv/versions/2.7.15/lib/libpython2.7.dylib
-      ] 
-      
+
     - os: osx
       osx_image: xcode9.4 #10.13
       compiler: clang
@@ -66,18 +55,6 @@ matrix:
       env: [
         APPLE_OSX_VERSION=10.12,
         COMPILER=clang++,
-        PYTHON_VERSION=2.7.15,
-        PYTHON_EXECUTABLE=$HOME/.pyenv/versions/2.7.15/bin/python ,
-        PYTHON_INCLUDE_DIR=$HOME/.pyenv/versions/2.7.15/include/python2.7,
-        PYTHON_LIBRARY=$HOME/.pyenv/versions/2.7.15/lib/libpython2.7.dylib
-      ]   
-            
-    - os: osx
-      osx_image: xcode8.3
-      compiler: clang
-      env: [
-        APPLE_OSX_VERSION=10.12,
-        COMPILER=clang++,
         PYTHON_VERSION=3.6.6,
         PYTHON_EXECUTABLE=$HOME/.pyenv/versions/3.6.6/bin/python ,
         PYTHON_INCLUDE_DIR=$HOME/.pyenv/versions/3.6.6/include/python3.6m,
@@ -98,20 +75,7 @@ matrix:
       
     # ///////////////////////////////// Ubuntu 14.04 
     
-    - os: linux
-      dist: trusty
-      env: [
-          COMPILER=g++-4,
-          PYTHON_VERSION=2.7,
-          PYTHON_INCLUDE_DIR=/usr/include/python2.7,
-          PYTHON_LIBRARY=/usr/lib/x86_64-linux-gnu/libpython2.7.so,
-          PYTHON_EXECUTABLE=/usr/bin/python2.7
-        ]
-      addons: 
-        apt:
-          packages: ['g++-4']
-          sources: ['ubuntu-toolchain-r-test']       
-          
+
     - os: linux
       dist: trusty
       env: [
@@ -205,8 +169,8 @@ script:
         cd "${TRAVIS_BUILD_DIR}" && mkdir build && cd build  
         cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPYTHON_VERSION=${PYTHON_VERSION} -DPYTHON_EXECUTABLE=${PYTHON_EXECUTABLE} -DPYTHON_INCLUDE_DIR=${PYTHON_INCLUDE_DIR} -DPYTHON_LIBRARY=${PYTHON_LIBRARY} ..
         cmake --build ./ --target all
-        cmake --build ./ --target install
-        cmake --build ./ --target dist
+        sudo cmake --build ./ --target install
+        sudo cmake --build ./ --target dist
       fi    
 
 before_deploy:
