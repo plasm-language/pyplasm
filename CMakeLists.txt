@@ -95,6 +95,9 @@ if (1)
 	  set(PLAT_NAME win_amd64)
 	elseif(APPLE)
 	
+		execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpmachine OUTPUT_VARIABLE MACHINE OUTPUT_STRIP_TRAILING_WHITESPACE)
+		string(REGEX REPLACE ".*-darwin([0-9]+).*" "\\1" _apple_ver "${MACHINE}")
+	
 		if (_apple_ver EQUAL "17")
 			set(APPLE_OSX_VERSION 10.13)
 		elseif (_apple_ver EQUAL "16")

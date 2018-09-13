@@ -167,7 +167,7 @@ script:
         export PATH=${TRAVIS_BUILD_DIR}/deps/cmake/bin:${PATH}        
       
         cd "${TRAVIS_BUILD_DIR}" && mkdir build && cd build  
-        cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPYTHON_VERSION=${PYTHON_VERSION} -DPYTHON_EXECUTABLE=${PYTHON_EXECUTABLE} -DPYTHON_INCLUDE_DIR=${PYTHON_INCLUDE_DIR} -DPYTHON_LIBRARY=${PYTHON_LIBRARY} ..
+        cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DPYTHON_VERSION=${PYTHON_VERSION} -DPYTHON_EXECUTABLE=${PYTHON_EXECUTABLE} -DPYTHON_INCLUDE_DIR=${PYTHON_INCLUDE_DIR} -DPYTHON_LIBRARY=${PYTHON_LIBRARY} -DCMAKE_INSTALL_PREFIX=${TRAVIS_BUILD_DIR}/build/install ..
         cmake --build ./ --target all
         sudo cmake --build ./ --target install
         sudo cmake --build ./ --target dist
