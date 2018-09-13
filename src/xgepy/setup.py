@@ -10,20 +10,14 @@ shutil.rmtree('./build', ignore_errors=True)
 shutil.rmtree('./dist', ignore_errors=True)
 shutil.rmtree('./pyplasm.egg-info', ignore_errors=True)
 shutil.rmtree('./__pycache__', ignore_errors=True)
-shutil.rmtree('./examples\__pycache__', ignore_errors=True)
-
-
+shutil.rmtree('./examples/__pycache__', ignore_errors=True)
 
 # findFilesInCurrentDirectory
 def findFilesInCurrentDirectory():
 	ret=[]
-	for dirpath, __dirnames__, filenames in os.walk(this_dir):
+	for dirpath, __dirnames__, filenames in os.walk("."):
 	  for filename in filenames:
 	    file= os.path.abspath(os.path.join(dirpath, filename))
-	    first_dir=dirpath.replace("\\","/").split("/")
-	    first_dir=first_dir[1] if len(first_dir)>=2 else ""
-	    if first_dir in ("build","dist","pyplasm.egg-info","__pycache__") or file.endswith(".pdb"):
-	    	continue
 	    ret.append(file)
 	return ret
 

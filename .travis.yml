@@ -158,7 +158,7 @@ script:
         curl -L https://bootstrap.pypa.io/get-pip.py -o /tmp/get-pip.py
         sudo -H python${PYTHON_VERSION} /tmp/get-pip.py
         sudo -H python${PYTHON_VERSION} -m pip install --upgrade pip
-        sudo -H python${PYTHON_VERSION} -m pip install numpy setuptools wheel twine
+        sudo -H python${PYTHON_VERSION} -m pip install --upgrade numpy setuptools wheel twine
         
         # Download and install recent cmake
         CMAKE_URL="http://www.cmake.org/files/v3.4/cmake-3.4.3-Linux-x86_64.tar.gz"
