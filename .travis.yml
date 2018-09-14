@@ -176,7 +176,7 @@ script:
       fi  
       
     - | 
-      if [ -n "$TRAVIS_TAG" ]; then
+      if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then 
       
         # deploy to PyPi
         echo "[distutils]"                > $HOME/.pypirc
