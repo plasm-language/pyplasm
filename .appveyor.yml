@@ -41,7 +41,7 @@ build_script:
   - cd build 
   - set PATH=%PYTHON_DIR%;%PYTHON_DIR%\Scripts;%PATH%
   - python -m pip install numpy setuptools wheel twine
-  - cmake -G "%CMAKE_GENERATOR%" -DPYTHON_VERSION=%PYTHON_VERSION% -DPYTHON_EXECUTABLE=%PYTHON_DIR%/python.exe -DPYTHON_INCLUDE_DIR=%PYTHON_DIR%/include -DCMAKE_INSTALL_PREFIX=${TRAVIS_BUILD_DIR}/build/install ../
+  - cmake -G "%CMAKE_GENERATOR%" -DPYTHON_VERSION=%PYTHON_VERSION% -DPYTHON_EXECUTABLE=%PYTHON_DIR%/python.exe -DPYTHON_INCLUDE_DIR=%PYTHON_DIR%/include -DCMAKE_INSTALL_PREFIX=%APPVEYOR_BUILD_FOLDER%/build/install ../
   - cmake --build . --target ALL_BUILD   --config RelWithDebInfo
   - cmake --build . --target INSTALL     --config RelWithDebInfo   
   - cmake --build . --target dist        --config RelWithDebInfo
