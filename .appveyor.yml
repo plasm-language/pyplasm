@@ -60,5 +60,5 @@ on_success:
   - set HOME=%USERPROFILE%
   - set PATH=%PYTHON_DIR%;%PYTHON_DIR%\Scripts;%PATH% 
   - cd %APPVEYOR_BUILD_FOLDER%\build\install
-  - ps: If ($env:APPVEYOR_REPO_TAG -eq "true") { Invoke-Expression "twine upload --skip-existing dist/*.whl" } Else { write-output "Not on a tag, won't deploy to pypi"}
+  - ps: If ($env:APPVEYOR_REPO_TAG -eq "true") { Invoke-Expression "python${PYTHON_VERSION} -m twine upload --skip-existing dist/*.whl" } Else { write-output "Not on a tag, won't deploy to pypi"}
 
