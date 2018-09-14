@@ -173,17 +173,20 @@ script:
         cmake --build ./ --target all
         sudo cmake --build ./ --target install
         sudo cmake --build ./ --target dist
-      fi    
+      fi  
+      
+    - | 
+      if [ -n "$TRAVIS_TAG" ]; then  
+      
+      	# deploy to PyPi
+			echo "[distutils]"                > $HOME/.pypirc
+			echo "index-servers ="           >> $HOME/.pypirc
+			echo "    pypi"                  >> $HOME/.pypirc
+			echo "[pypi]"                    >> $HOME/.pypirc
+			echo "username=$PYPI_USERNAME"   >> $HOME/.pypirc
+			echo "password=$PYPI_PASSWORD"   >> $HOME/.pypirc
+			twine upload --skip-existing $(ls ${TRAVIS_BUILD_DIR}/build/install/dist/*.whl)
+      fi       
 
-before_deploy:
-  - export DEPLOY_FILENAME=$(ls ${TRAVIS_BUILD_DIR}/build/install/dist/*.whl) 
 
-after_deploy:
-  - echo "[distutils]"                > $HOME/.pypirc
-  - echo "index-servers ="           >> $HOME/.pypirc
-  - echo "    pypi"                  >> $HOME/.pypirc
-  - echo "[pypi]"                    >> $HOME/.pypirc
-  - echo "username=$PYPI_USERNAME"   >> $HOME/.pypirc
-  - echo "password=$PYPI_PASSWORD"   >> $HOME/.pypirc
-  - if [ -n "$TRAVIS_TAG" ]; then twine upload --skip-existing $DEPLOY_FILENAME ; else echo "Not on a tag, won't deploy to pypi" ; fi
 
