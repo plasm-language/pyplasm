@@ -156,8 +156,7 @@ script:
         sudo apt-get -qy install --allow-unauthenticated swig3.0 git cmake libssl-dev libx11-xcb1 python${PYTHON_VERSION} python${PYTHON_VERSION}-dev
         sudo apt-get -qy install libasound2-dev libfreetype6-dev xorg-dev libglu1-mesa-dev python3-pip libldap2-dev
         sudo pip3 install --upgrade pip
-        sudo pip3 install --upgrade virtualenv
-        sudo pip3 install --upgrade numpy setuptools wheel twine
+        pip3 install --user --upgrade numpy setuptools wheel twine
         
         # Download and install recent cmake
         CMAKE_URL="http://www.cmake.org/files/v3.4/cmake-3.4.3-Linux-x86_64.tar.gz"
