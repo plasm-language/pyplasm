@@ -150,14 +150,18 @@ script:
     - |     
       if [[ ${TRAVIS_OS_NAME} == "linux" ]]; then 
       
-        #  install linux dependencies
+        #  install python
         sudo add-apt-repository -y ppa:deadsnakes/ppa
         sudo apt-get -qy update
-        sudo apt-get -qy install --allow-unauthenticated swig3.0 git cmake libssl-dev libx11-xcb1 python${PYTHON_VERSION} python${PYTHON_VERSION}-dev
-        sudo apt-get -qy install libasound2-dev libfreetype6-dev xorg-dev libglu1-mesa-dev python3-pip libldap2-dev
-        sudo pip3 install --upgrade pip
-        pip3 install --user --upgrade numpy setuptools wheel twine
-        
+        sudo apt-get -qy install --allow-unauthenticated swig3.0 git cmake libssl-dev uuid-dev libx11-xcb1 python${PYTHON_VERSION} python${PYTHON_VERSION}-dev
+        curl -L https://bootstrap.pypa.io/get-pip.py -o /tmp/get-pip.py
+        sudo -H python${PYTHON_VERSION} /tmp/get-pip.py
+        sudo -H python${PYTHON_VERSION} -m pip install --upgrade pip
+        sudo -H python${PYTHON_VERSION} -m pip install numpy setuptools wheel twine      
+      
+        #  install linux dependencies
+        sudo apt-get -qy install libasound2-dev libfreetype6-dev xorg-dev libglu1-mesa-dev libldap2-dev
+
         # Download and install recent cmake
         CMAKE_URL="http://www.cmake.org/files/v3.4/cmake-3.4.3-Linux-x86_64.tar.gz"
         mkdir -p ${TRAVIS_BUILD_DIR}/deps/cmake
