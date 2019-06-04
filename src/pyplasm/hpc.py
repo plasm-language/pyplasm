@@ -236,7 +236,7 @@ class Hpc:
     faces=[face for face in faces if num_occurrence[tuple(sorted(face))]==1]
     
     points=[None]*len(POINTDB)
-    for point,num in POINTDB.iteritems(): 
+    for point,num in POINTDB.items(): 
       points[num]=point  
     
 
@@ -253,17 +253,17 @@ def selftest():
   #failed, total = doctest.testmod()
   #print "%d/%d failed" % (failed, total)
   
-  if False:
-    print Hpc.cube(3).view()
+  if True:
+    print(Hpc.cube(3).view())
   
-  if False:
+  if True:
     N,M=16,16
     domain=Hpc.power(Hpc.quote([math.pi/N]*N).translate([-math.pi/2]),Hpc.quote([2*math.pi/M]*M))
     obj=domain.mapFn(lambda p: [math.cos(p[0])*math.sin(p[1]),math.cos(p[0])*math.cos(p[1]),math.sin(p[0])])
     obj.view()
     
-  if False:
-    print Hpc.mkpol([[0],[1],[2],[3],[4],[5]],[[5,3],[0,1]])
+  if True:
+    Hpc.mkpol([[0],[1],[2],[3],[4],[5]],[[5,3],[0,1]]).view()
 
 if __name__=="__main__":
     selftest()

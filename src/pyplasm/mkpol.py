@@ -91,7 +91,7 @@ class MkPol:
         SIMPLICES.append([mapped[I] for I in simplex])
 
     POINTS=[None]*len(POINTDB)
-    for point,num in POINTDB.iteritems(): 
+    for point,num in POINTDB.items(): 
       POINTS[num]=point
       
     # fix orientation of triangles on the plane (important for a coherent orientation)

@@ -3,9 +3,11 @@ import math
 from OpenGL.GL      import *
 from OpenGL.GLU     import *
 
-from PyQt4.QtGui    import *
-from PyQt4.QtCore   import *
-from PyQt4.QtOpenGL import *
+from PyQt5.QtWidgets import QApplication
+
+from PyQt5.QtGui    import *
+from PyQt5.QtCore   import *
+from PyQt5.QtOpenGL import *
 
 from box import *
 
@@ -258,7 +260,7 @@ class Viewer(QGLWidget):
   # wheelEvent
   # ////////////////////////////////////////////
   def wheelEvent(self,event):
-    K=(+1 if event.delta()>0 else -1)*self.walk_speed
+    K=(+1 if max(event.angleDelta().x(),event.angleDelta().y())>0 else -1)*self.walk_speed
     self.pos=self.pos+self.dir*K
     self.redisplay()  
 

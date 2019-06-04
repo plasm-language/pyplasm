@@ -561,7 +561,7 @@ def INTSTO(n):
   >>> INTSTO(5)
   [1, 2, 3, 4, 5]
   """
-  return range(1,n+1)
+  return list(range(1,n+1))
 
 # FROMTO
 def FROMTO(args):  
@@ -569,7 +569,7 @@ def FROMTO(args):
   >>> FROMTO([1,4])
   [1, 2, 3, 4]
   """ 
-  return range(args[0],args[-1]+1)
+  return list(range(args[0],args[-1]+1))
 
 
 # PLASM  selectors
@@ -666,8 +666,8 @@ def RANGE(Pair):
   >>> RANGE([3,1])
   [3, 2, 1]
   """
-  if((Pair[-1]-Pair[0]) >= 0 ): return range(Pair[0], Pair[-1] + 1)
-  return range(Pair[0], Pair[-1] - 1, -1)
+  if((Pair[-1]-Pair[0]) >= 0 ): return list(range(Pair[0], Pair[-1] + 1))
+  return list(range(Pair[0], Pair[-1] - 1, -1))
 
 # SIGN
 def SIGN(Number): 
@@ -686,7 +686,7 @@ def PRINT(AnyValue):
 
 # PRINTPOL
 def PRINTPOL(PolValue):
-  print PolValue
+  print(PolValue)
   sys.stdout.flush()
   return PolValue
 
@@ -699,7 +699,7 @@ def TREE(f):
   4
   """
   def TREE_NO_CURRIED(fun,List):
-    length = len(List)
+    length = len(list(List))
     if length == 1: return List[0]
     k = int(len(List)/2)
     return f([TREE_NO_CURRIED(f, List[:k])] + [TREE_NO_CURRIED(f, List[k:])])
@@ -1021,11 +1021,11 @@ def ISPOL(obj):
 
 # PRINT POL
 def PRINTPOL(obj):
-  print obj
+  print(obj)
   return obj
 
 def PRINT(obj):
-  print obj
+  print(obj)
   return obj
 
 # view
@@ -1125,7 +1125,7 @@ MK = COMP([MKPOL, CONS([LIST, K([[1]]), K([[1]])])])
 
 # CONVEXHULL
 def CONVEXHULL(points):
-  return MKPOL([points, [range(1,len(points)+1)], [[1]]])
+  return MKPOL([points, [list(range(1,len(points)+1))], [[1]]])
 
 # UKPOL
 def UKPOL(pol):  
@@ -1145,7 +1145,7 @@ if False:
   def UKPOLF(pol):  
     """
     >>> temp=UKPOLF(Hpc.cube(3))
-    >>> print len(temp[0]),len(temp[0][0]), len(temp[1]), len(temp[1][0]), len(temp[2])
+    >>> print(len(temp[0]),len(temp[0][0]), len(temp[1]), len(temp[1][0]), len(temp[2]))
     6 4 1 6 1
     """
     f = StdVectorFloat()
@@ -1501,20 +1501,20 @@ class Bsp:
         assert(len(face.vertices)==1)
         N=len(points)
         points+=face.vertices
-        hulls+=[range(N,N+len(face.vertices))]
+        hulls+=[list(range(N,N+len(face.vertices)))]
       
       elif dim==2:
         assert(len(face.vertices)==2)
         N=len(points)
         points+=face.vertices
-        hulls+=[range(N,N+len(face.vertices))]
+        hulls+=[list(range(N,N+len(face.vertices)))]
         
       elif dim==3:
         assert(len(face.vertices)>=3)
         for I in range(2,len(face.vertices)):
           N=len(points)
           points+=[face.vertices[0],face.vertices[I-1],face.vertices[I]]
-          hulls+=[range(N,N+3)]
+          hulls+=[list(range(N,N+3))]
       else:
         raise Exception("not supported")
   
@@ -1807,7 +1807,7 @@ def MY_CYLINDER(args):
   R , H = args
   def MY_CYLINDER0(N):
     points=CIRCLE_POINTS(R,N)
-    circle=Hpc.mkpol(points,[range(N)])
+    circle=Hpc.mkpol(points,[list(range(N))])
     return Hpc.power(circle,Hpc.mkpol([[0],[H]],[[0,1]]))
   return MY_CYLINDER0
 
@@ -1946,7 +1946,7 @@ def POLYMARKER(type,MARKERSIZE=0.1):
 	marker=[marker0, marker1, marker2, marker3, marker4,marker5][type % 6]
 	def POLYMARKER_POINTS(points):
 		dim=len(points[0])
-		axis=range(1,dim+1)
+		axis=list(range(1,dim+1))
 		return Hpc.Struct([T(axis)(point)(marker) for point in points])
 	return POLYMARKER_POINTS
 
@@ -2150,9 +2150,9 @@ def PERMUTAHEDRON(d):
   >>> VIEW(Hpc.Struct([PERMUTAHEDRON(2),(PERMUTAHEDRON(2))]))
   >>> VIEW(Hpc.Struct([PERMUTAHEDRON(3),(PERMUTAHEDRON(3))]))
   """  
-  vertices = PERMUTATIONS(range(1,d+2))
+  vertices = PERMUTATIONS(list(range(1,d+2)))
   center = MEANPOINT(vertices)
-  cells=[range(1,len(vertices)+1)]
+  cells=[list(range(1,len(vertices)+1))]
   object=MKPOL([vertices,cells,[[1]]])
   object=object.translate([-coord for coord in center])
   for i in range(1,d+1): object=R([i,d+1])(PI/4)(object)
@@ -2206,7 +2206,7 @@ def CROSSPOLYTOPE(D):
 		point_pos=[0 for x in range(D)];point_pos[i]=+1
 		point_neg=[0 for x in range(D)];point_neg[i]=-1
 		points+=[point_pos,point_neg]
-	cells=[range(1,D*2+1)]
+	cells=[list(range(1,D*2+1))]
 	pols=[[1]]
 	return MKPOL([points,cells,pols])
 
@@ -2458,7 +2458,7 @@ def RIF(size):
 
 # FRACTALSIMPLEX
 def FRACTALSIMPLEX(D):
-  def FRACTALSIMPLEX0(N):
+	def FRACTALSIMPLEX0(N):
 		mkpols = COMP([COMP([COMP([COMP([STRUCT, AA(MKPOL)]), AA(AL)]), DISTR]), CONS([ID, K([[FROMTO([1,D+1])], [[1]]])])])
 		def COMPONENT(args):
 			i, seq = args
@@ -2471,7 +2471,7 @@ def FRACTALSIMPLEX(D):
 		expand = COMP([COMP([AA(COMPONENT), DISTR]), CONS([COMP([INTSTO, LEN]), ID])])
 		splitting =(COMP([COMP, DIESIS(N)]))((COMP([CAT, AA(expand)])))
 		return(COMP([COMP([COMP([COMP([mkpols, splitting]), CONS([S1])])])]))(UKPOL(SIMPLEX(D)))
-  return FRACTALSIMPLEX0
+	return FRACTALSIMPLEX0
 
 
 # PYRAMID
@@ -2608,14 +2608,14 @@ if False:
 
 # SWEEP 
 def SWEEP(v):
-  def SWEEP0(pol):
+	def SWEEP0(pol):
 		ret=Hpc.power(pol,QUOTE([1]))
 		mat=IDNT(len(v)+2)
 		for i in range(len(v)):
 			mat[i+1][len(v)+1]=v[i]
 		ret=MAT(mat)(ret)
 		return PROJECT(1)(ret)
-  return SWEEP0
+	return SWEEP0
 
 # MINKOWSKI
 def MINKOWSKI(vects):
@@ -3080,4 +3080,4 @@ if False:
 if __name__=="__main__":
   import doctest
   failed, total = doctest.testmod()
-  print "%d/%d failed" % (failed, total)
+  print("%d/%d failed" % (failed, total))

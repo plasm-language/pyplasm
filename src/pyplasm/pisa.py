@@ -44,7 +44,7 @@ def BuildBasament1(N=24):
 Basament1=BuildBasament1()
 
 if debug_tower:
-  print "Basament1..."
+  print("Basament1...")
   VIEW(Basament1)
 
 
@@ -65,7 +65,7 @@ def BuildBasament2(N=24):
 Basament2 = BuildBasament2()
 
 if debug_tower:
-  print "Basament2..."
+  print("Basament2...")
   VIEW(Basament2)
 
 # =======================================
@@ -768,5 +768,5 @@ Fabric = STRUCT([
 out = Fabric
 
 #Plasm.save(out,':models/pisa.hpc.gz')
-print "Pisa evaluated in",time.clock()-start,"seconds"
+print("Pisa evaluated in",time.clock()-start,"seconds")
 VIEW(out)

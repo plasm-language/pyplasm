@@ -1,12 +1,14 @@
 from OpenGL.GL      import *
 from OpenGL.GLU     import *
 
-from PyQt4.QtGui    import *
-from PyQt4.QtCore   import *
-from PyQt4.QtOpenGL import *
+from PyQt5.QtGui    import *
+from PyQt5.QtCore   import *
+from PyQt5.QtOpenGL import *
 
 from matrix import *
 from box    import *
+
+from functools import reduce
 
 # ////////////////////////////////////////////
 # GLVertexBuffer
@@ -113,7 +115,7 @@ class Batch3D:
     
   # writeProperties
   def writeProperties(self,properties):
-    for key,value in properties.iteritems():
+    for key,value in properties.items():
       self.properties[key]=value
  
   # render
