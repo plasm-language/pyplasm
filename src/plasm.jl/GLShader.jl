@@ -50,15 +50,23 @@ end
 # /////////////////////////////////////////////////////////////////////
 function createShader(type,source)
 	shader_id = glCreateShader(type)::GLuint
-	glShaderSource(shader_id, 1, convert(Ptr{UInt8}, pointer([convert(Ptr{GLchar}, pointer(source))])), C_NULL)
+	glCheckError()
+	glShaderSource(shader_id, 1, convert(Ptr{UInt8}, pointer([convert(Ptr{GLchar}, pointer(source))])) , C_NULL)
 	glCompileShader(shader_id)
 	status = GLint[0]
 	glGetShaderiv(shader_id, GL_COMPILE_STATUS, status)	
-	if status == GL_FALSE
-		error("shader compilation failed",getGLInfo(shader_id))
+	if status[1] == GL_FALSE
+		maxlength = 8192
+		buffer = zeros(GLchar, maxlength)
+		sizei = GLsizei[0]
+		glGetShaderInfoLog(shader_id, maxlength, sizei, buffer)
+		len = sizei[]
+		error_msg=unsafe_string(pointer(buffer), len)
+		error("shader compilation failed\n",error_msg,"\nsource\n",source)
 	end
 	return shader_id
 end
+
 
 
 # /////////////////////////////////////////////////////////////////////
@@ -67,27 +75,33 @@ function enableProgram(shader)
 	if (shader.program_id<0)
 	
 		shader.program_id = glCreateProgram()
-		if shader.program_id == 0
-			error("Error creating GLShader program: ", glErrorMessage())
-		end
+		glCheckError()
 		
-		shader.vertex_shader_id=createShader(GL_VERTEX_SHADER  ,shader.vertex_source  )
+		shader.vertex_shader_id=createShader(GL_VERTEX_SHADER,shader.vertex_source)
 		glAttachShader(shader.program_id, shader.vertex_shader_id)
-		glCheckError("attaching vertex shader")
+		glCheckError()
 		
 		shader.frag_shader_id=createShader(GL_FRAGMENT_SHADER,shader.frag_source)
 		glAttachShader(shader.program_id, shader.frag_shader_id)
-		glCheckError("attaching fragment shader")
+		glCheckError()
 
 		glLinkProgram(shader.program_id)
+		glCheckError()
 		status = GLint[0]
 		glGetProgramiv(shader.program_id, GL_LINK_STATUS, status)		
-		if status == GL_FALSE 
-			error("Error linking program",getGLInfo(shader.shader_id))
+		if status[1] == GL_FALSE 
+			maxlength = 8192
+			buffer = zeros(GLchar, maxlength)
+			sizei = GLsizei[0]
+			glGetProgramInfoLog(shader.program_id, maxlength, sizei, buffer)
+			len = sizei[]
+			error_msg = unsafe_string(pointer(buffer), len)
+			error("Error linking program\n",error_msg)
 		end
+		glCheckError()
 	end
 
-	glUseProgram(shader.program_id)	
+	glUseProgram(shader.program_id)
 end
 
 # /////////////////////////////////////////////////////////////////////

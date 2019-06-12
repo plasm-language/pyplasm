@@ -27,14 +27,21 @@ end
 
 # /////////////////////////////////////////////////////////////////////
 function enableVertexArray(array::GLVertexArray)
+
+	# not needed or osx
+	if Sys.isapple() return end
+
 	if array.id<0
 		array.id=glGenVertexArray()
 	end
-
 	glBindVertexArray(array.id)
 end
 
 # /////////////////////////////////////////////////////////////////////
 function disableVertexArray(array::GLVertexArray)
+
+	# not needed or osx
+	if Sys.isapple() return end
+
 	glBindVertexArray(0)
 end

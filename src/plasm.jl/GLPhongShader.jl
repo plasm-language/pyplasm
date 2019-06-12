@@ -1,5 +1,12 @@
+
+
+
 # /////////////////////////////////////////////////////////////////////
-vertex_source="""
+vert_source="""
+
+#define LIGHTING_ENABLED        arg(LIGHTING_ENABLED)
+#define COLOR_ATTRIBUTE_ENABLED arg(COLOR_ATTRIBUTE_ENABLED)
+
 uniform mat4 u_modelview_matrix;
 uniform mat4 u_projection_matrix;
 uniform vec4 u_color;
@@ -23,7 +30,7 @@ varying vec3 v_eye_vec;
 #endif
 
 #if COLOR_ATTRIBUTE_ENABLED
-  varying vec4 v_color;
+varying vec4 v_color;
 #endif
 
 void main() 
@@ -47,7 +54,11 @@ void main()
 
 
 # /////////////////////////////////////////////////////////////////////
-fragment_source="""
+frag_source="""
+
+#define LIGHTING_ENABLED        arg(LIGHTING_ENABLED)
+#define COLOR_ATTRIBUTE_ENABLED arg(COLOR_ATTRIBUTE_ENABLED)
+
 uniform vec4 u_color;
 
 #if LIGHTING_ENABLED
@@ -57,7 +68,7 @@ varying vec3 v_eye_vec;
 #endif
 
 #if COLOR_ATTRIBUTE_ENABLED
-  varying vec4 v_color;
+varying vec4 v_color;
 #endif
 
 void main() 
@@ -112,17 +123,25 @@ void main()
 # /////////////////////////////////////////////////////////////////////
 function GLPhongShader(lighting_enabled,color_attribute_enabled)
 	
-	defines=""
-	if lighting_enabled
-		defines=string(defines , "#define LIGHTING_ENABLED 1\n")
-	end	
-		
-	if color_attribute_enabled
-		defines=string(defines , "#define COLOR_ATTRIBUTE_ENABLED 1\n")
-	end
-	
-	return GLShader(
-		string(defines , vertex_source),
-		string(defines , fragment_source))	
+	v=vert_source
+	f=frag_source
+
+	v=replace(v, "arg(LIGHTING_ENABLED)"=>lighting_enabled ? "1" : "0")
+	f=replace(f, "arg(LIGHTING_ENABLED)"=>lighting_enabled ? "1" : "0")
+
+	v=replace(v, "arg(COLOR_ATTRIBUTE_ENABLED)"=>color_attribute_enabled ? "1" : "0")
+	f=replace(f, "arg(COLOR_ATTRIBUTE_ENABLED)"=>color_attribute_enabled ? "1" : "0")
+
+	# this is needed for #version 330
+	# v=replace(v, "attribute"=>"in")
+	# f=replace(f, "attribute"=>"in")
+
+	# v=replace(v, "varying"=>"out")
+	# f=replace(f, "varying"=>"out")
+
+	# v=string("#version 120\n",v)
+	# f=string("#version 120\n",f)
+
+	return GLShader(v,f)
 end
 

@@ -21,8 +21,11 @@ include("GLPhongShader.jl")
 
 # /////////////////////////////////////////////////////////////////////
 mutable struct Viewer
+	win::Any
 	W::Int32
 	H::Int32
+	scalex::Float64
+	scaley::Float64
 	fov::Float64
 	pos::Point3d
 	dir::Point3d
@@ -38,7 +41,7 @@ mutable struct Viewer
 	
 	# constructor
 	function Viewer(meshes) 
-		new(1024,768,60.0, Point3d(), Point3d(), Point3d(), 0.0, 0.0, 0.0,  0,0,0, meshes,Dict())
+		new(0,1024,768,1.0,1.0, 60.0, Point3d(), Point3d(), Point3d(), 0.0, 0.0, 0.0,  0,0,0, meshes,Dict())
 	end
 	
 end
@@ -57,24 +60,39 @@ function releaseGpuResources(viewer::Viewer)
 end
 
 # ///////////////////////////////////////////////////////////////////////
-function run(viewer::Viewer)
+function runViewer(viewer::Viewer)
 
-	GLFW.Init()
+	ret_code=GLFW.Init()
+	println("GLFW init returned ",ret_code)
+
+	# seems not to be needed for julia 1.x
+  	#GLFW.WindowHint(GLFW.CONTEXT_VERSION_MAJOR, 3)
+	#GLFW.WindowHint(GLFW.CONTEXT_VERSION_MINOR, 2)
+	#GLFW.WindowHint(GLFW.OPENGL_FORWARD_COMPAT, GL_TRUE)
+	#GLFW.WindowHint(GLFW.OPENGL_PROFILE, GLFW.OPENGL_CORE_PROFILE)
 	
-	GLFW.WindowHint(GLFW.CONTEXT_VERSION_MAJOR, 3)
-	GLFW.WindowHint(GLFW.CONTEXT_VERSION_MINOR, 2)
-	GLFW.WindowHint(GLFW.OPENGL_FORWARD_COMPAT, GL_TRUE)
-	GLFW.WindowHint(GLFW.OPENGL_PROFILE, GLFW.OPENGL_CORE_PROFILE)	
-	
-	win = GLFW.CreateWindow(viewer.W, viewer.H, "Plasm")	
-	GLFW.MakeContextCurrent(win)			
-	
-	GLFW.SetWindowSizeCallback(win, function(win, width::Int32, height::Int32) handleResizeEvent(viewer,width,height) end)  
-	GLFW.SetKeyCallback(win, function((win,key, scancode, action, mods)) handleKeyPressEvent(viewer,key,scancode,action,mods) end)	
-	GLFW.SetCursorPosCallback(win, function((win,x,y)) handleMouseMoveEvent(viewer,x,y) end)
+	win = GLFW.CreateWindow(viewer.W, viewer.H, "Plasm")
+	viewer.win=win	
+	GLFW.MakeContextCurrent(win)
+
+	println("GL_SHADING_LANGUAGE_VERSION ",unsafe_string(glGetString(GL_SHADING_LANGUAGE_VERSION)))
+	println("GL_VERSION                  ",unsafe_string(glGetString(GL_VERSION)))
+	println("GL_VENDOR                   ",unsafe_string(glGetString(GL_VENDOR)))
+	println("GL_RENDERER                 ",unsafe_string(glGetString(GL_RENDERER)))
+
+	# problem of retina
+	window_size     =GLFW.GetWindowSize(viewer.win)
+	framebuffer_size=GLFW.GetFramebufferSize(viewer.win)
+	viewer.scalex=framebuffer_size[1]/Float64(window_size[1])
+	viewer.scaley=framebuffer_size[2]/Float64(window_size[2])
+
+	GLFW.SetWindowSizeCallback(win,  function(win, width::Int32, height::Int32) handleResizeEvent(viewer) end)  
+	GLFW.SetKeyCallback(win,         function((win,key, scancode, action, mods)) handleKeyPressEvent(viewer,key,scancode,action,mods) end)	
+	GLFW.SetCursorPosCallback(win,   function((win,x,y)) handleMouseMoveEvent(viewer,x,y) end)
 	GLFW.SetMouseButtonCallback(win, function(win,button,action,mods) handleMouseButtonEvent(viewer,button,action,mods) end)
-	GLFW.SetScrollCallback(win, function((win,dx,dy)) handleMouseWheelEvent(viewer,dx,dy) end)	
+	GLFW.SetScrollCallback(win,      function((win,dx,dy)) handleMouseWheelEvent(viewer,dy) end)	
 
+	handleResizeEvent(viewer)
 	while !GLFW.WindowShouldClose(win)
 		glRender(viewer)
 		GLFW.SwapBuffers(win)
@@ -113,12 +131,12 @@ function VIEW(meshes)
 	viewer.vup = Point3d(0,0,1)
 	
 	maxsize           = 2.0
-	viewer.zNear	   = maxsize / 50.0
-	viewer.zFar		   = maxsize * 10.0
-	viewer.walk_speed = maxsize / 100.0		
+	viewer.zNear	  = maxsize / 50.0
+	viewer.zFar	  = maxsize * 10.0
+	viewer.walk_speed = maxsize / 500.0		
 	redisplay(viewer)		
 	
-	run(viewer)
+	runViewer(viewer)
 	
 end
 
@@ -181,7 +199,8 @@ function glRender(viewer::Viewer)
 	
 	PROJECTION = getProjection(viewer)
 	MODELVIEW  = getModelview(viewer)
-	lightpos=MODELVIEW * Point4d(viewer.pos[1],viewer.pos[2],viewer.pos[3],1.0)	
+	lightpos=MODELVIEW * Point4d(viewer.pos[1],viewer.pos[2],viewer.pos[3],1.0)
+
 	
 	for mesh in viewer.meshes
 	
@@ -196,8 +215,8 @@ function glRender(viewer::Viewer)
 	
 		for polygon_mode in (pdim>=2 ? [GL_FILL,GL_LINE] : [GL_FILL])
 		
-			glPolygonMode(GL_FRONT_AND_BACK,polygon_mode)	
-			
+			glPolygonMode(GL_FRONT_AND_BACK,polygon_mode)
+
 			if pdim>=2
 				glEnable(GL_POLYGON_OFFSET_LINE)
 			end			
@@ -206,16 +225,17 @@ function glRender(viewer::Viewer)
 			color_attribute_enabled =polygon_mode!=GL_LINE && length(mesh.colors.vector )>0
 			
 			shader=getShader(viewer,lighting_enabled,color_attribute_enabled)
-			
-			enableProgram(shader)		
+
+			enableProgram(shader)
 			
 			projection=PROJECTION
 			modelview=MODELVIEW * mesh.T
+			normal_matrix=dropW(transpose(inv(modelview)))
 			
 			glUniformMatrix4fv(glGetUniformLocation(shader.program_id, "u_modelview_matrix" ) ,1, GL_TRUE, flatten(modelview))
 			glUniformMatrix4fv(glGetUniformLocation(shader.program_id, "u_projection_matrix") ,1, GL_TRUE, flatten(projection))
-			glUniformMatrix3fv(glGetUniformLocation(shader.program_id, "u_normal_matrix" )	 ,1, GL_TRUE, flatten(dropW(transpose(inv(modelview)))))
-			
+			glUniformMatrix3fv(glGetUniformLocation(shader.program_id, "u_normal_matrix")	  ,1, GL_TRUE, flatten(normal_matrix))
+
 			u_light_position = glGetUniformLocation(shader.program_id, "u_light_position")
 			if u_light_position>=0
 				glUniform3f(u_light_position,lightpos[1]/lightpos[4],lightpos[2]/lightpos[4],lightpos[3]/lightpos[4])				
@@ -236,8 +256,10 @@ function glRender(viewer::Viewer)
 			enableAttribute(a_position,mesh.vertices,3)
 			enableAttribute(a_normal  ,mesh.normals ,3)
 			enableAttribute(a_color   ,mesh.colors ,4)
-			
+
 			glDrawArrays(mesh.primitive, 0, Int64(length(mesh.vertices.vector)/3))
+
+				
 			
 			disableAttribute(a_position,mesh.vertices)
 			disableAttribute(a_normal  ,mesh.normals)
@@ -252,6 +274,8 @@ function glRender(viewer::Viewer)
 			
 		end
 	end
+
+	glCheckError()
 			
 end
 
@@ -261,14 +285,16 @@ function redisplay(viewer::Viewer)
 end			
 
 # ///////////////////////////////////////////////////////////////////////
-function handleResizeEvent(viewer, width::Int32, height::Int32)
-	viewer.W = width
-	viewer.H = height
+function handleResizeEvent(viewer)
+	size=GLFW.GetWindowSize(viewer.win)
+	viewer.W = size[1]*viewer.scalex
+	viewer.H = size[2]*viewer.scaley
 	redisplay(viewer)		
 end		
 	
 # ///////////////////////////////////////////////////////////////////////
 function handleMouseButtonEvent(viewer,button,action,mods)
+
 	button=Dict(GLFW.MOUSE_BUTTON_1=>1,GLFW.MOUSE_BUTTON_2=>3,GLFW.MOUSE_BUTTON_3=>2)[button]
 	
 	if action == GLFW.PRESS && viewer.down_button==0
@@ -287,6 +313,9 @@ end
 # ///////////////////////////////////////////////////////////////////////
 function handleMouseMoveEvent(viewer,x,y)
 	
+	x=x*viewer.scalex
+	y=y*viewer.scaley
+
 	button=viewer.down_button
 	
 	if (button==0)
@@ -332,13 +361,9 @@ function handleMouseMoveEvent(viewer,x,y)
 	redisplay(viewer)		
 end	
 	
-function handleMouseWheelEvent(viewer,dx,dy)
-	if dy>0
-		K=+viewer.walk_speed
-	else
-		K=-viewer.walk_speed
-	end
-	viewer.pos=viewer.pos+viewer.dir*K
+# ///////////////////////////////////////////////////////////////////////
+function handleMouseWheelEvent(viewer,delta)
+	viewer.pos=viewer.pos+viewer.dir * ((delta>=0 ? 10.0 : -10.0) * viewer.walk_speed)
 	redisplay(viewer)		
 end
 
