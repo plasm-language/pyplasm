@@ -38,10 +38,11 @@ mutable struct Viewer
 	down_button::Int32
 	meshes::Any
 	shaders::Dict
+	use_ortho:: Bool 
 	
 	# constructor
 	function Viewer(meshes) 
-		new(0,1024,768,1.0,1.0, 60.0, Point3d(), Point3d(), Point3d(), 0.0, 0.0, 0.0,  0,0,0, meshes,Dict())
+		new(0,1024,768,1.0,1.0, 60.0, Point3d(), Point3d(), Point3d(), 0.0, 0.0, 0.0,  0,0,0, meshes,Dict(), false)
 	end
 	
 end
@@ -133,7 +134,7 @@ function VIEW(meshes)
 	maxsize           = 2.0
 	viewer.zNear	  = maxsize / 50.0
 	viewer.zFar	  = maxsize * 10.0
-	viewer.walk_speed = maxsize / 500.0		
+	viewer.walk_speed = maxsize / 100.0		
 	redisplay(viewer)		
 	
 	runViewer(viewer)
@@ -147,7 +148,17 @@ function getModelview(viewer::Viewer)
 end
 			
 function getProjection(viewer::Viewer)
-	return perspectiveMatrix(viewer.fov,viewer.W/float(viewer.H),viewer.zNear,viewer.zFar)
+	ratio=viewer.W/float(viewer.H)
+	if viewer.use_ortho
+		# euristic that seem to work well
+		Z=viewer.zNear + 0.5*(viewer.zFar - viewer.zNear)
+		right=Z * tan(deg2rad(viewer.fov/2.0))
+		left=-right
+		return  orthoMatrix(left, right, -0.5*(right-left)/ratio, +0.5*(right-left)/ratio, viewer.zNear, viewer.zFar)
+	else
+		return perspectiveMatrix(viewer.fov,ratio,viewer.zNear,viewer.zFar)
+	end
+	
 end
 
 # ///////////////////////////////////////////////////////////////////////
@@ -160,7 +171,7 @@ function projectPoint(viewer::Viewer,pos::Point3d)
 end
 	
 # ///////////////////////////////////////////////////////////////////////
-function unprojectPoint(viewer::Viewer,x::Float32,y::Float32)
+function unprojectPoint(viewer::Viewer,x::Float64,y::Float64)
 	viewport=[0,0,viewer.W,viewer.H]
 	projection =getProjection(viewer)
 	modelview=getModelview(viewer)
@@ -201,7 +212,6 @@ function glRender(viewer::Viewer)
 	MODELVIEW  = getModelview(viewer)
 	lightpos=MODELVIEW * Point4d(viewer.pos[1],viewer.pos[2],viewer.pos[3],1.0)
 
-	
 	for mesh in viewer.meshes
 	
 		pdim=Dict(
@@ -234,7 +244,7 @@ function glRender(viewer::Viewer)
 			
 			glUniformMatrix4fv(glGetUniformLocation(shader.program_id, "u_modelview_matrix" ) ,1, GL_TRUE, flatten(modelview))
 			glUniformMatrix4fv(glGetUniformLocation(shader.program_id, "u_projection_matrix") ,1, GL_TRUE, flatten(projection))
-			glUniformMatrix3fv(glGetUniformLocation(shader.program_id, "u_normal_matrix")	  ,1, GL_TRUE, flatten(normal_matrix))
+			glUniformMatrix3fv(glGetUniformLocation(shader.program_id, "u_normal_matrix")	    ,1, GL_TRUE, flatten(normal_matrix))
 
 			u_light_position = glGetUniformLocation(shader.program_id, "u_light_position")
 			if u_light_position>=0
@@ -370,66 +380,74 @@ end
 # ///////////////////////////////////////////////////////////////////////
 function handleKeyPressEvent(viewer,key, scancode, action, mods)
 	
-	if action != GLFW.PRESS
+	if action != GLFW.PRESS && action != GLFW.REPEAT
 		return	
 	end
 		
-	x,y=0.5*viewer.W,0.5*viewer.H	
-	
 	if key == GLFW.KEY_ESCAPE 
 		viewer.exitNow = true
 		return		
 	end
 	
-	if (key=="+" || key=="=")
+	if (key==GLFW.KEY_KP_ADD)
 		viewer.walk_speed*=0.95
 		return 
 	end
 
-	if (key=='-' || key=="_")
+	if (key==GLFW.KEY_KP_SUBTRACT )
 		viewer.walk_speed*=(1.0/0.95)
 		return 
 	end
 
-	if (key=='w')
-		dir=unproject(viewer,x,y)
+	if (key==GLFW.KEY_W)
+		dir=unprojectPoint(viewer,0.5*viewer.W,0.5*viewer.H)
+		println("dir",dir,"walk_speed",viewer.walk_speed)
 		viewer.pos=viewer.pos+dir*viewer.walk_speed
 		redisplay(viewer)		
 		return
 	end
 
-	if (key=='s')
-		dir=unproject(viewer,x,y)
+	if (key==GLFW.KEY_S)
+		dir=unprojectPoint(viewer,0.5*viewer.W,0.5*viewer.H)
 		viewer.pos=viewer.pos-dir*viewer.walk_speed
 		redisplay(viewer)		
 		return 
 	end
-			
-	if (key=='a'	|| key==GLFW.KEY_LEFT)
+	
+	if (key==GLFW.KEY_O)
+		viewer.use_ortho=!viewer.use_ortho
+		println("use_ortho ",viewer.use_ortho)
+		redisplay(viewer)		
+		return 	
+	end		
+	
+
+	if (key==GLFW.KEY_UP)
+		viewer.pos=viewer.pos+viewer.vup*viewer.walk_speed
+		redisplay(viewer)		
+		return 
+	end	
+	
+	if (key==GLFW.KEY_DOWN)
+		viewer.pos=viewer.pos-viewer.vup*viewer.walk_speed
+		redisplay(viewer)		
+		return 	
+	end	
+	
+	if (key==GLFW.KEY_LEFT || key==GLFW.KEY_A)
 		right=normalized(cross(viewer.dir,viewer.vup))
 		viewer.pos=viewer.pos-right*viewer.walk_speed
 		redisplay(viewer)		
 		return 
 	end
 
-	if (key=='d' || key==GLFW.KEY_RIGHT)
+	if (key==GLFW.KEY_RIGHT || key==GLFW.KEY_D)
 		right=normalized(cross(viewer.dir,viewer.vup))
 		viewer.pos=viewer.pos+right*viewer.walk_speed
 		redisplay(viewer)		
 		return	
-	end			 
-
-	if (key==GLFW.KEY_UP)
-		viewer.pos=viewer.pos+viewer.vup*viewer.walk_speed
-		redisplay(viewer)		
-		return 
-	end
-
-	if (key==GLFW.KEY_DOWN)
-		viewer.pos=viewer.pos-viewer.vup*viewer.walk_speed
-		redisplay(viewer)		
-		return 	
-	end
+	end	
+	
 end	
 
 
