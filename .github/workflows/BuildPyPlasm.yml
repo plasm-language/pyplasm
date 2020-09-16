@@ -149,6 +149,7 @@ jobs:
            conda install -c conda-forge pip numpy pyopengl freeglut 
            conda install -c conda-forge libglu || true
            conda update --all
+           python -m pip install --upgrade setuptools wheel twine  || true # not sure if this is needed
            cd build/Release/pyplasm
            rm -Rf $(find ${CONDA_PREFIX} -iname "pyplasm*.tar.bz2")  || true
            python setup.py -q bdist_conda 
