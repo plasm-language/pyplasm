@@ -149,7 +149,8 @@ jobs:
     # ____________________________________________
     - name: Distrib pyplasm on conda
       if: matrix.python-type == 'conda'
-      shell: ba
+      shell: bash
+      run: |
            cd build/Release/pyplasm
            conda install anaconda-client conda-build 1>/dev/null || true
            conda install pyopengl freeglut || true
