@@ -84,8 +84,7 @@ jobs:
            sudo apt-get install libglu1-mesa-dev 1>/dev/null
 
     # ____________________________________________
-    - name: Compile pyplasm on windows
-      if: matrix.os == 'windows-latest'
+    - name: Compile pyplasm 
       shell: bash -l {0}
       run: |
            if [[  "${{ matrix.python-type }}" == "cpython" ]] ; then 
@@ -93,42 +92,32 @@ jobs:
            else
               Python_EXECUTABLE=$(which python)
            fi
-           mkdir -p build
-           cd build
-           curl -L --insecure https://cfhcable.dl.sourceforge.net/project/swig/swigwin/swigwin-4.0.2/swigwin-4.0.2.zip -O  && unzip swigwin-4.0.2.zip
-           ${Python_EXECUTABLE} -m pip install numpy setuptools wheel twine
-           cmake -G "Visual Studio 16 2019" -A "x64" -DPython_EXECUTABLE=${Python_EXECUTABLE} -DSWIG_EXECUTABLE=./swigwin-4.0.2/swig.exe ../
-           cmake --build . --target ALL_BUILD --config Release --parallel 4
-           cmake --build . --target install   --config Release
-
-    # ____________________________________________
-    - name: Compile pyplasm on macos
-      if: matrix.os == 'macos-latest'
-      shell: bash -l {0}
-      run: |
-           if [[  "${{ matrix.python-type }}" == "cpython" ]] ; then 
-              Python_EXECUTABLE=${pythonLocation}/python
-           else
-              Python_EXECUTABLE=$(which python)
-           fi
-           ${Python_EXECUTABLE} -m pip install --upgrade pip
-           ${Python_EXECUTABLE} -m pip install numpy setuptools wheel twine           
            
-           mkdir -p build
-           cd build
-           cmake -GXcode -DCMAKE_OSX_SYSROOT="/tmp/MacOSX-SDKs/MacOSX10.9.sdk" -DPython_EXECUTABLE=${Python_EXECUTABLE}  ../
-           cmake --build ./ --target ALL_BUILD --config Release --parallel 4 
-           cmake --build ./ --target install   --config Release 
-
-    # ____________________________________________
-    - name: Compile pyplasm on ubuntu
-      if: matrix.os == 'ubuntu-latest' 
-      shell: bash -l {0}
-      run: |
-           docker run -e PYTHON_VERSION=${{ matrix.python-version }} -v ${PWD}:${PWD}  -w ${PWD} visus/portable-linux-binaries /bin/bash -c "./scripts/build_linux.sh"
-           sudo chown -R root:root  build
-           sudo chmod -R a+rwx      build
-
+           ${Python_EXECUTABLE} -m pip install --upgrade pip
+           ${Python_EXECUTABLE} -m pip install --upgrade numpy setuptools wheel twine
+           
+           if [[  "${{ matrix.os }}" == "windows-latest" ]] ; then 
+             curl -L --insecure https://cfhcable.dl.sourceforge.net/project/swig/swigwin/swigwin-4.0.2/swigwin-4.0.2.zip -O  && unzip swigwin-4.0.2.zip
+             mkdir -p build
+             cd build             
+             cmake -G "Visual Studio 16 2019" -A "x64" -DPython_EXECUTABLE=${Python_EXECUTABLE} -DSWIG_EXECUTABLE=./swigwin-4.0.2/swig.exe ../
+             cmake --build . --target ALL_BUILD --config Release --parallel 4
+             cmake --build . --target install   --config Release             
+           fi
+           
+           if [[  "${{ matrix.os }}" == "macos-latest"   ]] ; then P
+             mkdir -p build
+             cd build               
+             cmake -GXcode -DCMAKE_OSX_SYSROOT="/tmp/MacOSX-SDKs/MacOSX10.9.sdk" -DPython_EXECUTABLE=${Python_EXECUTABLE}  ../
+             cmake --build ./ --target ALL_BUILD --config Release --parallel 4 
+             cmake --build ./ --target install   --config Release 
+           fi
+           
+           if [[  "${{ matrix.os }}" == "ubuntu-latest"  ]] ; then 
+             docker run -e PYTHON_VERSION=${{ matrix.python-version }} -v ${PWD}:${PWD}  -w ${PWD} visus/portable-linux-binaries /bin/bash -c "./scripts/build_linux.sh"
+             sudo chown -R root:root  build
+             sudo chmod -R a+rwx      build
+           fi
 
     # ____________________________________________
     - name: Distrib pyplasm on pypi
