@@ -759,5 +759,5 @@ Fabric = STRUCT([
 out = Fabric
 
 #Plasm.save(out,':models/pisa.hpc.gz')
-print "Pisa evaluated in",time.perf_counter()-start,"seconds"
+print("Pisa evaluated in",time.perf_counter()-start,"seconds")
 VIEW(out)

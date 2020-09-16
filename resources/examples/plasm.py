@@ -24,7 +24,7 @@ assert Plasm.getPointDim(Plasm.cube(2))==2
 # calculate limits
 assert Plasm.limits(Plasm.cube(3))==Boxf(Vecf(1,0,0,0),Vecf(1,1,1,1))
 	 
-# print debuggin infos
+# debuggin infos
 Plasm.Print(Plasm.cube(2))
 	 
 # add properties

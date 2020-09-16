@@ -1,6 +1,6 @@
 from pyplasm import *
 
-print "Creo un cubo 3d"
+print("Creo un cubo 3d")
 
 # ho bisogno di un graph navigator per le operazioni booleane
 nav=GraphNavigator()
@@ -33,17 +33,17 @@ max_try = 10  # quante volte provare a fare lo splitting
 [cell_below,cell_equal,cell_above]=g.split(nav,cube,splitting_plane,tolerance,max_try)
 
 if cell_below==0 and cell_equal==0 and cell_above==0:
-	print "splitting fallito (cella flat o classificazione impossibile)"
+	print("splitting fallito (cella flat o classificazione impossibile)")
 	
 elif cell_below>0 and cell_equal==0 and cell_above==0:
-	print "iperpiano lascia la cella TUTTA nello spazio below"
+	print("iperpiano lascia la cella TUTTA nello spazio below")
 	
 elif cell_above>0 and cell_below==0 and cell_equal==0:
-	print "iperpiano lascia la cella TUTTA nello spazio above"
+	print("iperpiano lascia la cella TUTTA nello spazio above")
 	
 else:
 	assert cell_above>0 and cell_below>0 and cell_equal>0
-	print "Splitting riuscito, continuare lo splitting sulle celle cell_above e cell_below, come faresti con un bsp"
+	print("Splitting riuscito, continuare lo splitting sulle celle cell_above e cell_below, come faresti con un bsp")
 
 # quando si ha finito si puo convertire l'oggetto Graph in un Hpc e visualizzarlo
 # nota, in visualizzazione le celle sono "triangolate"

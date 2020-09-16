@@ -13,14 +13,20 @@ To install pyplasm, if you are using `CPython` distribution:
 
 
 python -m pip install --user --upgrade pip
-python -m pip install --upgrade GL PyGlut PyOpenGL pyplasm
-python -c "from pyplasm import *; VIEW(CUBOID([1,1,1]))"
+python -m pip install GL PyGlut PyOpenGL 
+python -m pip install --upgrade pyplasm
 ```
 
 If you are using `conda` python:
 
 ```
+conda install -y pyopengl freeglut
 conda install  -y --channel scrgiorgio pyplasm
+```
+
+Then test it:
+
+```
 python -c "from pyplasm import *; VIEW(CUBOID([1,1,1]))"
 ```
 
