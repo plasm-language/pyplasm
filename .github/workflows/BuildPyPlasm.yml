@@ -121,7 +121,7 @@ jobs:
       if: matrix.python-type == 'cpython'
       shell: bash
       run: |
-           ${pythonLocation}/python -m pip install --upgrade pip
+           ${pythonLocation}/python -m pip install --upgrade pip                                      || true
            ${pythonLocation}/python -m pip install --upgrade numpy setuptools wheel twine 1>/dev/null || true
            cd build/Release/pyplasm
            Version=${{ matrix.python-version }}
@@ -138,9 +138,8 @@ jobs:
       if: matrix.python-type == 'conda'
       shell: bash
       run: |
-           conda install anaconda-client conda-build 1>/dev/null || true
-           conda install -c conda-forge libglu pip pyopengl freeglut || true
-           python -m pip install --upgrade numpy setuptools wheel twine
+           conda install -c conda-forge anaconda-client conda-build 
+           conda install -c conda-forge libglu pip pyopengl freeglut numpy
            cd build/Release/pyplasm
            rm -Rf $(find ${CONDA_PREFIX} -iname "pyplasm*.tar.bz2")  || true
            python setup.py -q bdist_conda 1>/dev/null
