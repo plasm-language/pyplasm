@@ -17,18 +17,32 @@ Array::~Array()
 
 /////////////////////////////////////////////////////////////////////////////////////
 Array::Gpu::~Gpu()
-{GLDestroyLater::push_back(GLDestroyLater::DestroyArrayBuffer,id);}
+{
+	GLDestroyLater::push_back(GLDestroyLater::DestroyArrayBuffer,id);
+}
+
+
 
 
 /////////////////////////////////////////////////////////////////////////////////////
 void Array::uploadIfNeeded(GLCanvas& gl)
 {
-  if (this->gpu) return;
+  if (this->gpu) 
+    return;
 
   juce::OpenGLContext* context=(juce::OpenGLContext*)gl.getGLContext();
+  XgeReleaseAssert(context);
 
-  GLuint bufferid;	
-  context->extensions.glGenBuffers(1,&bufferid);XgeReleaseAssert(bufferid);
+  GLuint bufferid=0;	
+  context->extensions.glGenBuffers(1,&bufferid);
+
+  if (!bufferid)
+  {
+    std::cout<<"Failed to generate buffer. See following errors..."<<std::endl;
+    GLCanvas::CheckGLErrors(__FILE__,__LINE__, /*bVerbose*/true);
+    XgeReleaseAssert(false);
+  }
+  
   context->extensions.glBindBuffer(GL_ARRAY_BUFFER,bufferid);
   context->extensions.glBufferData(GL_ARRAY_BUFFER,this->memsize(),this->c_ptr(),GL_STATIC_DRAW);
   context->extensions.glBindBuffer(GL_ARRAY_BUFFER,0);

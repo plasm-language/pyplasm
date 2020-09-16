@@ -54,7 +54,7 @@
     the availability of Xinerama is queried during runtime.
 */
 #ifndef JUCE_USE_XINERAMA
- #define JUCE_USE_XINERAMA 0;//scrgiorgio 1
+ #define JUCE_USE_XINERAMA 0 //scrgiorgio
 #endif
 
 /** Config: JUCE_USE_XSHM
@@ -62,7 +62,7 @@
     unless you have a good reason to disable it.
 */
 #ifndef JUCE_USE_XSHM
- #define JUCE_USE_XSHM 0; //scrgiorgio1
+ #define JUCE_USE_XSHM 0 //scrgiorgio
 #endif
 
 /** Config: JUCE_USE_XRENDER
@@ -77,7 +77,7 @@
     a good reason to disable it.
 */
 #ifndef JUCE_USE_XCURSOR
- #define JUCE_USE_XCURSOR 0; //scrgiorgio 1
+ #define JUCE_USE_XCURSOR 0 //scrgiorgio 1
 #endif
 
 //=============================================================================

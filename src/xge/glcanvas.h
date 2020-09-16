@@ -57,7 +57,7 @@ public:
 	bool bProgressiveRendering;
 
 	//constructor
-	GLCanvas(bool bShared=false);
+	GLCanvas(bool bShared = false);
 
 	//~destructor
 	virtual ~GLCanvas();
@@ -92,20 +92,21 @@ public:
 	static void destroyShared()
 	{
 		static GLCanvas*& shared = getShared();
-		GLCanvas::getShared() = nullptr;
 		delete shared;
+		shared = nullptr;
+		std::cout << "shared GLCanvas destroyed" << std::endl;
 	}
 
-  //getGLContext
-  void* getGLContext();
+	//getGLContext
+	void* getGLContext();
 
-  //getWorldBox
-  virtual Box3f getWorldBox() {
-    return octree? this->octree->world_box : Box3f(Vec3f(-1,-1,-1),Vec3f(+1,+1,+1));
-  }
+	//getWorldBox
+	virtual Box3f getWorldBox() {
+		return octree ? this->octree->world_box : Box3f(Vec3f(-1, -1, -1), Vec3f(+1, +1, +1));
+	}
 
-  //setOctree
-  virtual void setOctree(SmartPointer<Octree> octree);
+	//setOctree
+	virtual void setOctree(SmartPointer<Octree> octree);
 
 	//! makeCurrent
 	virtual bool makeCurrent();
@@ -114,86 +115,94 @@ public:
 	virtual void doneCurrent();
 
 	//!clearScreen
-	virtual void  clearScreen(bool ClearColor=true,bool ClearDepth=true);
+	virtual void  clearScreen(bool ClearColor = true, bool ClearDepth = true);
 
-  //!setViewport
-	virtual void  setViewport(int x,int y,int width,int height);
+	//!setViewport
+	virtual void  setViewport(int x, int y, int width, int height);
 
-  //!setProjectionMatrix
+	//!setProjectionMatrix
 	virtual void  setProjectionMatrix(Mat4f mat);
 
-  //!setModelviewMatrix
+	//!setModelviewMatrix
 	virtual void  setModelviewMatrix(Mat4f mat);
 
-  //!setDefaultLight
-	virtual void  setDefaultLight (Vec3f pos,Vec3f dir);
-	
-	//! pushModelviewMatrix
-	virtual void pushModelviewMatrix(Mat4f mat,bool AccumulateWithCurrent=true);
+	//!setDefaultLight
+	virtual void  setDefaultLight(Vec3f pos, Vec3f dir);
 
-  //popModelviewMatrix
+	//! pushModelviewMatrix
+	virtual void pushModelviewMatrix(Mat4f mat, bool AccumulateWithCurrent = true);
+
+	//popModelviewMatrix
 	virtual void popModelviewMatrix();
 
-  //! pushProjectionMatrix
-	virtual void pushProjectionMatrix(Mat4f mat,bool AccumulateWithCurrent=true);
+	//! pushProjectionMatrix
+	virtual void pushProjectionMatrix(Mat4f mat, bool AccumulateWithCurrent = true);
 
-  //! popProjectionMatrix
+	//! popProjectionMatrix
 	virtual void popProjectionMatrix();
-	
+
 	//! setDepthTest
 	virtual void setDepthTest(bool value);
 
-  //! setDepthWrite
+	//! setDepthWrite
 	virtual void setDepthWrite(bool vaue);
 
-  //! setPolygonMode (use Batch::POINTS,Batch::LINES or Batch::POLYGON)
+	//! setPolygonMode (use Batch::POINTS,Batch::LINES or Batch::POLYGON)
 	virtual void setPolygonMode(int value);
 
-  //! setPointSize
+	//! setPointSize
 	virtual void setPointSize(float value);
 
-  //! setLineWidth
+	//! setLineWidth
 	virtual void setLineWidth(float value);
 
-  //! setPolygonOffset
+	//! setPolygonOffset
 	virtual void setPolygonOffset(float value);
 
 	//renderBatch
-	virtual void  renderBatch(SmartPointer<Batch> batch,int first=0,int last=-1);
+	virtual void  renderBatch(SmartPointer<Batch> batch, int first = 0, int last = -1);
 
-  //! renderOpenGL
+	//! renderOpenGL
 	virtual void renderOpenGL();
 
 	//! redisplay
 	virtual void redisplay();
 
 	//! virtuals
-	virtual bool onKeyboard(int key,int x,int y) ;
+	virtual bool onKeyboard(int key, int x, int y);
 
-  //onMouseDown
-	virtual void onMouseDown(int button,int x,int y);
+	//onMouseDown
+	virtual void onMouseDown(int button, int x, int y);
 
-  //onMouseMove
-	virtual void onMouseMove(int button,int x,int y);
+	//onMouseMove
+	virtual void onMouseMove(int button, int x, int y);
 
-  //onMouseUp
-	virtual void onMouseUp(int button,int x,int y);
+	//onMouseUp
+	virtual void onMouseUp(int button, int x, int y);
 
-  //onMouseWheel
-  virtual void onMouseWheel(int delta);
+	//onMouseWheel
+	virtual void onMouseWheel(int delta);
 
-  //onResize
-	virtual void onResize(int width,int height);
+	//onResize
+	virtual void onResize(int width, int height);
 
 	// close
 	virtual void close();
-	
+
 	//runLoop
 	virtual void runLoop();
 
-  //getNativeHandle
-  inline Pimpl* getNativeHandle()
-  {return pimpl;}
+	//getNativeHandle
+	inline Pimpl* getNativeHandle()
+	{
+		return pimpl;
+	}
+
+	//CheckGLErrors
+	static void CheckGLErrors(const char* file, const int line, bool bVerbose);
+
+	//ResetGLErrors
+	static void ResetGLErrors(const char* file, const int line, bool bVerbose);
 
 protected:
 
@@ -206,6 +215,7 @@ protected:
   virtual void renderModel();
 
 };
+
 
 
 #endif //_GL_CANVAS_H__

@@ -68,7 +68,8 @@ public:
       if (getRawContext() == nullptr)
         throw "internal error";
 
-
+      std::cout << "GL_EXTENSIONS [" << glGetString(GL_EXTENSIONS) << "]"<<std::endl;
+      std::cout << "GL_SHADING_LANGUAGE_VERSION [" << glGetString(GL_SHADING_LANGUAGE_VERSION) << "]"<<std::endl;
       
     }
     else
@@ -391,6 +392,60 @@ void GLCanvas::runLoop()
 
   while (!bExitRunLoop)
     juce::MessageManager::getInstance()->runDispatchLoopUntil(200);
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////
+static const char* getGLErrorMessage(const GLenum e)
+{
+  switch (e)
+  {
+  case GL_INVALID_ENUM:                   return "GL_INVALID_ENUM";
+  case GL_INVALID_VALUE:                  return "GL_INVALID_VALUE";
+  case GL_INVALID_OPERATION:              return "GL_INVALID_OPERATION";
+  case GL_OUT_OF_MEMORY:                  return "GL_OUT_OF_MEMORY";
+#ifdef GL_STACK_OVERFLOW
+  case GL_STACK_OVERFLOW:                 return "GL_STACK_OVERFLOW";
+#endif
+#ifdef GL_STACK_UNDERFLOW
+  case GL_STACK_UNDERFLOW:                return "GL_STACK_UNDERFLOW";
+#endif
+#ifdef GL_INVALID_FRAMEBUFFER_OPERATION
+  case GL_INVALID_FRAMEBUFFER_OPERATION:  return "GL_INVALID_FRAMEBUFFER_OPERATION";
+#endif
+  default: break;
+  }
+
+  return "Unknown error";
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+void GLCanvas::ResetGLErrors(const char* file, const int line, bool bVerbose) {
+  for (;;)
+  {
+    const GLenum e = glGetError();
+
+    if (e == GL_NO_ERROR)
+      break;
+
+    if (bVerbose)
+      std::cout << "Resetting GLError " << getGLErrorMessage(e) << "  at " << file << " : " << line << std::endl;
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+void GLCanvas::CheckGLErrors(const char* file, const int line, bool bVerbose)
+{
+  for (;;)
+  {
+    const GLenum e = glGetError();
+
+    if (e == GL_NO_ERROR)
+      break;
+
+    if (bVerbose)
+    std::cout << "CheckGLErrors " << getGLErrorMessage(e) << "  at " << file << " : " << line << std::endl;
+  }
 }
 
 void GLCanvas::close()
@@ -868,9 +923,9 @@ void GLCanvas::renderBatch(SmartPointer<Batch> _batch,int first,int last)
     return;
 
   juce::OpenGLContext* context=pimpl->getGLContext();
+  XgeReleaseAssert(context);
 
-  //reset Error
-  glGetError();
+  GLCanvas::ResetGLErrors(__FILE__,__LINE__, /*bVerbose*/ false);
 
   Batch& batch=(*_batch);
   XgeReleaseAssert(batch.primitive>=0 && batch.vertices);
