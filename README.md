@@ -15,16 +15,15 @@ To install pyplasm, if you are using `CPython` distribution:
 # For Linux sometimes you have to install some python libraries 
 # sudo apt-get install python3.6 libpython3/6
 
-
-python -m pip install --user --upgrade pip
-python -m pip install GL PyGlut PyOpenGL 
+python -m pip install --user --upgrade pip numpy GL PyGlut PyOpenGL 
 python -m pip install --upgrade pyplasm
 ```
 
 If you are using `conda` python:
 
 ```
-conda install pyopengl freeglut
+conda install numpy pyopengl freeglut
+conda install -c conda-forge libglu # if this fails just ignore it
 conda install --channel scrgiorgio pyplasm
 ```
 

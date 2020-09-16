@@ -31,6 +31,5 @@ setuptools.setup(
   package_dir={"pyplasm":'.'},
   package_data={"pyplasm": findFilesInCurrentDirectory()},
   platforms=['Linux', 'OS-X', 'Windows'],
-  license = "GPL",
-  install_requires=['numpy'],
+  license = "GPL"
 )

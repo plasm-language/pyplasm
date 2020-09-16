@@ -4,7 +4,6 @@ from pyplasm import *
 import os,sys
 from math import *	
 
-
 # view a 3d cube
 Plasm.view(Plasm.cube(3,0,1))
 	 

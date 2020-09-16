@@ -20,8 +20,7 @@ jobs:
     # ____________________________________________
     - name: git clone pyplasm
       uses: actions/checkout@v2
-          
-    
+
     # ____________________________________________
     - name: Install CMake
       uses: lukka/get-cmake@latest
@@ -66,7 +65,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
         activate-environment: tmp
         auto-update-conda: true
-
+    
     # ____________________________________________
     - name: Configure Miniconda 
       if: matrix.python-type == 'conda'
@@ -74,15 +73,7 @@ jobs:
       run: |
            conda config --set always_yes yes --set changeps1 no --set anaconda_upload no   1>/dev/null
            conda install conda                                                             1>/dev/null
-
-    # ____________________________________________
-    - name: Install glu on ubuntu
-      if: matrix.os == 'ubuntu-latest'
-      shell: bash
-      run: |
-           sudo apt-get update
-           sudo apt-get install libglu1-mesa-dev 1>/dev/null
-
+    
     # ____________________________________________
     - name: Compile pyplasm on windows
       if: matrix.os == 'windows-latest'
@@ -147,9 +138,8 @@ jobs:
       if: matrix.python-type == 'conda'
       shell: bash
       run: |
-      
            conda install anaconda-client conda-build 1>/dev/null || true
-           conda install pip pyopengl freeglut || true
+           conda install -c conda-forge libglu pip pyopengl freeglut || true
            python -m pip install --upgrade numpy setuptools wheel twine
            cd build/Release/pyplasm
            rm -Rf $(find ${CONDA_PREFIX} -iname "pyplasm*.tar.bz2")  || true

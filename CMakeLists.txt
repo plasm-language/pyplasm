@@ -72,12 +72,9 @@ set(CMAKE_INSTALL_PREFIX           ${CMAKE_BINARY_DIR} CACHE STRING "CMAKE_INSTA
 
 include(FindPackageHandleStandardArgs)
 
-find_package(Python COMPONENTS Interpreter Development NumPy REQUIRED)
+find_package(Python COMPONENTS Interpreter Development REQUIRED)
 MESSAGE(STATUS "Python_EXECUTABLE ${Python_EXECUTABLE}")
 MESSAGE(STATUS "Python_VERSION    ${Python_VERSION}")
 
 ADD_SUBDIRECTORY(libs)
 ADD_SUBDIRECTORY(src)
-
-
-
