@@ -135,29 +135,29 @@ jobs:
       if: matrix.python-type == 'cpython'
       shell: bash
       run: |
+           cd build/Release/pyplasm
+           Version=${{ matrix.python-version }}
+           if [[  "${{ matrix.os }}" == "windows-latest" ]] ; then PLATFORM_NAME=win_amd64            ; fi
+           if [[  "${{ matrix.os }}" == "macos-latest"   ]] ; then PLATFORM_NAME=macosx_10_9_x86_64   ; fi
+           if [[  "${{ matrix.os }}" == "ubuntu-latest"  ]] ; then PLATFORM_NAME=manylinux2010_x86_64 ; fi             
+           ${pythonLocation}/python -m pip install setuptools wheel twine --upgrade 1>/dev/null || true
+           ${pythonLocation}/python setup.py -q bdist_wheel --python-tag=cp${Version:0:1}${Version:2:1} --plat-name=${PLATFORM_NAME}
            GIT_TAG=$(git describe --tags --exact-match 2>/dev/null || true)
            if [[ "${GIT_TAG}" != "" ]] ; then
-             cd build/Release/pyplasm
-             Version=${{ matrix.python-version }}
-             if [[  "${{ matrix.os }}" == "windows-latest" ]] ; then PLATFORM_NAME=win_amd64            ; fi
-             if [[  "${{ matrix.os }}" == "macos-latest"   ]] ; then PLATFORM_NAME=macosx_10_9_x86_64   ; fi
-             if [[  "${{ matrix.os }}" == "ubuntu-latest"  ]] ; then PLATFORM_NAME=manylinux2010_x86_64 ; fi             
-             ${pythonLocation}/python -m pip install setuptools wheel twine --upgrade 1>/dev/null || true
-             ${pythonLocation}/python setup.py -q bdist_wheel --python-tag=cp${Version:0:1}${Version:2:1} --plat-name=${PLATFORM_NAME}
              ${pythonLocation}/python -m twine upload --username ${{ secrets.PYPI_USERNAME }} --password ${{ secrets.PYPI_PASSWORD }} --skip-existing  "dist/*.whl" 
            fi               
 
     # ____________________________________________
     - name: Distrib pyplasm on conda
       if: matrix.python-type == 'conda'
-      shell: bash -l {0}   
-      run: |
+      shell: ba
+           cd build/Release/pyplasm
+           conda install  -y anaconda-client conda-build 1>/dev/null || true #conda-build is needed for 'bdist_conda'
+           conda install -y pyopengl freeglut || true
+           rm -Rf $(find ${CONDA_PREFIX} -iname "pyplasm*.tar.bz2")  || true
+           python setup.py -q bdist_conda 1>/dev/null
+           CONDA_FILENAME=$(find ${CONDA_PREFIX} -iname "pyplasm*.tar.bz2"  | head -n 1)
            GIT_TAG=$(git describe --tags --exact-match 2>/dev/null || true)
            if [[ "${GIT_TAG}" != ""  ]] ; then
-             cd build/Release/pyplasm
-             conda install anaconda-client conda-build 1>/dev/null || true #conda-build is needed for 'bdist_conda'
-             rm -Rf $(find ${CONDA_PREFIX} -iname "pyplasm*.tar.bz2")  || true
-             python setup.py -q bdist_conda 1>/dev/null
-             CONDA_FILENAME=$(find ${CONDA_PREFIX} -iname "pyplasm*.tar.bz2"  | head -n 1) 
              anaconda --verbose --show-traceback  -t ${{ secrets.ANACONDA_TOKEN }}   upload "${CONDA_FILENAME}"
            fi

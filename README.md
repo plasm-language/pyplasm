@@ -5,6 +5,10 @@ developed by the CAD Group at the Universities 'La Sapienza' and 'Roma Tre' in I
 
 See also: http://www.plasm.net/
 
+Supported platforms: Windows, MacOsX, Linux.
+
+Supported python versions: 3.6, 3.7, 3.8.
+
 To install pyplasm, if you are using `CPython` distribution:
 
 ```
@@ -32,7 +36,8 @@ python -c "from pyplasm import *; VIEW(CUBOID([1,1,1]))"
 
 
 
-<!--//////////////////////////////////////////////////////////////////////// -->
+<!--
+////////////////////////////////////////////////////////////////////////
 ## Commit CI (only for developers
 
 Edit file `src/xgepy/setup.py` and increment the VERSION.
@@ -41,5 +46,7 @@ Edit file `src/xgepy/setup.py` and increment the VERSION.
 TAG=...write the same value of VERSION here...
 git commit -a -m "New tag" && git tag -a $TAG -m "$TAG" && git push origin $TAG && git push origin
 ```
+
+ -->
 
 
