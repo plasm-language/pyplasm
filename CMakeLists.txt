@@ -1,6 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 
-\# swig related 
+# swig related 
 if (POLICY CMP0086)
   cmake_policy(SET CMP0086 OLD) 
 endif()
