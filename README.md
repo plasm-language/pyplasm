@@ -13,7 +13,7 @@ To install pyplasm, if you are using `CPython` distribution:
 
 
 python -m pip install --user --upgrade pip
-python -m pip install --upgrade pyplasm
+python -m pip install --upgrade GL PyGlut PyOpenGL pyplasm
 python -c "from pyplasm import *; VIEW(CUBOID([1,1,1]))"
 ```
 

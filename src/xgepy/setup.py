@@ -32,5 +32,5 @@ setuptools.setup(
   package_data={"pyplasm": findFilesInCurrentDirectory()},
   platforms=['Linux', 'OS-X', 'Windows'],
   license = "GPL",
-  install_requires=['numpy', "GL", "PyGlut", "PyOpenGL"],
+  install_requires=['numpy'],
 )
