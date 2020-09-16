@@ -145,9 +145,7 @@ jobs:
       shell: bash
       run: |
            set -x
-           conda install -c conda-forge anaconda-client conda-build 
-           conda install -c conda-forge pip numpy pyopengl freeglut 
-           conda install -c conda-forge libglu || true
+           conda install anaconda-client conda-build pip
            conda update --all
            python -m pip install --upgrade setuptools wheel twine  || true # not sure if this is needed
            cd build/Release/pyplasm
