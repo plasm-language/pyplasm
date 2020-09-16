@@ -3,16 +3,13 @@
 FIND_PACKAGE(OpenGL REQUIRED)
 INCLUDE_DIRECTORIES(${OPENGL_INCLUDE_DIR})
 
-ADD_DEFINITIONS(-DPYPLASM_BUILDING_JUCE=1)
-
 # Enable stack-unwinding support in c objects on gcc-based platforms.
 # Failing to do so will cause your program to be terminated when a png
 # or a jpeg exception is thrown on linux or macosx.
 IF (CMAKE_COMPILER_IS_GNUCC)
   SET(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -fexceptions")
   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive")
-ENDIF(CMAKE_COMPILER_IS_GNUCC)
-
+ENDIF()
 
 IF (WIN32)
   SET(JUCE_PLATFORM_SPECIFIC_DIR src/native/windows)
@@ -37,7 +34,6 @@ ELSE()
     ENDIF()
   ENDIF()
 ENDIF()
-
 
 # ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 # use "find ./modules -type d" inside Juce src directory and remove all 

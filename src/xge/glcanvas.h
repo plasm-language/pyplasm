@@ -2,6 +2,7 @@
 #define _GL_CANVAS_H__
 
 #include <xge/xge.h>
+#include <iostream>
 
 class GLCanvas;
 
@@ -27,17 +28,17 @@ class GLCanvas
 {
 public:
 
-  class Pimpl;
-  
-  //m_fix_lighting
-  bool m_fix_lighting;
+	class Pimpl;
+
+	//m_fix_lighting
+	bool m_fix_lighting;
 
 	//! navigation using trackball
 	bool  trackball_mode;
 	Vec3f trackball_center;
 
 	//! internal mouse position
-	int  mouse_beginx,mouse_beginy;
+	int  mouse_beginx, mouse_beginy;
 
 	//if to draw lines or not
 	bool draw_lines;
@@ -56,18 +57,44 @@ public:
 	bool bProgressiveRendering;
 
 	//constructor
-	GLCanvas();
+	GLCanvas(bool bShared=false);
 
 	//~destructor
 	virtual ~GLCanvas();
 
-  //getShader
-  static GLCanvas*& getShared()
-  {static GLCanvas* ret=nullptr;return ret;;}
 
-  //isShared
-  bool isShared() const
-  {return getShared()==this;}
+	//getShader
+	static GLCanvas*& getShared()
+	{
+		static GLCanvas* ret = nullptr;
+		return ret;
+	}
+
+	//createShared
+	static void createShared()
+	{
+		static GLCanvas*& shared = getShared();
+		if (shared)
+			throw  "internal error";
+
+		shared = new GLCanvas(true);
+		if (!shared->makeCurrent())
+		{
+			std::cout << "failed to create shared GLCanvas" << std::endl;
+			throw "internal error";
+		}
+
+		shared->doneCurrent();
+		std::cout << "shared GLCanvas created" << std::endl;
+	}
+
+	//destroyShared
+	static void destroyShared()
+	{
+		static GLCanvas*& shared = getShared();
+		GLCanvas::getShared() = nullptr;
+		delete shared;
+	}
 
   //getGLContext
   void* getGLContext();

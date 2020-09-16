@@ -24,7 +24,7 @@ if (sys.version_info > (3, 0)):
 
 
 
-start=time.clock()
+start=time.perf_counter()
 print("Evaluating fenvs.py..")
 
 #default values (see PlasmConfig)
@@ -3872,7 +3872,7 @@ def FLAT(hpc) :
     ret.append(temp.childs[I])
   return ret
 
-print("...fenvs.py imported in",(time.clock() - start),"seconds")
+print("...fenvs.py imported in",(time.perf_counter() - start),"seconds")
 
 
 if __name__ == "__main__":

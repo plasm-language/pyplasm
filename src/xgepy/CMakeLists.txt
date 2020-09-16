@@ -1,72 +1,54 @@
-
-# huge file is generated!
-IF (PYPLASM_WINDOWS)
-  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
-ENDIF()
+find_package(SWIG 3.0 REQUIRED)
+include(${SWIG_USE_FILE})	
 
 
-INCLUDE_DIRECTORIES(${PYTHON_INCLUDE_PATH})
-INCLUDE_DIRECTORIES(${NUMPY_INCLUDE_DIRS})
+set(SwigFile ${CMAKE_CURRENT_SOURCE_DIR}/xge.i)
 
+set_property(SOURCE ${SwigFile} APPEND PROPERTY SWIG_FLAGS "-I${CMAKE_CURRENT_SOURCE_DIR}")
 
-# use SWIG to generate file or not
-SET(PYPLASM_REGENERATE_SWIG_WRAPPERS OFF CACHE BOOL "Regenerate swig wrappers")
-IF (PYPLASM_REGENERATE_SWIG_WRAPPERS)
-  MESSAGE("-- Regenerating swig wrappers")
-  FIND_PACKAGE(SWIG REQUIRED)
-  INCLUDE(${SWIG_USE_FILE})
-  SET(CMAKE_SWIG_FLAGS "")
-  SET_SOURCE_FILES_PROPERTIES(xge.i PROPERTIES CPLUSPLUS ON)
-  # important -extranative (which define SWIG_PYTHON_EXTRA_NATIVE_CONTAINERS see http://old.nabble.com/Re%3A-std_vector-and-typemaps-p32605911.html)  
-  SET_SOURCE_FILES_PROPERTIES(xge.i PROPERTIES SWIG_FLAGS "-threads;-extranative")
-  SWIG_ADD_MODULE(xgepy python xge.i)
-  ADD_DEPENDENCIES(_xgepy xge)
-  SWIG_LINK_LIBRARIES(xgepy ${PYTHON_LIBRARIES} xge)
-  INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/xgepy.py DESTINATION "${CMAKE_INSTALL_PREFIX}")
-ELSE()
+# this is for generated C++ and header files
+set(SWIG_OUTFILE_DIR ${CMAKE_BINARY_DIR}/${IntConfigName}) 
 
-  MESSAGE("-- Using existing swig wrappers")
-  ADD_LIBRARY(_xgepy SHARED xge.i xgePYTHON_wrap.cxx xgePYTHON_wrap.h xgepy.py)
-  
-  set(PYTHON_IS_ANACONDA 0)
-  string(FIND "${PYTHON_EXECUTABLE}" "anaconda" _index_)
-	if("${_index_}" GREATER -1)
-  	set(PYTHON_IS_ANACONDA 1)
-  endif()
-  
-  # see https://groups.google.com/a/continuum.io/forum/#!topic/anaconda/057P4uNWyCU
-  if(APPLE)
-    TARGET_LINK_LIBRARIES(_xgepy xge)
-    set_target_properties(_xgepy PROPERTIES LINK_FLAGS "-undefined dynamic_lookup")
-	else()
-		TARGET_LINK_LIBRARIES(_xgepy ${PYTHON_LIBRARIES} xge)
-	endif()
-  
-  ADD_DEPENDENCIES(_xgepy xge)
-  INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/xgepy.py DESTINATION "${CMAKE_INSTALL_PREFIX}")
-  IF (PYPLASM_WINDOWS)
-    SET_TARGET_PROPERTIES(_xgepy PROPERTIES SUFFIX ".pyd")
-  ELSE()
-    SET_TARGET_PROPERTIES(_xgepy PROPERTIES PREFIX "")
-    SET_TARGET_PROPERTIES(_xgepy PROPERTIES SUFFIX ".so")
-  ENDIF()
-ENDIF()
+set(CMAKE_SWIG_OUTDIR ${SWIG_OUTFILE_DIR}/pyplasm) # this is for *.py generated files
+set (UseSWIG_TARGET_NAME_PREFERENCE STANDARD)
 
-# install the shared library
-INSTALL(TARGETS _xgepy DESTINATION ${CMAKE_INSTALL_PREFIX})
+set_property(SOURCE ${SwigFile} APPEND PROPERTY SWIG_FLAGS "-threads;-extranative")
 
-# install other *.py files
-INSTALL(FILES 
-  ${CMAKE_CURRENT_SOURCE_DIR}/fenvs.py 
-  ${CMAKE_CURRENT_SOURCE_DIR}/__init__.py 
-  ${CMAKE_CURRENT_SOURCE_DIR}/viewer.py
-  ${CMAKE_CURRENT_SOURCE_DIR}/setup.py 
-  DESTINATION "${CMAKE_INSTALL_PREFIX}")
+set_source_files_properties(${SwigFile} PROPERTIES CPLUSPLUS ON)
 
+file(GLOB PyFiles      ${CMAKE_CURRENT_SOURCE_DIR}/*.py)
+file(GLOB ExampleFiles ${CMAKE_CURRENT_SOURCE_DIR}/../../resources/examples/*.py)
+source_group("examples"   FILES ${ExampleFiles})
 
-# install examples
-FILE(GLOB XGEPY_EXAMPLES "${CMAKE_CURRENT_SOURCE_DIR}/../../resources/examples/*")
-INSTALL(FILES ${XGEPY_EXAMPLES} DESTINATION "${CMAKE_INSTALL_PREFIX}/examples/")
+swig_add_library(xgepy LANGUAGE python SOURCES ${SwigFile} ${PyFiles} ${ExampleFiles})
+target_compile_definitions(xgepy PRIVATE SWIG_TYPE_TABLE=pyplasm)
+target_compile_definitions(xgepy PRIVATE SWIG_PYTHON_INTERPRETER_NO_DEBUG=1)
+target_include_directories(xgepy PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(xgepy PRIVATE xge)
+set_target_properties(xgepy PROPERTIES FOLDER Swig/)
+
+target_compile_definitions(xgepy PUBLIC PYPLASM_PYTHON=1)
+if (WIN32)
+	target_include_directories(xgepy PUBLIC ${Python_INCLUDE_DIRS})
+	target_link_libraries(xgepy      PUBLIC ${Python_LIBRARY_RELEASE})
+else()
+	target_link_libraries(xgepy PUBLIC Python::Module) # Python library for Python extending
+endif()
+
+if (MSVC)
+	target_compile_definitions(xgepy PRIVATE /W0) 
+	target_compile_options(xgepy     PRIVATE /bigobj)
+else()
+	set_target_properties(xgepy PROPERTIES COMPILE_FLAGS "${BUILD_FLAGS} -w")
+endif()
+
+# swig generated *.py file and *.so must be in the same pyplasm/ root directoryc otherwise it won't work
+set_target_properties(xgepy PROPERTIES 
+	LIBRARY_OUTPUT_DIRECTORY  ${CMAKE_BINARY_DIR}/${ConfigName}/pyplasm
+	RUNTIME_OUTPUT_DIRECTORY  ${CMAKE_BINARY_DIR}/${ConfigName}/pyplasm
+	ARCHIVE_OUTPUT_DIRECTORY  ${CMAKE_BINARY_DIR}/${ConfigName}/swig) 
+
+install(FILES ${PyFiles}      DESTINATION ${CMAKE_BINARY_DIR}/${ConfigName}/pyplasm/)
+install(FILES ${ExampleFiles} DESTINATION ${CMAKE_BINARY_DIR}/${ConfigName}/pyplasm/examples/)
 
  
-

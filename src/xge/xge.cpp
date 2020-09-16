@@ -37,27 +37,13 @@ public:
   //initialise
   virtual void initialise(const juce::String& commandLine)  override
   {
-    //GLCanvas (shared)
-    {
-      std::cout<<"Creating shared GLCanvas..."<<std::endl;
-      GLCanvas* shared=new GLCanvas();
-      if (!shared->makeCurrent())
-      {
-        std::cout<<"failed to create GLCanvas"<<std::endl;
-        std::cout<<"Failed to create GLCanvas because your video card or driver does not support at least OpenGL ES 2.0."<<std::endl;
-        return;
-      }
-
-      shared->doneCurrent();
-      std::cout<<"shared GLCanvas created"<<std::endl;
-    }
+    GLCanvas::createShared();
   }
 
   //shutdown
   virtual void shutdown() override
   {
-    delete GLCanvas::getShared();
-    GLCanvas::getShared()=nullptr;
+    GLCanvas::destroyShared();
   }
 
 };

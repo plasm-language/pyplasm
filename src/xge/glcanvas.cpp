@@ -49,19 +49,27 @@ public:
   OwnedWindow* owned_win;
 
   //constructor
-  Pimpl(GLCanvas* owner_) : owned_win(nullptr),owner(owner_)
+  Pimpl(GLCanvas* owner_, bool bShared) : owned_win(nullptr),owner(owner_)
   {
-    bPyPlasmMainSharedContext=owner->isShared();
+    //modified JUCE 
+    this->bPyPlasmMainSharedContext = bShared;
+
     setPixelFormat(juce::OpenGLPixelFormat(8,8,16,0));
 
-    if (owner->isShared())
+    if (bPyPlasmMainSharedContext)
     {
-      owned_win=new OwnedWindow(owner,"GLShared",juce::Colours::white,false,true);
+      owned_win=new OwnedWindow(owner,"GLShared",juce::Colours::white,/*requiredButtons*/false,/*addToDesktop*/true);
       attachTo(*owned_win);
-      owned_win->setSize(256,256);
+      owned_win->setSize(1,1);
       owned_win->setVisible(true ); //force construction...
-      owned_win->setVisible(false); //... but I dont'want to see it (note: I made a modification in juce_OpenGLContext.cpp to not flush it)
-      assert(getRawContext()!=nullptr);
+      owned_win->setVisible(false); 
+      
+      //... but I dont'want to see it (note: I made a modification in juce_OpenGLContext.cpp to not flush it)
+      if (getRawContext() == nullptr)
+        throw "internal error";
+
+
+      
     }
     else
     {
@@ -71,7 +79,10 @@ public:
       setContinuousRepainting(false);
 
       //sharing...
-      void* raw_context=((juce::OpenGLContext*)GLCanvas::getShared()->getGLContext())->getRawContext(); assert(raw_context);
+      void* raw_context=((juce::OpenGLContext*)GLCanvas::getShared()->getGLContext())->getRawContext(); 
+      if (!raw_context)
+        throw "internal error";
+
       setNativeSharedContext(raw_context);
       setRenderer(this);
       attachTo(*this);
@@ -106,11 +117,21 @@ public:
 
   //makeCurrent
   bool makeCurrent()
-  {assert(owner->isShared());return juce::OpenGLContext::makeActive();}
+  {
+    if (!bPyPlasmMainSharedContext)
+      throw "internal exception";
+
+    return juce::OpenGLContext::makeActive();
+  }
 
   //doneCurrent
   void doneCurrent()
-  {assert(owner->isShared());juce::OpenGLContext::deactivateCurrentContext();}
+  {
+    if (!bPyPlasmMainSharedContext)
+      throw "internal exception";
+
+    juce::OpenGLContext::deactivateCurrentContext();
+  }
 
   //getGLContext
   juce::OpenGLContext* getGLContext()
@@ -132,14 +153,14 @@ private:
     if (!owner)
       return;
     
-    assert(!owner->isShared());
+    if (bPyPlasmMainSharedContext)
+      throw "internal error";
     
     if (!isShowing() || !isActive()) 
       return;
 
     GLDestroyLater::flush(*owner);
 
-    
     {
       glEnable(GL_LIGHTING);
       glEnable(GL_POINT_SMOOTH);
@@ -307,11 +328,8 @@ void GLDestroyLater::flush(GLCanvas& gl)
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
-GLCanvas::GLCanvas() : pimpl(nullptr)
+GLCanvas::GLCanvas(bool bShared) : pimpl(nullptr)
 {
-  if (!getShared())
-    getShared()=this;
-
   this->bProgressiveRendering = true;
   this->draw_lines            = false;
   this->draw_axis             = true;
@@ -322,9 +340,7 @@ GLCanvas::GLCanvas() : pimpl(nullptr)
   this->frustum               = SmartPointer<Frustum>(new Frustum());
   this->m_fix_lighting        = false;
   this->batch_line_width      = 1;
-
-  this->pimpl=new Pimpl(this);
-
+  this->pimpl=new Pimpl(this, bShared);
   this->frustum->guessBestPosition(Box3f(Vec3f(-1,-1,-1),Vec3f(+1,+1,+1)));
 }
 
@@ -1049,7 +1065,7 @@ void GLCanvas::renderModel()
   }
 
   //draw transparent object in reverse order
-  for (int i=(transparent.size()-1);!bQuitRenderingLoop && i>=0 ;i--)
+  for (int i=((int)transparent.size()-1);!bQuitRenderingLoop && i>=0 ;i--)
     renderBatch(transparent[i]);
 
 }

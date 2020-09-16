@@ -46,9 +46,8 @@ class JUCE_API  OpenGLContext
 {
 public:
   
-    #if PYPLASM_JUCE
+  //scrgiorgio
     bool bPyPlasmMainSharedContext;
-    #endif  
   
     OpenGLContext();
 

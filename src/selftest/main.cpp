@@ -49,7 +49,7 @@ int ArchiveSelfTest()
 
 			ar.Push("stl_vector_vec3f");
 			{
-				ar.WriteInt("num",std_vector_vec3f.size());
+				ar.WriteInt("num",(int)std_vector_vec3f.size());
 
 				for (int i=0;i<(int)std_vector_vec3f.size();i++)
 				{
@@ -2779,10 +2779,10 @@ public:
 		batch->setColor(Color4f(1,1,1));
 		float vertices[] = 
     {
-      0,0,0,  
-      W,0,0,  
-      W,H,0, 
-      0,H,0
+             0,       0,0,  
+      float(W),       0,0,  
+			float(W),float(H),0,
+             0,float(H),0
     };
     batch->vertices.reset(new Array(12,vertices));
 

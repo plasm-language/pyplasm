@@ -1,6 +1,12 @@
 
 %module(directors="1") xgepy
 
+// Nested class not currently supported
+#pragma SWIG nowarn=325 
+
+// Nested struct not currently supported
+#pragma SWIG nowarn=312 
+
 %{ #include "xge/xge.h" %}
 
 %include <stl.i>

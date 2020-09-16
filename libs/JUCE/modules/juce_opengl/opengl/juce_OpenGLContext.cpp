@@ -218,7 +218,7 @@ public:
         if (! context.makeActive())
             return false;
       
-        //pyplasm!
+        //scrgiorgio pyplasm!
         //I want the rendering to happen with the main message lock
         //important that this lock is acquired before NativeContext::Locker otherwise deadlock
 #if 1
@@ -553,7 +553,7 @@ public:
     {
         detach();
 
-      #if PYPLASM_JUCE
+        //scrgiorgio
       if (context.bPyPlasmMainSharedContext)
       {
         Component& comp = *getComponent();
@@ -564,7 +564,6 @@ public:
         comp.setCachedComponentImage (nullptr);
         context.nativeContext = nullptr;
       }
-      #endif  
     }
 
     void componentMovedOrResized (bool /*wasMoved*/, bool /*wasResized*/) override
@@ -652,14 +651,13 @@ private:
                                                              context.contextToShareWith);
         comp.setCachedComponentImage (newCachedImage);
         
-        #if PYPLASM_JUCE
+        //scrgiorgio
         if (context.bPyPlasmMainSharedContext)
         {
           newCachedImage->initialiseOnThread();
           newCachedImage->hasInitialised = true;
           return;
-        }
-        #endif        
+        }       
         
         newCachedImage->start(); // (must wait until this is attached before starting its thread)
         newCachedImage->updateViewportSize (true);
@@ -669,10 +667,9 @@ private:
 
     void detach()
     {
-      #if PYPLASM_JUCE
+      //scrgiorgio
       if (context.bPyPlasmMainSharedContext)
-        return; //I'm really detaching only in destructor (see ~Attachment)
-      #endif      
+        return; //I'm really detaching only in destructor (see ~Attachment)   
       
       
         stopTimer();
@@ -704,9 +701,8 @@ OpenGLContext::OpenGLContext()
       imageCacheMaxSize (8 * 1024 * 1024),
       renderComponents (true), useMultisampling (false), continuousRepaint (false)
 {
-  #if PYPLASM_JUCE
+  //scrgiorgio
   bPyPlasmMainSharedContext=false;
-  #endif  
 }
 
 OpenGLContext::~OpenGLContext()

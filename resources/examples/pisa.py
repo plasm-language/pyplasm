@@ -2,7 +2,7 @@ from pyplasm import *
 
 import sys,time
 
-start=time.clock()
+start=time.perf_counter()
 
 # if you want to see intermediate results
 debug_tower =False
@@ -759,5 +759,5 @@ Fabric = STRUCT([
 out = Fabric
 
 #Plasm.save(out,':models/pisa.hpc.gz')
-print "Pisa evaluated in",time.clock()-start,"seconds"
+print "Pisa evaluated in",time.perf_counter()-start,"seconds"
 VIEW(out)

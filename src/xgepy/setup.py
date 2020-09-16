@@ -1,10 +1,9 @@
 import os, sys, setuptools
 import shutil
 
-#increase this number for PIP
-VERSION="1.2.5"
+#increase this number for PIP/conda
+VERSION="2.0.1"
 this_dir="."
-
 
 shutil.rmtree('./build', ignore_errors=True)
 shutil.rmtree('./dist', ignore_errors=True)
@@ -33,5 +32,5 @@ setuptools.setup(
   package_data={"pyplasm": findFilesInCurrentDirectory()},
   platforms=['Linux', 'OS-X', 'Windows'],
   license = "GPL",
-  install_requires=['numpy', ],
+  install_requires=['numpy', "GL", "PyGlut", "PyOpenGL"],
 )
