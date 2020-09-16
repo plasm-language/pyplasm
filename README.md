@@ -24,8 +24,8 @@ python -m pip install --upgrade pyplasm
 If you are using `conda` python:
 
 ```
-conda install -y pyopengl freeglut
-conda install  -y --channel scrgiorgio pyplasm
+conda install pyopengl freeglut
+conda install --channel scrgiorgio pyplasm
 ```
 
 Then test it:
