@@ -1,7 +1,5 @@
 # PLASM (Programming LAnguage for Solid Modeling)
 
-![GitHub Actions](https://github.com/sci-visus/pyplasm/workflows/BuildPyPlasm/badge.svg)
-
 Plasm is a 'design language' for geometric and solid parametric design, 
 developed by the CAD Group at the Universities 'La Sapienza' and 'Roma Tre' in Italy.
 
@@ -22,9 +20,20 @@ python -c "from pyplasm import *; VIEW(CUBOID([1,1,1]))"
 If you are using `conda` python:
 
 ```
-conda install  -y --channel pyplasm pyplasm
+conda install  -y --channel scrgiorgio pyplasm
 python -c "from pyplasm import *; VIEW(CUBOID([1,1,1]))"
 ```
 
+
+
+<!--//////////////////////////////////////////////////////////////////////// -->
+## Commit CI (only for developers
+
+Edit file `src/xgepy/setup.py` and increment the VERSION.
+
+```
+TAG=...write the same value of VERSION here...
+git commit -a -m "New tag" && git tag -a $TAG -m "$TAG" && git push origin $TAG && git push origin
+```
 
 

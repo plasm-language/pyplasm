@@ -1,22 +1,27 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 
+\# swig related 
 if (POLICY CMP0086)
-  cmake_policy(SET CMP0086 OLD) # swig related 
+  cmake_policy(SET CMP0086 OLD) 
 endif()
 
+# swig related
 if (POLICY CMP0078)
-  cmake_policy(SET CMP0078 OLD)  # swig related
+  cmake_policy(SET CMP0078 OLD)  
 endif()
 
+# cmake generator expression in install
 if (POLICY CMP0087)
-  cmake_policy(SET CMP0087 NEW)  # cmake generator expression in install
+  cmake_policy(SET CMP0087 NEW)  
 endif()
 
+# use cmake folders
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)  
 
 # disable incremental linking for windows
 SET(MSVC_INCREMENTAL_DEFAULT OFF) 
 
+# independent code position
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 PROJECT(PyPlasm)
@@ -40,22 +45,14 @@ else()
 	set(GNUC  1)
 	SET(PYPLASM_LINUX 1)
 	ADD_DEFINITIONS(-DPYPLASM_LINUX=1)
-
-	IF (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
-		ADD_DEFINITIONS(-D_DEBUG=1)
-	ENDIF() 
-  
 	# enable 64 bit file support (see http://learn-from-the-guru.blogspot.it/2008/02/large-file-support-in-linux-for-cc.html)
 	ADD_DEFINITIONS(-D_FILE_OFFSET_BITS=64)
-	SET(CMAKE_C_FLAGS    ${CMAKE_C_FLAGS}   "-fPIC")
-	SET(CMAKE_CXX_FLAGS  ${CMAKE_CXX_FLAGS} "-fPIC -std=gnu++0x")
+	SET(CMAKE_CXX_FLAGS  ${CMAKE_CXX_FLAGS} "-std=gnu++0x")
 	INCLUDE_DIRECTORIES("/usr/local/include")
 	INCLUDE_DIRECTORIES("/usr/include")
-
 	MESSAGE(STATUS "Detected GNU ")
 
 endif()
-
 
 if (CMAKE_CONFIGURATION_TYPES)
 	set(ConfigName         $<CONFIG>)
