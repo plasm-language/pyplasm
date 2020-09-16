@@ -71,14 +71,17 @@ jobs:
       if: matrix.python-type == 'conda'
       shell: bash -l {0}
       run: |
-           conda config --set always_yes yes --set changeps1 no --set anaconda_upload no   1>/dev/null
-           conda install conda                                                             1>/dev/null
+           set -x
+           conda config --set always_yes yes --set changeps1 no --set anaconda_upload no   
+           conda install conda 
+           conda update  conda
     
     # ____________________________________________
     - name: Compile pyplasm on windows
       if: matrix.os == 'windows-latest'
       shell: bash -l {0}
       run: |
+           set -x
            if [[  "${{ matrix.python-type }}" == "cpython" ]] ; then 
               Python_EXECUTABLE=${pythonLocation}/python.exe 
            else
@@ -96,6 +99,7 @@ jobs:
       if: matrix.os == 'macos-latest'
       shell: bash -l {0}
       run: |
+           set -x
            if [[  "${{ matrix.python-type }}" == "cpython" ]] ; then 
               Python_EXECUTABLE=${pythonLocation}/python
            else
@@ -112,6 +116,7 @@ jobs:
       if: matrix.os == 'ubuntu-latest' 
       shell: bash -l {0}
       run: |
+           set -x
            docker run -e PYTHON_VERSION=${{ matrix.python-version }} -v ${PWD}:${PWD}  -w ${PWD} visus/portable-linux-binaries /bin/bash -c "./scripts/build_linux.sh"
            sudo chown -R root:root  build
            sudo chmod -R a+rwx      build
@@ -121,8 +126,9 @@ jobs:
       if: matrix.python-type == 'cpython'
       shell: bash
       run: |
-           ${pythonLocation}/python -m pip install --upgrade pip                                      || true
-           ${pythonLocation}/python -m pip install --upgrade numpy setuptools wheel twine 1>/dev/null || true
+           set -x
+           ${pythonLocation}/python -m pip install --upgrade pip                           || true
+           ${pythonLocation}/python -m pip install --upgrade numpy setuptools wheel twine  || true
            cd build/Release/pyplasm
            Version=${{ matrix.python-version }}
            if [[  "${{ matrix.os }}" == "windows-latest" ]] ; then PLATFORM_NAME=win_amd64            ; fi
@@ -138,12 +144,14 @@ jobs:
       if: matrix.python-type == 'conda'
       shell: bash
       run: |
+           set -x
            conda install -c conda-forge anaconda-client conda-build 
            conda install -c conda-forge pip numpy pyopengl freeglut 
            conda install -c conda-forge libglu || true
+           conda update --all
            cd build/Release/pyplasm
            rm -Rf $(find ${CONDA_PREFIX} -iname "pyplasm*.tar.bz2")  || true
-           python setup.py -q bdist_conda 1>/dev/null
+           python setup.py -q bdist_conda 
            CONDA_FILENAME=$(find ${CONDA_PREFIX} -iname "pyplasm*.tar.bz2"  | head -n 1)
            GIT_TAG=$(git describe --tags --exact-match 2>/dev/null || true)
            if [[ "${GIT_TAG}" != ""  ]] ; then

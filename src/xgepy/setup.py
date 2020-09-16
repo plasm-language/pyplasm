@@ -1,5 +1,4 @@
-import os, sys, setuptools
-import shutil
+import os,sys,shutil,setuptools
 
 #increase this number for PIP/conda
 VERSION="2.0.6"
