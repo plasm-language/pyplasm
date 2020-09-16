@@ -97,9 +97,9 @@ jobs:
            ${Python_EXECUTABLE} -m pip install --upgrade numpy setuptools wheel twine
            
            if [[  "${{ matrix.os }}" == "windows-latest" ]] ; then 
-             curl -L --insecure https://cfhcable.dl.sourceforge.net/project/swig/swigwin/swigwin-4.0.2/swigwin-4.0.2.zip -O  && unzip swigwin-4.0.2.zip
              mkdir -p build
-             cd build             
+             cd build
+             curl -L --insecure https://cfhcable.dl.sourceforge.net/project/swig/swigwin/swigwin-4.0.2/swigwin-4.0.2.zip -O  && unzip swigwin-4.0.2.zip
              cmake -G "Visual Studio 16 2019" -A "x64" -DPython_EXECUTABLE=${Python_EXECUTABLE} -DSWIG_EXECUTABLE=./swigwin-4.0.2/swig.exe ../
              cmake --build . --target ALL_BUILD --config Release --parallel 4
              cmake --build . --target install   --config Release             
