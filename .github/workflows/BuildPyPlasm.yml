@@ -139,7 +139,8 @@ jobs:
       shell: bash
       run: |
            conda install -c conda-forge anaconda-client conda-build 
-           conda install -c conda-forge libglu pip pyopengl freeglut numpy
+           conda install -c conda-forge pip numpy pyopengl freeglut 
+           conda install -c conda-forge libglu || true
            cd build/Release/pyplasm
            rm -Rf $(find ${CONDA_PREFIX} -iname "pyplasm*.tar.bz2")  || true
            python setup.py -q bdist_conda 1>/dev/null
