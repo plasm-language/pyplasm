@@ -84,7 +84,8 @@ jobs:
            sudo apt-get install libglu1-mesa-dev 1>/dev/null
 
     # ____________________________________________
-    - name: Compile pyplasm 
+    - name: Compile pyplasm on windows
+      if: matrix.os == 'windows-latest'
       shell: bash -l {0}
       run: |
            if [[  "${{ matrix.python-type }}" == "cpython" ]] ; then 
@@ -92,44 +93,50 @@ jobs:
            else
               Python_EXECUTABLE=$(which python)
            fi
-           
-           ${Python_EXECUTABLE} -m pip install --upgrade pip
-           ${Python_EXECUTABLE} -m pip install --upgrade numpy setuptools wheel twine
-           
-           if [[  "${{ matrix.os }}" == "windows-latest" ]] ; then 
-             mkdir -p build
-             cd build
-             curl -L --insecure https://cfhcable.dl.sourceforge.net/project/swig/swigwin/swigwin-4.0.2/swigwin-4.0.2.zip -O  && unzip swigwin-4.0.2.zip
-             cmake -G "Visual Studio 16 2019" -A "x64" -DPython_EXECUTABLE=${Python_EXECUTABLE} -DSWIG_EXECUTABLE=./swigwin-4.0.2/swig.exe ../
-             cmake --build . --target ALL_BUILD --config Release --parallel 4
-             cmake --build . --target install   --config Release             
+           mkdir -p build
+           cd build
+           curl -L --insecure https://cfhcable.dl.sourceforge.net/project/swig/swigwin/swigwin-4.0.2/swigwin-4.0.2.zip -O  && unzip swigwin-4.0.2.zip
+           cmake -G "Visual Studio 16 2019" -A "x64" -DPython_EXECUTABLE=${Python_EXECUTABLE} -DSWIG_EXECUTABLE=./swigwin-4.0.2/swig.exe ../
+           cmake --build . --target ALL_BUILD --config Release --parallel 4
+           cmake --build . --target install   --config Release
+
+    # ____________________________________________
+    - name: Compile pyplasm on macos
+      if: matrix.os == 'macos-latest'
+      shell: bash -l {0}
+      run: |
+           if [[  "${{ matrix.python-type }}" == "cpython" ]] ; then 
+              Python_EXECUTABLE=${pythonLocation}/python
+           else
+              Python_EXECUTABLE=$(which python)
            fi
-           
-           if [[  "${{ matrix.os }}" == "macos-latest"   ]] ; then P
-             mkdir -p build
-             cd build               
-             cmake -GXcode -DCMAKE_OSX_SYSROOT="/tmp/MacOSX-SDKs/MacOSX10.9.sdk" -DPython_EXECUTABLE=${Python_EXECUTABLE}  ../
-             cmake --build ./ --target ALL_BUILD --config Release --parallel 4 
-             cmake --build ./ --target install   --config Release 
-           fi
-           
-           if [[  "${{ matrix.os }}" == "ubuntu-latest"  ]] ; then 
-             docker run -e PYTHON_VERSION=${{ matrix.python-version }} -v ${PWD}:${PWD}  -w ${PWD} visus/portable-linux-binaries /bin/bash -c "./scripts/build_linux.sh"
-             sudo chown -R root:root  build
-             sudo chmod -R a+rwx      build
-           fi
+           mkdir -p build
+           cd build
+           cmake -GXcode -DCMAKE_OSX_SYSROOT="/tmp/MacOSX-SDKs/MacOSX10.9.sdk" -DPython_EXECUTABLE=${Python_EXECUTABLE}  ../
+           cmake --build ./ --target ALL_BUILD --config Release --parallel 4 
+           cmake --build ./ --target install   --config Release 
+
+    # ____________________________________________
+    - name: Compile pyplasm on ubuntu
+      if: matrix.os == 'ubuntu-latest' 
+      shell: bash -l {0}
+      run: |
+           docker run -e PYTHON_VERSION=${{ matrix.python-version }} -v ${PWD}:${PWD}  -w ${PWD} visus/portable-linux-binaries /bin/bash -c "./scripts/build_linux.sh"
+           sudo chown -R root:root  build
+           sudo chmod -R a+rwx      build
 
     # ____________________________________________
     - name: Distrib pyplasm on pypi
       if: matrix.python-type == 'cpython'
       shell: bash
       run: |
+           ${pythonLocation}/python -m pip install --upgrade pip
+           ${pythonLocation}/python -m pip install --upgrade numpy setuptools wheel twine 1>/dev/null || true
            cd build/Release/pyplasm
            Version=${{ matrix.python-version }}
            if [[  "${{ matrix.os }}" == "windows-latest" ]] ; then PLATFORM_NAME=win_amd64            ; fi
            if [[  "${{ matrix.os }}" == "macos-latest"   ]] ; then PLATFORM_NAME=macosx_10_9_x86_64   ; fi
-           if [[  "${{ matrix.os }}" == "ubuntu-latest"  ]] ; then PLATFORM_NAME=manylinux2010_x86_64 ; fi             
-           ${pythonLocation}/python -m pip install setuptools wheel twine --upgrade 1>/dev/null || true
+           if [[  "${{ matrix.os }}" == "ubuntu-latest"  ]] ; then PLATFORM_NAME=manylinux2010_x86_64 ; fi
            ${pythonLocation}/python setup.py -q bdist_wheel --python-tag=cp${Version:0:1}${Version:2:1} --plat-name=${PLATFORM_NAME}
            GIT_TAG=$(git describe --tags --exact-match 2>/dev/null || true)
            if [[ "${GIT_TAG}" != "" ]] ; then
@@ -140,9 +147,11 @@ jobs:
       if: matrix.python-type == 'conda'
       shell: bash
       run: |
-           cd build/Release/pyplasm
+      
            conda install anaconda-client conda-build 1>/dev/null || true
-           conda install pyopengl freeglut || true
+           conda install pip pyopengl freeglut || true
+           python -m pip install --upgrade numpy setuptools wheel twine
+           cd build/Release/pyplasm
            rm -Rf $(find ${CONDA_PREFIX} -iname "pyplasm*.tar.bz2")  || true
            python setup.py -q bdist_conda 1>/dev/null
            CONDA_FILENAME=$(find ${CONDA_PREFIX} -iname "pyplasm*.tar.bz2"  | head -n 1)
