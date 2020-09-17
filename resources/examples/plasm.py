@@ -4,7 +4,6 @@ from pyplasm import *
 import os,sys
 from math import *	
 
-
 # view a 3d cube
 Plasm.view(Plasm.cube(3,0,1))
 	 
@@ -24,7 +23,7 @@ assert Plasm.getPointDim(Plasm.cube(2))==2
 # calculate limits
 assert Plasm.limits(Plasm.cube(3))==Boxf(Vecf(1,0,0,0),Vecf(1,1,1,1))
 	 
-# print debuggin infos
+# debuggin infos
 Plasm.Print(Plasm.cube(2))
 	 
 # add properties

@@ -156,24 +156,23 @@ def printGraph(g):
 
 	#stampa il grafo (solo per debugging)
 	#g.Print()
-	#print ""
+	#print("")
 	
 	# ESEMPIO: stampa tutte le celle a tutti i livelli
-	print "Graph cells"
+	print("Graph cells")
 	for level in range(0,pointdim+1):
-		print " level(",level,")",cellsPerLevel(g,level)
-	print ""
+		print(" level(",level,")",cellsPerLevel(g,level))
+	print("")
 	
 	# ESEMPIO : ottieni informazioni su una certa cella
 	for cell in [v0,v1,v2,e01,e12,e20,triangle]:
-		print "cell id(",cell, ") level(",g.Level(cell), ") downCells(",downCells(g,cell), ") upCells("  ,upCells(g,cell),")",
+		print("cell id(",cell, ") level(",g.Level(cell), ") downCells(",downCells(g,cell), ") upCells("  ,upCells(g,cell),")")
 		# stampa le coordinate
-		if g.Level(cell)==0: print "coord(",g.getVecf(cell),")",
-		print ""
+		if g.Level(cell)==0: 
+			print("coord(",g.getVecf(cell),")")
 		# stampa la connettivita a tutti i livelli
 		for level in range(0,pointdim+1):
-			print "   findCells(g,nav,",level,",cell",cell,")",findCells(g,nav,level,cell) 
-		print ""
+			print("   findCells(g,nav,",level,",cell",cell,")",findCells(g,nav,level,cell))
 	
 	
 if False:
@@ -182,7 +181,7 @@ if False:
 	vmat = Matf(1)
 	hmat = Matf(1)
 	g=Graph.power(vmat,hmat,  g1,None,None,  g2,None,None)
-	print "vmat",vmat,"hmat",hmat
+	print("vmat",vmat,"hmat",hmat)
 	g.Print()
 	Plasm.View(Hpc(g,vmat,hmat))
 
@@ -198,7 +197,7 @@ if False:
 		if child.g: 
 			child.g.Print()
 			graphs+=[[child.g,child.vmat,child.hmat],]
-	print graphs	
+	print(graphs)
 	
 
 if False:
@@ -225,7 +224,7 @@ def multiTraverse(g,cell,nrecursion,up_direction=False):
 
 #g=makeTet()
 #g.Print()
-#print multiTraverse(g,15,3,False)
+#print(multiTraverse(g,15,3,False))
 
 
 

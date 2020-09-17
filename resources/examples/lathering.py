@@ -17,7 +17,7 @@ def myprint(arg0,arg1):
     """
     Useful for debugging.
     """
-    print "\n"+arg0+" =", arg1
+    print("\n"+arg0+" =", arg1)
 
 
 def intersect2DLines(P0,T0,P2,T2):
@@ -313,7 +313,8 @@ if __name__=="__main__":
 
     # input parsing and 2D curve segments generation
     segments = parseProfile(commands,offsetx=-1,offsety=1.5)
-    for seg in segments: print "\n", seg
+    for seg in segments: 
+       print("\n", seg)
 
     # visual check of generated 2D spline
     profile = STRUCT([MAP(seg.curve)(seg.domain) for seg in segments])

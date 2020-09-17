@@ -9,13 +9,13 @@ def dom(n):
     return INTERVALS(1)(n)
 
 def ROTATIONALSOLID (args):
-    section = args
-    def map_fn(point):
-	u, v, w = point
-	x, y, z = section([u, v])
-	ret = [x*math.cos(w), x*math.sin(w), z]
-	return ret
-    return map_fn
+   section = args
+   def map_fn(point):
+      u, v, w = point
+      x, y, z = section([u, v])
+      ret = [x*math.cos(w), x*math.sin(w), z]
+      return ret
+   return map_fn
   
 # Curves
 c0 = BEZIER(S1)([[0, 0, 0], [0, 0, 3]])

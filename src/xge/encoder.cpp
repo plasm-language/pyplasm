@@ -51,7 +51,7 @@ void Decoder::Init(const char* src)
 	this->tohandle_last  = 0;
 	this->pos            = 0;
 	this->__eof          = false;
-	this->buffersize     = strlen(src);
+	this->buffersize     = (int)strlen(src);
 	this->buffer         = (unsigned char*)MemPool::getSingleton()->malloc(this->buffersize);
 	memcpy(this->buffer,src,this->buffersize);
 }

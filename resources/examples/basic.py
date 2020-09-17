@@ -11,7 +11,7 @@ assert v.size()==0
 if True:
 	src=Array([1,2,3])
 	dst=copy.copy(src)
-	print dst
+	print(dst)
 	assert dst.size()==3 and dst[0]==1 and dst[1]==2 and dst[2]==3 
 
 v=Array(3)
@@ -1159,4 +1159,4 @@ assert(eval(repr(v)))==Vecf([1,2,3,4])
 v=Vecf([1,2,3,4])
 assert eval(str(v))==[1,2,3,4]
 
-print "self test on basic data succeded"
+print("self test on basic data succeded")

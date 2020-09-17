@@ -37,7 +37,7 @@ class BallSet:
 	#__________________________________________________________________________
 	def createOctree(self):
 		
-		print "Creating loose octree with world_box",str(self.world_box)," max_depth",self.max_depth	
+		print("Creating loose octree with world_box",str(self.world_box)," max_depth",self.max_depth)
 		self.octree=Octree(self.world_box,self.max_depth)
 		 
 		for ball in self.balls:

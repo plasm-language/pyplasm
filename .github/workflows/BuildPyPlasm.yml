@@ -1,0 +1,158 @@
+name: BuildPyPlasm
+
+on: [push]
+
+jobs:
+
+  # ///////////////////////////////////////////////////////////////
+  Build:
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false  
+      matrix:
+        python-version: [ '3.6', '3.7', '3.8',  ] 
+        os: ["windows-latest", "macos-latest", "ubuntu-latest"]
+        # conda disabled, it fails in distrib, need to debug it
+        # python-type: ["cpython", "conda"]
+        python-type: ["cpython"]
+    steps:
+    
+    # ____________________________________________
+    - name: git clone pyplasm
+      uses: actions/checkout@v2
+
+    # ____________________________________________
+    - name: Install CMake
+      uses: lukka/get-cmake@latest
+      
+    # ____________________________________________
+    # problems with choco and SWIG_DIR
+    # - name: Install Swig for windows
+    # if: matrix.os == 'windows-latest'
+    # uses: crazy-max/ghaction-chocolatey@v1
+    # with:
+    #    args: install -y --allow-empty-checksums --no-progress swig
+
+    # ____________________________________________  
+    - name: Install Swig for macos
+      if: matrix.os == 'macos-latest'
+      run: brew install swig
+           
+    # ____________________________________________  
+    - name: Install SDK 10.9 for macos 
+      if: matrix.os == 'macos-latest'
+      uses: nick-invision/retry@v1
+      with:
+        max_attempts: 3
+        timeout_minutes: 5
+        retry_wait_seconds: 5
+        command: 'cd /tmp && rm -Rf MacOSX-SDKs && git clone https://github.com/phracker/MacOSX-SDKs.git'
+           
+    # ____________________________________________
+    - name: Install CPython 
+      if: matrix.python-type == 'cpython'
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }} 
+        architecture: 'x64'
+        
+    # ____________________________________________
+    - name: Install Miniconda 
+      if: matrix.python-type == 'conda'
+      uses: goanpeca/setup-miniconda@v1
+      with:
+        miniconda-version: 'latest'    
+        python-version: ${{ matrix.python-version }}
+        activate-environment: tmp
+        auto-update-conda: true
+    
+    # ____________________________________________
+    - name: Configure Miniconda 
+      if: matrix.python-type == 'conda'
+      shell: bash -l {0}
+      run: |
+           set -x
+           conda config --set always_yes yes --set changeps1 no --set anaconda_upload no   
+           conda install conda 
+    
+    # ____________________________________________
+    - name: Compile pyplasm on windows
+      if: matrix.os == 'windows-latest'
+      shell: bash -l {0}
+      run: |
+           set -x
+           if [[  "${{ matrix.python-type }}" == "cpython" ]] ; then 
+              Python_EXECUTABLE=${pythonLocation}/python.exe 
+           else
+              Python_EXECUTABLE=$(which python)
+           fi
+           mkdir -p build
+           cd build
+           curl -L --insecure https://cfhcable.dl.sourceforge.net/project/swig/swigwin/swigwin-4.0.2/swigwin-4.0.2.zip -O  && unzip swigwin-4.0.2.zip
+           cmake -G "Visual Studio 16 2019" -A "x64" -DPython_EXECUTABLE=${Python_EXECUTABLE} -DSWIG_EXECUTABLE=./swigwin-4.0.2/swig.exe ../
+           cmake --build . --target ALL_BUILD --config Release --parallel 4
+           cmake --build . --target install   --config Release
+
+    # ____________________________________________
+    - name: Compile pyplasm on macos
+      if: matrix.os == 'macos-latest'
+      shell: bash -l {0}
+      run: |
+           set -x
+           if [[  "${{ matrix.python-type }}" == "cpython" ]] ; then 
+              Python_EXECUTABLE=${pythonLocation}/python
+           else
+              Python_EXECUTABLE=$(which python)
+           fi
+           mkdir -p build
+           cd build
+           cmake -GXcode -DCMAKE_OSX_SYSROOT="/tmp/MacOSX-SDKs/MacOSX10.9.sdk" -DPython_EXECUTABLE=${Python_EXECUTABLE}  ../
+           cmake --build ./ --target ALL_BUILD --config Release --parallel 4 
+           cmake --build ./ --target install   --config Release 
+
+    # ____________________________________________
+    - name: Compile pyplasm on ubuntu
+      if: matrix.os == 'ubuntu-latest' 
+      shell: bash -l {0}
+      run: |
+           set -x
+           docker run -e PYTHON_VERSION=${{ matrix.python-version }} -v ${PWD}:${PWD}  -w ${PWD} visus/portable-linux-binaries /bin/bash -c "./scripts/build_linux.sh"
+           sudo chown -R root:root  build
+           sudo chmod -R a+rwx      build
+
+    # ____________________________________________
+    - name: Distrib pyplasm on pypi
+      if: matrix.python-type == 'cpython'
+      shell: bash
+      run: |
+           set -x
+           ${pythonLocation}/python -m pip install --upgrade pip                           || true
+           ${pythonLocation}/python -m pip install --upgrade numpy setuptools wheel twine  || true
+           cd build/Release/pyplasm
+           Version=${{ matrix.python-version }}
+           if [[  "${{ matrix.os }}" == "windows-latest" ]] ; then PLATFORM_NAME=win_amd64            ; fi
+           if [[  "${{ matrix.os }}" == "macos-latest"   ]] ; then PLATFORM_NAME=macosx_10_9_x86_64   ; fi
+           if [[  "${{ matrix.os }}" == "ubuntu-latest"  ]] ; then PLATFORM_NAME=manylinux2010_x86_64 ; fi
+           ${pythonLocation}/python setup.py -q bdist_wheel --python-tag=cp${Version:0:1}${Version:2:1} --plat-name=${PLATFORM_NAME}
+           GIT_TAG=$(git describe --tags --exact-match 2>/dev/null || true)
+           if [[ "${GIT_TAG}" != "" ]] ; then
+             ${pythonLocation}/python -m twine upload --username ${{ secrets.PYPI_USERNAME }} --password ${{ secrets.PYPI_PASSWORD }} --skip-existing  "dist/*.whl" 
+           fi 
+    # ____________________________________________
+    - name: Distrib pyplasm on conda
+      if: matrix.python-type == 'conda'
+      shell: bash
+      run: |
+           set -x
+           conda install anaconda-client conda-build pip
+           conda update --all
+           python -m pip install --upgrade setuptools wheel twine  || true # not sure if this is needed
+           cd build/Release/pyplasm
+           rm -Rf $(find ${CONDA_PREFIX} -iname "pyplasm*.tar.bz2")  || true
+           python setup.py -q bdist_conda 
+           CONDA_FILENAME=$(find ${CONDA_PREFIX} -iname "pyplasm*.tar.bz2"  | head -n 1)
+           GIT_TAG=$(git describe --tags --exact-match 2>/dev/null || true)
+           if [[ "${GIT_TAG}" != ""  ]] ; then
+             anaconda --verbose --show-traceback  -t ${{ secrets.ANACONDA_TOKEN }}   upload "${CONDA_FILENAME}"
+           fi
