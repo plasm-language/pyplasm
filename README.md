@@ -1,23 +1,25 @@
 # PLASM (Programming LAnguage for Solid Modeling)
 
 Plasm is a 'design language' for geometric and solid parametric design, 
-developed by the CAD Group at the Universities 'La Sapienza' and 'Roma Tre' in Italy.
+developed by the CAD Group at the Universities 'La Sapienza' and 'Roma Tre' in Italy. See also: http://www.plasm.net/
 
-See also: http://www.plasm.net/
+Supported python versions: >=3.6 (python 2.x no longer supported).
 
-Supported platforms: Windows, MacOsX, Linux.
+Supported OS: Windows, MacOsX, Linux. 
 
-Supported python versions: 3.6, 3.7, 3.8.
-
-To install pyplasm, if you are using `CPython` distribution:
+To install `pyplasm`
 
 ```
 # For Linux sometimes you have to install some python libraries 
 # sudo apt-get install python3.6 libpython3/6
 
-python -m pip install --user --upgrade pip numpy GL PyGlut PyOpenGL 
-python -m pip install --upgrade pyplasm
+# replace `python3` with your python executable path
+python3 -m pip install --user --upgrade pip numpy GL PyGlut PyOpenGL 
+python3 -m pip install --upgrade pyplasm
 ```
+
+<!--
+DISABLED: problems on github actions
 
 If you are using `conda` python:
 
@@ -26,11 +28,12 @@ conda install numpy pyopengl freeglut
 conda install -c conda-forge libglu # if this fails just ignore it
 conda install --channel scrgiorgio pyplasm
 ```
+-->
 
 Then test it:
 
 ```
-python -c "from pyplasm import *; VIEW(CUBOID([1,1,1]))"
+python3 -c "from pyplasm import *; VIEW(CUBOID([1,1,1]))"
 ```
 
 
