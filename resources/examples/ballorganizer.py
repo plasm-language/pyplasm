@@ -45,7 +45,7 @@ class BallSet:
 			box=Box3f(C-Vec3f([R,R,R]),C+Vec3f([R,R,R]))
 			ID=self.octree.getNode(box).getId()
 			# assign each ball to it's slot of the loose octree
-			if not self.ballmap.has_key(ID): self.ballmap[ID]=[]
+			if ID not in self.ballmap: self.ballmap[ID]=[]
 			self.ballmap[ID]+=[ball]	
 
 	#__________________________________________________________________________
