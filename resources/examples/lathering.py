@@ -333,7 +333,7 @@ if __name__=="__main__":
         COLOR(CYAN)(bottom) ]))
 
     # rotational solid generation
-    dom3D = INSR(PROD)([dom(n),dom(1),S(1)(3*PI/2)(dom(64))])
+    dom3D = INSR(PROD)([dom(1),dom(1),S(1)(3*PI/2)(dom(64))])
     VIEW(dom3D)
     lathered = STRUCT([MAP(ROTATIONALSOLID(f))(dom3D) for n,f in bottomSurface])
     VIEW(lathered)

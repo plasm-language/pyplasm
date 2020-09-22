@@ -77,7 +77,7 @@ class BallSet:
 		# vedi se qualche ball ha intersezione
 		id=node.getId()
 		
-		if self.ballmap.has_key(id):
+		if id in self.ballmap:
 			for B in self.ballmap[id]:
 				if self.intersect(ball,B): ret+=[B]
 				
@@ -171,7 +171,7 @@ def buildGraphFromBalls(balls_,STEP=16,TOLERANCE=1e-6):
 				assert ((pc-ci).module()-ri)<0.1
 				assert ((pc-cj).module()-rj)<0.1
 
-				pids    += [len(pointdb)/3]
+				pids    += [int(len(pointdb)/3)]
 				pointdb += [pc.x,pc.y,pc.z]
 				
 			# later I will use this for Graph.qhull
@@ -196,7 +196,7 @@ def buildGraphFromBalls(balls_,STEP=16,TOLERANCE=1e-6):
 				if not bInside: break
 				
 			if bInside:
-				pids    += [len(pointdb)/3]
+				pids    += [int(len(pointdb)/3)]
 				pointdb += [ip.x,ip.y,ip.z]
 				
 		# needed later for Graph.qhull
@@ -204,7 +204,7 @@ def buildGraphFromBalls(balls_,STEP=16,TOLERANCE=1e-6):
 
 
 	# add all the points to the db
-	for i in range(len(pointdb)/3):
+	for i in range(int(len(pointdb)/3)):
 		cell0d=g.addNode(0) 
 		assert cell0d==i+1 # since I'm adding all points at the beginning...
 		g.setVecf(cell0d,Vecf(1, pointdb[i*3+0],pointdb[i*3+1],pointdb[i*3+2]))
@@ -263,7 +263,7 @@ def buildGraphFromBalls(balls_,STEP=16,TOLERANCE=1e-6):
 			KEY=tuple(sorted(faces[I]))
 			
 			# face already created...
-			if FACES.has_key(KEY):
+			if KEY in FACES:
 				cell2d=FACES[KEY]
 			# ... otherwise create it
 			else:

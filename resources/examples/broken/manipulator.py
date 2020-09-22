@@ -6,6 +6,7 @@ from pyplasm import *
 class PyViewer(GLCanvas):
 
 	def __init__(self):
+		
 		GLCanvas.__init__(self)
 		self.manipulator=Manipulator()		
 		self.box=Box3f(Vec3f(0,0,0),Vec3f(1,1,1))
