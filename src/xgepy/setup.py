@@ -1,7 +1,7 @@
 import os,sys,shutil,setuptools
 
 #increase this number for PIP/conda
-VERSION="2.0.11"
+VERSION="2.0.12"
 this_dir="."
 
 shutil.rmtree('./build', ignore_errors=True)
