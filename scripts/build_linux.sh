@@ -9,6 +9,6 @@ cmake -DPython_EXECUTABLE=${Python_EXECUTABLE} ../
 cmake --build ./ --target all     --config Release --parallel 4
 cmake --build ./ --target install --config Release
 
-# test it
-${Python_EXECUTABLE} -c "from pyplasm import *" 
+export PYTHONPATH=build/Release
+${Python_EXECUTABLE} -c "from pyplasm import *"
 

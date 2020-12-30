@@ -36,12 +36,12 @@ jobs:
 
     # ____________________________________________  
     - name: Install Swig for macos
-      if: matrix.os == 'macos-latest'
+      if: matrix.os == 'macos-11.0'
       run: brew install swig
            
     # ____________________________________________  
     - name: Install SDK 10.9 for macos 
-      if: matrix.os == 'macos-latest'
+      if: matrix.os == 'macos-11.0'
       uses: nick-invision/retry@v1
       with:
         max_attempts: 3
@@ -93,11 +93,12 @@ jobs:
            cmake -G "Visual Studio 16 2019" -A "x64" -DPython_EXECUTABLE=${Python_EXECUTABLE} -DSWIG_EXECUTABLE=./swigwin-4.0.2/swig.exe ../
            cmake --build . --target ALL_BUILD --config Release --parallel 4
            cmake --build . --target install   --config Release
-           ${Python_EXECUTABLE} -c "from pyplasm import *" 
+           export PYTHONPATH=build/Release
+           ${Python_EXECUTABLE} -c "from pyplasm import *"
 
     # ____________________________________________
     - name: Compile pyplasm on macos
-      if: matrix.os == 'macos-latest'
+      if: matrix.os == 'macos-11.0'
       shell: bash -l {0}
       run: |
            set -x
@@ -111,7 +112,8 @@ jobs:
            cmake -GXcode -DCMAKE_OSX_SYSROOT="/tmp/MacOSX-SDKs/MacOSX10.9.sdk" -DPython_EXECUTABLE=${Python_EXECUTABLE}  ../
            cmake --build ./ --target ALL_BUILD --config Release --parallel 4 
            cmake --build ./ --target install   --config Release 
-           ${Python_EXECUTABLE} -c "from pyplasm import *" 
+           export PYTHONPATH=build/Release
+           ${Python_EXECUTABLE} -c "from pyplasm import *"
 
     # ____________________________________________
     - name: Compile pyplasm on ubuntu
@@ -134,7 +136,7 @@ jobs:
            cd build/Release/pyplasm
            Version=${{ matrix.python-version }}
            if [[  "${{ matrix.os }}" == "windows-latest" ]] ; then PLATFORM_NAME=win_amd64            ; fi
-           if [[  "${{ matrix.os }}" == "macos-latest"   ]] ; then PLATFORM_NAME=macosx_10_9_x86_64   ; fi
+           if [[  "${{ matrix.os }}" == "macos-11.0"     ]] ; then PLATFORM_NAME=macosx_10_9_x86_64   ; fi
            if [[  "${{ matrix.os }}" == "ubuntu-latest"  ]] ; then PLATFORM_NAME=manylinux2010_x86_64 ; fi
            ${pythonLocation}/python setup.py -q bdist_wheel --python-tag=cp${Version:0:1}${Version:2:1} --plat-name=${PLATFORM_NAME}
            GIT_TAG=$(git describe --tags --exact-match 2>/dev/null || true)
