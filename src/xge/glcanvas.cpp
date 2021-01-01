@@ -68,8 +68,9 @@ public:
       if (getRawContext() == nullptr)
         throw "internal error";
 
-      std::cout << "GL_EXTENSIONS [" << glGetString(GL_EXTENSIONS) << "]"<<std::endl;
-      std::cout << "GL_SHADING_LANGUAGE_VERSION [" << glGetString(GL_SHADING_LANGUAGE_VERSION) << "]"<<std::endl;
+			//this cause crash in BigSur
+      //std::cout << "GL_EXTENSIONS [" << glGetString(GL_EXTENSIONS) << "]"<<std::endl;
+      //std::cout << "GL_SHADING_LANGUAGE_VERSION [" << glGetString(GL_SHADING_LANGUAGE_VERSION) << "]"<<std::endl;
       
     }
     else

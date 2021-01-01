@@ -18,6 +18,9 @@ python3 -m pip install --user --upgrade pip numpy GL PyGlut PyOpenGL
 python3 -m pip install --upgrade pyplasm
 ```
 
+Important for Big Sur users: there is a problem with PyOpenGL.So you will need to do as explained 
+here [a link](https://stackoverflow.com/questions/63475461/unable-to-import-opengl-gl-in-python-on-macos)
+
 <!--
 DISABLED: problems on github actions
 
