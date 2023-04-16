@@ -24,12 +24,16 @@ fi
 
 source ~/miniforge3/etc/profile.d/conda.sh || true # can be already activated
 conda config --set always_yes yes --set anaconda_upload no
-conda create --name my-env -c conda-forge python=${PYTHON_VERSION} numpy conda anaconda-client conda-build wheel swig cmake pyopengl
+conda create --name my-env -c conda-forge python=${PYTHON_VERSION} numpy conda anaconda-client conda-build wheel swig cmake 
 conda activate my-env
 PYTHON=`which python`
 
-# not sure if I need this
-$PYTHON -m pip install PyOpenGL 
+# test if opengl is working
+conda install -c conda-forge pyopengl freeglut
+python -c "import OpenGL.GL"
+python -c "import OpenGL.GLU"
+python -c "import OpenGL.GLUT"
+
 
 # compile 
 BUILD_DIR=build_macos_conda

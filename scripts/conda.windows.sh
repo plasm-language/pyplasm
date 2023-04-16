@@ -12,12 +12,16 @@ CONDA_HOME=/c/tools/miniconda3
 echo "source ${CONDA_HOME}/etc/profile.d/conda.sh" >> ~/.bashrc
 source ~/.bashrc
 conda config  --set always_yes yes --set changeps1 no --set anaconda_upload no 
-conda create --name my-env -c conda-forge python=${PYTHON_VERSION} numpy cmake swig anaconda-client wheel conda conda-build pyopengl pip
+conda create --name my-env -c conda-forge python=${PYTHON_VERSION} numpy cmake swig anaconda-client wheel conda conda-build pip
 conda activate my-env
 PYTHON=`which python`
 
-# not sure if I need this
-$PYTHON -m pip install PyOpenGL 
+# test if opengl is working
+conda install -c conda-forge pyopengl freeglut
+python -c "import OpenGL.GL"
+python -c "import OpenGL.GLU"
+python -c "import OpenGL.GLUT"
+
 
 # compile
 BUILD_DIR=build_windows_conda
