@@ -28,6 +28,9 @@ conda create --name my-env -c conda-forge python=${PYTHON_VERSION} numpy conda a
 conda activate my-env
 PYTHON=`which python`
 
+# not sure if I need this
+$PYTHON -m pip install PyOpenGL 
+
 # compile 
 BUILD_DIR=build_macos_conda
 mkdir -p ${BUILD_DIR} 
@@ -37,7 +40,7 @@ cmake --build . --target ALL_BUILD --config Release --parallel 4
 cmake --build . --target install	 --config Release 
 
 # for for `bdist_conda` problem
-find ${CONDA_PREFIX} 
+# find ${CONDA_PREFIX} 
 pushd ${CONDA_PREFIX}/lib/python${PYTHON_VERSION}
 cp -n distutils/command/bdist_conda.py         site-packages/setuptools/_distutils/command/bdist_conda.py || true
 cp -n site-packages/conda_build/bdist_conda.py site-packages/setuptools/_distutils/command/bdist_conda.py || true 

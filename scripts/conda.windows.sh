@@ -12,11 +12,14 @@ CONDA_HOME=/c/tools/miniconda3
 echo "source ${CONDA_HOME}/etc/profile.d/conda.sh" >> ~/.bashrc
 source ~/.bashrc
 conda config  --set always_yes yes --set changeps1 no --set anaconda_upload no 
-conda create --name my-env -c conda-forge python=${PYTHON_VERSION} numpy cmake swig anaconda-client wheel conda conda-build pyopengl
+conda create --name my-env -c conda-forge python=${PYTHON_VERSION} numpy cmake swig anaconda-client wheel conda conda-build pyopengl pip
 conda activate my-env
 PYTHON=`which python`
 
-# compil
+# not sure if I need this
+$PYTHON -m pip install PyOpenGL 
+
+# compile
 BUILD_DIR=build_windows_conda
 mkdir -p ${BUILD_DIR} 
 cd ${BUILD_DIR}
@@ -25,7 +28,7 @@ cmake --build . --target ALL_BUILD --config Release --parallel 4
 cmake --build . --target install   --config Release
 
 # for for `bdist_conda` problem
-find ${CONDA_PREFIX} 
+# find ${CONDA_PREFIX} 
 pushd ${CONDA_PREFIX}/Lib
 cp -n distutils/command/bdist_conda.py         site-packages/setuptools/_distutils/command/bdist_conda.py || true
 cp -n site-packages/conda_build/bdist_conda.py site-packages/setuptools/_distutils/command/bdist_conda.py || true 
