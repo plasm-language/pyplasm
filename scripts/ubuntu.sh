@@ -8,17 +8,12 @@ PYPI_USERNAME=${PYPI_USERNAME:-}
 PYPI_TOKEN=${PYPI_TOKEN:-}
 ANACONDA_TOKEN=${ANACONDA_TOKEN:-}
 
-DOCKER_TOKEN=${DOCKER_TOKEN:-}
-DOCKER_USERNAME=${DOCKER_USERNAME:-}
-DOCKER_IMAGE=${DOCKER_IMAGE:-}
-
-GIT_TAG=`git describe --tags --exact-match 2>/dev/null || true`
-
 # needs to run using docker
+DOCKER_IMAGE=${DOCKER_IMAGE:-}
 if [[ "$DOCKER_IMAGE" != "" ]] ; then
 
-  # run docker to compile portable OpenVisus
-  docker run --rm -v ${PWD}:/home/OpenVisus -w /home/OpenVisus \
+  # run docker to compile portable pyplasm
+  docker run --rm -v ${PWD}:/home/pyplasm -w /home/pyplasm \
     -e BUILD_DIR=build_docker \
     -e PYTHON_VERSION=${PYTHON_VERSION} \
     -e PYPI_USERNAME=${PYPI_USERNAME} -e PYPI_TOKEN=${PYPI_TOKEN} \
@@ -26,12 +21,10 @@ if [[ "$DOCKER_IMAGE" != "" ]] ; then
     -e INSIDE_DOCKER=1 \
     ${DOCKER_IMAGE} bash scripts/ubuntu.sh
 
-
   echo "All done ubuntu $PYTHON_VERSION} "
   exit 0
 
 fi
-
 
 # /////////////////////////////////////////////////////////////////////////
 # *** cpython ***
@@ -54,28 +47,24 @@ if [[ "1" == "1" ]]; then
 fi
 
 # compile
-if [[ "1" == "1" ]]; then
-  mkdir -p ${BUILD_DIR} 
-  cd ${BUILD_DIR}
-  cmake -DPython_EXECUTABLE=${PYTHON}  ../
-  make -j
-  make install
-fi
+mkdir -p ${BUILD_DIR} 
+cd ${BUILD_DIR}
+cmake -DPython_EXECUTABLE=${PYTHON} ../
+make -j
+make install
 
 # distrib
-pushd Release/OpenVisus
+pushd Release/pyplasm
 rm -Rf ./dist
 $PYTHON -m pip install --upgrade pip || true 
 $PYTHON -m pip install setuptools wheel cryptography==3.4.0 twine || true
-
 PYTHON_TAG=cp$(echo $PYTHON_VERSION | awk -F'.' '{print $1 $2}')
 $PYTHON setup.py -q bdist_wheel --python-tag=$PYTHON_TAG --plat-name=$PIP_PLATFORM
-
+GIT_TAG=`git describe --tags --exact-match 2>/dev/null || true`
 if [[ "${GIT_TAG}" != "" ]] ; then
   $PYTHON -m twine upload --username ${PYPI_USERNAME} --password ${PYPI_TOKEN} --skip-existing   "dist/*.whl" 
 fi
 popd
-
 
 
 # /////////////////////////////////////////////////////////////////////////
@@ -95,17 +84,18 @@ conda activate my-env
 PYTHON=`which python`
 
 # fix `bdist_conda` problem
-if [[ "1" == "1" ]]; then
-  pushd ${CONDA_PREFIX}/lib/python${PYTHON_VERSION}
-  cp -n distutils/command/bdist_conda.py site-packages/setuptools/_distutils/command/bdist_conda.py || true
-  popd
-fi
+find ${CONDA_PREFIX} 
+pushd ${CONDA_PREFIX}/lib/python${PYTHON_VERSION}
+cp -n distutils/command/bdist_conda.py         site-packages/setuptools/_distutils/command/bdist_conda.py || true
+cp -n site-packages/conda_build/bdist_conda.py site-packages/setuptools/_distutils/command/bdist_conda.py || true 
+popd
 
 # distrib
-pushd Release/OpenVisus 
-rm -Rf $(find ${CONDA_PREFIX} -iname "openvisus*.tar.bz2") || true
+pushd Release/pyplasm 
+rm -Rf $(find ${CONDA_PREFIX} -iname "pyplasm*.tar.bz2") || true
 $PYTHON setup.py -q bdist_conda 1>/dev/null
-CONDA_FILENAME=$(find ${CONDA_PREFIX} -iname "openvisus*.tar.bz2" | head -n 1)
+CONDA_FILENAME=$(find ${CONDA_PREFIX} -iname "pyplasm*.tar.bz2" | head -n 1)
+GIT_TAG=`git describe --tags --exact-match 2>/dev/null || true`
 if [[ "${GIT_TAG}" != "" ]] ; then
   anaconda --verbose --show-traceback -t ${ANACONDA_TOKEN} upload ${CONDA_FILENAME} --no-progress 
 fi
