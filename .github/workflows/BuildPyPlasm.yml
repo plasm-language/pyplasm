@@ -13,9 +13,7 @@ jobs:
       matrix:
         python-version: [ '3.6', '3.7', '3.8', '3.9'  ] 
         os: ["windows-latest", "macos-11.0", "ubuntu-latest"]
-        # conda disabled, it fails in distrib, need to debug it
-        # python-type: ["cpython", "conda"]
-        python-type: ["cpython"]
+        python-type: ["cpython", "conda"]
     steps:
     
     # ____________________________________________
@@ -26,14 +24,6 @@ jobs:
     - name: Install CMake
       uses: lukka/get-cmake@latest
       
-    # ____________________________________________
-    # problems with choco and SWIG_DIR
-    # - name: Install Swig for windows
-    # if: matrix.os == 'windows-latest'
-    # uses: crazy-max/ghaction-chocolatey@v1
-    # with:
-    #    args: install -y --allow-empty-checksums --no-progress swig
-
     # ____________________________________________  
     - name: Install Swig for macos
       if: matrix.os == 'macos-11.0'
@@ -93,12 +83,6 @@ jobs:
            cmake -G "Visual Studio 16 2019" -A "x64" -DPython_EXECUTABLE=${Python_EXECUTABLE} -DSWIG_EXECUTABLE=./swigwin-4.0.2/swig.exe ../
            cmake --build . --target ALL_BUILD --config Release --parallel 4
            cmake --build . --target install   --config Release
-           
-           # test it
-           #cd Release/pyplasm
-           #export PYTHONPATH=../
-           #${Python_EXECUTABLE} -m pip install --upgrade pip numpy GL PyGlut PyOpenGL
-           #${Python_EXECUTABLE}  -c "from pyplasm import *" || true  # segmentation fault 
 
     # ____________________________________________
     - name: Compile pyplasm on macos
@@ -116,12 +100,6 @@ jobs:
            cmake -GXcode -DCMAKE_OSX_SYSROOT="/tmp/MacOSX-SDKs/MacOSX10.9.sdk" -DPython_EXECUTABLE=${Python_EXECUTABLE}  ../
            cmake --build ./ --target ALL_BUILD --config Release --parallel 4 
            cmake --build ./ --target install   --config Release 
-           
-           # test it
-           #cd Release/pyplasm
-           #export PYTHONPATH=../
-           #${Python_EXECUTABLE} -m pip install --upgrade pip numpy GL PyGlut PyOpenGL
-           #${Python_EXECUTABLE}  -c "from pyplasm import *" || true  # segmentation fault 
 
     # ____________________________________________
     - name: Compile pyplasm on ubuntu
@@ -159,7 +137,7 @@ jobs:
            set -x
            conda install anaconda-client conda-build pip
            conda update --all
-           python -m pip install --upgrade setuptools wheel twine  || true # not sure if this is needed
+           python -m pip install --upgrade setuptools wheel twine  || true 
            cd build/Release/pyplasm
            rm -Rf $(find ${CONDA_PREFIX} -iname "pyplasm*.tar.bz2")  || true
            python setup.py -q bdist_conda 
