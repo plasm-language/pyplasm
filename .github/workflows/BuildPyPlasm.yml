@@ -67,7 +67,7 @@ jobs:
     
     # ____________________________________________
     - name: Compile pyplasm on windows
-      if: matrix.os == 'windows-latest'
+      if: matrix.os == 'windows-2019'
       shell: bash -l {0}
       run: |
            set -x
@@ -120,7 +120,7 @@ jobs:
            ${pythonLocation}/python -m pip install --upgrade numpy setuptools wheel twine  || true
            cd build/Release/pyplasm
            Version=${{ matrix.python-version }}
-           if [[  "${{ matrix.os }}" == "windows-latest" ]] ; then PLATFORM_NAME=win_amd64            ; fi
+           if [[  "${{ matrix.os }}" == "windows-2019"   ]] ; then PLATFORM_NAME=win_amd64            ; fi
            if [[  "${{ matrix.os }}" == "macos-11.0"     ]] ; then PLATFORM_NAME=macosx_10_9_x86_64   ; fi
            if [[  "${{ matrix.os }}" == "ubuntu-latest"  ]] ; then PLATFORM_NAME=manylinux2010_x86_64 ; fi
            ${pythonLocation}/python setup.py -q bdist_wheel --python-tag=cp${Version:0:1}${Version:2:1} --plat-name=${PLATFORM_NAME}
