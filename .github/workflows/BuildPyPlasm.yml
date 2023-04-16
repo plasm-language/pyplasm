@@ -49,21 +49,23 @@ jobs:
     # ____________________________________________
     - name: Install Miniconda 
       if: matrix.python-type == 'conda'
-      uses: goanpeca/setup-miniconda@v1
+      uses: conda-incubator/setup-miniconda@v2
       with:
-        miniconda-version: 'latest'    
         python-version: ${{ matrix.python-version }}
-        activate-environment: tmp
-        auto-update-conda: true
+        auto-activate-base: true
+        activate-environment: ""
+        channels: conda-forge,defaults
     
     # ____________________________________________
     - name: Configure Miniconda 
       if: matrix.python-type == 'conda'
       shell: bash -l {0}
       run: |
-           set -x
+           conda info
            conda config --set always_yes yes --set changeps1 no --set anaconda_upload no  || true
-           conda install conda || true
+           conda install conda  || true
+           conda install anaconda-client conda-build pip || true
+           python -m pip install --upgrade setuptools wheel twine  || true 
     
     # ____________________________________________
     - name: Compile pyplasm on windows
@@ -131,12 +133,8 @@ jobs:
     # ____________________________________________
     - name: Distrib pyplasm on conda
       if: matrix.python-type == 'conda'
-      shell: bash
+      shell: bash -l {0}
       run: |
-           set -x
-           conda install anaconda-client conda-build pip
-           conda update --all
-           python -m pip install --upgrade setuptools wheel twine  || true 
            cd build/Release/pyplasm
            rm -Rf $(find ${CONDA_PREFIX} -iname "pyplasm*.tar.bz2")  || true
            python setup.py -q bdist_conda 
