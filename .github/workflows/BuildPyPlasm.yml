@@ -12,7 +12,7 @@ jobs:
       fail-fast: false  
       matrix:
         python-version: [ '3.6', '3.7', '3.8', '3.9'  ] 
-        os: ["windows-latest", "macos-11.0", "ubuntu-latest"]
+        os: ["windows-2019", "macos-11.0", "ubuntu-latest"]
         python-type: ["cpython", "conda"]
     steps:
     
@@ -63,8 +63,8 @@ jobs:
       shell: bash -l {0}
       run: |
            set -x
-           conda config --set always_yes yes --set changeps1 no --set anaconda_upload no   
-           conda install conda 
+           conda config --set always_yes yes --set changeps1 no --set anaconda_upload no  || true
+           conda install conda || true
     
     # ____________________________________________
     - name: Compile pyplasm on windows
