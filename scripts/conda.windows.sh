@@ -16,13 +16,6 @@ conda create --name my-env -c conda-forge python=${PYTHON_VERSION} numpy cmake s
 conda activate my-env
 PYTHON=`which python`
 
-# test if opengl is working
-conda install -c conda-forge pyopengl freeglut
-python -c "import OpenGL.GL"
-python -c "import OpenGL.GLU"
-python -c "import OpenGL.GLUT"
-
-
 # compile
 BUILD_DIR=build_windows_conda
 mkdir -p ${BUILD_DIR} 
@@ -33,15 +26,15 @@ cmake --build . --target install   --config Release
 
 # for for `bdist_conda` problem
 # find ${CONDA_PREFIX} 
-pushd ${CONDA_PREFIX}/Lib
-cp -n distutils/command/bdist_conda.py         site-packages/setuptools/_distutils/command/bdist_conda.py || true
-cp -n site-packages/conda_build/bdist_conda.py site-packages/setuptools/_distutils/command/bdist_conda.py || true 
-popd
+# pushd ${CONDA_PREFIX}/Lib
+# cp -n distutils/command/bdist_conda.py         site-packages/setuptools/_distutils/command/bdist_conda.py || true
+# cp -n site-packages/conda_build/bdist_conda.py site-packages/setuptools/_distutils/command/bdist_conda.py || true 
+# popd
 
 # distrib
 pushd Release/pyplasm
 rm -Rf $(find ${CONDA_PREFIX} -iname "pyplasm*.tar.bz2") || true
-$PYTHON setup.py -q bdist_conda 1>/dev/null
+$PYTHON setup.py -q bdist_conda 
 CONDA_FILENAME=$(find ${CONDA_PREFIX} -iname "pyplasm*.tar.bz2" | head -n 1)
 GIT_TAG=`git describe --tags --exact-match 2>/dev/null || true`
 if [[ "${GIT_TAG}" != "" ]] ; then

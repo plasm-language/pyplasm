@@ -1,4 +1,4 @@
-import os,sys,shutil,setuptools
+import os,sys,shutil
 
 #increase this number for PIP/conda
 VERSION="2.2.2"
@@ -21,8 +21,8 @@ def findFilesInCurrentDirectory():
 
 is_conda = os.path.exists(os.path.join(sys.prefix, 'conda-meta', 'history'))
 if is_conda:
-	from distutils.core import setup, Extension
-	import distutils.command.bdist_conda
+	from setuptools import setup
+	import conda_build.bdist_conda
 	setup(
 		name = "pyplasm",
 		description = "Plasm is a design language for geometric and solid parametric design, developed by the CAD Group at the Universities La Sapienza and Roma Tre in Italy",
@@ -35,10 +35,12 @@ if is_conda:
 		package_data={"pyplasm": findFilesInCurrentDirectory()},
 		platforms=['Linux', 'OS-X', 'Windows'],
 		license = "GPL",
-		distclass=distutils.command.bdist_conda.CondaDistribution,
+		distclass=conda_build.bdist_conda.CondaDistribution,
 		conda_buildnum=1)
 	
 else:
+	from setuptools import setup
+	import conda_build.bdist_conda	
 	setuptools.setup(
 		name = "pyplasm",
 		description = "Plasm is a design language for geometric and solid parametric design, developed by the CAD Group at the Universities La Sapienza and Roma Tre in Italy",
