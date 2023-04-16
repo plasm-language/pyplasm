@@ -1,0 +1,110 @@
+name: build-pyplasm
+on: [push] 
+
+env:
+  PYPI_USERNAME: ${{ secrets.PYPI_USERNAME }}
+  PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
+  ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
+
+jobs:
+
+  build-windows-cpython:
+    runs-on: windows-2019
+    strategy:
+      fail-fast: false  
+      matrix:
+        python-version: [ '3.7', '3.8', '3.9' , '3.10', '3.11']
+    steps:
+    - name: git clone pyplasm
+      uses: actions/checkout@v2    
+    - name: install cpython
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Compile (cpython)
+      shell: bash
+      run: |
+           set -ex
+           export PYTHON_VERSION=${{ matrix.python-version }}
+           source ./scripts/cpython.windows.sh
+
+  build-windows-conda:
+    runs-on: windows-2019
+    strategy:
+      fail-fast: false  
+      matrix:
+        python-version: [ '3.7', '3.8', '3.9' ]
+    steps:
+    - name: git clone pyplasm
+      uses: actions/checkout@v2     
+    - name: Compile (cpython)
+      shell: bash
+      run: |
+           set -ex
+           export PYTHON_VERSION=${{ matrix.python-version }}
+           source ./scripts/conda.windows.sh
+
+  build-macos-cpython:
+    runs-on: macos-11
+    strategy:
+      fail-fast: false  
+      matrix:
+        python-version: [ '3.7', '3.8', '3.9' , '3.10', '3.11' ]
+    steps:
+    - name: git clone pyplasm
+      uses: actions/checkout@v2
+    - name: install cpython
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Compile (cpython)
+      shell: bash
+      run: |
+           set -ex
+           export PYTHON_VERSION=${{ matrix.python-version }}
+           source ./scripts/cpython.macos.sh
+            
+      
+  build-macos-conda:
+    runs-on: macos-11
+    strategy:
+      fail-fast: false  
+      matrix:
+        python-version: [ '3.7', '3.8', '3.9']
+    steps:
+    - name: git clone pyplasm
+      uses: actions/checkout@v2
+    - name: Compile (cpython)
+      shell: bash
+      run: |
+           set -ex
+           export PYTHON_VERSION=${{ matrix.python-version }}
+           source ./scripts/conda.macos.sh
+                  
+      
+  build-ubuntu:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false  
+      matrix:
+        python-version: [ '3.6', '3.7', '3.8', '3.9', '3.10', '3.11' ]
+    steps:
+    - name: git clone pyplasm
+      uses: actions/checkout@v2
+    - name: Compile cpython
+      shell: bash
+      run: |
+           set -ex
+           export PYTHON_VERSION=${{ matrix.python-version }}
+           export DOCKER_IMAGE=visus/portable-linux-binaries_x86_64:4.1
+           source scripts/ubuntu.sh
+
+
+
+
+
+
+
+
+
+
