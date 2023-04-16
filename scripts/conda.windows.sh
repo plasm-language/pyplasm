@@ -12,7 +12,7 @@ CONDA_HOME=/c/tools/miniconda3
 echo "source ${CONDA_HOME}/etc/profile.d/conda.sh" >> ~/.bashrc
 source ~/.bashrc
 conda config  --set always_yes yes --set changeps1 no --set anaconda_upload no 
-conda create --name my-env -c conda-forge python=${PYTHON_VERSION} numpy cmake swig anaconda-client wheel conda conda-build
+conda create --name my-env -c conda-forge python=${PYTHON_VERSION} numpy cmake swig anaconda-client wheel conda conda-build pyopengl
 conda activate my-env
 PYTHON=`which python`
 

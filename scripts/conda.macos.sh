@@ -24,7 +24,7 @@ fi
 
 source ~/miniforge3/etc/profile.d/conda.sh || true # can be already activated
 conda config --set always_yes yes --set anaconda_upload no
-conda create --name my-env -c conda-forge python=${PYTHON_VERSION} numpy conda anaconda-client conda-build wheel swig cmake
+conda create --name my-env -c conda-forge python=${PYTHON_VERSION} numpy conda anaconda-client conda-build wheel swig cmake pyopengl
 conda activate my-env
 PYTHON=`which python`
 
