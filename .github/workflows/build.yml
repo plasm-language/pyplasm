@@ -2,7 +2,7 @@ name: build-pyplasm
 on: [push] 
 
 env:
-  PYPI_USERNAME: ${{ secrets.PYPI_USERNAME }} 
+  PYPI_USERNAME: __token__
   PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
   ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
 
