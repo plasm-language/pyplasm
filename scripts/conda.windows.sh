@@ -12,7 +12,7 @@ CONDA_HOME=/c/tools/miniconda3
 echo "source ${CONDA_HOME}/etc/profile.d/conda.sh" >> ~/.bashrc
 source ~/.bashrc
 conda config  --set always_yes yes --set changeps1 no --set anaconda_upload no 
-conda create --name my-env -c conda-forge python=${PYTHON_VERSION} numpy cmake swig anaconda-client wheel conda conda-build pip
+conda create --name my-env -c conda-forge python=${PYTHON_VERSION} numpy cmake swig anaconda-client wheel conda conda-build pip pyopengl freeglut
 conda activate my-env
 PYTHON=`which python`
 
@@ -23,13 +23,6 @@ cd ${BUILD_DIR}
 cmake -G "Visual Studio 16 2019" -A x64 -DSWIG_EXECUTABLE=$(which swig) -DPython_EXECUTABLE=${PYTHON} ../ 
 cmake --build . --target ALL_BUILD --config Release --parallel 4
 cmake --build . --target install   --config Release
-
-# for for `bdist_conda` problem
-# find ${CONDA_PREFIX} 
-# pushd ${CONDA_PREFIX}/Lib
-# cp -n distutils/command/bdist_conda.py         site-packages/setuptools/_distutils/command/bdist_conda.py || true
-# cp -n site-packages/conda_build/bdist_conda.py site-packages/setuptools/_distutils/command/bdist_conda.py || true 
-# popd
 
 # distrib
 pushd Release/pyplasm

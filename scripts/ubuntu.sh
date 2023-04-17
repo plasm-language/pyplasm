@@ -26,9 +26,7 @@ if [[ "$DOCKER_IMAGE" != "" ]] ; then
 
 fi
 
-# /////////////////////////////////////////////////////////////////////////
-# *** cpython ***
-# /////////////////////////////////////////////////////////////////////////
+# cpython 
 
 PYTHON=`which python${PYTHON_VERSION}`
 
@@ -37,14 +35,6 @@ yum install -y libffi-devel
 
 # make sure pip is updated
 ${PYTHON} -m pip install --upgrade pip || true
-
-# detect architecture
-if [[ "1" == "1" ]]; then
-  ARCHITECTURE=`uname -m`
-  PIP_PLATFORM=unknown
-  if [[ "${ARCHITECTURE}" ==  "x86_64" ]] ; then PIP_PLATFORM=manylinux2010_${ARCHITECTURE} ; fi
-  if [[ "${ARCHITECTURE}" == "aarch64" ]] ; then PIP_PLATFORM=manylinux2014_${ARCHITECTURE} ; fi
-fi
 
 # compile
 mkdir -p ${BUILD_DIR} 
@@ -59,36 +49,26 @@ rm -Rf ./dist
 $PYTHON -m pip install --upgrade pip || true 
 $PYTHON -m pip install setuptools wheel cryptography==3.4.0 twine || true
 PYTHON_TAG=cp$(echo $PYTHON_VERSION | awk -F'.' '{print $1 $2}')
-$PYTHON setup.py -q bdist_wheel --python-tag=$PYTHON_TAG --plat-name=$PIP_PLATFORM
+$PYTHON setup.py -q bdist_wheel --python-tag=$PYTHON_TAG --plat-name=manylinux2010_x86_64
 GIT_TAG=`git describe --tags --exact-match 2>/dev/null || true`
 if [[ "${GIT_TAG}" != "" ]] ; then
   $PYTHON -m twine upload --username ${PYPI_USERNAME} --password ${PYPI_TOKEN} --skip-existing   "dist/*.whl" 
 fi
 popd
 
-
-# /////////////////////////////////////////////////////////////////////////
-# *** conda ***
-# /////////////////////////////////////////////////////////////////////////
+# conda 
 
 export PYTHONNOUSERSITE=True  # avoid conflicts with pip packages installed using --user
 pushd ~
-curl -L -O https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-$ARCHITECTURE.sh
-bash Miniforge3-Linux-$ARCHITECTURE.sh -b || true # maybe it's already installed?
-rm -f Miniforge3-Linux-$ARCHITECTURE.sh
+curl -L -O https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
+bash Miniforge3-Linux-x86_64.sh -b || true # maybe it's already installed?
+rm -f Miniforge3-Linux-x86_64.sh
 popd
 source ~/miniforge3/etc/profile.d/conda.sh || true # can be already activated
 conda config --set always_yes yes --set anaconda_upload no
-conda create --name my-env -c conda-forge python=${PYTHON_VERSION} numpy conda anaconda-client conda-build wheel 
+conda create --name my-env -c conda-forge python=${PYTHON_VERSION} numpy conda anaconda-client conda-build wheel pyopengl freeglut 
 conda activate my-env
 PYTHON=`which python`
-
-# fix `bdist_conda` problem
-# find ${CONDA_PREFIX} 
-# pushd ${CONDA_PREFIX}/lib/python${PYTHON_VERSION}
-# cp -n distutils/command/bdist_conda.py         site-packages/setuptools/_distutils/command/bdist_conda.py || true
-# cp -n site-packages/conda_build/bdist_conda.py site-packages/setuptools/_distutils/command/bdist_conda.py || true 
-# popd
 
 # distrib
 pushd Release/pyplasm 
@@ -101,6 +81,5 @@ if [[ "${GIT_TAG}" != "" ]] ; then
 fi
 popd
 
-echo "All done ubuntu $PYTHON_VERSION} (in docker) "
 
 

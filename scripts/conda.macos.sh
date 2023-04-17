@@ -24,7 +24,7 @@ fi
 
 source ~/miniforge3/etc/profile.d/conda.sh || true # can be already activated
 conda config --set always_yes yes --set anaconda_upload no
-conda create --name my-env -c conda-forge python=${PYTHON_VERSION} numpy conda anaconda-client conda-build wheel swig cmake 
+conda create --name my-env -c conda-forge python=${PYTHON_VERSION} numpy conda anaconda-client conda-build wheel swig cmake pyopengl freeglut
 conda activate my-env
 PYTHON=`which python`
 
@@ -35,13 +35,6 @@ cd ${BUILD_DIR}
 cmake  -GXcode  -DCMAKE_OSX_SYSROOT=$CMAKE_OSX_SYSROOT  -DPython_EXECUTABLE=${PYTHON} ../
 cmake --build . --target ALL_BUILD --config Release --parallel 4
 cmake --build . --target install	 --config Release 
-
-# for for `bdist_conda` problem
-# find ${CONDA_PREFIX} 
-# pushd ${CONDA_PREFIX}/lib/python${PYTHON_VERSION}
-# cp -n distutils/command/bdist_conda.py         site-packages/setuptools/_distutils/command/bdist_conda.py || true
-# cp -n site-packages/conda_build/bdist_conda.py site-packages/setuptools/_distutils/command/bdist_conda.py || true 
-# popd
 
 # distrib
 pushd Release/pyplasm
