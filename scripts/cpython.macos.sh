@@ -2,13 +2,9 @@
 
 set -ex 
 
-GIT_TAG=`git describe --tags --exact-match 2>/dev/null || true`
-
 # NOTE: before the sdk was 10.9 which is not supported by arm64 (i.e. M1/M2 CPUs)
-# PLAT_NAME=macosx_11.0_x86_64
-# CMAKE_OSX_SYSROOT=/tmp/MacOSX-SDKs/MacOSX10.9.sdk
-PLAT_NAME=macosx_11.0_universal2
-CMAKE_OSX_SYSROOT=/tmp/MacOSX-SDKs/MacOSX11.0.sdk
+PLAT_NAME=macosx_11.0_universal2                           # macosx_10.9_x86_64
+CMAKE_OSX_SYSROOT=/tmp/MacOSX-SDKs/MacOSX11.0.sdk          # MacOSX10.9.sdk
 
 # macosx sdk
 pushd /tmp 
@@ -22,7 +18,7 @@ PYTHON=$(which python3)
 ${PYTHON} --version
 ${PYTHON} -m pip install --upgrade pip
 
-# compile 
+# compile (producing binaries for both architecture)
 mkdir -p build 
 cd build
 cmake -GXcode -DCMAKE_OSX_SYSROOT=${CMAKE_OSX_SYSROOT} -DPython_EXECUTABLE=${PYTHON} -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64" ../

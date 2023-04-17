@@ -2,8 +2,6 @@
 
 set -ex
 
-GIT_TAG=`git describe --tags --exact-match 2>/dev/null || true`
-
 # swig
 mkdir -p /tmp
 pushd /tmp

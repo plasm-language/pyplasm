@@ -2,8 +2,6 @@
 
 set -ex
 
-GIT_TAG=`git describe --tags --exact-match 2>/dev/null || true`
-
 # install and activate conda
 export PYTHONNOUSERSITE=True  # avoid conflicts with pip packages installed using --user
 choco install --accept-license --yes --force miniconda3 
