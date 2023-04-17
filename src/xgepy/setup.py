@@ -1,7 +1,7 @@
 import os,sys,shutil
 
 #increase this number for PIP/conda
-PROJECT_VERSION="3.0.2"
+PROJECT_VERSION="3.0.3"
 
 this_dir=os.path.dirname(os.path.abspath(__file__))
 
@@ -44,7 +44,7 @@ def DoSetup():
 	setup(
 		name = "pyplasm",
 		description = "Plasm is a design language for geometric and solid parametric design, developed by the CAD Group at the Universities La Sapienza and Roma Tre in Italy",
-		version=VERSION,
+		version=PROJECT_VERSION,
 		url="https://github.com/plasm-language/pyplasm",
 		author="Giorgio Scorzelli",
 		author_email="scorzell@dia.uniroma3.it",
