@@ -1,7 +1,7 @@
 import os,sys,shutil
 
 #increase this number for PIP/conda
-PROJECT_VERSION="3.0.10"
+PROJECT_VERSION="3.0.11"
 
 this_dir=os.path.dirname(os.path.abspath(__file__))
 

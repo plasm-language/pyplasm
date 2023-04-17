@@ -61,39 +61,32 @@ Install pyplasm:
 conda install -c scrgiorgio -y pyplasm 
 ```
 
-Test pyplasm:
+# Test
+
+Simple cuboid:
 
 ```
 python -c "from pyplasm import *; VIEW(CUBOID([1,1,1]))"
 ```
 
-## Developers only
-
-
-```
-./scripts/new-tag.sh
-```
-
-Tests do perform:
+Other misc tests:
 
 ```
-[OK] resources\examples\arm2d.py
-[OK] resources\examples\ashtray.py
-[OK] resources\examples\ballorganizer.py
-[OK] resources\examples\basic.py
-[OK] resources\examples\batch.py
-[OK] resources\examples\bsp.py
-[OK] resources\examples\colors.py
-[OK] resources\examples\graph.py
-[OK] resources\examples\lathering.py
-[OK] resources\examples\load_obj.py
-[OK] resources\examples\pisa.py
-[OK] resources\examples\plasm.py
-[OK] resources\examples\rotational_solid.py
-[OK] resources\examples\temple.py
-[OK] resources\examples\threecubes.py
-
-[BROKEN] resources\examples\manipulator.py (but not important, belongs to a different object)
+python resources/examples/arm2d.py
+python resources/examples/ashtray.py
+python resources/examples/ballorganizer.py
+python resources/examples/basic.py
+python resources/examples/batch.py
+python resources/examples/bsp.py
+python resources/examples/colors.py
+python resources/examples/graph.py
+python resources/examples/lathering.py
+python resources/examples/load_obj.py
+python resources/examples/pisa.py
+python resources/examples/plasm.py
+python resources/examples/rotational_solid.py
+python resources/examples/temple.py
+python resources/examples/threecubes.py
 ```
 
 
