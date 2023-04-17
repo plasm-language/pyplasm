@@ -3,42 +3,82 @@
 Plasm is a 'design language' for geometric and solid parametric design, 
 developed by the CAD Group at the Universities 'La Sapienza' and 'Roma Tre' in Italy. See also: http://www.plasm.net/
 
-Supported python versions: >=3.6 (python 2.x no longer supported).
+# cpython
 
-Supported OS: Windows, MacOsX, Linux. 
-
-To install `pyplasm`
+Create a virtual environment:
 
 ```
-# For Linux sometimes you have to install some python libraries 
-# sudo apt-get install python3.6 libpython3/6
-
-# replace `python3` with your python executable path
-python3 -m pip install --user --upgrade pip numpy GL PyGlut PyOpenGL 
-python3 -m pip install --upgrade pyplasm
+python -m pip install virtualenv
+python -m venv .venv
 ```
 
-Important for Big Sur users: there is a problem with PyOpenGL.So you will need to do as explained 
-here [a link](https://stackoverflow.com/questions/63475461/unable-to-import-opengl-gl-in-python-on-macos)
+Activate the virtual environment. 
 
-
-If you are using `conda` python:
+On Windows:
 
 ```
-conda install -c conda-forge numpy     # optional
-conda install -c conda-forge pyopengl  # optional
-conda install -c conda-forge freeglut  # optional
-conda install -c conda-forge libglu    # optional 
-conda install -c scrgiorgio pyplasm 
+.\.venv\Scripts\activate.bat
+python -m pip install numpy PyGlut PyOpenGL 
 ```
 
-Then test it:
+on other platforms:
 
 ```
-python3 -c "from pyplasm import *; VIEW(CUBOID([1,1,1]))"
+source .venv/bin/activate
+python -m pip install numpy PyGlut PyOpenGL 
 ```
 
-## Examples
+Install pyplasm:
+
+```
+python -m pip install --upgrade pyplasm
+```
+
+Test pyplasm:
+
+```
+python -c "from pyplasm import *; VIEW(CUBOID([1,1,1]))"
+```
+
+
+# Conda
+
+Create a conda environment (change python version as needed):
+
+```
+conda create -y -n my-env -c conda-forge python=3.9 numpy pyopengl freeglut 
+```
+
+Activate the environment:
+
+```
+conda activate my-env
+```
+
+Install pyplasm:
+
+```
+conda install -c scrgiorgio -y pyplasm 
+```
+
+Test pyplasm:
+
+```
+python -c "from pyplasm import *; VIEW(CUBOID([1,1,1]))"
+```
+
+## Developers only
+
+Edit file `src/xgepy/setup.py` and increment the `${VERSION}`.
+
+```
+TAG=...write the same value of VERSION here...
+git commit -a -m "New tag" && git tag -a $TAG -m "$TAG" 
+git push origin $TAG 
+git push origin
+```
+
+Tests do perform:
 
 ```
 [OK] resources\examples\arm2d.py
@@ -60,17 +100,6 @@ python3 -c "from pyplasm import *; VIEW(CUBOID([1,1,1]))"
 [BROKEN] resources\examples\manipulator.py (but not important, belongs to a different object)
 ```
 
-<!--
-////////////////////////////////////////////////////////////////////////
-## Commit CI (only for developers
 
-Edit file `src/xgepy/setup.py` and increment the VERSION.
-
-```
-TAG=...write the same value of VERSION here...
-git commit -a -m "New tag" && git tag -a $TAG -m "$TAG" && git push origin $TAG && git push origin
-```
-
- -->
 
 
