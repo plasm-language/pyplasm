@@ -69,13 +69,9 @@ python -c "from pyplasm import *; VIEW(CUBOID([1,1,1]))"
 
 ## Developers only
 
-Edit file `src/xgepy/setup.py` and increment the `${VERSION}`.
 
 ```
-TAG=...write the same value of VERSION here...
-git commit -a -m "New tag" && git tag -a $TAG -m "$TAG" 
-git push origin $TAG 
-git push origin
+./scripts/new-tag.sh
 ```
 
 Tests do perform:
