@@ -4,6 +4,8 @@
 
 set -ex
 
+GIT_TAG=`git describe --tags --exact-match 2>/dev/null || true`
+
 PYTHON=`which python${PYTHON_VERSION}`
 
 # this is for linux/docker
@@ -26,7 +28,6 @@ $PYTHON -m pip install --upgrade pip || true
 $PYTHON -m pip install setuptools wheel cryptography==3.4.0 twine || true
 PYTHON_TAG=cp$(echo $PYTHON_VERSION | awk -F'.' '{print $1 $2}')
 $PYTHON setup.py -q bdist_wheel --python-tag=$PYTHON_TAG --plat-name=manylinux2010_x86_64
-GIT_TAG=`git describe --tags --exact-match 2>/dev/null || true`
 if [[ "${GIT_TAG}" != "" ]] ; then
   $PYTHON -m twine upload --username ${PYPI_USERNAME} --password ${PYPI_PASSWORD} --skip-existing   "dist/*.whl" 
 fi

@@ -2,10 +2,7 @@
 
 set -ex
 
-BUILD_DIR=${BUILD_DIR:-build_windows}
-PYTHON_VERSION=${PYTHON_VERSION:-3.8}
-PYPI_USERNAME=${PYPI_USERNAME:-}
-PYPI_PASSWORD=${PYPI_PASSWORD:-}
+GIT_TAG=`git describe --tags --exact-match 2>/dev/null || true`
 
 # swig
 mkdir -p /tmp
@@ -30,8 +27,8 @@ PYTHON=$(which python)
 $PYTHON -m pip install --upgrade pip	
 
 # compile
-mkdir -p ${BUILD_DIR} 
-cd ${BUILD_DIR}
+mkdir -p build
+cd build
 cmake -G "Visual Studio 16 2019" -A x64 -DPython_EXECUTABLE=${PYTHON} -DSWIG_EXECUTABLE=$SWIG_EXECUTABLE ../
 cmake --build . --target ALL_BUILD --config Release --parallel 4
 cmake --build . --target install   --config Release
@@ -42,7 +39,6 @@ rm -Rf ./dist
 $PYTHON -m pip install setuptools wheel twine --upgrade 1>/dev/null || true
 PYTHON_TAG=cp$(echo $PYTHON_VERSION | awk -F'.' '{print $1 $2}')
 $PYTHON setup.py -q bdist_wheel --python-tag=${PYTHON_TAG} --plat-name=win_amd64
-GIT_TAG=`git describe --tags --exact-match 2>/dev/null || true`
 if [[ "${GIT_TAG}" != "" ]] ; then
 	$PYTHON -m twine upload --username ${PYPI_USERNAME} --password ${PYPI_PASSWORD} --skip-existing   "dist/*.whl" 
 fi
