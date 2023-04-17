@@ -8,6 +8,9 @@ env:
 
 jobs:
 
+  # //////////////////////////////////////////////////////////
+  # cpython
+
   cpython-windows:
     runs-on: windows-2019
     strategy:
@@ -54,7 +57,7 @@ jobs:
     strategy:
       fail-fast: false  
       matrix:
-        python-version: [ '3.6', '3.7', '3.8', '3.9', '3.10' ]
+        python-version: [  '3.7', '3.8', '3.9', '3.10' ] # 3.11 is disabled since I don't have it in docker
     steps:
     - name: git clone pyplasm
       uses: actions/checkout@v2
@@ -67,13 +70,16 @@ jobs:
             -e PYPI_USERNAME=${PYPI_USERNAME} -e PYPI_TOKEN=${PYPI_TOKEN} \
             visus/portable-linux-binaries_x86_64:4.1 bash ./scripts/cpython.ubuntu.sh
 
+  # //////////////////////////////////////////////////////////////////////////
+  # conda
+  # see https://docs.conda.io/en/latest/miniconda.html
 
   conda-windows:
     runs-on: windows-2019
     strategy:
       fail-fast: false  
       matrix:
-        python-version: [ '3.7', '3.8', '3.9' ]
+        python-version: [ '3.7', '3.8', '3.9', '3.10']
     steps:
     - name: git clone pyplasm
       uses: actions/checkout@v2     
@@ -89,7 +95,7 @@ jobs:
     strategy:
       fail-fast: false  
       matrix:
-        python-version: [ '3.7', '3.8', '3.9']
+        python-version: [ '3.7', '3.8', '3.9', '3.10']
     steps:
     - name: git clone pyplasm
       uses: actions/checkout@v2
@@ -105,7 +111,7 @@ jobs:
     strategy:
       fail-fast: false  
       matrix:
-        python-version: [ '3.6', '3.7', '3.8', '3.9', '3.10' ]
+        python-version: [ '3.7', '3.8', '3.9', '3.10' ]
     steps:
     - name: git clone pyplasm
       uses: actions/checkout@v2
