@@ -3,7 +3,7 @@ on: [push]
 
 env:
   PYPI_USERNAME: ${{ secrets.PYPI_USERNAME }} 
-  PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+  PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
   ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
 
 jobs:
@@ -64,7 +64,7 @@ jobs:
           set -ex 
           docker run --rm -v ${PWD}:/home/pyplasm -w /home/pyplasm \
             -e PYTHON_VERSION=${{ matrix.python-version }}  \
-            -e PYPI_USERNAME=${PYPI_USERNAME} -e PYPI_PASSWORD=${PYPI_PASSWORD} \
+            -e PYPI_USERNAME=${PYPI_USERNAME} -e PYPI_TOKEN=${PYPI_TOKEN} \
             visus/portable-linux-binaries_x86_64:4.1 bash ./scripts/cpython.ubuntu.sh
 
 

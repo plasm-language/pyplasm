@@ -31,7 +31,7 @@ $PYTHON -m pip install setuptools wheel twine --upgrade 1>/dev/null || true
 PYTHON_TAG=cp$(echo $PYTHON_VERSION | awk -F'.' '{print $1 $2}')
 $PYTHON setup.py -q bdist_wheel --python-tag=${PYTHON_TAG} --plat-name=macosx_10_9_x86_64
 if [[ "${GIT_TAG}" != "" ]] ; then
-	$PYTHON -m twine upload --username ${PYPI_USERNAME} --password ${PYPI_PASSWORD} --skip-existing   "dist/*.whl" 
+	$PYTHON -m twine upload --username ${PYPI_USERNAME} --password ${PYPI_TOKEN} --skip-existing   "dist/*.whl" 
 fi
 
 echo "All done"

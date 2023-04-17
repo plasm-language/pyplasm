@@ -26,20 +26,18 @@ source ~/miniforge3/etc/profile.d/conda.sh || true # can be already activated
 conda config --set always_yes yes --set anaconda_upload no
 conda create --name my-env -c conda-forge python=${PYTHON_VERSION} numpy conda anaconda-client conda-build wheel swig cmake setuptools  
 conda activate my-env
-PYTHON=`which python`
 
 # compile 
-BUILD_DIR=build_macos_conda
-mkdir -p ${BUILD_DIR} 
-cd ${BUILD_DIR}
-cmake  -GXcode  -DCMAKE_OSX_SYSROOT=$CMAKE_OSX_SYSROOT  -DPython_EXECUTABLE=${PYTHON} ../
+mkdir -p build
+cd build
+cmake  -GXcode  -DCMAKE_OSX_SYSROOT=${CMAKE_OSX_SYSROOT}  -DPython_EXECUTABLE=`which python` ../
 cmake --build . --target ALL_BUILD --config Release --parallel 4
 cmake --build . --target install	 --config Release 
 
 # distrib
 cd Release/pyplasm
 rm -Rf $(find ${CONDA_PREFIX} -iname "pyplasm*.tar.bz2") || true
-$PYTHON setup.py -q bdist_conda
+python setup.py -q bdist_conda
 CONDA_FILENAME=$(find ${CONDA_PREFIX} -iname "pyplasm*.tar.bz2" | head -n 1)
 echo "CONDA_FILENAME=${CONDA_FILENAME}"
 if [[ "${GIT_TAG}" != "" ]] ; then

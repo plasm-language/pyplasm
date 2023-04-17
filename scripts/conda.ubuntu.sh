@@ -20,19 +20,17 @@ conda config --set always_yes yes --set anaconda_upload no
 conda create --name my-env -c conda-forge python=${PYTHON_VERSION} numpy conda anaconda-client conda-build wheel setuptools 
 conda activate my-env
 
-PYTHON=`which python`
-
-# compile pyplas
+# compile
 mkdir -p build
 cd build
-cmake -DPython_EXECUTABLE=${PYTHON} ../
+cmake -DPython_EXECUTABLE=`which python` ../
 make -j
 make install
 
 # distrib
 cd Release/pyplasm 
 rm -Rf $(find ${CONDA_PREFIX} -iname "pyplasm*.tar.bz2") || true
-$PYTHON setup.py -q bdist_conda || true # why this fails???
+python setup.py -q bdist_conda || true # why this fails???
 CONDA_FILENAME=$(find ${CONDA_PREFIX} -iname "pyplasm*.tar.bz2" | head -n 1)
 echo "CONDA_FILENAME=${CONDA_FILENAME}"
 if [[ "${GIT_TAG}" != "" ]] ; then
