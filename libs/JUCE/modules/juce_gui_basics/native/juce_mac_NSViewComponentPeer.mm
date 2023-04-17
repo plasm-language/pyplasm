@@ -624,7 +624,8 @@ public:
         wheel.isSmooth = false;
         wheel.isInertial = false;
 
-       #if ! JUCE_PPC
+        // scrgiorgio added ! defined(__arm64__)
+       #if ! JUCE_PPC && ! defined(__arm64__)
         @try
         {
            #if defined (MAC_OS_X_VERSION_10_7) && MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_7

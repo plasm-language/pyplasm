@@ -22,6 +22,7 @@
   ==============================================================================
 */
 
+
 #if defined (JUCE_AUDIO_DEVICES_H_INCLUDED) && ! JUCE_AMALGAMATED_INCLUDE
  /* When you add this cpp file to your project, you mustn't include it in a file where you've
     already included any other headers - just put it inside a file on its own, possibly with your config
@@ -129,6 +130,7 @@
  #endif
 
 #endif
+
 
 namespace juce
 {
