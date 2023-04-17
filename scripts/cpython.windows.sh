@@ -37,7 +37,7 @@ cmake --build . --target ALL_BUILD --config Release --parallel 4
 cmake --build . --target install   --config Release
 
 # distrib
-pushd Release/pyplasm
+cd Release/pyplasm
 rm -Rf ./dist
 $PYTHON -m pip install setuptools wheel twine --upgrade 1>/dev/null || true
 PYTHON_TAG=cp$(echo $PYTHON_VERSION | awk -F'.' '{print $1 $2}')
@@ -46,6 +46,5 @@ GIT_TAG=`git describe --tags --exact-match 2>/dev/null || true`
 if [[ "${GIT_TAG}" != "" ]] ; then
 	$PYTHON -m twine upload --username ${PYPI_USERNAME} --password ${PYPI_TOKEN} --skip-existing   "dist/*.whl" 
 fi
-popd
 
 echo "All done"

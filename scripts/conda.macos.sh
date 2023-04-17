@@ -38,14 +38,14 @@ cmake --build . --target ALL_BUILD --config Release --parallel 4
 cmake --build . --target install	 --config Release 
 
 # distrib
-pushd Release/pyplasm
+cd Release/pyplasm
 rm -Rf $(find ${CONDA_PREFIX} -iname "pyplasm*.tar.bz2") || true
 $PYTHON setup.py -q bdist_conda
 CONDA_FILENAME=$(find ${CONDA_PREFIX} -iname "pyplasm*.tar.bz2" | head -n 1)
+echo "CONDA_FILENAME=${CONDA_FILENAME}"
 GIT_TAG=`git describe --tags --exact-match 2>/dev/null || true`
 if [[ "${GIT_TAG}" != "" ]] ; then
    anaconda --verbose --show-traceback -t ${ANACONDA_TOKEN} upload ${CONDA_FILENAME}
 fi
-popd
 
 echo "All done"

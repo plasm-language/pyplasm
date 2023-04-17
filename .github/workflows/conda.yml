@@ -50,8 +50,7 @@ jobs:
     - name: Compile cpython
       shell: bash
       run: |
-          set -ex
-          export PYTHON_VERSION=         
+          set -ex    
           docker run --rm -v ${PWD}:/home/pyplasm -w /home/pyplasm \
             -e PYTHON_VERSION=${{ matrix.python-version }}  \
             -e ANACONDA_TOKEN=${ANACONDA_TOKEN} \
