@@ -5,7 +5,7 @@ set -ex
 BUILD_DIR=${BUILD_DIR:-build_windows}
 PYTHON_VERSION=${PYTHON_VERSION:-3.8}
 PYPI_USERNAME=${PYPI_USERNAME:-}
-PYPI_TOKEN=${PYPI_TOKEN:-}
+PYPI_PASSWORD=${PYPI_PASSWORD:-}
 
 # swig
 mkdir -p /tmp
@@ -44,7 +44,7 @@ PYTHON_TAG=cp$(echo $PYTHON_VERSION | awk -F'.' '{print $1 $2}')
 $PYTHON setup.py -q bdist_wheel --python-tag=${PYTHON_TAG} --plat-name=win_amd64
 GIT_TAG=`git describe --tags --exact-match 2>/dev/null || true`
 if [[ "${GIT_TAG}" != "" ]] ; then
-	$PYTHON -m twine upload --username ${PYPI_USERNAME} --password ${PYPI_TOKEN} --skip-existing   "dist/*.whl" 
+	$PYTHON -m twine upload --username ${PYPI_USERNAME} --password ${PYPI_PASSWORD} --skip-existing   "dist/*.whl" 
 fi
 
 echo "All done"

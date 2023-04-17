@@ -64,7 +64,7 @@ jobs:
           set -ex 
           docker run --rm -v ${PWD}:/home/pyplasm -w /home/pyplasm \
             -e PYTHON_VERSION=${{ matrix.python-version }}  \
-            -e PYPI_USERNAME=${PYPI_USERNAME} -e PYPI_TOKEN=${PYPI_TOKEN} \
+            -e PYPI_USERNAME=${PYPI_USERNAME} -e PYPI_PASSWORD=${PYPI_PASSWORD} \
             visus/portable-linux-binaries_x86_64:4.1 bash ./scripts/cpython.ubuntu.sh
 
 
