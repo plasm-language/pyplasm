@@ -12,6 +12,8 @@ typedef unsigned long long int      uint64;
 #endif
 
 
+
+
 //windows specific stuff
 #if PYPLASM_WINDOWS
   #include <windows.h>
@@ -48,6 +50,7 @@ typedef unsigned long long int      uint64;
 #include <algorithm>
 #include <cctype>
 #include <memory>
+
 
 //Some defines
 #if !SWIG

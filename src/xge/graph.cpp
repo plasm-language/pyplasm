@@ -920,7 +920,7 @@ void Graph::render(int view_cell_level,bool bDisplayOffetLines,bool bShowNormals
 			unsigned int FirstFace=*(g->each(2));
 			bool bHasNormals=(g->pointdim==3) && g->NodeData(FirstFace)>0;
 
-			throw "TODO";
+			Utils::Error(HERE,"TODO");
 
 			/*
 			if (bHasNormals) 
@@ -1700,7 +1700,7 @@ Graph::SplitResult Graph::split(GraphNavigator& navigator,
 
 				getNode(mapface).Sign=SIGN_ZER;
 				NodeTmp(face   )= mapface;
-				NodeTmp(mapface)=face; /* mi segno che è un elemento new */
+				NodeTmp(mapface)=face; /* mi segno che ï¿½ un elemento new */
 
 				/* mi segno la faccia in caso di abort */
 				newcells[nnewcells++]=mapface;

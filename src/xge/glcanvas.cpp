@@ -66,7 +66,7 @@ public:
       
       //... but I dont'want to see it (note: I made a modification in juce_OpenGLContext.cpp to not flush it)
       if (getRawContext() == nullptr)
-        throw "internal error";
+        Utils::Error(HERE,"internal error");
 
 			//this cause crash in BigSur
       //std::cout << "GL_EXTENSIONS [" << glGetString(GL_EXTENSIONS) << "]"<<std::endl;
@@ -83,7 +83,7 @@ public:
       //sharing...
       void* raw_context=((juce::OpenGLContext*)GLCanvas::getShared()->getGLContext())->getRawContext(); 
       if (!raw_context)
-        throw "internal error";
+        Utils::Error(HERE,"internal error");
 
       setNativeSharedContext(raw_context);
       setRenderer(this);
@@ -121,7 +121,7 @@ public:
   bool makeCurrent()
   {
     if (!bPyPlasmMainSharedContext)
-      throw "internal exception";
+      Utils::Error(HERE,"internal error");
 
     return juce::OpenGLContext::makeActive();
   }
@@ -130,7 +130,7 @@ public:
   void doneCurrent()
   {
     if (!bPyPlasmMainSharedContext)
-      throw "internal exception";
+      Utils::Error(HERE,"internal error");
 
     juce::OpenGLContext::deactivateCurrentContext();
   }
@@ -156,7 +156,7 @@ private:
       return;
     
     if (bPyPlasmMainSharedContext)
-      throw "internal error";
+      Utils::Error(HERE,"internal error");
     
     if (!isShowing() || !isActive()) 
       return;

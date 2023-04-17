@@ -57,6 +57,7 @@ std::string Utils::Format(const char * format, ...)
 	return ret;
 }
 
+
 ////////////////////////////////////////////////////////////////////
 void Utils::Error(std::string location,const char * format, ...)
 {
@@ -81,7 +82,7 @@ void Utils::Error(std::string location,const char * format, ...)
 	#ifdef _DEBUG
 	assert(false);
 	#endif
-
+	
 	throw formatted_msg.c_str();
 }
 

@@ -75,13 +75,13 @@ public:
 	{
 		static GLCanvas*& shared = getShared();
 		if (shared)
-			throw  "internal error";
+			Utils::Error(HERE,"internal error");
 
 		shared = new GLCanvas(true);
 		if (!shared->makeCurrent())
 		{
 			std::cout << "failed to create shared GLCanvas" << std::endl;
-			throw "internal error";
+			Utils::Error(HERE,"internal error");
 		}
 
 		shared->doneCurrent();
