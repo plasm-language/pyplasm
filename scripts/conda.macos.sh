@@ -4,7 +4,7 @@ set -ex
 
 GIT_TAG=`git describe --tags --exact-match 2>/dev/null || true`
 
-# skd
+# sdk
 pushd /tmp 
 rm -Rf MacOSX-SDKs 
 git clone https://github.com/phracker/MacOSX-SDKs.git 1>/dev/null
@@ -30,7 +30,8 @@ conda activate my-env
 # compile 
 mkdir -p build
 cd build
-cmake  -GXcode  -DCMAKE_OSX_SYSROOT=${CMAKE_OSX_SYSROOT}  -DPython_EXECUTABLE=`which python` ../
+# -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64" for M1/M2 Apple??
+cmake  -GXcode  -DCMAKE_OSX_SYSROOT=${CMAKE_OSX_SYSROOT}  -DPython_EXECUTABLE=`which python`  ../
 cmake --build . --target ALL_BUILD --config Release --parallel 4
 cmake --build . --target install	 --config Release 
 
