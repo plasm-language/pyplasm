@@ -12,7 +12,7 @@ CONDA_HOME=/c/tools/miniconda3
 echo "source ${CONDA_HOME}/etc/profile.d/conda.sh" >> ~/.bashrc
 source ~/.bashrc
 conda config  --set always_yes yes --set changeps1 no --set anaconda_upload no 
-conda create --name my-env -c conda-forge python=${PYTHON_VERSION} numpy cmake swig anaconda-client wheel conda conda-build pip pyopengl freeglut
+conda create --name my-env -c conda-forge python=${PYTHON_VERSION} numpy cmake swig anaconda-client wheel conda conda-build pip setuptools 
 conda activate my-env
 PYTHON=`which python`
 
@@ -35,4 +35,4 @@ if [[ "${GIT_TAG}" != "" ]] ; then
 fi
 popd
 
-echo "All done windows conda $PYTHON_VERSION}"
+echo "All done"

@@ -22,9 +22,10 @@ if [[ ! -d "~/miniforge3" ]]; then
    popd
 fi
 
+# activate conda
 source ~/miniforge3/etc/profile.d/conda.sh || true # can be already activated
 conda config --set always_yes yes --set anaconda_upload no
-conda create --name my-env -c conda-forge python=${PYTHON_VERSION} numpy conda anaconda-client conda-build wheel swig cmake pyopengl freeglut
+conda create --name my-env -c conda-forge python=${PYTHON_VERSION} numpy conda anaconda-client conda-build wheel swig cmake setuptools  
 conda activate my-env
 PYTHON=`which python`
 
@@ -47,4 +48,4 @@ if [[ "${GIT_TAG}" != "" ]] ; then
 fi
 popd
 
-echo "All done macos conda $PYTHON_VERSION} "
+echo "All done"

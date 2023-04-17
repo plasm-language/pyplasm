@@ -48,4 +48,4 @@ if [[ "${GIT_TAG}" != "" ]] ; then
 fi
 popd
 
-echo "All done windows cpythyon $PYTHON_VERSION} "
+echo "All done"

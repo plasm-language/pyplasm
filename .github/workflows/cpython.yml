@@ -1,14 +1,12 @@
-name: build-pyplasm
+name: cpython
 on: [push] 
 
 env:
-  PYPI_USERNAME: ${{ secrets.PYPI_USERNAME }}
-  PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
   ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
 
 jobs:
 
-  build-windows-cpython:
+  windows:
     runs-on: windows-2019
     strategy:
       fail-fast: false  
@@ -28,23 +26,8 @@ jobs:
            export PYTHON_VERSION=${{ matrix.python-version }}
            source ./scripts/cpython.windows.sh
 
-  build-windows-conda:
-    runs-on: windows-2019
-    strategy:
-      fail-fast: false  
-      matrix:
-        python-version: [ '3.7', '3.8', '3.9' ]
-    steps:
-    - name: git clone pyplasm
-      uses: actions/checkout@v2     
-    - name: Compile (cpython)
-      shell: bash
-      run: |
-           set -ex
-           export PYTHON_VERSION=${{ matrix.python-version }}
-           source ./scripts/conda.windows.sh
 
-  build-macos-cpython:
+  macos:
     runs-on: macos-11
     strategy:
       fail-fast: false  
@@ -64,25 +47,7 @@ jobs:
            export PYTHON_VERSION=${{ matrix.python-version }}
            source ./scripts/cpython.macos.sh
             
-      
-  build-macos-conda:
-    runs-on: macos-11
-    strategy:
-      fail-fast: false  
-      matrix:
-        python-version: [ '3.7', '3.8', '3.9']
-    steps:
-    - name: git clone pyplasm
-      uses: actions/checkout@v2
-    - name: Compile (cpython)
-      shell: bash
-      run: |
-           set -ex
-           export PYTHON_VERSION=${{ matrix.python-version }}
-           source ./scripts/conda.macos.sh
-                  
-
-  build-ubuntu-cpython:
+  ubuntu:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false  
@@ -99,28 +64,4 @@ jobs:
             -e PYTHON_VERSION=${{ matrix.python-version }}  \
             -e PYPI_USERNAME=${PYPI_USERNAME} -e PYPI_TOKEN=${PYPI_TOKEN} \
             visus/portable-linux-binaries_x86_64:4.1 bash ./scripts/cpython.ubuntu.sh
-
-  build-ubuntu-conda:
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false  
-      matrix:
-        python-version: [ '3.6', '3.7', '3.8', '3.9', '3.10' ]
-    steps:
-    - name: git clone pyplasm
-      uses: actions/checkout@v2
-    - name: Compile cpython
-      shell: bash
-      run: |
-          set -ex
-          export PYTHON_VERSION=         
-          docker run --rm -v ${PWD}:/home/pyplasm -w /home/pyplasm \
-            -e PYTHON_VERSION=${{ matrix.python-version }}  \
-            -e ANACONDA_TOKEN=${ANACONDA_TOKEN} \
-            visus/portable-linux-binaries_x86_64:4.1 bash ./scripts/conda.ubuntu.sh
-
-
-
-
-
 

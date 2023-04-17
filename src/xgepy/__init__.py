@@ -1,12 +1,26 @@
 import sys,types,math
 
-import OpenGL.GL   ; Gl   = OpenGL.GL
-import OpenGL.GLU  ; Glu  = OpenGL.GLU
-import OpenGL.GLUT ; Glut = OpenGL.GLUT
+# allow the oepngl imports to fail
+try:
+	import OpenGL.GL   
+	Gl = OpenGL.GL
+except:
+	pass
+
+try:
+	import OpenGL.GLU
+	Glu  = OpenGL.GLU
+except:
+	pass
+
+try:
+	import OpenGL.GLUT
+	Glut = OpenGL.GLUT
+except:
+	pass
 
 from .xgepy import *
 from .fenvs import *
-
 
 
 

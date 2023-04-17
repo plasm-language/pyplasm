@@ -30,3 +30,5 @@ GIT_TAG=`git describe --tags --exact-match 2>/dev/null || true`
 if [[ "${GIT_TAG}" != "" ]] ; then
   $PYTHON -m twine upload --username ${PYPI_USERNAME} --password ${PYPI_TOKEN} --skip-existing   "dist/*.whl" 
 fi
+
+echo "All done"

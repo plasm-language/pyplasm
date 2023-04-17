@@ -21,17 +21,16 @@ python3 -m pip install --upgrade pyplasm
 Important for Big Sur users: there is a problem with PyOpenGL.So you will need to do as explained 
 here [a link](https://stackoverflow.com/questions/63475461/unable-to-import-opengl-gl-in-python-on-macos)
 
-<!--
-DISABLED: problems on github actions
 
 If you are using `conda` python:
 
 ```
-conda install numpy pyopengl freeglut
-conda install -c conda-forge libglu # if this fails just ignore it
-conda install --channel scrgiorgio pyplasm
+conda install -c conda-forge numpy     # optional
+conda install -c conda-forge pyopengl  # optional
+conda install -c conda-forge freeglut  # optional
+conda install -c conda-forge libglu    # optional 
+conda install -c scrgiorgio pyplasm 
 ```
--->
 
 Then test it:
 
