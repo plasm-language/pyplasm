@@ -8,7 +8,7 @@ export PYTHONNOUSERSITE=True
 # install conda
 pushd ~
 curl -L -O https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
-bash Miniforge3-Linux-x86_64.sh -b 
+bash Miniforge3-Linux-x86_64.sh -b || true # it can already exists
 rm -f Miniforge3-Linux-x86_64.sh
 popd
 
