@@ -43,7 +43,10 @@ python -c "from pyplasm import *; VIEW(CUBOID([1,1,1]))"
 
 # Conda
 
-Create a conda environment (cmake installonda-forge python=3.9 numpy pyopengl 
+Create a conda environment:
+
+```
+conda create -y -n my-env -c conda-forge python=3.9 numpy pyopengl
 ```
 
 Activate the environment:
@@ -56,7 +59,7 @@ Install pyplasm:
 
 ```
 conda install -c scrgiorgio -y pyplasm 
-```
+``` 
 
 # Test
 
@@ -86,6 +89,19 @@ python3 examples/temple.py
 python3 examples/threecubes.py
 ```
 
+# Developers only
 
+To compile pyplasm, `.github/workflows/build.yml` directory and `resources/scripts`
+
+For `macosx/conda/arm64` you need to compile manually (since GitHub actions does not yet support it):
+
+```:
+export ANACONDA_TOKEN=<your-value-here>
+export GIT_TAG=<your-value-here>  
+for PYTHON_VERSION in 3.8 3.9 3.10 3.11; do
+   # internally it will use `uname -m` to detect architecture
+   ./resources/scripts/conda.macos.sh
+done
+```
 
 

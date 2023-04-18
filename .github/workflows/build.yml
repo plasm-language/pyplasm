@@ -96,13 +96,8 @@ jobs:
            export GIT_TAG=`git describe --tags --exact-match 2>/dev/null || true`
            source ./resources/conda.windows.sh
 
-  # this will compile only for x86_64 since github actions does not have APPLE ARM64 architecture
-  # so you will need to produce conda ARM64 for apple manually by doing:
-  #   export ANACONDA_TOKEN=<your-value-here>
-  #   export GIT_TAG=<your-value-here>  
-  #   export PYTHON_VERSION=3.8 | 3.9 | 3.10 | 3.11
-  #   ./resources/scripts/conda.macos.sh
-  conda-macos:
+
+  conda-macos-x86_64:
     runs-on: macos-11
     strategy:
       fail-fast: false  
