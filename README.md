@@ -18,14 +18,14 @@ On Windows:
 
 ```
 .\.venv\Scripts\activate.bat
-python -m pip install numpy PyGlut PyOpenGL 
+python -m pip install numpy PyOpenGL 
 ```
 
 on other platforms:
 
 ```
 source .venv/bin/activate
-python -m pip install numpy PyGlut PyOpenGL 
+python -m pip install numpy PyOpenGL 
 ```
 
 Install pyplasm:
@@ -43,10 +43,7 @@ python -c "from pyplasm import *; VIEW(CUBOID([1,1,1]))"
 
 # Conda
 
-Create a conda environment (change python version as needed):
-
-```
-conda create -y -n my-env -c conda-forge python=3.9 numpy pyopengl freeglut 
+Create a conda environment (cmake installonda-forge python=3.9 numpy pyopengl 
 ```
 
 Activate the environment:
@@ -66,27 +63,27 @@ conda install -c scrgiorgio -y pyplasm
 Simple cuboid:
 
 ```
-python -c "from pyplasm import *; VIEW(CUBOID([1,1,1]))"
+python3 -c "from pyplasm import *; VIEW(CUBOID([1,1,1]))"
 ```
 
 Other misc tests:
 
 ```
-python resources/examples/arm2d.py
-python resources/examples/ashtray.py
-python resources/examples/ballorganizer.py
-python resources/examples/basic.py
-python resources/examples/batch.py
-python resources/examples/bsp.py
-python resources/examples/colors.py
-python resources/examples/graph.py
-python resources/examples/lathering.py
-python resources/examples/load_obj.py
-python resources/examples/pisa.py
-python resources/examples/plasm.py
-python resources/examples/rotational_solid.py
-python resources/examples/temple.py
-python resources/examples/threecubes.py
+python3 examples/arm2d.py
+python3 examples/ashtray.py
+python3 examples/ballorganizer.py
+python3 examples/basic.py
+python3 examples/batch.py
+python3 examples/bsp.py
+python3 examples/colors.py
+python3 examples/graph.py
+python3 examples/lathering.py
+python3 examples/load_obj.py
+python3 examples/pisa.py
+python3 examples/plasm.py
+python3 examples/rotational_solid.py
+python3 examples/temple.py
+python3 examples/threecubes.py
 ```
 
 

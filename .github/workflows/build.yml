@@ -30,7 +30,7 @@ jobs:
            set -ex
            export PYTHON_VERSION=${{ matrix.python-version }}
            export GIT_TAG=`git describe --tags --exact-match 2>/dev/null || true`
-           source ./scripts/cpython.windows.sh
+           source ./resources/scripts/cpython.windows.sh
 
   # this is producing an universal2 wheel (i.e. arm64 and x86_64)
   cpython-macos:
@@ -52,7 +52,7 @@ jobs:
            set -ex
            export PYTHON_VERSION=${{ matrix.python-version }}
            export GIT_TAG=`git describe --tags --exact-match 2>/dev/null || true`
-           source ./scripts/cpython.macos.sh
+           source ./resources/scripts/cpython.macos.sh
             
   cpython-ubuntu:
     runs-on: ubuntu-latest
@@ -73,7 +73,7 @@ jobs:
             -e PYTHON_VERSION=${PYTHON_VERSION}  \
             -e PYPI_USERNAME=${PYPI_USERNAME} -e PYPI_TOKEN=${PYPI_TOKEN} \
             -e GIT_TAG=${GIT_TAG} \
-            visus/portable-linux-binaries_x86_64:4.1 bash ./scripts/cpython.ubuntu.sh
+            visus/portable-linux-binaries_x86_64:4.1 bash ./resources/scripts/cpython.ubuntu.sh
 
   # //////////////////////////////////////////////////////////////////////////
   # conda
@@ -94,14 +94,14 @@ jobs:
            set -ex
            export PYTHON_VERSION=${{ matrix.python-version }}
            export GIT_TAG=`git describe --tags --exact-match 2>/dev/null || true`
-           source ./scripts/conda.windows.sh
+           source ./resources/conda.windows.sh
 
   # this will compile only for x86_64 since github actions does not have APPLE ARM64 architecture
   # so you will need to produce conda ARM64 for apple manually by doing:
   #   export ANACONDA_TOKEN=<your-value-here>
   #   export GIT_TAG=<your-value-here>  
   #   export PYTHON_VERSION=3.8 | 3.9 | 3.10 | 3.11
-  #   ./scripts/conda.macos.sh
+  #   ./resources/scripts/conda.macos.sh
   conda-macos:
     runs-on: macos-11
     strategy:
@@ -117,7 +117,7 @@ jobs:
            set -ex
            export PYTHON_VERSION=${{ matrix.python-version }}
            export GIT_TAG=`git describe --tags --exact-match 2>/dev/null || true`
-           source ./scripts/conda.macos.sh
+           source ./resources/scripts/conda.macos.sh
                   
   conda-ubuntu:
     runs-on: ubuntu-latest
@@ -138,7 +138,7 @@ jobs:
             -e PYTHON_VERSION=${PYTHON_VERSION} \
             -e ANACONDA_TOKEN=${ANACONDA_TOKEN} \
             -e GIT_TAG=${GIT_TAG} \
-            visus/portable-linux-binaries_x86_64:4.1 bash ./scripts/conda.ubuntu.sh
+            visus/portable-linux-binaries_x86_64:4.1 bash ./resources/scripts/conda.ubuntu.sh
 
 
 

@@ -16,11 +16,9 @@ set_property(SOURCE ${SwigFile} APPEND PROPERTY SWIG_FLAGS "-threads;-extranativ
 
 set_source_files_properties(${SwigFile} PROPERTIES CPLUSPLUS ON)
 
-file(GLOB PyFiles      ${CMAKE_CURRENT_SOURCE_DIR}/*.py)
-file(GLOB ExampleFiles ${CMAKE_CURRENT_SOURCE_DIR}/../../resources/examples/*.py)
-source_group("examples"   FILES ${ExampleFiles})
+file(GLOB PyFiles ${CMAKE_CURRENT_SOURCE_DIR}/*.py)
 
-swig_add_library(xgepy LANGUAGE python SOURCES ${SwigFile} ${PyFiles} ${ExampleFiles})
+swig_add_library(xgepy LANGUAGE python SOURCES ${SwigFile} ${PyFiles})
 target_compile_definitions(xgepy PRIVATE SWIG_TYPE_TABLE=pyplasm)
 target_compile_definitions(xgepy PRIVATE SWIG_PYTHON_INTERPRETER_NO_DEBUG=1)
 target_include_directories(xgepy PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
@@ -48,7 +46,7 @@ set_target_properties(xgepy PROPERTIES
 	RUNTIME_OUTPUT_DIRECTORY  ${CMAKE_BINARY_DIR}/${ConfigName}/pyplasm
 	ARCHIVE_OUTPUT_DIRECTORY  ${CMAKE_BINARY_DIR}/${ConfigName}/swig) 
 
-install(FILES ${PyFiles}      DESTINATION ${CMAKE_BINARY_DIR}/${ConfigName}/pyplasm/)
-install(FILES ${ExampleFiles} DESTINATION ${CMAKE_BINARY_DIR}/${ConfigName}/pyplasm/examples/)
+install(FILES ${PyFiles}         DESTINATION ${CMAKE_BINARY_DIR}/${ConfigName}/pyplasm/)
+install(DIRECTORY ../../examples DESTINATION ${CMAKE_BINARY_DIR}/${ConfigName}/pyplasm/)
 
  
