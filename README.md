@@ -93,6 +93,12 @@ python3 examples/threecubes.py
 
 To compile pyplasm, `.github/workflows/build.yml` directory and `resources/scripts`
 
+To push new tag:
+
+```
+./resources/scripts/new-tag.sh
+```
+
 For `macosx/conda/arm64` you need to compile manually (since GitHub actions does not yet support it):
 
 ```:
