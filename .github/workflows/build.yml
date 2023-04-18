@@ -30,7 +30,7 @@ jobs:
            set -ex
            export PYTHON_VERSION=${{ matrix.python-version }}
            export GIT_TAG=`git describe --tags --exact-match 2>/dev/null || true`
-           source ./scripts/cpython.windows.sh
+           source ./resources/scripts/cpython.windows.sh
 
   # this is producing an universal2 wheel (i.e. arm64 and x86_64)
   cpython-macos:
@@ -52,7 +52,7 @@ jobs:
            set -ex
            export PYTHON_VERSION=${{ matrix.python-version }}
            export GIT_TAG=`git describe --tags --exact-match 2>/dev/null || true`
-           source ./scripts/cpython.macos.sh
+           source ./resources/scripts/cpython.macos.sh
             
   cpython-ubuntu:
     runs-on: ubuntu-latest
@@ -73,7 +73,7 @@ jobs:
             -e PYTHON_VERSION=${PYTHON_VERSION}  \
             -e PYPI_USERNAME=${PYPI_USERNAME} -e PYPI_TOKEN=${PYPI_TOKEN} \
             -e GIT_TAG=${GIT_TAG} \
-            visus/portable-linux-binaries_x86_64:4.1 bash ./scripts/cpython.ubuntu.sh
+            visus/portable-linux-binaries_x86_64:4.1 bash ./resources/scripts/cpython.ubuntu.sh
 
   # //////////////////////////////////////////////////////////////////////////
   # conda
@@ -94,7 +94,7 @@ jobs:
            set -ex
            export PYTHON_VERSION=${{ matrix.python-version }}
            export GIT_TAG=`git describe --tags --exact-match 2>/dev/null || true`
-           source ./scripts/conda.windows.sh
+           source ./resources/scripts/conda.windows.sh
 
 
   conda-macos-x86-64:
@@ -112,7 +112,7 @@ jobs:
            set -ex
            export PYTHON_VERSION=${{ matrix.python-version }}
            export GIT_TAG=`git describe --tags --exact-match 2>/dev/null || true`
-           source ./scripts/conda.macos.sh
+           source ./resources/scripts/conda.macos.sh
                   
   conda-ubuntu:
     runs-on: ubuntu-latest
@@ -133,7 +133,7 @@ jobs:
             -e PYTHON_VERSION=${PYTHON_VERSION} \
             -e ANACONDA_TOKEN=${ANACONDA_TOKEN} \
             -e GIT_TAG=${GIT_TAG} \
-            visus/portable-linux-binaries_x86_64:4.1 bash ./scripts/conda.ubuntu.sh
+            visus/portable-linux-binaries_x86_64:4.1 bash ./resources/scripts/conda.ubuntu.sh
 
 
 

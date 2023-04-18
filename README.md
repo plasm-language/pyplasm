@@ -104,9 +104,9 @@ For `macosx/conda/arm64` you need to compile manually (since GitHub actions does
 ```:
 export ANACONDA_TOKEN=<your-value-here>
 export GIT_TAG=<your-value-here>  
-for PYTHON_VERSION in 3.8 3.9 3.10 3.11; do
-   # internally it will use `uname -m` to detect architecture
-   ./resources/scripts/conda.macos.sh
+export PYTHON_VERSION=3.8  # 3.9 3.10 3.11
+
+./resources/scripts/conda.macos.sh
 done
 ```
 
