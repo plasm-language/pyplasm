@@ -1,12 +1,10 @@
-from fenvs import *
-
 import sys,time
+from pyplasm.fenvs import *
 
-start=time.clock()
+T1=time.time()
 
 # if you want to see intermediate results
 debug_tower =True
-
 
 ScaleFactor = 3.16655256
 InternalBasementRadius = ScaleFactor*0.7
@@ -23,18 +21,7 @@ WallHeight = 9.35 * ScaleFactor
 FirstRingPerimeter = 5.15 * ScaleFactor * PI
 FirstRingColumnArcWidth = FirstRingPerimeter/12.0
 
-if (False):
-  cube0=Hpc.cube(3).translate([0.0,0.0,0.0])
-  cube1=Hpc.cube(3).translate([0.5,0.5,0.5])
-  cube2=Hpc.cube(3).translate([1.0,1.0,1.0])
-  one=UNION([cube0,cube1]);one.view()
-  two=UNION([one  ,cube2]);two.view()
-  sys.exit(0)
-
 # =======================================
-# basament1
-# =======================================
-
 def BuildBasament1(N=24):
 	return DIFF([
 			CYLINDER([ExternalBasementRadius,BasementHeight/2.0])(N),
@@ -47,11 +34,7 @@ if debug_tower:
   print("Basament1...")
   VIEW(Basament1)
 
-
 # =======================================
-# Basament2
-# =======================================
-
 def BuildBasament2(N=24):
 	tg_alpha = (ExternalBasementRadius - ExternalFirstFloorRadius)/(BasementHeight/2.0)
 	hcone = tg_alpha*ExternalBasementRadius
@@ -72,37 +55,24 @@ if debug_tower:
 # Basament
 # =======================================
 
-
 Basament = STRUCT([Basament1, T(3)(BasementHeight/2.0)(Basament2)])
 
 if debug_tower:
 	VIEW(Basament)
 
-
-
 # =======================================
-# Basament
-# =======================================
-
-
 def BuildFirstFloor(N=24):
 	return DIFF([
 		CYLINDER([ExternalFirstFloorRadius, FirstFloorHeight])(24),
 		CYLINDER([InternalFirstFloorRadius, FirstFloorHeight])(24)
 	])
 
-
 FirstFloor=BuildFirstFloor()
 
 if debug_tower:
 	VIEW(FirstFloor)
 
-
 # =======================================
-# Basament
-# =======================================
-
-
 def BuildKernel(N=24):
 	return DIFF([
 		CYLINDER([ExternalWallRadius, WallHeight])(N),
@@ -114,11 +84,7 @@ Kernel=BuildKernel()
 if debug_tower:
 	VIEW(Kernel)
 
-
 # =======================================
-# Terrace
-# =======================================
-
 def BuildTerrace(N=24):
 	tg_alpha = (0.05*ExternalFirstFloorRadius)/(0.095*ScaleFactor)
 	hcone = tg_alpha * 1.1*ExternalFirstFloorRadius
@@ -137,12 +103,7 @@ Terrace = BuildTerrace()
 if debug_tower:
 	VIEW(Terrace)
 
-
-
 # =======================================
-# Column_1
-# =======================================
-
 def Column_1 (angle,N=18):
 	unit = FirstRingColumnArcWidth/2
 	basis = CYLINDER([0.11*ScaleFactor,0.03*ScaleFactor])(N)
@@ -156,14 +117,10 @@ def Column_1 (angle,N=18):
 if debug_tower:
 	VIEW(Column_1(PI/12))
 
-
 ColumnScaling = (WallHeight/6.0)/(SIZE(3)(Column_1(PI/24)))
 
 
 # =======================================
-# Column_2
-# =======================================
-
 def BuildBox1Column2():
 	y = 0.13*ScaleFactor
 	x = -4*y
@@ -195,10 +152,6 @@ if debug_tower:
 
 
 # =======================================
-# Arch
-# =======================================
-
-
 def Arch (ARCH_arg_):
 	R1 , R2 , W = ARCH_arg_
 	return (COMP([
@@ -220,13 +173,9 @@ def Build_ARC_1_1():
 Arc_1_1 = Build_ARC_1_1()
 
 # =======================================
-# WALL_1_HOLE
-# =======================================
-
 def WALL_1_HOLE (WALL_1_HOLE_arg_):
 	R2 , W = WALL_1_HOLE_arg_
 	return (T([1, 2])([2.45*ScaleFactor, 0]))(((COMP([COMP([R([1, 3])(PI/-2.0), S(3)(2)]), T(3)((W/-2.0))]))((RAISE(DIFF)([CYLINDER([R2, 2.0*W])(24),(COMP([T(2)((RAISE(DIFF)(R2))), CUBOID]))([R2, 2*R2, W])])))))
-
 
 def BuildWall_1():
 	UNIT = FirstRingColumnArcWidth/2.0
@@ -236,38 +185,23 @@ def BuildWall_1():
 
 Wall_1 = BuildWall_1()
 
-
 if debug_tower:
 	VIEW(Wall_1)
 
-
-
 # =======================================
-# FirstColumnRing
-# =======================================
-
 FirstColumnRing = (COMP([STRUCT, DOUBLE_DIESIS(12)]))([Column_1((PI/12)), Arc_1_1, Wall_1, R([1, 2])((RAISE(DIV)([PI,6])))])
-
 
 if debug_tower:
 	VIEW(FirstColumnRing)
 
 
 # =======================================
-# Arc_2_1
-# =======================================
-
-
 def Arc_2_1 (ANGLE):
 	UNIT = FirstRingColumnArcWidth/4
 	ret_val = (COMP([COMP([OPTIMIZE, R([1, 2])((ANGLE))]), T([1, 2, 3])([2.40*ScaleFactor, 0, 2.10*ScaleFactor*ColumnScaling])]))((STRUCT([(Arch([0.65*UNIT, 0.9*UNIT, RAISE(PROD)([1.5,UNIT])])),(Arch([0.9*UNIT, UNIT, UNIT/0.75]))])))
 	return ret_val
 
-
 # =======================================
-# Wall_2
-# =======================================
-
 def Wall_2 (ANGLE):
 	UNIT = FirstRingColumnArcWidth/4
 	THECYLINDER = RAISE(DIFF)([CYLINDER([RAISE(PROD)([1.05,ExternalFirstFloorRadius]), RAISE(PROD)([1.35,UNIT])])(48),CYLINDER([ExternalWallRadius, RAISE(PROD)([1.35,UNIT])])(24)])
@@ -276,25 +210,16 @@ def Wall_2 (ANGLE):
 
 Wall_2_Ottusangle = (RAISE(SUM)([(COMP([COMP([COMP([OPTIMIZE, R([1, 2])((PI/24))]), T(1)((-100))]), CUBOID]))([200, 100, 100]),(COMP([COMP([COMP([OPTIMIZE, R([1, 2])((23*PI/24))]), T(1)((-100))]), CUBOID]))([200, 100, 100])]))
 
-
 if debug_tower:
 	VIEW(Wall_2_Ottusangle)
 
-
-
 # =======================================
-# Wall_2_Hole
-# =======================================
-
 def Wall_2_Hole (WALL_2_HOLE_arg_):
 	R2 , W = WALL_2_HOLE_arg_
 	return (T([1, 2])([2.45*ScaleFactor, 0]))(((COMP([COMP([R([1, 3])(PI/-2.0), S(3)(2)]), T(3)((W/-2.0))]))((RAISE(DIFF)([CYLINDER([R2, 2.0*W])(24),(COMP([T(2)((RAISE(DIFF)(R2))), CUBOID]))([R2, 2*R2, W])])))))
 
 
 # =======================================
-# SecondColumnRing
-# =======================================
-
 SecondColumnRing = (COMP([STRUCT, DOUBLE_DIESIS(24)]))([
 		Column_2((PI/12)), 
 		Arc_2_1((PI/24)), 
@@ -302,10 +227,8 @@ SecondColumnRing = (COMP([STRUCT, DOUBLE_DIESIS(24)]))([
 		R([1, 2])((PI/12))
 	])
 
-
 if debug_tower:
 	VIEW(SecondColumnRing)
-
 
 RadiusSteps = 1.9*ScaleFactor
 PitchSteps = ScaleFactor*7/1.5
@@ -315,17 +238,19 @@ AlphaStep = RAISE(DIV)([RAISE(DIFF)(AngleSteps),NumberOfSteps])
 ZetaStep = RAISE(DIV)([(RAISE(SUM)([FirstFloorHeight,WallHeight])),NumberOfSteps])
 StepVolume = (COMP([T(1)((RAISE(DIFF)(RadiusSteps))), CUBOID]))((SCALARVECTPROD([[0.4, 0.11, 0.8],ScaleFactor])))
 
-
+if debug_tower:
+	VIEW(StepVolume)
 
 # =======================================
-# Steps
-# =======================================
-
 def BuildStepsSegment ():
 	TRANSLATIONS = DIESIS(17)((T(3)(ZetaStep)))
 	ROTATIONS = DIESIS(17)((R([1, 2])(AlphaStep)))
 	OBJECTS = DIESIS(17)(StepVolume)
-	return (COMP([COMP([COMP([OPTIMIZE, STRUCT]), CAT]), TRANS]))([TRANSLATIONS, ROTATIONS, OBJECTS])
+	ret=TRANS([TRANSLATIONS, ROTATIONS, OBJECTS])
+	ret=CAT(ret)
+	ret=STRUCT(ret)
+	ret=OPTIMIZE(ret)
+	return ret
 
 StepSegment = BuildStepsSegment()
 
@@ -335,16 +260,10 @@ Steps = (COMP([COMP([OPTIMIZE, STRUCT]), DOUBLE_DIESIS(17)]))([
 	T(3)((17*ZetaStep))
 	])
 
-
 if debug_tower:
 	VIEW(Steps)
 
-
 # =======================================
-# Fabric
-# =======================================
-
-
 Fabric = STRUCT([
 		T(3)((RAISE(DIFF)(BasementHeight)))(Basament), 
 		Steps, FirstFloor, 
@@ -358,15 +277,9 @@ Fabric = STRUCT([
 if debug_tower:
 	VIEW(Fabric)
 
-
 LASTFLOORHEIGHT = WallHeight/5
 
-
 # =======================================
-# TowerCap
-# =======================================
-
-
 def MySphere (RADIUS):
 	def MYSPHERE0 (MYSPHERE0_arg_0):
 		N , M = MYSPHERE0_arg_0
@@ -393,13 +306,8 @@ TowerCap = buildTowerCap()
 if debug_tower:
 	VIEW(TowerCap)
 
-
 # =======================================
-# Fabric
-# =======================================
-
-Fabric = \
-	STRUCT([
+Fabric = STRUCT([
 		T(3)((RAISE(DIFF)(BasementHeight)))(Basament), 
 		Steps, FirstFloor, 
 		T(3)(FirstFloorHeight)(Kernel), 
@@ -414,7 +322,6 @@ Fabric = \
 if debug_tower:
 	VIEW(Fabric)
 
-
 Int7Height = 1.7*ScaleFactor
 Ext7Height = 2.3*ScaleFactor
 C11 = BEZIER(S1)([[InternalWallRadius, 0, 0], [InternalWallRadius, 0, Int7Height]])
@@ -428,13 +335,8 @@ C32 = BEZIER(S1)([[(ExternalWallRadius+1), 0, Int7Height], [(ExternalWallRadius+
 SURF3 = BEZIER(S2)([C31, C32])
 
 # =======================================
-# Solid
-# =======================================
-
-
 def Solid (SURF):
-	return \
-		[
+	return [
 			RAISE(DIFF)([
 				(RAISE(PROD)([  COMP([S1,SURF])   ,COMP([COS, S3])])),
 				(RAISE(PROD)([  COMP([S2,SURF])  ,COMP([SIN, S3])]))]), 
@@ -445,10 +347,6 @@ def Solid (SURF):
 		]
 
 # =======================================
-# Out1
-# =======================================
-
-
 def buildOUT1():
 	domain = (RAISE(PROD)([RAISE(PROD)([INTERVALS(1.0)(1),INTERVALS(1.0)(1)]),INTERVALS((3*PI/2))(18)]))
 	return MAP((Solid(SURF1)))(domain)
@@ -458,49 +356,30 @@ Out1 = buildOUT1()
 if debug_tower:
 	VIEW(Out1)
 
-
 # =======================================
-# Out2
-# =======================================
-
-
 def buildOUT2():
 	domain = (RAISE(PROD)([RAISE(PROD)([INTERVALS(1.0)(9),INTERVALS(1.0)(1)]),INTERVALS((3*PI/2))(18)]))
 	return MAP((Solid(SURF1)))(domain)
 
 Out2 = buildOUT2()
 
-
 if debug_tower:
 	VIEW(Out2)
 
 # =======================================
-# Out3
-# =======================================
-
-
 Out3 = MAP((Solid(SURF3)))((RAISE(PROD)([(COMP([SQR, INTERVALS(1.0)]))(1),INTERVALS((3*PI/2))(18)])))
-
 
 if debug_tower:
 	VIEW(Out3)
 
 
 # =======================================
-# Cap
-# =======================================
-
-
 Cap = STRUCT([Out1, Out2, Out3])
 
 if debug_tower:
 	VIEW(Cap)
 
 # =======================================
-# Column_B
-# =======================================
-
-
 def buildColumn_B():
 	UNIT = FirstRingColumnArcWidth/2.0
 	TRANSL = T([1, 2])([-0.12*ScaleFactor, -0.12*ScaleFactor])
@@ -515,86 +394,53 @@ def buildColumn_B():
 
 Column_B = buildColumn_B()
 
-
 if debug_tower:
 	VIEW(Column_B)
 
 
 # =======================================
-# Arc_2_b
-# =======================================
-
-
-
-
 def buildARC_2_B():
 	UNIT = FirstRingColumnArcWidth/4
 	return (COMP([COMP([OPTIMIZE, R([1, 2])((PI/18))]), T([1, 2, 3])([2.53*ScaleFactor*18.0/24.0, 0, ColumnScaling*2.08*ScaleFactor])]))((STRUCT([Arch([0.65*UNIT, 0.9*UNIT, 0.5*UNIT]),Arch([0.9*UNIT, 1.1*UNIT, 0.65*UNIT])])))
 
 Arc_2_b = buildARC_2_B()
-
-def buildARC_2_B():
-	UNIT = FirstRingColumnArcWidth/4
-	return (COMP([COMP([OPTIMIZE, R([1, 2])((PI/18))]), T([1, 2, 3])([2.53*ScaleFactor*18.0/24.0, 0, ColumnScaling*2.08*ScaleFactor])]))((STRUCT([Arch([0.65*UNIT, 0.9*UNIT, 0.5*UNIT]),Arch([0.9*UNIT, 1.1*UNIT, 0.65*UNIT])])))
-
-Arc_2_b = buildARC_2_B()
-
-
 
 if debug_tower:
 	VIEW(Arc_2_b)
 
 # =======================================
-# Wall_B_Ottusangle
-# =======================================
-
-
 def Wall_B (ANGLE):
 	UNIT = FirstRingColumnArcWidth/4
 	THECYLINDER = RAISE(DIFF)([CYLINDER([RAISE(PROD)([1.05,ExternalFirstFloorRadius]), RAISE(PROD)([1.35,UNIT])])(48),CYLINDER([ExternalWallRadius, RAISE(PROD)([1.35,UNIT])])(24)])
 	ret_val = (COMP([COMP([OPTIMIZE, R([1, 2])((ANGLE))]), T(3)((RAISE(PROD)([2.10*18.0*ScaleFactor/24.0,ColumnScaling])))]))((RAISE(DIFF)([RAISE(DIFF)([THECYLINDER,Wall_B_Ottusangle]),Wall_B_Hole([UNIT, UNIT/0.75])])))
 	return ret_val
 
-
 Wall_B_Ottusangle = (RAISE(SUM)([(COMP([COMP([COMP([OPTIMIZE, R([1, 2])((PI/24))]), T(1)((-100))]), CUBOID]))([200, 100, 100]),(COMP([COMP([COMP([OPTIMIZE, R([1, 2])((23*PI/24))]), T(1)((-100))]), CUBOID]))([200, 100, 100])]))
 
 if debug_tower:
 	VIEW(Wall_B_Ottusangle)
 
-
 # =======================================
-# TopTower
-# =======================================
-
 def Wall_B_Hole (Wall_B_Hole_arg_):
 	R2 , W = Wall_B_Hole_arg_
 	return (T([1, 2])([2.45*ScaleFactor, 0]))(((COMP([COMP([R([1, 3])(PI/-2.0), S(3)(2)]), T(3)((W/-2.0))]))((RAISE(DIFF)([CYLINDER([R2, W*2.0])(24),(COMP([T(2)((RAISE(DIFF)(R2))), CUBOID]))([R2, 2*R2, W])])))))
 
 TopTower = STRUCT([SecondColumnRing, Cap, T(3)((WallHeight/5.0)), Terrace])
 
-
 if debug_tower:
 	VIEW(TopTower)
 
-
 # =======================================
-# Tooth
-# =======================================
-
 def tooth_width (DR):
 	return RAISE(SUM)([RAISE(DIFF)([ExternalWallRadius,InternalWallRadius]),DR])
-
 
 def tooth_mymap1 (tooth_mymap1_arg_):
 	DR , H = tooth_mymap1_arg_
 	return MAP([RAISE(PROD)([(RAISE(SUM)([S2,S3])),COMP([COS, S1])]), RAISE(PROD)([(RAISE(SUM)([S2,S3])),COMP([SIN, S1])]), S3])((RAISE(PROD)([RAISE(PROD)([INTERVALS((PI/106))(1),T(1)((InternalWallRadius))((INTERVALS((tooth_width(DR)))(1)))]),INTERVALS(H)(1)])))
 
-
-
 def Tooth_MyMap2 (Tooth_MyMap2_arg_):
 	DR , H = Tooth_MyMap2_arg_
 	return MAP([RAISE(PROD)([(S2),(COMP([COS, S1]))]), RAISE(PROD)([(S2),(COMP([SIN, S1]))]), S3])((RAISE(PROD)([RAISE(PROD)([INTERVALS((PI/106))(1),T(1)((InternalWallRadius))((INTERVALS((tooth_width(DR)))(1)))]),INTERVALS(H)(1)])))
-
 
 def buildTooth():
 	RAGGIO = ExternalWallRadius
@@ -607,12 +453,7 @@ Tooth = buildTooth()
 if debug_tower:
 	VIEW(Tooth)
 
-
 # =======================================
-# Plateau
-# =======================================
-
-
 Plateau = (COMP([COMP([OPTIMIZE, STRUCT]), DOUBLE_DIESIS(106)]))([Tooth, R([1, 2])((2*PI/106))])
 
 if debug_tower:
@@ -633,12 +474,7 @@ BeltColumnRing = STRUCT([(
 if debug_tower:
 	VIEW(BeltColumnRing)
 
-
 # =======================================
-# BeltWalls
-# =======================================
-
-
 def MyRing (ANGLE):
 	def MYRING1 (MYRING1_arg_1):
 		R1 , R2 = MYRING1_arg_1
@@ -651,22 +487,16 @@ def MyRing (ANGLE):
 	
 	return MYRING1
 
-
 BeltWalls = RAISE(PROD)([MyRing(3*PI/9)([InternalWallRadius, ExternalWallRadius*6.0/7.0])([6, 1]),Q(5.75)])
 
 if debug_tower:
 	VIEW(BeltWalls)
 
 # =======================================
-# SmallWindow1
-# =======================================
-
-
 SmallWindow1 = PROD([MyRing(3*PI/(18*4))([InternalWallRadius-1, (ExternalWallRadius*6.0/7+1)])([2, 1]),Q(1.75)])
 
 if debug_tower:
 	VIEW(SmallWindow1)
-
 
 
 SmallWindow2 = PROD([
@@ -677,10 +507,6 @@ if debug_tower:
 	VIEW(SmallWindow2)
 
 # =======================================
-# Window3
-# =======================================
-
-
 def Hole3 (ANGLE):
 	def HOLE30 (HOLE30_arg_0):
 		R1 , R2 = HOLE30_arg_0
@@ -707,45 +533,26 @@ def Hole3_Portal2 (ANGLE):
 	
 	return Hole3_Portal20
 
-
 Window3 = PROD([MyRing((2*PI/9-0.2))([InternalWallRadius-1, (ExternalWallRadius*6.0/7+1)])([1, 1]),Q(2.5)])
-
 
 if debug_tower:
 	VIEW(Window3)
 
-
-
 # =======================================
-# SectorWall
-# =======================================
-
-
 SectorWall = RAISE(DIFF)([BeltWalls, R([1, 2])((3*PI/(18*5)))(SmallWindow1), R([1, 2])((PI/36))(SmallWindow2), R([1, 2])((PI/9+0.1))(Window3)])
-
 
 if debug_tower:
 	VIEW(SectorWall)
 
-
-
 # =======================================
-# BeltTower
-# =======================================
-
 BeltTower = STRUCT([(COMP([STRUCT, DOUBLE_DIESIS(6)]))([SectorWall, R([1, 2])((PI/3))]),BeltColumnRing])
-
 
 if debug_tower:
 	VIEW(BeltTower)
 
-
 # =======================================
-# Fabric
-# =======================================
-
-
-Fabric = STRUCT([
+def PisaTower():
+	return STRUCT([
 		T(3)((RAISE(DIFF)(BasementHeight)))(Basament), 
 		Steps, 
 		FirstFloor, 
@@ -765,8 +572,9 @@ Fabric = STRUCT([
 		BeltTower
 	])
 
-out = Fabric
-
-#Plasm.save(out,':models/pisa.hpc.gz')
-print("Pisa evaluated in",time.clock()-start,"seconds")
-VIEW(out)
+######################################################################
+if __name__=="__main__":
+	out = PisaTower()
+	#Plasm.save(out,':models/pisa.hpc.gz')
+	print("Pisa evaluated in",time.time()-T1,"seconds")
+	VIEW(out)

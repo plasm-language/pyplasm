@@ -1,6 +1,7 @@
-from fenvs import *
+from pyplasm.fenvs import *
 
-def out():
+# ////////////////////////////////////////////////////////////////////////
+def Temple():
 
 	def Column (r,h):
 		basis = CUBOID([ 2*r*1.2, 2*r*1.2, h/12.0 ]) 
@@ -34,6 +35,9 @@ def out():
 	Zsizes = QUOTE([ -13, 0.6 ])
 
 	SecondaryBeams = POWER([POWER([Xsizes,Ysizes]),Zsizes])
-	return STRUCT([Temple, SecondaryBeams, Ground])
+	model= STRUCT([Temple, SecondaryBeams, Ground])
+	model.view()
 
-out().view()
+# ////////////////////////////////////////////////////////////////////////
+if __name__=="__main__":
+	Temple()
