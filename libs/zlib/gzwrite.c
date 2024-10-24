@@ -5,6 +5,9 @@
 
 #include "gzguts.h"
 
+#ifndef _WIN32
+#include "unistd.h"
+#endif
 
 #ifdef _MSC_VER
 #include <io.h>	/* write, close */
