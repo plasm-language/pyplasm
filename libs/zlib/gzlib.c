@@ -5,6 +5,9 @@
 
 #include "gzguts.h"
 
+#ifndef _WIN32
+#include "unistd.h"
+#endif
 
 #ifdef _MSC_VER
 #include <io.h>	/* read, close */
@@ -20,7 +23,7 @@ disable warning "The POSIX name for this item is deprecated. Instead, use the IS
 #if defined(_LARGEFILE64_SOURCE) && _LFS64_LARGEFILE-0
 #  define LSEEK lseek64
 #else
-#  define LSEEK lseek
+#define LSEEK lseek
 #endif
 #endif
 
